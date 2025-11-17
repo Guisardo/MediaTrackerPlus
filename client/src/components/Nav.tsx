@@ -18,6 +18,7 @@ export const useRouteNames = () => {
     { path: '/upcoming', name: t`Upcoming` },
     { path: '/in-progress', name: t`In progress` },
     { path: '/watchlist', name: t`Watchlist` },
+    { path: '/random', name: t`Random` },
     { path: '/calendar', name: t`Calendar` },
     { path: '/import', name: t`Import` },
     { path: '/lists', name: t`Lists` },

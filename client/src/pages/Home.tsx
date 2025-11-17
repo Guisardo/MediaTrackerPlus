@@ -7,7 +7,7 @@ import { GridItem, GridItemAppearanceArgs } from 'src/components/GridItem';
 import { subDays } from 'date-fns';
 import { StatisticsSummary } from 'src/components/StatisticsSummary';
 
-const Segment: FunctionComponent<{
+export const Segment: FunctionComponent<{
   title: string;
   items: MediaItemItemsResponse[];
   gridItemArgs?: GridItemAppearanceArgs;

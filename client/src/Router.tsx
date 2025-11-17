@@ -23,6 +23,7 @@ import { GoodreadsImportPage } from 'src/pages/import/Goodreads';
 import { ListPage } from 'src/pages/ListPage';
 import { EpisodePage } from 'src/pages/EpisodePage';
 import { ListsPage } from 'src/pages/ListsPage';
+import { Random } from './pages/Random';
 
 export const MyRouter: FunctionComponent = () => {
   const { isLoading, user } = useUser();
@@ -83,6 +84,11 @@ export const MyRouter: FunctionComponent = () => {
               <Route
                 path="/watchlist"
                 element={<WatchlistPage key="/watchlist" />}
+              />
+
+              <Route
+                path="/random"
+                element={<Random key="/random" />}
               />
 
               <Route

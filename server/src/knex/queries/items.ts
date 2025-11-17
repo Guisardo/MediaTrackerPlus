@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { random } from 'lodash';
 import {
   MediaItemBase,
   mediaItemColumns,
@@ -10,7 +10,7 @@ import { Seen } from 'src/entity/seen';
 import { UserRating, userRatingColumns } from 'src/entity/userRating';
 import { GetItemsArgs } from 'src/repository/mediaItem';
 import { TvEpisode, tvEpisodeColumns } from 'src/entity/tvepisode';
-import { Knex } from 'knex';
+import knex, { Knex } from 'knex';
 import { List, listItemColumns } from 'src/entity/list';
 import { Progress } from 'src/entity/progress';
 
@@ -71,6 +71,7 @@ const getItemsKnexSql = async (args: GetItemsArgs) => {
     onlyWithUserRating,
     onlyWithoutUserRating,
     onlyWithProgress,
+    selectRandom
   } = args;
 
   const currentDateString = new Date().toISOString();
@@ -383,6 +384,10 @@ const getItemsKnexSql = async (args: GetItemsArgs) => {
               .andWhere('unseenEpisodesCount', '>', 0)
           )
       );
+    }
+    if(selectRandom){
+      console.log("Here in Random")
+      query.orderByRaw("RANDOM()").limit(1)
     }
   }
 

@@ -37,6 +37,7 @@ export class ItemsController {
       onlyWithUserRating,
       onlyWithoutUserRating,
       onlyWithProgress,
+      selectRandom
     } = req.query;
 
     const orderBy = req.query.orderBy || 'title';
@@ -74,7 +75,7 @@ export class ItemsController {
   get = createExpressRoute<{
     method: 'get';
     path: '/api/items';
-    requestQuery: Omit<GetItemsRequest, 'page'>;
+    requestQuery: Omit<GetItemsRequest, "page">;
     responseBody: MediaItemItemsResponse[];
   }>(async (req, res) => {
     const userId = Number(req.user);
@@ -89,6 +90,7 @@ export class ItemsController {
       onlyWithUserRating,
       onlyWithoutUserRating,
       onlyWithProgress,
+      selectRandom
     } = req.query;
 
     const orderBy = req.query.orderBy || 'title';
@@ -107,6 +109,54 @@ export class ItemsController {
       onlyWithUserRating: onlyWithUserRating,
       onlyWithoutUserRating: onlyWithoutUserRating,
       onlyWithProgress: onlyWithProgress,
+    });
+
+    res.send(result);
+  });
+
+  /**
+   * @description Get items
+   * @openapi_tags Items
+   * @openapi_operationId random
+   */
+  getRandom = createExpressRoute<{
+    method: 'get';
+    path: '/api/items/random';
+    requestQuery: Omit<GetItemsRequest, 'page'>;
+    responseBody: MediaItemItemsResponse[];
+  }>(async (req, res) => {
+    const userId = Number(req.user);
+
+    const {
+      filter,
+      mediaType,
+      onlyWithNextAiring,
+      onlyWithNextEpisodesToWatch,
+      onlySeenItems,
+      onlyOnWatchlist,
+      onlyWithUserRating,
+      onlyWithoutUserRating,
+      onlyWithProgress,
+      selectRandom
+    } = req.query;
+
+    const orderBy = req.query.orderBy || 'title';
+    const sortOrder = req.query.sortOrder || 'asc';
+
+    const result = await mediaItemRepository.items({
+      userId: userId,
+      mediaType: mediaType,
+      orderBy: orderBy,
+      sortOrder: sortOrder,
+      filter: filter,
+      onlySeenItems: onlySeenItems,
+      onlyOnWatchlist: onlyOnWatchlist,
+      onlyWithNextEpisodesToWatch: onlyWithNextEpisodesToWatch,
+      onlyWithNextAiring: onlyWithNextAiring,
+      onlyWithUserRating: onlyWithUserRating,
+      onlyWithoutUserRating: onlyWithoutUserRating,
+      onlyWithProgress: onlyWithProgress,
+      selectRandom: selectRandom
     });
 
     res.send(result);
