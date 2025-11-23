@@ -57,6 +57,7 @@
   "Descending": "Descendant",
   "Description": "Description",
   "Discord webhook url": "URL du webhook Discord",
+  "Do you really want to logout?": "",
   "Do you really want to remove list \"{0}\"": "Voulez-vous vraiment supprimer la liste \"{0}\"",
   "Do you want to remove episode {0} from seen history?": "Voulez-vous supprimer l'épisode {0} de l'historique des vues ?",
   "Duration": "Durée",

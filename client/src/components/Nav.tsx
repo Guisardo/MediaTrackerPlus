@@ -87,7 +87,9 @@ export const NavComponent: FunctionComponent = () => {
                 href="/logout"
                 onClick={(e) => {
                   e.preventDefault();
-                  logout();
+                  if (confirm(t`Do you really want to logout?`)) {
+                    logout();
+                  }
                 }}
               >
                 <Trans>Logout</Trans>
