@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { mediaTrackerApi } from 'src/api/api';
 import StatisticsSegmant from 'src/components/StatisticsSegment';
+import { StatisticsSummary } from 'src/components/StatisticsSummary';
 
 const StatisticsPage = (): JSX.Element => {
   const [years, setYears] = useState<(number | string)[]>([]);
@@ -31,7 +32,13 @@ const StatisticsPage = (): JSX.Element => {
 
   return (
     <>
+      <div className="text-2xl font-bold">{t`Overall`}</div>
+      <StatisticsSummary></StatisticsSummary>
       <div className="flex mb-2">
+        <div
+          className="text-2xl font-bold"
+          style={{ marginRight: '16px' }}
+        >{t`By Year`}</div>
         <select
           className="mr-1"
           value={currentYear.year}
