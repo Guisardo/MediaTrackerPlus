@@ -1841,6 +1841,36 @@
         }
       }
     },
+    "/api/statistics/genresinyear": {
+      "get": {
+        "tags": [
+          "Statistics"
+        ],
+        "parameters": [
+          {
+            "name": "year",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenreSummeryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/tokens": {
       "put": {
         "description": "Add token",
@@ -4559,6 +4589,108 @@
               "items",
               "plays"
             ]
+          }
+        },
+        "required": [
+          "audiobook",
+          "book",
+          "movie",
+          "tv",
+          "video_game"
+        ]
+      },
+      "GenreSummeryResponse": {
+        "type": "object",
+        "properties": {
+          "tv": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "genre": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "count",
+                "genre"
+              ]
+            }
+          },
+          "movie": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "genre": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "count",
+                "genre"
+              ]
+            }
+          },
+          "book": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "genre": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "count",
+                "genre"
+              ]
+            }
+          },
+          "video_game": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "genre": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "count",
+                "genre"
+              ]
+            }
+          },
+          "audiobook": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "genre": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "count",
+                "genre"
+              ]
+            }
           }
         },
         "required": [

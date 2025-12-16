@@ -940,7 +940,18 @@ router.get(
       required: ['year'],
     },
   }),
-  _StatisticsController.year
+  _StatisticsController.seeninyear
+);
+router.get(
+  '/api/statistics/genresinyear',
+  validatorHandler({
+    requestQuerySchema: {
+      $schema: 'http://json-schema.org/draft-07/schema#',
+      type: 'object',
+      properties: { year: { type: ['string', 'null'] } },
+    },
+  }),
+  _StatisticsController.genres
 );
 router.put(
   '/api/tokens',
