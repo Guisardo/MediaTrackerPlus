@@ -1812,6 +1812,35 @@
         }
       }
     },
+    "/api/statistics/seeninyear": {
+      "get": {
+        "tags": [
+          "Statistics"
+        ],
+        "parameters": [
+          {
+            "name": "year",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatisticsSummaryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/tokens": {
       "put": {
         "description": "Add token",

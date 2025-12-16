@@ -71,7 +71,7 @@ const getItemsKnexSql = async (args: GetItemsArgs) => {
     onlyWithUserRating,
     onlyWithoutUserRating,
     onlyWithProgress,
-    selectRandom
+    selectRandom,
   } = args;
 
   const currentDateString = new Date().toISOString();
@@ -385,9 +385,8 @@ const getItemsKnexSql = async (args: GetItemsArgs) => {
           )
       );
     }
-    if(selectRandom){
-      console.log("Here in Random")
-      query.orderByRaw("RANDOM()").limit(1)
+    if (selectRandom) {
+      query.orderByRaw('RANDOM()').limit(1);
     }
   }
 

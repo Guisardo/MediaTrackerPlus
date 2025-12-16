@@ -928,7 +928,19 @@ router.delete(
 router.get(
   '/api/statistics/summary',
   validatorHandler({}),
-  _StatisticsController.add
+  _StatisticsController.summary
+);
+router.get(
+  '/api/statistics/seeninyear',
+  validatorHandler({
+    requestQuerySchema: {
+      $schema: 'http://json-schema.org/draft-07/schema#',
+      type: 'object',
+      properties: { year: { type: 'string' } },
+      required: ['year'],
+    },
+  }),
+  _StatisticsController.year
 );
 router.put(
   '/api/tokens',

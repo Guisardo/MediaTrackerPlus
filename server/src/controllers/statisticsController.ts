@@ -11,13 +11,24 @@ export class StatisticsController {
   /**
    * @openapi_operationId summary
    */
-  add = createExpressRoute<{
+  summary = createExpressRoute<{
     method: 'get';
     path: '/api/statistics/summary';
     responseBody: StatisticsSummaryResponse;
   }>(async (req, res) => {
     const userId = Number(req.user);
     const statistics = await userStatisticsSummary(userId);
+    res.send(statistics);
+  });
+
+  year = createExpressRoute<{
+    method: 'get';
+    path: '/api/statistics/seeninyear';
+    requestQuery: Omit<{ year: string }, 'page'>;
+    responseBody: StatisticsSummaryResponse;
+  }>(async (req, res) => {
+    const userId = Number(req.user);
+    const statistics = await userStatisticsSummary(userId, req.query.year);
     res.send(statistics);
   });
 }
@@ -32,7 +43,10 @@ type StatisticsSummaryResponse = {
   };
 };
 
-export const userStatisticsSummary = async (userId: number) => {
+export const userStatisticsSummary = async (
+  userId: number,
+  date: false | string = false
+) => {
   const res = await Database.knex('seen')
     .sum({
       runtime: Database.knex.raw(`CASE
@@ -55,7 +69,25 @@ export const userStatisticsSummary = async (userId: number) => {
       items: Database.knex.raw('DISTINCT "mediaItem"."id"'),
       plays: '*',
     })
-    .where('userId', userId)
+    .where((qb) => {
+      qb.where('userId', userId);
+      if (date && date != 'noyear') {
+        qb.andWhere(
+          Database.knex.raw(
+            "strftime('%Y', datetime(\"seen\".\"date\" / 1000, 'unixepoch')) is '" +
+              date +
+              "'"
+          )
+        );
+      } else if (date && date == 'noyear') {
+        qb.andWhere(
+          Database.knex.raw(
+            'strftime(\'%Y\', datetime("seen"."date" / 1000, \'unixepoch\')) is NULL'
+          )
+        );
+      }
+    })
+
     .leftJoin('mediaItem', 'mediaItem.id', 'seen.mediaItemId')
     .leftJoin('episode', 'episode.id', 'seen.episodeId')
     .groupBy('mediaItem.mediaType');

@@ -24,6 +24,7 @@ import { ListPage } from 'src/pages/ListPage';
 import { EpisodePage } from 'src/pages/EpisodePage';
 import { ListsPage } from 'src/pages/ListsPage';
 import { Random } from './pages/Random';
+import Statistics from './pages/Statistics';
 
 export const MyRouter: FunctionComponent = () => {
   const { isLoading, user } = useUser();
@@ -86,9 +87,11 @@ export const MyRouter: FunctionComponent = () => {
                 element={<WatchlistPage key="/watchlist" />}
               />
 
+              <Route path="/random" element={<Random key="/random" />} />
+
               <Route
-                path="/random"
-                element={<Random key="/random" />}
+                path="/statistics"
+                element={<Statistics key="/statistics" />}
               />
 
               <Route

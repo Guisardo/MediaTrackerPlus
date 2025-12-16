@@ -19,6 +19,7 @@ export const useRouteNames = () => {
     { path: '/in-progress', name: t`In progress` },
     { path: '/watchlist', name: t`Watchlist` },
     { path: '/random', name: t`Random` },
+    { path: '/statistics', name: t`Statistics` },
     { path: '/calendar', name: t`Calendar` },
     { path: '/import', name: t`Import` },
     { path: '/lists', name: t`Lists` },
