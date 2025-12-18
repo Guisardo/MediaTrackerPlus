@@ -32,12 +32,13 @@ export class ItemsController {
       onlyWithNextAiring,
       onlyWithNextEpisodesToWatch,
       page,
+      year,
       onlySeenItems,
       onlyOnWatchlist,
       onlyWithUserRating,
       onlyWithoutUserRating,
       onlyWithProgress,
-      selectRandom
+      selectRandom,
     } = req.query;
 
     const orderBy = req.query.orderBy || 'title';
@@ -55,6 +56,7 @@ export class ItemsController {
       sortOrder: sortOrder,
       filter: filter,
       page: page,
+      year: year,
       onlySeenItems: onlySeenItems,
       onlyOnWatchlist: onlyOnWatchlist,
       onlyWithNextEpisodesToWatch: onlyWithNextEpisodesToWatch,
@@ -75,7 +77,7 @@ export class ItemsController {
   get = createExpressRoute<{
     method: 'get';
     path: '/api/items';
-    requestQuery: Omit<GetItemsRequest, "page">;
+    requestQuery: Omit<GetItemsRequest, 'page'>;
     responseBody: MediaItemItemsResponse[];
   }>(async (req, res) => {
     const userId = Number(req.user);
@@ -90,7 +92,7 @@ export class ItemsController {
       onlyWithUserRating,
       onlyWithoutUserRating,
       onlyWithProgress,
-      selectRandom
+      selectRandom,
     } = req.query;
 
     const orderBy = req.query.orderBy || 'title';
@@ -137,7 +139,7 @@ export class ItemsController {
       onlyWithUserRating,
       onlyWithoutUserRating,
       onlyWithProgress,
-      selectRandom
+      selectRandom,
     } = req.query;
 
     const orderBy = req.query.orderBy || 'title';
@@ -156,7 +158,7 @@ export class ItemsController {
       onlyWithUserRating: onlyWithUserRating,
       onlyWithoutUserRating: onlyWithoutUserRating,
       onlyWithProgress: onlyWithProgress,
-      selectRandom: selectRandom
+      selectRandom: selectRandom,
     });
 
     res.send(result);

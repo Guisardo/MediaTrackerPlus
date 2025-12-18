@@ -86,6 +86,10 @@ export type GetItemsArgs = {
    * @description Selects a random Item
    */
   selectRandom?: boolean;
+  /**
+   * @description Filter by Year
+   */
+  year?: string;
 
   onlyWithProgress?: boolean;
 
@@ -474,7 +478,7 @@ class MediaItemRepository extends repository<MediaItemBase>({
       return this.deserialize(res);
     }
   }
-    
+
   public async findByTitle(params: {
     mediaType: MediaType;
     title: string;

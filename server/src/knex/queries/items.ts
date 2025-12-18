@@ -55,7 +55,7 @@ export const getItemsKnex = async (args: any): Promise<any> => {
   }
 };
 
-const getItemsKnexSql = async (args: GetItemsArgs) => {
+const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
   const {
     onlyOnWatchlist,
     mediaType,
@@ -72,6 +72,7 @@ const getItemsKnexSql = async (args: GetItemsArgs) => {
     onlyWithoutUserRating,
     onlyWithProgress,
     selectRandom,
+    year,
   } = args;
 
   const currentDateString = new Date().toISOString();
@@ -327,6 +328,23 @@ const getItemsKnexSql = async (args: GetItemsArgs) => {
     // Filter
     if (filter && filter.trim().length > 0) {
       query.andWhere('mediaItem.title', 'LIKE', `%${filter}%`);
+    }
+
+    if (year) {
+      let yearFilter = year;
+      const pattern = '^[0-9]{4}$';
+      const re = new RegExp(pattern);
+      if (!year.match(re)) {
+        yearFilter = '';
+      }
+      console.log('yearFilter', yearFilter);
+      query.andWhere(
+        Database.knex.raw(
+          "strftime('%Y', datetime(\"lastSeen\".\"date\" / 1000, 'unixepoch')) is '" +
+            yearFilter +
+            "'"
+        )
+      );
     }
 
     // Next airing

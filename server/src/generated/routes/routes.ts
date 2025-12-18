@@ -403,6 +403,10 @@ router.get(
                 },
               },
             },
+            {
+              type: 'object',
+              properties: { year: { type: ['string', 'null'] } },
+            },
           ],
         },
         MediaItemOrderBy: {
@@ -476,6 +480,7 @@ router.get(
         onlyWithoutUserRating: { type: ['boolean', 'null'] },
         selectRandom: { type: ['boolean', 'null'] },
         onlyWithProgress: { type: ['boolean', 'null'] },
+        year: { type: ['string', 'null'] },
       },
     },
   }),
@@ -527,6 +532,7 @@ router.get(
         onlyWithoutUserRating: { type: ['boolean', 'null'] },
         selectRandom: { type: ['boolean', 'null'] },
         onlyWithProgress: { type: ['boolean', 'null'] },
+        year: { type: ['string', 'null'] },
       },
     },
   }),

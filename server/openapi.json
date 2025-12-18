@@ -447,6 +447,15 @@
               ],
               "nullable": true
             }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
           }
         ],
         "responses": {
@@ -621,6 +630,15 @@
               "type": "boolean",
               "nullable": true
             }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
           }
         ],
         "responses": {
@@ -765,6 +783,15 @@
             "required": false,
             "schema": {
               "type": "boolean",
+              "nullable": true
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
               "nullable": true
             }
           }
@@ -3971,6 +3998,15 @@
                     "$ref": "#/components/schemas/MediaType"
                   }
                 ],
+                "nullable": true
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "year": {
+                "type": "string",
                 "nullable": true
               }
             }

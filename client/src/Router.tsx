@@ -62,7 +62,15 @@ export const MyRouter: FunctionComponent = () => {
                 element={<ItemsPage key="/tv" mediaType="tv" />}
               />
               <Route
+                path="/tv/:year"
+                element={<ItemsPage key="/tv" mediaType="tv" />}
+              />
+              <Route
                 path="/movies"
+                element={<ItemsPage key="/movies" mediaType="movie" />}
+              />
+              <Route
+                path="/movies/:year"
                 element={<ItemsPage key="/movies" mediaType="movie" />}
               />
               <Route
@@ -70,11 +78,23 @@ export const MyRouter: FunctionComponent = () => {
                 element={<ItemsPage key="/games" mediaType="video_game" />}
               />
               <Route
+                path="/games/:year"
+                element={<ItemsPage key="/games" mediaType="video_game" />}
+              />
+              <Route
                 path="/books"
                 element={<ItemsPage key="/books" mediaType="book" />}
               />
               <Route
+                path="/books/:year"
+                element={<ItemsPage key="/books" mediaType="book" />}
+              />
+              <Route
                 path="/audiobooks"
+                element={<ItemsPage key="/audiobooks" mediaType="audiobook" />}
+              />
+              <Route
+                path="/audiobooks/:year"
                 element={<ItemsPage key="/audiobooks" mediaType="audiobook" />}
               />
 
