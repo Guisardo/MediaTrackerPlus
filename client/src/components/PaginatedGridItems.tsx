@@ -212,6 +212,12 @@ export const PaginatedGridItems: FunctionComponent<{
                             </Trans>
                           }
                         />
+                      ) : args.year ? (
+                        <Plural
+                          value={numberOfItemsTotal}
+                          one={'1 item in' + args.year}
+                          other={'# items in ' + args.year}
+                        />
                       ) : (
                         <Plural
                           value={numberOfItemsTotal}
