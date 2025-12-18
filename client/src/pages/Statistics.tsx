@@ -3,8 +3,9 @@ import { Statistics } from 'mediatracker-api';
 import React, { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { mediaTrackerApi } from 'src/api/api';
-import StatisticsSegmant from 'src/components/StatisticsSegment';
-import { StatisticsSummary } from 'src/components/StatisticsSummary';
+import StatisticsGenreSegment from 'src/components/Statistics/StatisticsGenreSegment';
+import StatisticsSegmant from 'src/components/Statistics/StatisticsSegment';
+import { StatisticsSummary } from 'src/components/Statistics/StatisticsSummary';
 
 const StatisticsPage = (): JSX.Element => {
   const [years, setYears] = useState<(number | string)[]>([]);
@@ -12,9 +13,20 @@ const StatisticsPage = (): JSX.Element => {
     useState<Statistics.StatisticsSeeninyearList.RequestQuery>({
       year: new Date().getFullYear().toString(),
     });
-  const { error, data, isFetched } = useQuery(
-    ['statistics', currentYear],
-    async () => mediaTrackerApi.statistics.statisticsSeeninyearList(currentYear)
+  const {
+    error: errorSeenCount,
+    data: dataSeenCount,
+    isFetched: isFetchedSeenCount,
+  } = useQuery(['statistics', currentYear], async () =>
+    mediaTrackerApi.statistics.statisticsSeeninyearList(currentYear)
+  );
+
+  const {
+    error: errorGenre,
+    data: dataGenre,
+    isFetched: isFetchedGenre,
+  } = useQuery(['genre', currentYear], async () =>
+    mediaTrackerApi.statistics.statisticsGenresinyearList(currentYear)
   );
 
   useEffect(() => {
@@ -54,11 +66,12 @@ const StatisticsPage = (): JSX.Element => {
             return <option key={year}>{year}</option>;
           })}
         </select>
-        <div>
+        <div className="font-bold" style={{ lineHeight: 2 }}>
           <Trans>Select Year</Trans>
         </div>
       </div>
-      <StatisticsSegmant data={data}></StatisticsSegmant>
+      <StatisticsSegmant data={dataSeenCount}></StatisticsSegmant>
+      <StatisticsGenreSegment data={dataGenre}></StatisticsGenreSegment>
     </>
   );
 };

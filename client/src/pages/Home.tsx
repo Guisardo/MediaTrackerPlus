@@ -5,7 +5,7 @@ import { MediaItemItemsResponse } from 'mediatracker-api';
 import { useItems } from 'src/api/items';
 import { GridItem, GridItemAppearanceArgs } from 'src/components/GridItem';
 import { subDays } from 'date-fns';
-import { StatisticsSummary } from 'src/components/StatisticsSummary';
+import { StatisticsSummary } from 'src/components/Statistics/StatisticsSummary';
 
 export const Segment: FunctionComponent<{
   title: string;

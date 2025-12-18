@@ -154,12 +154,7 @@ export const userGenreStatistics = async (
     .leftJoin('episode', 'episode.id', 'seen.episodeId')
     .groupBy('mediaItem.genres');
 
-  console.log('Res', res);
-
   const result = convertGenreResponse(res);
-
-  console.log('Result', result);
-
   return result;
 };
 
@@ -195,10 +190,13 @@ const convertGenreResponse = (
   const grouped = _(splitted)
     .groupBy('media_type')
     .mapValues((item) => {
-      const result = [];
+      const result: { genre: string; count: number }[] = [];
       for (let i = 0; i < item.length; i++) {
         result.push({ ..._.omit(item[i], ['media_type']) });
       }
+      result.sort(
+        (a, b) => b.count - a.count || a.genre.localeCompare(b.genre)
+      );
       return result;
     })
     .value() as GenreSummeryResponse;
