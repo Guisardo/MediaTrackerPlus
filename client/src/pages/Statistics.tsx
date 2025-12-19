@@ -70,8 +70,14 @@ const StatisticsPage = (): JSX.Element => {
           <Trans>Select Year</Trans>
         </div>
       </div>
-      <StatisticsSegmant data={dataSeenCount}></StatisticsSegmant>
-      <StatisticsGenreSegment data={dataGenre}></StatisticsGenreSegment>
+      <StatisticsSegmant
+        data={dataSeenCount}
+        year={currentYear.year}
+      ></StatisticsSegmant>
+      <StatisticsGenreSegment
+        data={dataGenre}
+        year={currentYear.year}
+      ></StatisticsGenreSegment>
     </>
   );
 };

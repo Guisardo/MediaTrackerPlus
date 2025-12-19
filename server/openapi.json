@@ -418,6 +418,24 @@
             }
           },
           {
+            "name": "year",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "genre",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
             "name": "onlyWithProgress",
             "in": "query",
             "required": false,
@@ -445,15 +463,6 @@
                   "$ref": "#/components/schemas/MediaType"
                 }
               ],
-              "nullable": true
-            }
-          },
-          {
-            "name": "year",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
               "nullable": true
             }
           }
@@ -623,20 +632,29 @@
             }
           },
           {
-            "name": "onlyWithProgress",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean",
-              "nullable": true
-            }
-          },
-          {
             "name": "year",
             "in": "query",
             "required": false,
             "schema": {
               "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "genre",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "onlyWithProgress",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
               "nullable": true
             }
           }
@@ -778,20 +796,29 @@
             }
           },
           {
-            "name": "onlyWithProgress",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean",
-              "nullable": true
-            }
-          },
-          {
             "name": "year",
             "in": "query",
             "required": false,
             "schema": {
               "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "genre",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "onlyWithProgress",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
               "nullable": true
             }
           }
@@ -3979,6 +4006,14 @@
                 "type": "boolean",
                 "nullable": true
               },
+              "year": {
+                "type": "string",
+                "nullable": true
+              },
+              "genre": {
+                "type": "string",
+                "nullable": true
+              },
               "onlyWithProgress": {
                 "type": "boolean",
                 "nullable": true
@@ -3998,15 +4033,6 @@
                     "$ref": "#/components/schemas/MediaType"
                   }
                 ],
-                "nullable": true
-              }
-            }
-          },
-          {
-            "type": "object",
-            "properties": {
-              "year": {
-                "type": "string",
                 "nullable": true
               }
             }

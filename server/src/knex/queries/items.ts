@@ -73,6 +73,7 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
     onlyWithProgress,
     selectRandom,
     year,
+    genre,
   } = args;
 
   const currentDateString = new Date().toISOString();
@@ -337,7 +338,6 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
       if (!year.match(re)) {
         yearFilter = '';
       }
-      console.log('yearFilter', yearFilter);
       query.andWhere(
         Database.knex.raw(
           "strftime('%Y', datetime(\"lastSeen\".\"date\" / 1000, 'unixepoch')) is '" +
@@ -345,6 +345,11 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
             "'"
         )
       );
+    }
+
+    if (genre) {
+      console.log('Gerne', genre);
+      query.andWhere('mediaItem.genres', 'LIKE', `%${genre}%`);
     }
 
     // Next airing

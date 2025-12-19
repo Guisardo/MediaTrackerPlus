@@ -2,9 +2,14 @@ import { Trans } from '@lingui/macro';
 import { FormatDuration } from 'src/components/date';
 import React from 'react';
 import { StatisticsSummaryResponse } from 'mediatracker-api';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 
-const StatisticsSegmant = (props: { data: StatisticsSummaryResponse }) => {
-  const { data } = props;
+const StatisticsSegmant = (props: {
+  data: StatisticsSummaryResponse;
+  year?: string;
+}) => {
+  const { data, year } = props;
+  const navigate = useNavigate();
   return (
     <>
       {data && (
@@ -12,7 +17,21 @@ const StatisticsSegmant = (props: { data: StatisticsSummaryResponse }) => {
           {data.tv?.plays > 0 && (
             <div className="mb-6 mr-6">
               <div className="text-lg font-bold">
-                <Trans>Tv</Trans>
+                <div
+                  className="hover:underline hover:cursor-pointer"
+                  onClick={() =>
+                    navigate({
+                      pathname: '/tv',
+                      search: year
+                        ? createSearchParams({
+                            year: year,
+                          }).toString()
+                        : '',
+                    })
+                  }
+                >
+                  <Trans>Tv</Trans>
+                </div>
               </div>
               {data.tv.duration > 0 && (
                 <div className="whitespace-nowrap">
@@ -37,7 +56,21 @@ const StatisticsSegmant = (props: { data: StatisticsSummaryResponse }) => {
           {data.movie?.plays > 0 && (
             <div className="mb-6 mr-6">
               <div className="text-lg font-bold">
-                <Trans>Movies</Trans>{' '}
+                <div
+                  className="hover:underline hover:cursor-pointer"
+                  onClick={() =>
+                    navigate({
+                      pathname: '/movies',
+                      search: year
+                        ? createSearchParams({
+                            year: year,
+                          }).toString()
+                        : '',
+                    })
+                  }
+                >
+                  <Trans>Movies</Trans>
+                </div>
               </div>
               {data.movie.duration > 0 && (
                 <div className="whitespace-nowrap">
@@ -62,7 +95,21 @@ const StatisticsSegmant = (props: { data: StatisticsSummaryResponse }) => {
           {data.video_game?.plays > 0 && (
             <div className="mb-6 mr-6">
               <div className="text-lg font-bold">
-                <Trans>Games</Trans>
+                <div
+                  className="hover:underline hover:cursor-pointer"
+                  onClick={() =>
+                    navigate({
+                      pathname: '/games',
+                      search: year
+                        ? createSearchParams({
+                            year: year,
+                          }).toString()
+                        : '',
+                    })
+                  }
+                >
+                  <Trans>Games</Trans>
+                </div>
               </div>
               {data.video_game.duration > 0 && (
                 <div className="whitespace-nowrap">
@@ -87,7 +134,21 @@ const StatisticsSegmant = (props: { data: StatisticsSummaryResponse }) => {
           {data.book?.plays > 0 && (
             <div className="mb-6 mr-6">
               <div className="text-lg font-bold">
-                <Trans>Books</Trans>
+                <div
+                  className="hover:underline hover:cursor-pointer"
+                  onClick={() =>
+                    navigate({
+                      pathname: '/books',
+                      search: year
+                        ? createSearchParams({
+                            year: year,
+                          }).toString()
+                        : '',
+                    })
+                  }
+                >
+                  <Trans>Books</Trans>
+                </div>
               </div>
               {data.book.duration > 0 && (
                 <div className="whitespace-nowrap">
@@ -112,7 +173,21 @@ const StatisticsSegmant = (props: { data: StatisticsSummaryResponse }) => {
           {data.audiobook?.plays > 0 && (
             <div className="mb-6 mr-6">
               <div className="text-lg font-bold">
-                <Trans>Audiobooks</Trans>
+                <div
+                  className="hover:underline hover:cursor-pointer"
+                  onClick={() =>
+                    navigate({
+                      pathname: '/audiobooks',
+                      search: year
+                        ? createSearchParams({
+                            year: year,
+                          }).toString()
+                        : '',
+                    })
+                  }
+                >
+                  <Trans>Audiobooks</Trans>
+                </div>
               </div>
               {data.audiobook.duration > 0 && (
                 <div className="whitespace-nowrap">

@@ -90,6 +90,10 @@ export type GetItemsArgs = {
    * @description Filter by Year
    */
   year?: string;
+  /**
+   * @description Filter by Genre
+   */
+  genre?: string;
 
   onlyWithProgress?: boolean;
 

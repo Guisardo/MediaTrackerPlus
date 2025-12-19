@@ -129,7 +129,7 @@ export const userGenreStatistics = async (
     .select('mediaItem.mediaType')
     .select('mediaItem.genres')
     .count({
-      genre_count: '*',
+      genre_count: Database.knex.raw('Distinct "mediaItem"."id"'),
     })
     .where((qb) => {
       qb.where('userId', userId);
