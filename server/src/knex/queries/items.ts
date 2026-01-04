@@ -90,6 +90,17 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
 
   const watchlistId = watchlist.id;
 
+  let yearFilter = '';
+
+  if (year) {
+    yearFilter = year;
+    const pattern = '^[0-9]{4}$';
+    const re = new RegExp(pattern);
+    if (!year.match(re)) {
+      yearFilter = '';
+    }
+  }
+
   const query = Database.knex
     .select(generateColumnNames('firstUnwatchedEpisode', tvEpisodeColumns))
     .select(generateColumnNames('listItem', listItemColumns))
@@ -122,9 +133,16 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
       (qb) =>
         qb
           .select('mediaItemId')
-          .max('date', { as: 'date' })
+          .select('date')
           .from<Seen>('seen')
           .where('userId', userId)
+          .andWhere(
+            Database.knex.raw(
+              "strftime('%Y', datetime(\"date\" / 1000, 'unixepoch')) is '" +
+                yearFilter +
+                "'"
+            )
+          )
           .groupBy('mediaItemId')
           .as('lastSeen2'),
       'lastSeen2.mediaItemId',
@@ -332,17 +350,9 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
     }
 
     if (year) {
-      let yearFilter = year;
-      const pattern = '^[0-9]{4}$';
-      const re = new RegExp(pattern);
-      if (!year.match(re)) {
-        yearFilter = '';
-      }
       query.andWhere(
         Database.knex.raw(
-          "strftime('%Y', datetime(\"lastSeen\".\"date\" / 1000, 'unixepoch')) is '" +
-            yearFilter +
-            "'"
+          'strftime(\'%Y\', datetime("lastSeen2"."date" / 1000, \'unixepoch\')) not null'
         )
       );
     }

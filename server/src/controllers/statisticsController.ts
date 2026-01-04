@@ -133,7 +133,6 @@ export const userGenreStatistics = async (
     })
     .where((qb) => {
       qb.where('userId', userId);
-      console.log(date);
       if (date && date != 'noyear' && date != 'allyear') {
         qb.andWhere(
           Database.knex.raw(
