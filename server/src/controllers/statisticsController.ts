@@ -133,7 +133,8 @@ export const userGenreStatistics = async (
     })
     .where((qb) => {
       qb.where('userId', userId);
-      if (date && date != 'noyear') {
+      console.log(date);
+      if (date && date != 'noyear' && date != 'allyear') {
         qb.andWhere(
           Database.knex.raw(
             "strftime('%Y', datetime(\"seen\".\"date\" / 1000, 'unixepoch')) is '" +
@@ -172,8 +173,9 @@ const convertGenreResponse = (
         },
         obj
       ) {
+        if (!obj.genres) return result;
         const allGenres = obj.genres.split(',');
-        for (let i = 0; i < allGenres.length; i++) {
+        for (let i = 0; i < allGenres?.length; i++) {
           result[allGenres[i]] = {
             media_type: obj.mediaType,
             genre: allGenres[i],

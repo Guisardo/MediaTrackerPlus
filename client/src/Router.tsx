@@ -110,7 +110,7 @@ export const MyRouter: FunctionComponent = () => {
               <Route path="/random" element={<Random key="/random" />} />
 
               <Route
-                path="/statistics"
+                path="/statistics/*"
                 element={<Statistics key="/statistics" />}
               />
 

@@ -1,8 +1,6 @@
 import { t, Trans } from '@lingui/macro';
-import clsx from 'clsx';
 import { GenreSummeryResponse } from 'mediatracker-api';
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { createSearchParams, NavLink, useNavigate } from 'react-router-dom';
 
 const StatisticsGenreSegment = (props: {
@@ -17,8 +15,8 @@ const StatisticsGenreSegment = (props: {
     { path: '/tv/', name: t`Tv`, type: 'tv' },
     { path: '/movies/', name: t`Movies`, type: 'movie' },
     { path: '/games/', name: t`Games`, type: 'video_game' },
-    { path: '/books/', name: t`Books`, type: 'book' },
-    { path: '/audiobooks/', name: t`Audiobooks`, type: 'audiobook' },
+    //   { path: '/books/', name: t`Books`, type: 'book' },
+    //  { path: '/audiobooks/', name: t`Audiobooks`, type: 'audiobook' },
   ];
 
   return (
