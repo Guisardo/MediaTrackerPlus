@@ -7,22 +7,6 @@ import { mediaTrackerApi } from 'src/api/api';
 import { FormatDuration } from 'src/components/date';
 import StatisticsSegmant from './StatisticsSegment';
 
-const Foo: FunctionComponent<{
-  mediaType: MediaType;
-  content: JSX.Element;
-}> = (props) => {
-  const { mediaType, content } = props;
-
-  return (
-    <>
-      <div>
-        {mediaType}
-        {content}
-      </div>
-    </>
-  );
-};
-
 export const StatisticsSummary: FunctionComponent = () => {
   const { data } = useQuery(
     ['statistics', 'summary'],
