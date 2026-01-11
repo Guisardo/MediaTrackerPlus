@@ -163,6 +163,8 @@ const convertGenreResponse = (
 ) => {
   const result: GenreSummeryResponse = null;
 
+  console.log(res);
+
   const splitted = _.values(
     _.reduce(
       res,
@@ -174,20 +176,26 @@ const convertGenreResponse = (
       ) {
         if (!obj.genres) return result;
         const allGenres = obj.genres.split(',');
+        console.log(allGenres);
         for (let i = 0; i < allGenres?.length; i++) {
-          result[allGenres[i]] = {
+          const typeGenre = `${obj.mediaType}_${allGenres[i]}`;
+          result[typeGenre] = {
             media_type: obj.mediaType,
             genre: allGenres[i],
             count:
               obj.genre_count +
-              (result[allGenres[i]] ? result[allGenres[i]].count : 0),
+              (result[typeGenre] ? result[typeGenre].count : 0),
           };
         }
+
+        console.log(result);
         return result;
       },
       {}
     )
   );
+
+  console.log(splitted);
   const grouped = _(splitted)
     .groupBy('media_type')
     .mapValues((item) => {

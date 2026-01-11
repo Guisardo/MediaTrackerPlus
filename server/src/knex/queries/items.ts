@@ -96,10 +96,12 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
     yearFilter = year;
     const pattern = '^[0-9]{4}$';
     const re = new RegExp(pattern);
-    if (!year.match(re)) {
+    if (!year.match(re) && year !== 'allyear') {
       yearFilter = '';
     }
   }
+
+  console.log(yearFilter);
 
   const query = Database.knex
     .select(generateColumnNames('firstUnwatchedEpisode', tvEpisodeColumns))
