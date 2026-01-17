@@ -163,8 +163,6 @@ const convertGenreResponse = (
 ) => {
   const result: GenreSummeryResponse = null;
 
-  console.log(res);
-
   const splitted = _.values(
     _.reduce(
       res,
@@ -195,7 +193,6 @@ const convertGenreResponse = (
     )
   );
 
-  console.log(splitted);
   const grouped = _(splitted)
     .groupBy('media_type')
     .mapValues((item) => {

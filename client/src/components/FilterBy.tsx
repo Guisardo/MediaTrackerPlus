@@ -5,24 +5,35 @@ import { MediaType } from 'mediatracker-api';
 import { isAudiobook, isBook, isVideoGame, reverseMap } from 'src/utils';
 import { useMenuComponent } from 'src/hooks/menu';
 
-const useFilterTextMap = (mediaType: MediaType) => {
-  return {
-    all: t`All`,
-    onlyWithUserRating: t`Rated`,
-    onlyWithoutUserRating: t`Unrated`,
-    onlyOnWatchlist: t`On watchlist`,
-    onlySeenItems: isAudiobook(mediaType)
-      ? t`Listened`
-      : isBook(mediaType)
-      ? t`Read`
-      : isVideoGame(mediaType)
-      ? t`Played`
-      : t`Watched`,
-  };
+const useFilterTextMap = (mediaType: MediaType, isStatisticsPage: boolean) => {
+  if (isStatisticsPage) {
+    return {
+      all: t`All`,
+      onlyWithUserRating: t`Rated`,
+      onlyWithoutUserRating: t`Unrated`,
+    };
+  } else {
+    return {
+      all: t`All`,
+      onlyWithUserRating: t`Rated`,
+      onlyWithoutUserRating: t`Unrated`,
+      onlyOnWatchlist: t`On watchlist`,
+      onlySeenItems: isAudiobook(mediaType)
+        ? t`Listened`
+        : isBook(mediaType)
+        ? t`Read`
+        : isVideoGame(mediaType)
+        ? t`Played`
+        : t`Watched`,
+    };
+  }
 };
 
-export const useFilterBy = (mediaType: MediaType) => {
-  const filterTextMap = useFilterTextMap(mediaType);
+export const useFilterBy = (
+  mediaType: MediaType,
+  isStatisticsPage: boolean
+) => {
+  const filterTextMap = useFilterTextMap(mediaType, isStatisticsPage);
   const filterTextReverseMap = reverseMap(filterTextMap);
 
   const { selectedValue, Menu } = useMenuComponent({
@@ -31,9 +42,11 @@ export const useFilterBy = (mediaType: MediaType) => {
   });
 
   return {
-    filter: {
-      [filterTextReverseMap[selectedValue]]: true,
-    },
+    filter: isStatisticsPage
+      ? { [filterTextReverseMap[selectedValue]]: true, onlySeenItems: true }
+      : {
+          [filterTextReverseMap[selectedValue]]: true,
+        },
     FilterByComponent: () => {
       return (
         <Menu>

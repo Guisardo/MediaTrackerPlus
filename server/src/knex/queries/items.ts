@@ -76,6 +76,8 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
     genre,
   } = args;
 
+  console.log('OnlySeenItems', onlySeenItems);
+
   const currentDateString = new Date().toISOString();
 
   const watchlist = await Database.knex('list')
@@ -96,7 +98,7 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
     yearFilter = year;
     const pattern = '^[0-9]{4}$';
     const re = new RegExp(pattern);
-    if (!year.match(re) && year !== 'allyear') {
+    if (!year.match(re) && year !== 'allyear' && year !== 'noyear') {
       yearFilter = '';
     }
   }
@@ -137,14 +139,24 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
           .select('mediaItemId')
           .select('date')
           .from<Seen>('seen')
-          .where('userId', userId)
-          .andWhere(
-            Database.knex.raw(
-              "strftime('%Y', datetime(\"date\" / 1000, 'unixepoch')) is '" +
-                yearFilter +
-                "'"
-            )
-          )
+          .where((db) => {
+            db.where('userId', userId);
+            if (yearFilter === 'noyear') {
+              db.andWhere(
+                Database.knex.raw(
+                  "strftime('%Y', datetime(\"date\" / 1000, 'unixepoch')) is NULL"
+                )
+              );
+            } else if (yearFilter !== 'allyear') {
+              db.andWhere(
+                Database.knex.raw(
+                  "strftime('%Y', datetime(\"date\" / 1000, 'unixepoch')) is '" +
+                    yearFilter +
+                    "'"
+                )
+              );
+            }
+          })
           .groupBy('mediaItemId')
           .as('lastSeen2'),
       'lastSeen2.mediaItemId',
@@ -352,11 +364,19 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
     }
 
     if (year) {
-      query.andWhere(
-        Database.knex.raw(
-          'strftime(\'%Y\', datetime("lastSeen2"."date" / 1000, \'unixepoch\')) not null'
-        )
-      );
+      if (year === 'noyear') {
+        query.andWhere(
+          Database.knex.raw(
+            'strftime(\'%Y\', datetime("lastSeen2"."date" / 1000, \'unixepoch\')) is null'
+          )
+        );
+      } else if (year !== 'allyear') {
+        query.andWhere(
+          Database.knex.raw(
+            'strftime(\'%Y\', datetime("lastSeen2"."date" / 1000, \'unixepoch\')) is not null'
+          )
+        );
+      }
     }
 
     if (genre) {

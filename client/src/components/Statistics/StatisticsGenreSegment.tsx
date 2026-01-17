@@ -40,13 +40,16 @@ const StatisticsGenreSegment = (props: {
                           <div
                             className="hover:underline hover:cursor-pointer"
                             onClick={() =>
-                              navigate({
-                                pathname: route.path,
-                                search: createSearchParams({
-                                  year: year,
-                                  genre: item.genre,
-                                }).toString(),
-                              })
+                              navigate(
+                                {
+                                  pathname: route.path,
+                                  search: createSearchParams({
+                                    year: year,
+                                    genre: item.genre,
+                                  }).toString(),
+                                },
+                                { state: { isStatisticPage: true } }
+                              )
                             }
                           >
                             <Trans>

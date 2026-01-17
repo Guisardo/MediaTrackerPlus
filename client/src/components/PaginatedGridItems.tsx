@@ -80,6 +80,7 @@ export const Pagination: FunctionComponent<{
 export const PaginatedGridItems: FunctionComponent<{
   args: Omit<Items.Paginated.RequestQuery, 'page' | 'filter'>;
   showSortOrderControls?: boolean;
+  isStatisticsPage: boolean;
   showSearch?: boolean;
   gridItemAppearance?: GridItemAppearanceArgs;
 }> = (props) => {
@@ -95,7 +96,10 @@ export const PaginatedGridItems: FunctionComponent<{
     orderBy: args.orderBy,
     mediaType: args.mediaType,
   });
-  const { filter, FilterByComponent } = useFilterBy(args.mediaType);
+  const { filter, FilterByComponent } = useFilterBy(
+    args.mediaType,
+    props.isStatisticsPage
+  );
 
   useEffect(() => {
     if (page !== 1) {
@@ -128,6 +132,9 @@ export const PaginatedGridItems: FunctionComponent<{
     },
     [searchParams, setSearchParams]
   );
+
+  console.log('Filer', filter);
+  console.log('args', args);
 
   const {
     isLoading: isLoadingItems,
