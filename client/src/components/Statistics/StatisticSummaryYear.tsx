@@ -18,7 +18,7 @@ const StatisticSummaryYear = (props: {
   return (
     <StatisticsSegmant
       data={data}
-      year={props.currentYear.year}
+      year={props.currentYear?.year}
     ></StatisticsSegmant>
   );
 };

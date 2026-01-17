@@ -76,8 +76,6 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
     genre,
   } = args;
 
-  console.log('OnlySeenItems', onlySeenItems);
-
   const currentDateString = new Date().toISOString();
 
   const watchlist = await Database.knex('list')
@@ -102,8 +100,6 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
       yearFilter = '';
     }
   }
-
-  console.log(yearFilter);
 
   const query = Database.knex
     .select(generateColumnNames('firstUnwatchedEpisode', tvEpisodeColumns))
@@ -147,7 +143,7 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
                   "strftime('%Y', datetime(\"date\" / 1000, 'unixepoch')) is NULL"
                 )
               );
-            } else if (yearFilter !== 'allyear') {
+            } else if (yearFilter !== '') {
               db.andWhere(
                 Database.knex.raw(
                   "strftime('%Y', datetime(\"date\" / 1000, 'unixepoch')) is '" +
@@ -364,13 +360,13 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
     }
 
     if (year) {
-      if (year === 'noyear') {
+      if (yearFilter === 'noyear') {
         query.andWhere(
           Database.knex.raw(
             'strftime(\'%Y\', datetime("lastSeen2"."date" / 1000, \'unixepoch\')) is null'
           )
         );
-      } else if (year !== 'allyear') {
+      } else if (yearFilter !== '') {
         query.andWhere(
           Database.knex.raw(
             'strftime(\'%Y\', datetime("lastSeen2"."date" / 1000, \'unixepoch\')) is not null'
@@ -380,7 +376,6 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
     }
 
     if (genre) {
-      console.log('Gerne', genre);
       query.andWhere('mediaItem.genres', 'LIKE', `%${genre}%`);
     }
 

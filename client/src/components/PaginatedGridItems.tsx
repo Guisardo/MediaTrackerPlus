@@ -80,7 +80,7 @@ export const Pagination: FunctionComponent<{
 export const PaginatedGridItems: FunctionComponent<{
   args: Omit<Items.Paginated.RequestQuery, 'page' | 'filter'>;
   showSortOrderControls?: boolean;
-  isStatisticsPage: boolean;
+  isStatisticsPage?: boolean;
   showSearch?: boolean;
   gridItemAppearance?: GridItemAppearanceArgs;
 }> = (props) => {
@@ -132,9 +132,6 @@ export const PaginatedGridItems: FunctionComponent<{
     },
     [searchParams, setSearchParams]
   );
-
-  console.log('Filer', filter);
-  console.log('args', args);
 
   const {
     isLoading: isLoadingItems,

@@ -25,6 +25,7 @@ import { EpisodePage } from 'src/pages/EpisodePage';
 import { ListsPage } from 'src/pages/ListsPage';
 import { Random } from './pages/Random';
 import Statistics from './pages/Statistics';
+import { ItemsPageStatistic } from './pages/ItemsPageStatistic';
 
 export const MyRouter: FunctionComponent = () => {
   const { isLoading, user } = useUser();
@@ -113,6 +114,16 @@ export const MyRouter: FunctionComponent = () => {
                 path="/statistics/*"
                 element={<Statistics key="/statistics" />}
               />
+
+              <Route
+                path="/statistics/genre/:mediatype"
+                element={<ItemsPageStatistic key={'mediatype'} />}
+              ></Route>
+
+              <Route
+                path="/statistics/seen/:mediatype"
+                element={<ItemsPageStatistic key={'mediatype'} />}
+              ></Route>
 
               <Route
                 path="/in-progress"

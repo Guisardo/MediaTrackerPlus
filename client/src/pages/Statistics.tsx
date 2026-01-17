@@ -166,8 +166,6 @@ export const YearSelector = (props: IStatistocsProps) => {
     currentYear = allYear().text;
   }
 
-  console.log(currentYear);
-
   return (
     <div className="flex mb-2">
       <select
@@ -175,7 +173,6 @@ export const YearSelector = (props: IStatistocsProps) => {
         value={currentYear}
         onChange={(e) => {
           let value = e.target.value;
-          console.log(e.target);
           if (value == noyear().text) {
             value = noyear().id;
           }

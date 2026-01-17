@@ -942,8 +942,7 @@ router.get(
     requestQuerySchema: {
       $schema: 'http://json-schema.org/draft-07/schema#',
       type: 'object',
-      properties: { year: { type: 'string' } },
-      required: ['year'],
+      properties: { year: { type: ['string', 'null'] } },
     },
   }),
   _StatisticsController.seeninyear

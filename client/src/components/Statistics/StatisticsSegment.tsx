@@ -21,7 +21,7 @@ const StatisticsSegmant = (props: {
                   className="hover:underline hover:cursor-pointer"
                   onClick={() =>
                     navigate({
-                      pathname: '/tv',
+                      pathname: '/statistics/seen/tv',
                       search: year
                         ? createSearchParams({
                             year: year,
@@ -60,7 +60,7 @@ const StatisticsSegmant = (props: {
                   className="hover:underline hover:cursor-pointer"
                   onClick={() =>
                     navigate({
-                      pathname: '/movies',
+                      pathname: '/statistics/seen/movie',
                       search: year
                         ? createSearchParams({
                             year: year,
@@ -99,7 +99,7 @@ const StatisticsSegmant = (props: {
                   className="hover:underline hover:cursor-pointer"
                   onClick={() =>
                     navigate({
-                      pathname: '/games',
+                      pathname: '/statistics/seen/video_game',
                       search: year
                         ? createSearchParams({
                             year: year,
@@ -138,7 +138,7 @@ const StatisticsSegmant = (props: {
                   className="hover:underline hover:cursor-pointer"
                   onClick={() =>
                     navigate({
-                      pathname: '/books',
+                      pathname: '/statistics/seen/book',
                       search: year
                         ? createSearchParams({
                             year: year,
@@ -177,7 +177,7 @@ const StatisticsSegmant = (props: {
                   className="hover:underline hover:cursor-pointer"
                   onClick={() =>
                     navigate({
-                      pathname: '/audiobooks',
+                      pathname: '/statistics/seen/audiobook',
                       search: year
                         ? createSearchParams({
                             year: year,

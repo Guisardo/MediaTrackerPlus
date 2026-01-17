@@ -24,7 +24,7 @@ export class StatisticsController {
   seeninyear = createExpressRoute<{
     method: 'get';
     path: '/api/statistics/seeninyear';
-    requestQuery: { year: string };
+    requestQuery: { year?: string };
     responseBody: StatisticsSummaryResponse;
   }>(async (req, res) => {
     const userId = Number(req.user);
@@ -161,9 +161,17 @@ export const userGenreStatistics = async (
 const convertGenreResponse = (
   res: { mediaType: string; genres: string; genre_count: number }[]
 ) => {
-  const result: GenreSummeryResponse = null;
+  const splitted = split(res);
 
-  const splitted = _.values(
+  const grouped = group(splitted);
+
+  return grouped;
+};
+
+const split = (
+  res: { mediaType: string; genres: string; genre_count: number }[]
+) => {
+  return _.values(
     _.reduce(
       res,
       function (
@@ -174,7 +182,6 @@ const convertGenreResponse = (
       ) {
         if (!obj.genres) return result;
         const allGenres = obj.genres.split(',');
-        console.log(allGenres);
         for (let i = 0; i < allGenres?.length; i++) {
           const typeGenre = `${obj.mediaType}_${allGenres[i]}`;
           result[typeGenre] = {
@@ -186,14 +193,21 @@ const convertGenreResponse = (
           };
         }
 
-        console.log(result);
         return result;
       },
       {}
     )
   );
+};
 
-  const grouped = _(splitted)
+const group = (
+  splitted: {
+    media_type: string;
+    genre: string;
+    count: number;
+  }[]
+) => {
+  return _(splitted)
     .groupBy('media_type')
     .mapValues((item) => {
       const result: { genre: string; count: number }[] = [];
@@ -206,6 +220,4 @@ const convertGenreResponse = (
       return result;
     })
     .value() as GenreSummeryResponse;
-
-  return grouped;
 };

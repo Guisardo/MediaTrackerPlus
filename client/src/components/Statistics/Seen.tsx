@@ -11,13 +11,11 @@ const StatisticsSeen = (props: IStatistocsProps) => {
         currentYear={props.currentYear}
         onYearChange={props.onYearChange}
       ></YearSelector>
-      {props.currentYear.year == allYear().id ? (
-        <StatisticsSummary></StatisticsSummary>
-      ) : (
-        <StatisticSummaryYear
-          currentYear={props.currentYear}
-        ></StatisticSummaryYear>
-      )}
+      <StatisticSummaryYear
+        currentYear={
+          props.currentYear.year === 'allyear' ? null : props.currentYear
+        }
+      ></StatisticSummaryYear>
     </>
   );
 };

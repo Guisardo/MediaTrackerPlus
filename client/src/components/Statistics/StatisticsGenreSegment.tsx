@@ -1,7 +1,7 @@
 import { t, Trans } from '@lingui/macro';
 import { GenreSummeryResponse } from 'mediatracker-api';
 import React from 'react';
-import { createSearchParams, NavLink, useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 
 const StatisticsGenreSegment = (props: {
   data: GenreSummeryResponse;
@@ -12,11 +12,15 @@ const StatisticsGenreSegment = (props: {
   const navigate = useNavigate();
 
   const rountes = [
-    { path: '/tv/', name: t`Tv`, type: 'tv' },
-    { path: '/movies/', name: t`Movies`, type: 'movie' },
-    { path: '/games/', name: t`Games`, type: 'video_game' },
-    //   { path: '/books/', name: t`Books`, type: 'book' },
-    //  { path: '/audiobooks/', name: t`Audiobooks`, type: 'audiobook' },
+    { path: '/statistics/genre/tv/', name: t`Tv`, type: 'tv' },
+    { path: '/statistics/genre/movie/', name: t`Movies`, type: 'movie' },
+    {
+      path: '/statistics/genre/video_game/',
+      name: t`Games`,
+      type: 'video_game',
+    },
+    //   { path: '/genre/books/', name: t`Books`, type: 'book' },
+    //  { path: '/genre/audiobooks/', name: t`Audiobooks`, type: 'audiobook' },
   ];
 
   return (
@@ -40,16 +44,13 @@ const StatisticsGenreSegment = (props: {
                           <div
                             className="hover:underline hover:cursor-pointer"
                             onClick={() =>
-                              navigate(
-                                {
-                                  pathname: route.path,
-                                  search: createSearchParams({
-                                    year: year,
-                                    genre: item.genre,
-                                  }).toString(),
-                                },
-                                { state: { isStatisticPage: true } }
-                              )
+                              navigate({
+                                pathname: route.path,
+                                search: createSearchParams({
+                                  year: year,
+                                  genre: item.genre,
+                                }).toString(),
+                              })
                             }
                           >
                             <Trans>

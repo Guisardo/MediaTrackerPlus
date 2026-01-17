@@ -142,8 +142,6 @@ export const getDetailsKnex = async (params: {
     .filter(TvEpisodeFilters.nonSpecialEpisodes)
     .minBy((episode) => episode.seasonNumber * 1000 + episode.episodeNumber);
 
-  console.log(firstUnwatchedEpisode);
-
   const upcomingEpisode = _(episodes)
     .filter(TvEpisodeFilters.withReleaseDateEpisodes)
     .filter(TvEpisodeFilters.nonSpecialEpisodes)
