@@ -3,15 +3,14 @@ import { IStatistocsProps, YearSelector } from 'src/pages/Statistics';
 import StatisticsGenreSegment from './StatisticsGenreSegment';
 import { useQuery } from 'react-query';
 import { mediaTrackerApi } from 'src/api/api';
+import { useGenreSeen } from 'src/hooks/statisticHooks';
 
 const StatsticsGenre = (props: IStatistocsProps) => {
   const {
     error: errorGenre,
     data: data,
     isFetched: isFetchedGenre,
-  } = useQuery(['genre', props.currentYear], async () =>
-    mediaTrackerApi.statistics.statisticsGenresinyearList(props.currentYear)
-  );
+  } = useGenreSeen(props.currentYear);
   return (
     <>
       <YearSelector

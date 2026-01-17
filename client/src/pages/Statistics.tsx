@@ -162,7 +162,7 @@ export const YearSelector = (props: IStatistocsProps) => {
     currentYear = noyear().text;
   }
 
-  if (currentYear == allYear().id) {
+  if (currentYear == null) {
     currentYear = allYear().text;
   }
 
@@ -177,7 +177,7 @@ export const YearSelector = (props: IStatistocsProps) => {
             value = noyear().id;
           }
           if (value == allYear().text) {
-            value = allYear().id;
+            value = null;
           }
           props.onYearChange({ year: value });
         }}

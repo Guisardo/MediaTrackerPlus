@@ -3,6 +3,7 @@ import { useQuery } from 'react-query';
 import { mediaTrackerApi } from 'src/api/api';
 import StatisticsSegmant from './StatisticsSegment';
 import { Statistics } from 'mediatracker-api';
+import { useSeen } from 'src/hooks/statisticHooks';
 
 const StatisticSummaryYear = (props: {
   currentYear: Statistics.StatisticsSeeninyearList.RequestQuery;
@@ -11,9 +12,7 @@ const StatisticSummaryYear = (props: {
     error: errorSeenCount,
     data: data,
     isFetched: isFetchedSeenCount,
-  } = useQuery(['statistics', props.currentYear], async () =>
-    mediaTrackerApi.statistics.statisticsSeeninyearList(props.currentYear)
-  );
+  } = useSeen(props.currentYear);
 
   return (
     <StatisticsSegmant

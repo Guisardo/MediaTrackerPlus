@@ -1,6 +1,5 @@
 import React from 'react';
-import { allYear, IStatistocsProps, YearSelector } from 'src/pages/Statistics';
-import { StatisticsSummary } from './StatisticsSummary';
+import { IStatistocsProps, YearSelector } from 'src/pages/Statistics';
 import StatisticSummaryYear from './StatisticSummaryYear';
 
 const StatisticsSeen = (props: IStatistocsProps) => {
@@ -12,9 +11,7 @@ const StatisticsSeen = (props: IStatistocsProps) => {
         onYearChange={props.onYearChange}
       ></YearSelector>
       <StatisticSummaryYear
-        currentYear={
-          props.currentYear.year === 'allyear' ? null : props.currentYear
-        }
+        currentYear={props.currentYear}
       ></StatisticSummaryYear>
     </>
   );
