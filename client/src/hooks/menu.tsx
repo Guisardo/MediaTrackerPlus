@@ -4,6 +4,7 @@ import clsx from 'clsx';
 export const useMenuComponent = <T extends string>(args: {
   values: T[];
   initialSelection?: T;
+  handleFilterChange: () => void;
 }) => {
   const { values, initialSelection } = args;
   const [selectedValue, setSelectedValue] = useState(initialSelection);
@@ -54,6 +55,7 @@ export const useMenuComponent = <T extends string>(args: {
                   )}
                   onClick={() => {
                     setSelectedValue(value);
+                    args.handleFilterChange();
                   }}
                 >
                   {value}

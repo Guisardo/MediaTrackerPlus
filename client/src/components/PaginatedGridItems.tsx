@@ -91,22 +91,24 @@ export const PaginatedGridItems: FunctionComponent<{
 
   const [page, _setPage] = useState(Number(searchParams?.get('page')) || 1);
 
+  const handleArgumentChange = useCallback(() => {
+    if (page != 1) {
+      _setPage(1);
+    }
+  }, [page]);
+
   const { orderBy, sortOrder, OrderByComponent } = useOrderByComponent({
     sortOrder: args.sortOrder,
     orderBy: args.orderBy,
     mediaType: args.mediaType,
+    handleFilterChange: handleArgumentChange,
   });
+
   const { filter, FilterByComponent } = useFilterBy(
     args.mediaType,
-    props.isStatisticsPage
+    props.isStatisticsPage,
+    handleArgumentChange
   );
-
-  useEffect(() => {
-    if (page !== 1) {
-      setPage(1);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orderBy, sortOrder, JSON.stringify(filter)]);
 
   const mainContainerRef = useRef<HTMLDivElement>();
 

@@ -26,6 +26,7 @@ export const useOrderByComponent = (args: {
   orderBy: MediaItemOrderBy;
   sortOrder: SortOrder;
   mediaType?: MediaType;
+  handleFilterChange: () => void;
 }) => {
   const { mediaType } = args;
   const [sortOrder, setSortOrder] = useState(args.sortOrder);
@@ -51,6 +52,7 @@ export const useOrderByComponent = (args: {
   const { selectedValue, Menu } = useMenuComponent({
     values: values,
     initialSelection: mediaTypeOrderByString[args.orderBy],
+    handleFilterChange: args.handleFilterChange,
   });
 
   return {
@@ -67,7 +69,10 @@ export const useOrderByComponent = (args: {
           </div>
           <div
             className="ml-2 cursor-pointer"
-            onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+            onClick={() => {
+              args.handleFilterChange();
+              setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+            }}
           >
             {sortOrder === 'asc' ? '↑' : '↓'}
           </div>

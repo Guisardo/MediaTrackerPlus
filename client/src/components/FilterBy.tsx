@@ -31,7 +31,8 @@ const useFilterTextMap = (mediaType: MediaType, isStatisticsPage: boolean) => {
 
 export const useFilterBy = (
   mediaType: MediaType,
-  isStatisticsPage: boolean
+  isStatisticsPage: boolean,
+  handleFilterChange: () => void
 ) => {
   const filterTextMap = useFilterTextMap(mediaType, isStatisticsPage);
   const filterTextReverseMap = reverseMap(filterTextMap);
@@ -39,7 +40,10 @@ export const useFilterBy = (
   const { selectedValue, Menu } = useMenuComponent({
     values: Object.values(filterTextMap),
     initialSelection: filterTextMap['all'],
+    handleFilterChange,
   });
+
+  console.log(selectedValue);
 
   return {
     filter: isStatisticsPage
