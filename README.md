@@ -1,24 +1,19 @@
-# MediaTracker &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/dnlwttnbrg/MediaTrackerPlus/blob/main/LICENSE.md) [![Crowdin](https://badges.crowdin.net/mediatracker/localized.svg)](https://crowdin.com/project/mediatracker) [![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/bonukai/mediatracker)](https://hub.docker.com/r/bonukai/mediatracker) [![Docker Pulls](https://img.shields.io/docker/pulls/bonukai/mediatracker)](https://hub.docker.com/r/bonukai/mediatracker) [![CodeFactor](https://www.codefactor.io/repository/github/bonukai/mediatracker/badge)](https://www.codefactor.io/repository/github/bonukai/mediatracker) [![codecov](https://codecov.io/gh/bonukai/MediaTracker/branch/main/graph/badge.svg?token=CPMW6R7M1Z)](https://codecov.io/gh/bonukai/MediaTracker)
+# MediaTracker &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/dnlwttnbrg/MediaTrackerPlus/blob/main/LICENSE.md) [![Crowdin](https://badges.crowdin.net/mediatracker-plus/localized.svg)](https://crowdin.com/project/mediatracker-plus) [![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/bonukai/mediatracker)](https://hub.docker.com/r/bonukai/mediatracker) [![Docker Pulls](https://img.shields.io/docker/pulls/bonukai/mediatracker)](https://hub.docker.com/r/bonukai/mediatracker) [![CodeFactor](https://www.codefactor.io/repository/github/dnlwttnbrg/mediatrackerplus/badge)](https://www.codefactor.io/repository/github/dnlwttnbrg/mediatrackerplus) [![codecov](https://codecov.io/github/dnlwttnbrg/MediaTrackerPlus/graph/badge.svg?token=7O9IV84JVL)](https://codecov.io/github/dnlwttnbrg/MediaTrackerPlus)
 
-Self hosted platform for tracking movies, tv shows, video games, books and audiobooks, highly inspired by [flox](https://github.com/devfake/flox)
-
-# Demo
-
-[mediatracker.app](https://mediatracker.app/)\
-Username: **demo**\
-Password: **demo**
+Self hosted platform for tracking movies, tv shows, video games, books and audiobooks, highly inspired by [flox](https://github.com/devfake/flox).
+This is a fork from [Mediatracker](https://github.com/bonukai/MediaTracker) because I wanted new features and the original repository is at this time abandoned. But feel free to check out the original repository.
 
 # API Documentation
 
-[https://bonukai.github.io/MediaTracker/](https://bonukai.github.io/MediaTracker/)
+[https://dnlwttnbrg.github.io/MediaTrackerPlus/](https://dnlwttnbrg.github.io/MediaTrackerPlus/)
 
 # Installation
 
 ## Building from source
 
 ```bash
-git clone https://github.com/bonukai/MediaTracker.git
-cd MediaTracker
+git clone https://github.com/dnlwttnbrg/MediaTrackerPlus.git
+cd MediaTrackerPlus
 npm install
 npm run build
 npm run start
@@ -27,8 +22,8 @@ npm run start
 ## From npm
 
 ```
-npm install -g mediatracker
-mediatracker
+npm install -g mediatracker-plus
+mediatracker-plus
 ```
 
 Database file, logs and assets will be saved in `$HOME/.mediatracker`
@@ -37,23 +32,22 @@ Database file, logs and assets will be saved in `$HOME/.mediatracker`
 
 ## Version Tags
 
-| Tag      | Description     |
-| -------- | --------------- |
-| latest   | stable releases |
-| unstable | pre-releases    |
+| Tag    | Description     |
+| ------ | --------------- |
+| latest | stable releases |
 
 ```bash
 docker volume create assets
 docker run \
     -d \
-    --name mediatracker \
+    --name mediatracker-plus \
     -p 7481:7481 \
     -v /home/YOUR_HOME_DIRECTORY/.config/mediatracker/data:/storage \
     -v assets:/assets \
     -e TMDB_LANG=en \
     -e AUDIBLE_LANG=us \
     -e TZ=Europe/London \
-    bonukai/mediatracker:latest
+    dnlwttnbrg/mediatracker-plus:latest
 ```
 
 ## With docker-compose
@@ -62,7 +56,7 @@ docker run \
 version: "3"
 services:
   mediatracker:
-    container_name: mediatracker
+    container_name: mediatracker-plus
     ports:
       - 7481:7481
     volumes:
@@ -73,7 +67,7 @@ services:
       TMDB_LANG: en
       AUDIBLE_LANG: us
       TZ: Europe/London
-    image: bonukai/mediatracker:latest
+    image: dnlwttnbrg/mediatracker-plus:latest
 
 volumes:
   assetsVolume: null
@@ -113,14 +107,10 @@ volumes:
 | HOSTNAME           | IP address that the server will listen on                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | PORT               | Port that the server will listen on                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
-## Heroku
-
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
-
 # Building docker image
 
 ```bash
-docker build --tag mediatracker:latest https://github.com/bonukai/MediaTracker.git
+docker build --tag mediatracker-plus:latest https://github.com/dnlwttnbrg/MediaTrackerPlus.git
 docker run -p 7481:7481 mediatracker
 ```
 
