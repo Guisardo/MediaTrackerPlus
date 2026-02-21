@@ -15,8 +15,6 @@ export const usePagination = (args: {
   const [searchParams, setSearchParams] = useSearchParams();
   const numberOfPages = Math.ceil(args.totalItems / args.itemsPerPage);
 
-  console.log(page);
-
   useEffect(() => {
     if (page > numberOfPages) {
       setPage(1);

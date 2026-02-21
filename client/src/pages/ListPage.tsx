@@ -57,7 +57,6 @@ export const ListPage: FunctionComponent = () => {
 
   const handleFIlterChange = () => {
     if (currentPage != 1) {
-      console.log('Actio');
       setPage(1);
     }
   };
