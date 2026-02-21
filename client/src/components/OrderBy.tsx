@@ -4,6 +4,7 @@ import { t } from '@lingui/macro';
 import { MediaItemOrderBy, MediaType, SortOrder } from 'mediatracker-api';
 import { isTvShow, reverseMap } from 'src/utils';
 import { useMenuComponent } from 'src/hooks/menu';
+import { useUpdateSearchParams } from 'src/hooks/updateSearchParamsHook';
 
 export const useMediaTypeOrderByNames = (): Record<
   MediaItemOrderBy,
@@ -29,7 +30,12 @@ export const useOrderByComponent = (args: {
   handleFilterChange: () => void;
 }) => {
   const { mediaType } = args;
-  const [sortOrder, setSortOrder] = useState(args.sortOrder);
+  const { currentValue, updateSearchParams } = useUpdateSearchParams({
+    filterParam: 'sortOrder',
+    initialValue: args.sortOrder,
+    resetPage: true,
+  });
+  const [sortOrder, setSortOrder] = useState(currentValue);
 
   const mediaTypeOrderByString = {
     ...useMediaTypeOrderByNames(),
@@ -53,6 +59,7 @@ export const useOrderByComponent = (args: {
     values: values,
     initialSelection: mediaTypeOrderByString[args.orderBy],
     handleFilterChange: args.handleFilterChange,
+    paramFilter: 'orderBy',
   });
 
   return {
@@ -71,6 +78,7 @@ export const useOrderByComponent = (args: {
             className="ml-2 cursor-pointer"
             onClick={() => {
               args.handleFilterChange();
+              updateSearchParams(sortOrder === 'asc' ? 'desc' : 'asc');
               setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
             }}
           >

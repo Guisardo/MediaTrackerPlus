@@ -4,6 +4,7 @@ import { t } from '@lingui/macro';
 import { MediaType } from 'mediatracker-api';
 import { isAudiobook, isBook, isVideoGame, reverseMap } from 'src/utils';
 import { useMenuComponent } from 'src/hooks/menu';
+import { useSearchParams } from 'react-router-dom';
 
 const useFilterTextMap = (mediaType: MediaType, isStatisticsPage: boolean) => {
   if (isStatisticsPage) {
@@ -40,10 +41,9 @@ export const useFilterBy = (
   const { selectedValue, Menu } = useMenuComponent({
     values: Object.values(filterTextMap),
     initialSelection: filterTextMap['all'],
-    handleFilterChange,
+    paramFilter: 'filter',
+    handleFilterChange: handleFilterChange,
   });
-
-  console.log(selectedValue);
 
   return {
     filter: isStatisticsPage

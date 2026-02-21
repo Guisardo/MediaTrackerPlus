@@ -17,6 +17,7 @@ import { useItems } from 'src/api/items';
 import { GridItemAppearanceArgs, GridItem } from 'src/components/GridItem';
 import { useOrderByComponent } from 'src/components/OrderBy';
 import { useFilterBy } from 'src/components/FilterBy';
+import { useUpdateSearchParams } from 'src/hooks/updateSearchParamsHook';
 
 const Search: FunctionComponent<{
   onSearch: (value: string) => void;
@@ -88,12 +89,17 @@ export const PaginatedGridItems: FunctionComponent<{
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState<string>();
-
-  const [page, _setPage] = useState(Number(searchParams?.get('page')) || 1);
+  const { currentValue, updateSearchParams } = useUpdateSearchParams<number>({
+    filterParam: 'page',
+    initialValue: 1,
+    resetPage: false,
+  });
+  const [page, _setPage] = useState<number>(currentValue as number);
 
   const handleArgumentChange = useCallback(() => {
     if (page != 1) {
       _setPage(1);
+      window.document.body.scrollIntoView({ behavior: 'auto' });
     }
   }, [page]);
 
@@ -111,29 +117,6 @@ export const PaginatedGridItems: FunctionComponent<{
   );
 
   const mainContainerRef = useRef<HTMLDivElement>();
-
-  const setPage = useCallback(
-    (value: number) => {
-      _setPage(value);
-      window.document.body.scrollIntoView({ behavior: 'auto' });
-
-      if (value === 1) {
-        setSearchParams(
-          Object.fromEntries(
-            Array.from(searchParams.entries()).filter(
-              ([name]) => name !== 'page'
-            )
-          )
-        );
-      } else {
-        setSearchParams({
-          ...Object.fromEntries(searchParams.entries()),
-          page: value.toString(),
-        });
-      }
-    },
-    [searchParams, setSearchParams]
-  );
 
   const {
     isLoading: isLoadingItems,
@@ -268,16 +251,17 @@ export const PaginatedGridItems: FunctionComponent<{
                 />
               ))}
               <div className="footer">
-                {!searchQuery &&
-                  items &&
-                  !isLoadingItems &&
-                  numberOfPages > 1 && (
-                    <Pagination
-                      numberOfPages={numberOfPages}
-                      page={page}
-                      setPage={setPage}
-                    />
-                  )}
+                {!searchQuery && items && !isLoadingItems && numberOfPages > 1 && (
+                  <Pagination
+                    numberOfPages={numberOfPages}
+                    page={page}
+                    setPage={(value: number) => {
+                      _setPage(value);
+                      window.document.body.scrollIntoView({ behavior: 'auto' });
+                      updateSearchParams(value);
+                    }}
+                  />
+                )}
               </div>
             </>
           )}

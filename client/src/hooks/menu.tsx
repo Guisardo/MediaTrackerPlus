@@ -1,13 +1,26 @@
-import React, { useState, FunctionComponent, useRef, useEffect } from 'react';
+import React, {
+  useState,
+  FunctionComponent,
+  useRef,
+  useEffect,
+  useCallback,
+} from 'react';
 import clsx from 'clsx';
+import { useUpdateSearchParams } from './updateSearchParamsHook';
 
 export const useMenuComponent = <T extends string>(args: {
   values: T[];
   initialSelection?: T;
+  paramFilter: string;
   handleFilterChange: () => void;
 }) => {
-  const { values, initialSelection } = args;
-  const [selectedValue, setSelectedValue] = useState(initialSelection);
+  const { values, paramFilter, initialSelection } = args;
+  const { currentValue, updateSearchParams } = useUpdateSearchParams<string>({
+    filterParam: paramFilter,
+    initialValue: initialSelection,
+    resetPage: true,
+  });
+  const [selectedValue, setSelectedValue] = useState(currentValue);
 
   useEffect(() => {
     if (selectedValue === undefined && initialSelection !== undefined) {
@@ -55,6 +68,7 @@ export const useMenuComponent = <T extends string>(args: {
                   )}
                   onClick={() => {
                     setSelectedValue(value);
+                    updateSearchParams(value);
                     args.handleFilterChange();
                   }}
                 >
