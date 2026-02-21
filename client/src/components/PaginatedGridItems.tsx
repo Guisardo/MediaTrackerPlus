@@ -55,7 +55,7 @@ export const Pagination: FunctionComponent<{
   setPage: (value: number) => void;
 }> = (props) => {
   const { numberOfPages, page, setPage } = props;
-
+  console.log('Pageg', page, numberOfPages);
   return (
     <div className="flex flex-wrap justify-center w-full my-3">
       {Array.from(new Array(numberOfPages).keys())
@@ -160,7 +160,10 @@ export const PaginatedGridItems: FunctionComponent<{
 
   const isLoading = isLoadingSearchResult || isLoadingItems;
   const noItems =
-    !isLoading && !searchQuery && items.length === 0 && filter === {};
+    !isLoading &&
+    !searchQuery &&
+    items.length === 0 &&
+    Object.keys(filter).length === 0;
 
   return (
     <>

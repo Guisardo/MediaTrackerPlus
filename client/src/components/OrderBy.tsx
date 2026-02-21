@@ -35,7 +35,9 @@ export const useOrderByComponent = (args: {
     initialValue: args.sortOrder,
     resetPage: true,
   });
-  const [sortOrder, setSortOrder] = useState(currentValue);
+  const [sortOrder, setSortOrder] = useState<SortOrder>(
+    currentValue as SortOrder
+  );
 
   const mediaTypeOrderByString = {
     ...useMediaTypeOrderByNames(),

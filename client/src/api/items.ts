@@ -13,14 +13,12 @@ type paginatedApiReturnType = {
 };
 
 export const useItems = (args: Items.Paginated.RequestQuery) => {
-  if (args.selectRandom === undefined) {
-    args.selectRandom = false;
-  }
+  const selectRandom = args.selectRandom ?? false;
 
   const { error, data, isFetched } = useQuery(
     ['items', args],
     async () =>
-      args.selectRandom
+      selectRandom
         ? mediaTrackerApi.items.random(args)
         : mediaTrackerApi.items.paginated(args),
     {
@@ -32,7 +30,7 @@ export const useItems = (args: Items.Paginated.RequestQuery) => {
     mediaTrackerApi.search.search({ mediaType: args.mediaType, q: query })
   );
 
-  return !args.selectRandom
+  return !selectRandom
     ? {
         items: search.data
           ? search.data

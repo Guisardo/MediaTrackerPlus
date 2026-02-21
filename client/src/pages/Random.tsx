@@ -1,7 +1,6 @@
-import { MediaItemItemsResponse, MediaType } from 'mediatracker-api';
+import { MediaType } from 'mediatracker-api';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useItems } from 'src/api/items';
-import { AllGridItems } from 'src/components/AllGridItems';
 import { Segment } from './Home';
 import { t } from '@lingui/macro';
 

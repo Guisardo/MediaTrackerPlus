@@ -7,27 +7,21 @@ import { useMenuComponent } from 'src/hooks/menu';
 import { useSearchParams } from 'react-router-dom';
 
 const useFilterTextMap = (mediaType: MediaType, isStatisticsPage: boolean) => {
-  if (isStatisticsPage) {
-    return {
-      all: t`All`,
-      onlyWithUserRating: t`Rated`,
-      onlyWithoutUserRating: t`Unrated`,
-    };
-  } else {
-    return {
-      all: t`All`,
-      onlyWithUserRating: t`Rated`,
-      onlyWithoutUserRating: t`Unrated`,
-      onlyOnWatchlist: t`On watchlist`,
-      onlySeenItems: isAudiobook(mediaType)
-        ? t`Listened`
-        : isBook(mediaType)
-        ? t`Read`
-        : isVideoGame(mediaType)
-        ? t`Played`
-        : t`Watched`,
-    };
-  }
+  return {
+    all: t`All`,
+    onlyWithUserRating: t`Rated`,
+    onlyWithoutUserRating: t`Unrated`,
+    onlyOnWatchlist: isStatisticsPage ? null : t`On watchlist`,
+    onlySeenItems: isStatisticsPage
+      ? null
+      : isAudiobook(mediaType)
+      ? t`Listened`
+      : isBook(mediaType)
+      ? t`Read`
+      : isVideoGame(mediaType)
+      ? t`Played`
+      : t`Watched`,
+  };
 };
 
 export const useFilterBy = (

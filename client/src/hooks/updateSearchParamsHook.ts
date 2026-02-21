@@ -14,11 +14,11 @@ export const useUpdateSearchParams = <T>(args: {
     ? searchParams.get(filterParam)
     : initialValue;
 
-  const deleteFUnction = useCallback(
+  const deleteFunction = useCallback(
     ([name], value) => {
       if (!resetPage && value === initialValue) {
         return name !== filterParam;
-      } else if (resetPage && !value === initialValue) {
+      } else if (resetPage && value !== initialValue) {
         return name !== 'page';
       } else {
         return name !== filterParam && name !== 'page';
@@ -29,23 +29,22 @@ export const useUpdateSearchParams = <T>(args: {
 
   const deleteEntry = useCallback(
     (value: T) => {
-      if (!resetPage && !value === initialValue) {
+      if (!resetPage && value !== initialValue) {
         return;
       }
       setSearchParams(
         Object.fromEntries(
           Array.from(searchParams.entries()).filter(([name]) =>
-            deleteFUnction(name, value)
+            deleteFunction(name, value)
           )
         )
       );
     },
-    [deleteFUnction, initialValue, resetPage, searchParams, setSearchParams]
+    [deleteFunction, initialValue, resetPage, searchParams, setSearchParams]
   );
 
   const updateSearchParams = useCallback(
     (value: T) => {
-      console.log('DELETE');
       deleteEntry(value);
 
       setSearchParams({

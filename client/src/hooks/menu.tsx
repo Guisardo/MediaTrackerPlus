@@ -59,22 +59,24 @@ export const useMenuComponent = <T extends string>(args: {
           {children}
           {showMenu && (
             <ul className="absolute right-0 z-10 transition-all rounded shadow-lg shadow-black bg-zinc-100 dark:bg-gray-900">
-              {values.map((value) => (
-                <li
-                  key={value}
-                  className={clsx(
-                    'px-2 py-1 rounded hover:bg-red-700 whitespace-nowrap',
-                    selectedValue === value && 'dark:bg-slate-700 bg-zinc-300'
-                  )}
-                  onClick={() => {
-                    setSelectedValue(value);
-                    updateSearchParams(value);
-                    args.handleFilterChange();
-                  }}
-                >
-                  {value}
-                </li>
-              ))}
+              {values.map((value) =>
+                value ? (
+                  <li
+                    key={value}
+                    className={clsx(
+                      'px-2 py-1 rounded hover:bg-red-700 whitespace-nowrap',
+                      selectedValue === value && 'dark:bg-slate-700 bg-zinc-300'
+                    )}
+                    onClick={() => {
+                      setSelectedValue(value);
+                      updateSearchParams(value);
+                      args.handleFilterChange();
+                    }}
+                  >
+                    {value}
+                  </li>
+                ) : null
+              )}
             </ul>
           )}
         </div>

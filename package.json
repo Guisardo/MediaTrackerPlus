@@ -1,5 +1,5 @@
 {
-  "name": "mediatracker",
+  "name": "mediatracker-plus",
   "private": true,
   "scripts": {
     "postinstall": "cd server && npm install && cd ../client && npm install",

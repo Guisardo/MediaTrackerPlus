@@ -36,14 +36,6 @@ export const ListPage: FunctionComponent = () => {
     }
   }, [sortOrder, list]);
 
-  const { Menu: OrderByMenuComponent, selectedValue: translatedSortBy } =
-    useMenuComponent({
-      values: sortByTranslation.translations.sort(),
-      initialSelection: sortByTranslation.keyToTranslation(list?.sortBy),
-    });
-
-  const sortBy = sortByTranslation.translationToKey(translatedSortBy);
-
   const filteredItems = searchQuery
     ? listItems.filter((listItem) =>
         listItem.mediaItem.title
@@ -62,6 +54,23 @@ export const ListPage: FunctionComponent = () => {
     itemsPerPage: 24,
     totalItems: filteredItems?.length,
   });
+
+  const handleFIlterChange = () => {
+    if (currentPage != 1) {
+      console.log('Actio');
+      setPage(1);
+    }
+  };
+
+  const { Menu: OrderByMenuComponent, selectedValue: translatedSortBy } =
+    useMenuComponent({
+      values: sortByTranslation.translations.sort(),
+      initialSelection: sortByTranslation.keyToTranslation(list?.sortBy),
+      paramFilter: 'orderBy',
+      handleFilterChange: handleFIlterChange,
+    });
+
+  const sortBy = sortByTranslation.translationToKey(translatedSortBy);
 
   const data = getPaginatedItems(
     useSortedList({
