@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "MediaTracker",
-    "version": "0.2.11",
+    "version": "0.1.0",
     "license": {
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
@@ -409,6 +409,33 @@
             }
           },
           {
+            "name": "selectRandom",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "genre",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
             "name": "onlyWithProgress",
             "in": "query",
             "required": false,
@@ -592,6 +619,197 @@
             "required": false,
             "schema": {
               "type": "boolean",
+              "nullable": true
+            }
+          },
+          {
+            "name": "selectRandom",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "genre",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "onlyWithProgress",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MediaItemItemsResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/items/random": {
+      "get": {
+        "description": "Get items",
+        "tags": [
+          "Items"
+        ],
+        "operationId": "random",
+        "parameters": [
+          {
+            "name": "mediaType",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/MediaType"
+                }
+              ],
+              "nullable": true
+            }
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/MediaItemOrderBy"
+                }
+              ],
+              "nullable": true
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/SortOrder"
+                }
+              ],
+              "nullable": true
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "onlyOnWatchlist",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            }
+          },
+          {
+            "name": "onlySeenItems",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            }
+          },
+          {
+            "name": "onlyWithNextEpisodesToWatch",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            }
+          },
+          {
+            "name": "onlyWithNextAiring",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            }
+          },
+          {
+            "name": "onlyWithUserRating",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            }
+          },
+          {
+            "name": "onlyWithoutUserRating",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            }
+          },
+          {
+            "name": "selectRandom",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "genre",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
               "nullable": true
             }
           },
@@ -1641,6 +1859,66 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/StatisticsSummaryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/statistics/seeninyear": {
+      "get": {
+        "tags": [
+          "Statistics"
+        ],
+        "parameters": [
+          {
+            "name": "year",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatisticsSummaryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/statistics/genresinyear": {
+      "get": {
+        "tags": [
+          "Statistics"
+        ],
+        "parameters": [
+          {
+            "name": "year",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenreSummeryResponse"
                 }
               }
             }
@@ -3725,6 +4003,18 @@
                 "type": "boolean",
                 "nullable": true
               },
+              "selectRandom": {
+                "type": "boolean",
+                "nullable": true
+              },
+              "year": {
+                "type": "string",
+                "nullable": true
+              },
+              "genre": {
+                "type": "string",
+                "nullable": true
+              },
               "onlyWithProgress": {
                 "type": "boolean",
                 "nullable": true
@@ -4362,6 +4652,108 @@
               "items",
               "plays"
             ]
+          }
+        },
+        "required": [
+          "audiobook",
+          "book",
+          "movie",
+          "tv",
+          "video_game"
+        ]
+      },
+      "GenreSummeryResponse": {
+        "type": "object",
+        "properties": {
+          "tv": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "genre": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "count",
+                "genre"
+              ]
+            }
+          },
+          "movie": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "genre": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "count",
+                "genre"
+              ]
+            }
+          },
+          "book": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "genre": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "count",
+                "genre"
+              ]
+            }
+          },
+          "video_game": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "genre": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "count",
+                "genre"
+              ]
+            }
+          },
+          "audiobook": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "genre": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "count",
+                "genre"
+              ]
+            }
           }
         },
         "required": [

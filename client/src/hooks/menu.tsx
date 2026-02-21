@@ -1,12 +1,26 @@
-import React, { useState, FunctionComponent, useRef, useEffect } from 'react';
+import React, {
+  useState,
+  FunctionComponent,
+  useRef,
+  useEffect,
+  useCallback,
+} from 'react';
 import clsx from 'clsx';
+import { useUpdateSearchParams } from './updateSearchParamsHook';
 
 export const useMenuComponent = <T extends string>(args: {
   values: T[];
   initialSelection?: T;
+  paramFilter: string;
+  handleFilterChange: () => void;
 }) => {
-  const { values, initialSelection } = args;
-  const [selectedValue, setSelectedValue] = useState(initialSelection);
+  const { values, paramFilter, initialSelection } = args;
+  const { currentValue, updateSearchParams } = useUpdateSearchParams<string>({
+    filterParam: paramFilter,
+    initialValue: initialSelection,
+    resetPage: true,
+  });
+  const [selectedValue, setSelectedValue] = useState(currentValue);
 
   useEffect(() => {
     if (selectedValue === undefined && initialSelection !== undefined) {
@@ -45,20 +59,24 @@ export const useMenuComponent = <T extends string>(args: {
           {children}
           {showMenu && (
             <ul className="absolute right-0 z-10 transition-all rounded shadow-lg shadow-black bg-zinc-100 dark:bg-gray-900">
-              {values.map((value) => (
-                <li
-                  key={value}
-                  className={clsx(
-                    'px-2 py-1 rounded hover:bg-red-700 whitespace-nowrap',
-                    selectedValue === value && 'dark:bg-slate-700 bg-zinc-300'
-                  )}
-                  onClick={() => {
-                    setSelectedValue(value);
-                  }}
-                >
-                  {value}
-                </li>
-              ))}
+              {values.map((value) =>
+                value ? (
+                  <li
+                    key={value}
+                    className={clsx(
+                      'px-2 py-1 rounded hover:bg-red-700 whitespace-nowrap',
+                      selectedValue === value && 'dark:bg-slate-700 bg-zinc-300'
+                    )}
+                    onClick={() => {
+                      setSelectedValue(value);
+                      updateSearchParams(value);
+                      args.handleFilterChange();
+                    }}
+                  >
+                    {value}
+                  </li>
+                ) : null
+              )}
             </ul>
           )}
         </div>

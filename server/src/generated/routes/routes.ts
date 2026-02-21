@@ -387,6 +387,9 @@ router.get(
                 onlyWithNextAiring: { type: ['boolean', 'null'] },
                 onlyWithUserRating: { type: ['boolean', 'null'] },
                 onlyWithoutUserRating: { type: ['boolean', 'null'] },
+                selectRandom: { type: ['boolean', 'null'] },
+                year: { type: ['string', 'null'] },
+                genre: { type: ['string', 'null'] },
                 onlyWithProgress: { type: ['boolean', 'null'] },
                 page: { type: ['number', 'null'] },
               },
@@ -473,11 +476,67 @@ router.get(
         onlyWithNextAiring: { type: ['boolean', 'null'] },
         onlyWithUserRating: { type: ['boolean', 'null'] },
         onlyWithoutUserRating: { type: ['boolean', 'null'] },
+        selectRandom: { type: ['boolean', 'null'] },
+        year: { type: ['string', 'null'] },
+        genre: { type: ['string', 'null'] },
         onlyWithProgress: { type: ['boolean', 'null'] },
       },
     },
   }),
   _ItemsController.get
+);
+router.get(
+  '/api/items/random',
+  validatorHandler({
+    requestQuerySchema: {
+      $schema: 'http://json-schema.org/draft-07/schema#',
+      definitions: {
+        MediaType: {
+          enum: ['audiobook', 'book', 'movie', 'tv', 'video_game'],
+          type: 'string',
+        },
+        MediaItemOrderBy: {
+          enum: [
+            'lastAiring',
+            'lastSeen',
+            'mediaType',
+            'nextAiring',
+            'progress',
+            'releaseDate',
+            'status',
+            'title',
+            'unseenEpisodes',
+          ],
+          type: 'string',
+        },
+        SortOrder: { enum: ['asc', 'desc'], type: 'string' },
+      },
+      type: 'object',
+      properties: {
+        mediaType: {
+          oneOf: [{ $ref: '#/definitions/MediaType' }, { type: 'null' }],
+        },
+        orderBy: {
+          oneOf: [{ $ref: '#/definitions/MediaItemOrderBy' }, { type: 'null' }],
+        },
+        sortOrder: {
+          oneOf: [{ $ref: '#/definitions/SortOrder' }, { type: 'null' }],
+        },
+        filter: { type: ['string', 'null'] },
+        onlyOnWatchlist: { type: ['boolean', 'null'] },
+        onlySeenItems: { type: ['boolean', 'null'] },
+        onlyWithNextEpisodesToWatch: { type: ['boolean', 'null'] },
+        onlyWithNextAiring: { type: ['boolean', 'null'] },
+        onlyWithUserRating: { type: ['boolean', 'null'] },
+        onlyWithoutUserRating: { type: ['boolean', 'null'] },
+        selectRandom: { type: ['boolean', 'null'] },
+        year: { type: ['string', 'null'] },
+        genre: { type: ['string', 'null'] },
+        onlyWithProgress: { type: ['boolean', 'null'] },
+      },
+    },
+  }),
+  _ItemsController.getRandom
 );
 router.put(
   '/api/list',
@@ -875,7 +934,29 @@ router.delete(
 router.get(
   '/api/statistics/summary',
   validatorHandler({}),
-  _StatisticsController.add
+  _StatisticsController.summary
+);
+router.get(
+  '/api/statistics/seeninyear',
+  validatorHandler({
+    requestQuerySchema: {
+      $schema: 'http://json-schema.org/draft-07/schema#',
+      type: 'object',
+      properties: { year: { type: ['string', 'null'] } },
+    },
+  }),
+  _StatisticsController.seeninyear
+);
+router.get(
+  '/api/statistics/genresinyear',
+  validatorHandler({
+    requestQuerySchema: {
+      $schema: 'http://json-schema.org/draft-07/schema#',
+      type: 'object',
+      properties: { year: { type: ['string', 'null'] } },
+    },
+  }),
+  _StatisticsController.genres
 );
 router.put(
   '/api/tokens',

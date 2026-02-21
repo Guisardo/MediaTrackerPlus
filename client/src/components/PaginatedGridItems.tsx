@@ -17,6 +17,7 @@ import { useItems } from 'src/api/items';
 import { GridItemAppearanceArgs, GridItem } from 'src/components/GridItem';
 import { useOrderByComponent } from 'src/components/OrderBy';
 import { useFilterBy } from 'src/components/FilterBy';
+import { useUpdateSearchParams } from 'src/hooks/updateSearchParamsHook';
 
 const Search: FunctionComponent<{
   onSearch: (value: string) => void;
@@ -54,7 +55,6 @@ export const Pagination: FunctionComponent<{
   setPage: (value: number) => void;
 }> = (props) => {
   const { numberOfPages, page, setPage } = props;
-
   return (
     <div className="flex flex-wrap justify-center w-full my-3">
       {Array.from(new Array(numberOfPages).keys())
@@ -80,6 +80,7 @@ export const Pagination: FunctionComponent<{
 export const PaginatedGridItems: FunctionComponent<{
   args: Omit<Items.Paginated.RequestQuery, 'page' | 'filter'>;
   showSortOrderControls?: boolean;
+  isStatisticsPage?: boolean;
   showSearch?: boolean;
   gridItemAppearance?: GridItemAppearanceArgs;
 }> = (props) => {
@@ -87,47 +88,34 @@ export const PaginatedGridItems: FunctionComponent<{
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState<string>();
+  const { currentValue, updateSearchParams } = useUpdateSearchParams<number>({
+    filterParam: 'page',
+    initialValue: 1,
+    resetPage: false,
+  });
+  const [page, _setPage] = useState<number>(currentValue as number);
 
-  const [page, _setPage] = useState(Number(searchParams?.get('page')) || 1);
+  const handleArgumentChange = useCallback(() => {
+    if (page != 1) {
+      _setPage(1);
+      window.document.body.scrollIntoView({ behavior: 'auto' });
+    }
+  }, [page]);
 
   const { orderBy, sortOrder, OrderByComponent } = useOrderByComponent({
     sortOrder: args.sortOrder,
     orderBy: args.orderBy,
     mediaType: args.mediaType,
+    handleFilterChange: handleArgumentChange,
   });
-  const { filter, FilterByComponent } = useFilterBy(args.mediaType);
 
-  useEffect(() => {
-    if (page !== 1) {
-      setPage(1);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orderBy, sortOrder, JSON.stringify(filter)]);
+  const { filter, FilterByComponent } = useFilterBy(
+    args.mediaType,
+    props.isStatisticsPage,
+    handleArgumentChange
+  );
 
   const mainContainerRef = useRef<HTMLDivElement>();
-
-  const setPage = useCallback(
-    (value: number) => {
-      _setPage(value);
-      window.document.body.scrollIntoView({ behavior: 'auto' });
-
-      if (value === 1) {
-        setSearchParams(
-          Object.fromEntries(
-            Array.from(searchParams.entries()).filter(
-              ([name]) => name !== 'page'
-            )
-          )
-        );
-      } else {
-        setSearchParams({
-          ...Object.fromEntries(searchParams.entries()),
-          page: value.toString(),
-        });
-      }
-    },
-    [searchParams, setSearchParams]
-  );
 
   const {
     isLoading: isLoadingItems,
@@ -171,7 +159,10 @@ export const PaginatedGridItems: FunctionComponent<{
 
   const isLoading = isLoadingSearchResult || isLoadingItems;
   const noItems =
-    !isLoading && !searchQuery && items.length === 0 && filter === {};
+    !isLoading &&
+    !searchQuery &&
+    items.length === 0 &&
+    Object.keys(filter).length === 0;
 
   return (
     <>
@@ -215,8 +206,12 @@ export const PaginatedGridItems: FunctionComponent<{
                       ) : (
                         <Plural
                           value={numberOfItemsTotal}
-                          one="1 item"
-                          other="# items"
+                          one={`1 item ${args.year ? 'in ' + args.year : ''} ${
+                            args.genre ? 'with genre ' + args.genre : ''
+                          }`}
+                          other={`# item ${
+                            args.year ? 'in ' + args.year : ''
+                          } ${args.genre ? 'with genre ' + args.genre : ''}`}
                         />
                       )}
                     </div>
@@ -258,16 +253,17 @@ export const PaginatedGridItems: FunctionComponent<{
                 />
               ))}
               <div className="footer">
-                {!searchQuery &&
-                  items &&
-                  !isLoadingItems &&
-                  numberOfPages > 1 && (
-                    <Pagination
-                      numberOfPages={numberOfPages}
-                      page={page}
-                      setPage={setPage}
-                    />
-                  )}
+                {!searchQuery && items && !isLoadingItems && numberOfPages > 1 && (
+                  <Pagination
+                    numberOfPages={numberOfPages}
+                    page={page}
+                    setPage={(value: number) => {
+                      _setPage(value);
+                      window.document.body.scrollIntoView({ behavior: 'auto' });
+                      updateSearchParams(value);
+                    }}
+                  />
+                )}
               </div>
             </>
           )}

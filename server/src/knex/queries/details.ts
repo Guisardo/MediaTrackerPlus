@@ -123,9 +123,7 @@ export const getDetailsKnex = async (params: {
     ...season,
     isSpecialSeason: Boolean(season.isSpecialSeason),
     poster: season.posterId ? `/img/${season.posterId}` : null,
-    posterSmall: season.posterId
-      ? `/img/${season.posterId}?size=small`
-      : null,
+    posterSmall: season.posterId ? `/img/${season.posterId}?size=small` : null,
     episodes: groupedEpisodes[season.id] || [],
     userRating: groupedSeasonRating[season.id],
     seen:
@@ -222,15 +220,11 @@ export const getDetailsKnex = async (params: {
     lastAiring: lastAiring,
     numberOfEpisodes: numberOfEpisodes,
     lastSeenAt: lastSeen,
-    poster: mediaItem.posterId
-      ? `/img/${mediaItem.posterId}`
-      : null,
+    poster: mediaItem.posterId ? `/img/${mediaItem.posterId}` : null,
     posterSmall: mediaItem.posterId
       ? `/img/${mediaItem.posterId}?size=small`
       : null,
-    backdrop: mediaItem.backdropId
-      ? `/img/${mediaItem.backdropId}`
-      : null,
+    backdrop: mediaItem.backdropId ? `/img/${mediaItem.backdropId}` : null,
     lists: mediaItemLists.map(mapList),
     totalRuntime: totalRuntime || undefined,
   };

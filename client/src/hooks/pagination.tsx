@@ -1,20 +1,19 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useUpdateSearchParams } from './updateSearchParamsHook';
 
 export const usePagination = (args: {
   itemsPerPage: number;
   totalItems: number;
 }) => {
-  const [page, setPage] = useState(1);
+  const { currentValue } = useUpdateSearchParams<number>({
+    filterParam: 'page',
+    initialValue: 1,
+    resetPage: false,
+  });
+  const [page, setPage] = useState(Number.parseInt(currentValue.toString()));
   const [searchParams, setSearchParams] = useSearchParams();
   const numberOfPages = Math.ceil(args.totalItems / args.itemsPerPage);
-  
-  useEffect(() => {
-    if (searchParams.has('page') && Number(searchParams.get('page')) !== page) {
-      setPage(Number(searchParams.get('page')));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
 
   useEffect(() => {
     if (page > numberOfPages) {

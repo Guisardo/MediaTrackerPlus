@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { random } from 'lodash';
 import {
   MediaItemBase,
   mediaItemColumns,
@@ -10,7 +10,7 @@ import { Seen } from 'src/entity/seen';
 import { UserRating, userRatingColumns } from 'src/entity/userRating';
 import { GetItemsArgs } from 'src/repository/mediaItem';
 import { TvEpisode, tvEpisodeColumns } from 'src/entity/tvepisode';
-import { Knex } from 'knex';
+import knex, { Knex } from 'knex';
 import { List, listItemColumns } from 'src/entity/list';
 import { Progress } from 'src/entity/progress';
 
@@ -55,7 +55,7 @@ export const getItemsKnex = async (args: any): Promise<any> => {
   }
 };
 
-const getItemsKnexSql = async (args: GetItemsArgs) => {
+const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
   const {
     onlyOnWatchlist,
     mediaType,
@@ -71,6 +71,9 @@ const getItemsKnexSql = async (args: GetItemsArgs) => {
     onlyWithUserRating,
     onlyWithoutUserRating,
     onlyWithProgress,
+    selectRandom,
+    year,
+    genre,
   } = args;
 
   const currentDateString = new Date().toISOString();
@@ -86,6 +89,17 @@ const getItemsKnexSql = async (args: GetItemsArgs) => {
   }
 
   const watchlistId = watchlist.id;
+
+  let yearFilter = '';
+
+  if (year) {
+    yearFilter = year;
+    const pattern = '^[0-9]{4}$';
+    const re = new RegExp(pattern);
+    if (!year.match(re) && year !== 'allyear' && year !== 'noyear') {
+      yearFilter = '';
+    }
+  }
 
   const query = Database.knex
     .select(generateColumnNames('firstUnwatchedEpisode', tvEpisodeColumns))
@@ -119,9 +133,26 @@ const getItemsKnexSql = async (args: GetItemsArgs) => {
       (qb) =>
         qb
           .select('mediaItemId')
-          .max('date', { as: 'date' })
+          .select('date')
           .from<Seen>('seen')
-          .where('userId', userId)
+          .where((db) => {
+            db.where('userId', userId);
+            if (yearFilter === 'noyear') {
+              db.andWhere(
+                Database.knex.raw(
+                  "strftime('%Y', datetime(\"date\" / 1000, 'unixepoch')) is NULL"
+                )
+              );
+            } else if (yearFilter !== '') {
+              db.andWhere(
+                Database.knex.raw(
+                  "strftime('%Y', datetime(\"date\" / 1000, 'unixepoch')) is '" +
+                    yearFilter +
+                    "'"
+                )
+              );
+            }
+          })
           .groupBy('mediaItemId')
           .as('lastSeen2'),
       'lastSeen2.mediaItemId',
@@ -328,6 +359,26 @@ const getItemsKnexSql = async (args: GetItemsArgs) => {
       query.andWhere('mediaItem.title', 'LIKE', `%${filter}%`);
     }
 
+    if (year) {
+      if (yearFilter === 'noyear') {
+        query.andWhere(
+          Database.knex.raw(
+            'strftime(\'%Y\', datetime("lastSeen2"."date" / 1000, \'unixepoch\')) is null'
+          )
+        );
+      } else if (yearFilter !== '') {
+        query.andWhere(
+          Database.knex.raw(
+            'strftime(\'%Y\', datetime("lastSeen2"."date" / 1000, \'unixepoch\')) is not null'
+          )
+        );
+      }
+    }
+
+    if (genre) {
+      query.andWhere('mediaItem.genres', 'LIKE', `%${genre}%`);
+    }
+
     // Next airing
     if (onlyWithNextAiring) {
       if (mediaType) {
@@ -383,6 +434,9 @@ const getItemsKnexSql = async (args: GetItemsArgs) => {
               .andWhere('unseenEpisodesCount', '>', 0)
           )
       );
+    }
+    if (selectRandom) {
+      query.orderByRaw('RANDOM()').limit(1);
     }
   }
 

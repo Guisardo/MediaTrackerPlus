@@ -82,6 +82,18 @@ export type GetItemsArgs = {
    * @description Return only items without user rating
    */
   onlyWithoutUserRating?: boolean;
+  /**
+   * @description Selects a random Item
+   */
+  selectRandom?: boolean;
+  /**
+   * @description Filter by Year
+   */
+  year?: string;
+  /**
+   * @description Filter by Genre
+   */
+  genre?: string;
 
   onlyWithProgress?: boolean;
 
@@ -98,6 +110,9 @@ class MediaItemRepository extends repository<MediaItemBase>({
   public items(
     args: GetItemsArgs & { page: number }
   ): Promise<Pagination<MediaItemItemsResponse>>;
+  public items(
+    args: GetItemsArgs & { random: boolean }
+  ): Promise<MediaItemItemsResponse[]>;
   public items(
     args: Omit<GetItemsArgs, 'page'>
   ): Promise<MediaItemItemsResponse[]>;
@@ -467,7 +482,7 @@ class MediaItemRepository extends repository<MediaItemBase>({
       return this.deserialize(res);
     }
   }
-    
+
   public async findByTitle(params: {
     mediaType: MediaType;
     title: string;

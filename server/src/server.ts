@@ -94,11 +94,13 @@ export class Server {
         }
       };
 
-      if (req.header('Accept-Encoding').includes('br')) {
+      const enc = req.header('Accept-Encoding') || '';
+
+      if (enc.includes('br')) {
         req.url = req.url + '.br';
         res.set('Content-Encoding', 'br');
         setHeaders();
-      } else if (req.header('Accept-Encoding').includes('gz')) {
+      } else if (enc.includes('gz')) {
         req.url = req.url + '.gz';
         res.set('Content-Encoding', 'gzip');
         setHeaders();

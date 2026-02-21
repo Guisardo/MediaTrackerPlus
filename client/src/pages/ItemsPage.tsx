@@ -1,11 +1,12 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 
 import { MediaType } from 'mediatracker-api';
 import { PaginatedGridItems } from 'src/components/PaginatedGridItems';
+import { useSearchParams } from 'react-router-dom';
 
-export const ItemsPage: FunctionComponent<{ mediaType?: MediaType }> = (
-  props
-) => {
+export const ItemsPage: FunctionComponent<{
+  mediaType?: MediaType;
+}> = (props) => {
   const { mediaType } = props;
 
   return (

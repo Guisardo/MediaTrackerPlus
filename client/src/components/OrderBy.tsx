@@ -4,6 +4,7 @@ import { t } from '@lingui/macro';
 import { MediaItemOrderBy, MediaType, SortOrder } from 'mediatracker-api';
 import { isTvShow, reverseMap } from 'src/utils';
 import { useMenuComponent } from 'src/hooks/menu';
+import { useUpdateSearchParams } from 'src/hooks/updateSearchParamsHook';
 
 export const useMediaTypeOrderByNames = (): Record<
   MediaItemOrderBy,
@@ -26,9 +27,17 @@ export const useOrderByComponent = (args: {
   orderBy: MediaItemOrderBy;
   sortOrder: SortOrder;
   mediaType?: MediaType;
+  handleFilterChange: () => void;
 }) => {
   const { mediaType } = args;
-  const [sortOrder, setSortOrder] = useState(args.sortOrder);
+  const { currentValue, updateSearchParams } = useUpdateSearchParams({
+    filterParam: 'sortOrder',
+    initialValue: args.sortOrder,
+    resetPage: true,
+  });
+  const [sortOrder, setSortOrder] = useState<SortOrder>(
+    currentValue as SortOrder
+  );
 
   const mediaTypeOrderByString = {
     ...useMediaTypeOrderByNames(),
@@ -51,6 +60,8 @@ export const useOrderByComponent = (args: {
   const { selectedValue, Menu } = useMenuComponent({
     values: values,
     initialSelection: mediaTypeOrderByString[args.orderBy],
+    handleFilterChange: args.handleFilterChange,
+    paramFilter: 'orderBy',
   });
 
   return {
@@ -67,7 +78,11 @@ export const useOrderByComponent = (args: {
           </div>
           <div
             className="ml-2 cursor-pointer"
-            onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+            onClick={() => {
+              args.handleFilterChange();
+              updateSearchParams(sortOrder === 'asc' ? 'desc' : 'asc');
+              setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+            }}
           >
             {sortOrder === 'asc' ? '↑' : '↓'}
           </div>

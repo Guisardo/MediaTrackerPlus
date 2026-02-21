@@ -32,11 +32,14 @@ export class ItemsController {
       onlyWithNextAiring,
       onlyWithNextEpisodesToWatch,
       page,
+      year,
+      genre,
       onlySeenItems,
       onlyOnWatchlist,
       onlyWithUserRating,
       onlyWithoutUserRating,
       onlyWithProgress,
+      selectRandom,
     } = req.query;
 
     const orderBy = req.query.orderBy || 'title';
@@ -54,6 +57,8 @@ export class ItemsController {
       sortOrder: sortOrder,
       filter: filter,
       page: page,
+      year: year,
+      genre: genre,
       onlySeenItems: onlySeenItems,
       onlyOnWatchlist: onlyOnWatchlist,
       onlyWithNextEpisodesToWatch: onlyWithNextEpisodesToWatch,
@@ -89,6 +94,7 @@ export class ItemsController {
       onlyWithUserRating,
       onlyWithoutUserRating,
       onlyWithProgress,
+      selectRandom,
     } = req.query;
 
     const orderBy = req.query.orderBy || 'title';
@@ -107,6 +113,54 @@ export class ItemsController {
       onlyWithUserRating: onlyWithUserRating,
       onlyWithoutUserRating: onlyWithoutUserRating,
       onlyWithProgress: onlyWithProgress,
+    });
+
+    res.send(result);
+  });
+
+  /**
+   * @description Get items
+   * @openapi_tags Items
+   * @openapi_operationId random
+   */
+  getRandom = createExpressRoute<{
+    method: 'get';
+    path: '/api/items/random';
+    requestQuery: Omit<GetItemsRequest, 'page'>;
+    responseBody: MediaItemItemsResponse[];
+  }>(async (req, res) => {
+    const userId = Number(req.user);
+
+    const {
+      filter,
+      mediaType,
+      onlyWithNextAiring,
+      onlyWithNextEpisodesToWatch,
+      onlySeenItems,
+      onlyOnWatchlist,
+      onlyWithUserRating,
+      onlyWithoutUserRating,
+      onlyWithProgress,
+      selectRandom,
+    } = req.query;
+
+    const orderBy = req.query.orderBy || 'title';
+    const sortOrder = req.query.sortOrder || 'asc';
+
+    const result = await mediaItemRepository.items({
+      userId: userId,
+      mediaType: mediaType,
+      orderBy: orderBy,
+      sortOrder: sortOrder,
+      filter: filter,
+      onlySeenItems: onlySeenItems,
+      onlyOnWatchlist: onlyOnWatchlist,
+      onlyWithNextEpisodesToWatch: onlyWithNextEpisodesToWatch,
+      onlyWithNextAiring: onlyWithNextAiring,
+      onlyWithUserRating: onlyWithUserRating,
+      onlyWithoutUserRating: onlyWithoutUserRating,
+      onlyWithProgress: onlyWithProgress,
+      selectRandom: selectRandom,
     });
 
     res.send(result);

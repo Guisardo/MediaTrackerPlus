@@ -1,12 +1,26 @@
 import { useQuery, useMutation } from 'react-query';
 
-import { Items } from 'mediatracker-api';
+import { Items, MediaItemItemsResponse } from 'mediatracker-api';
 import { mediaTrackerApi } from 'src/api/api';
 
+type paginatedApiReturnType = {
+  data: MediaItemItemsResponse[];
+  page: number;
+  totalPages: number;
+  from: number;
+  to: number;
+  total: number;
+};
+
 export const useItems = (args: Items.Paginated.RequestQuery) => {
+  const selectRandom = args.selectRandom ?? false;
+
   const { error, data, isFetched } = useQuery(
     ['items', args],
-    async () => mediaTrackerApi.items.paginated(args),
+    async () =>
+      selectRandom
+        ? mediaTrackerApi.items.random(args)
+        : mediaTrackerApi.items.paginated(args),
     {
       keepPreviousData: true,
     }
@@ -16,12 +30,28 @@ export const useItems = (args: Items.Paginated.RequestQuery) => {
     mediaTrackerApi.search.search({ mediaType: args.mediaType, q: query })
   );
 
-  return {
-    items: search.data ? search.data : data?.data,
-    error: error,
-    isLoading: !isFetched || search.isLoading,
-    numberOfPages: data ? data.totalPages : undefined,
-    numberOfItemsTotal: data ? data.total : undefined,
-    search: search.mutate,
-  };
+  return !selectRandom
+    ? {
+        items: search.data
+          ? search.data
+          : (data as paginatedApiReturnType)?.data,
+        error: error,
+        isLoading: !isFetched || search.isLoading,
+        numberOfPages: data
+          ? (data as paginatedApiReturnType).totalPages
+          : undefined,
+        numberOfItemsTotal: data
+          ? (data as paginatedApiReturnType).total
+          : undefined,
+        search: search.mutate,
+      }
+    : {
+        items: search.data ? search.data : (data as MediaItemItemsResponse[]),
+        error: error,
+        isLoading: !isFetched || search.isLoading,
+        numberOfItemsTotal: data
+          ? (data as MediaItemItemsResponse[]).length
+          : undefined,
+        search: search.mutate,
+      };
 };

@@ -4,14 +4,17 @@ import { t } from '@lingui/macro';
 import { MediaType } from 'mediatracker-api';
 import { isAudiobook, isBook, isVideoGame, reverseMap } from 'src/utils';
 import { useMenuComponent } from 'src/hooks/menu';
+import { useSearchParams } from 'react-router-dom';
 
-const useFilterTextMap = (mediaType: MediaType) => {
+const useFilterTextMap = (mediaType: MediaType, isStatisticsPage: boolean) => {
   return {
     all: t`All`,
     onlyWithUserRating: t`Rated`,
     onlyWithoutUserRating: t`Unrated`,
-    onlyOnWatchlist: t`On watchlist`,
-    onlySeenItems: isAudiobook(mediaType)
+    onlyOnWatchlist: isStatisticsPage ? null : t`On watchlist`,
+    onlySeenItems: isStatisticsPage
+      ? null
+      : isAudiobook(mediaType)
       ? t`Listened`
       : isBook(mediaType)
       ? t`Read`
@@ -21,19 +24,27 @@ const useFilterTextMap = (mediaType: MediaType) => {
   };
 };
 
-export const useFilterBy = (mediaType: MediaType) => {
-  const filterTextMap = useFilterTextMap(mediaType);
+export const useFilterBy = (
+  mediaType: MediaType,
+  isStatisticsPage: boolean,
+  handleFilterChange: () => void
+) => {
+  const filterTextMap = useFilterTextMap(mediaType, isStatisticsPage);
   const filterTextReverseMap = reverseMap(filterTextMap);
 
   const { selectedValue, Menu } = useMenuComponent({
     values: Object.values(filterTextMap),
     initialSelection: filterTextMap['all'],
+    paramFilter: 'filter',
+    handleFilterChange: handleFilterChange,
   });
 
   return {
-    filter: {
-      [filterTextReverseMap[selectedValue]]: true,
-    },
+    filter: isStatisticsPage
+      ? { [filterTextReverseMap[selectedValue]]: true, onlySeenItems: true }
+      : {
+          [filterTextReverseMap[selectedValue]]: true,
+        },
     FilterByComponent: () => {
       return (
         <Menu>

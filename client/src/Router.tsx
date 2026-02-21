@@ -23,6 +23,9 @@ import { GoodreadsImportPage } from 'src/pages/import/Goodreads';
 import { ListPage } from 'src/pages/ListPage';
 import { EpisodePage } from 'src/pages/EpisodePage';
 import { ListsPage } from 'src/pages/ListsPage';
+import { Random } from './pages/Random';
+import Statistics from './pages/Statistics';
+import { ItemsPageStatistic } from './pages/ItemsPageStatistic';
 
 export const MyRouter: FunctionComponent = () => {
   const { isLoading, user } = useUser();
@@ -60,7 +63,15 @@ export const MyRouter: FunctionComponent = () => {
                 element={<ItemsPage key="/tv" mediaType="tv" />}
               />
               <Route
+                path="/tv/:year"
+                element={<ItemsPage key="/tv" mediaType="tv" />}
+              />
+              <Route
                 path="/movies"
+                element={<ItemsPage key="/movies" mediaType="movie" />}
+              />
+              <Route
+                path="/movies/:year"
                 element={<ItemsPage key="/movies" mediaType="movie" />}
               />
               <Route
@@ -68,11 +79,23 @@ export const MyRouter: FunctionComponent = () => {
                 element={<ItemsPage key="/games" mediaType="video_game" />}
               />
               <Route
+                path="/games/:year"
+                element={<ItemsPage key="/games" mediaType="video_game" />}
+              />
+              <Route
                 path="/books"
                 element={<ItemsPage key="/books" mediaType="book" />}
               />
               <Route
+                path="/books/:year"
+                element={<ItemsPage key="/books" mediaType="book" />}
+              />
+              <Route
                 path="/audiobooks"
+                element={<ItemsPage key="/audiobooks" mediaType="audiobook" />}
+              />
+              <Route
+                path="/audiobooks/:year"
                 element={<ItemsPage key="/audiobooks" mediaType="audiobook" />}
               />
 
@@ -84,6 +107,23 @@ export const MyRouter: FunctionComponent = () => {
                 path="/watchlist"
                 element={<WatchlistPage key="/watchlist" />}
               />
+
+              <Route path="/random" element={<Random key="/random" />} />
+
+              <Route
+                path="/statistics/*"
+                element={<Statistics key="/statistics" />}
+              />
+
+              <Route
+                path="/statistics/genre/:mediatype"
+                element={<ItemsPageStatistic key={'mediatype'} />}
+              ></Route>
+
+              <Route
+                path="/statistics/seen/:mediatype"
+                element={<ItemsPageStatistic key={'mediatype'} />}
+              ></Route>
 
               <Route
                 path="/in-progress"

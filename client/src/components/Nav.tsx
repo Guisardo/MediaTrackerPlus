@@ -18,6 +18,8 @@ export const useRouteNames = () => {
     { path: '/upcoming', name: t`Upcoming` },
     { path: '/in-progress', name: t`In progress` },
     { path: '/watchlist', name: t`Watchlist` },
+    { path: '/random', name: t`Random` },
+    { path: '/statistics', name: t`Statistics` },
     { path: '/calendar', name: t`Calendar` },
     { path: '/import', name: t`Import` },
     { path: '/lists', name: t`Lists` },
@@ -86,7 +88,9 @@ export const NavComponent: FunctionComponent = () => {
                 href="/logout"
                 onClick={(e) => {
                   e.preventDefault();
-                  logout();
+                  if (confirm(t`Do you really want to logout?`)) {
+                    logout();
+                  }
                 }}
               >
                 <Trans>Logout</Trans>

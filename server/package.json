@@ -1,23 +1,29 @@
 {
-  "name": "mediatracker",
-  "version": "0.2.11",
+  "name": "mediatracker-plus",
+  "version": "0.1.0",
   "description": "Self hosted media tracker for movies, tv shows, video games, books and audiobooks",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bonukai/MediaTracker.git"
+    "url": "https://github.com/dnlwttnbrg/MediaTrackerPlus.git"
   },
   "keywords": [
     "self hosted"
   ],
   "author": {
-    "name": "bonukai",
-    "url": "https://github.com/bonukai"
+    "name": "Daniel Wittenburg",
+    "url": "https://github.com/dnlwttnbrg"
   },
+  "contributors": [
+    {
+      "name": "bonukai",
+      "url": "https://github.com/bonukai"
+    }
+  ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bonukai/MediaTracker/issues"
+    "url": "https://github.com/dnlwttnbrg/MediaTrackerPlus/issues"
   },
-  "homepage": "https://github.com/bonukai/MediaTracker#readme",
+  "homepage": "https://github.com/dnlwttnbrg/MediaTrackerPlus/MediaTracker#readme",
   "scripts": {
     "test": "cross-env DATABASE_PATH=:memory: jest",
     "test:coverage": "cross-env DATABASE_PATH=:memory: jest --coverage",
