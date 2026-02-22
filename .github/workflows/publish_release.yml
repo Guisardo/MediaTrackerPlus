@@ -30,6 +30,7 @@ jobs:
           fi
       - if: ${{ github.event.action == 'prereleased' }}
         name: Publish on npmjs.com [prerelease]
+        continue-on-error: true
         run: |
           npm ci
           npm run build
@@ -40,6 +41,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - if: ${{ github.event.action == 'released' }}
         name: Publish on npmjs.com
+        continue-on-error: true
         run: |
           npm ci
           npm run build
