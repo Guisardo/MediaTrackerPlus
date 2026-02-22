@@ -9,37 +9,25 @@ jobs:
     name: Publish release
     runs-on: ubuntu-latest
     steps:
-      - if: startsWith(${{ github.event.release.tag_name }}, "v")
-        id: version
-        run: echo "::set-output name=version::$(echo ${{ github.event.release.tag_name }} | cut -c2-)"
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: main
-      - name: Setup GPG keys for signed commits
-        uses: crazy-max/ghaction-import-gpg@v4
-        with:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          git_user_signingkey: true
-          git_commit_gpgsign: true
       - uses: actions/setup-node@v6
         with:
           registry-url: 'https://registry.npmjs.org'
-      - name: Update package.json
+      - name: Get version
+        id: version
         run: |
-          cd server
-          npm version ${{ steps.version.outputs.version }} --no-git-tag-version
-          npm ci
-          npm run build:routes
-          git add package.json openapi.json
-          git commit -m "${{ steps.version.outputs.version }}"
-          git tag --force ${{ github.event.release.tag_name }}
-          git push
-          git push --force --tags
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: main
+          echo "version=$(node -p "require('./server/package.json').version")" >> $GITHUB_OUTPUT
+      - name: Validate version
+        run: |
+          TAG_VERSION=${GITHUB_REF#refs/tags/v}
+          PACKAGE_VERSION=$(node -p "require('./server/package.json').version")
+
+          if [ "$TAG_VERSION" != "$PACKAGE_VERSION" ]; then
+            echo "Tag version and package.json version do not match!"
+            exit 1
+          fi
       - if: ${{ github.event.action == 'prereleased' }}
         name: Publish on npmjs.com [prerelease]
         run: |
