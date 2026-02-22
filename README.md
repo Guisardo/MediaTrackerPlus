@@ -2,6 +2,7 @@
 
 Self hosted platform for tracking movies, tv shows, video games, books and audiobooks, highly inspired by [flox](https://github.com/devfake/flox).
 This is a fork from [Mediatracker](https://github.com/bonukai/MediaTracker) because I wanted new features and the original repository is at this time abandoned. But feel free to check out the original repository.
+This is a drop in replacement of the original repository. For now, the databases are compartible.
 
 # API Documentation
 
