@@ -1,0 +1,20 @@
+# Ralph Progress Log
+Started: Fri Mar  6 17:48:31 -03 2026
+---
+
+## 2026-03-06 11:03 - US-001
+- Added migration file: server/src/migrations/20990101000000_listItemEstimatedRating.ts
+- Added comprehensive unit tests in server/__tests__/migrations/migrations.test.ts
+- Migration adds nullable FLOAT estimatedRating column to listItem table
+- Idempotent: uses hasColumn guard to prevent errors on re-runs
+- Tested on SQLite with in-memory database
+- All 215 tests pass
+- Build completes successfully with no type errors
+- Commit: feat: US-001 - Add estimatedRating column to listItem table
+
+**Learnings for future iterations:**
+- Migration pattern: Always use hasColumn guard for idempotent migrations
+- Test pattern: Run up, verify column exists, rollback, verify removed, up again for idempotency test
+- The test file setup requires the initial migration setup from beforeAll hook
+- Knex migration tracking prevents re-running migrations by name - use explicit down/up for rollback testing
+---
