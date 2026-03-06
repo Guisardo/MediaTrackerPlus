@@ -36,7 +36,7 @@
         "Tests pass"
       ],
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "notes": "Pure TypeScript type extension — no runtime logic, no DB changes. Modify only server/src/entity/list.ts. This is a prerequisite for US-010 (sort implementation).",
       "jiraKey": null,
       "reasoningLevel": "LOW"

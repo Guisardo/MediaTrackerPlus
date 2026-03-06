@@ -18,3 +18,25 @@ Started: Fri Mar  6 17:48:31 -03 2026
 - The test file setup requires the initial migration setup from beforeAll hook
 - Knex migration tracking prevents re-running migrations by name - use explicit down/up for rollback testing
 ---
+
+## 2026-03-06 14:20 - US-002
+- Extended ListSortBy union type to include 'recommended' in server/src/entity/list.ts
+- Added estimatedRating?: number field to ListItem type definition
+- Added 'estimatedRating' to listItemColumns constant for consistency
+- Created comprehensive unit tests: server/__tests__/entity/list.test.ts
+  - Verifies 'recommended' is valid ListSortBy value
+  - Verifies all original sort options remain intact
+  - Verifies ListItem accepts estimatedRating as optional number
+  - Tests various numeric values for estimatedRating
+  - Tests optional fields work together (seasonId, episodeId, estimatedRating)
+  - Validates listItemColumns exports estimatedRating
+- TypeScript type checking passes with no errors
+- All 224 tests pass (including 9 new tests, no regressions)
+- Commit: feat: US-002 - Extend ListSortBy type and ListItem entity with recommendation fields
+
+**Learnings for future iterations:**
+- The listItemColumns constant is used for projection queries - update it whenever ListItem type changes
+- Entity types are in server/src/entity/list.ts - this is the central type definition file
+- Tests for entity types go in server/__tests__/entity/ directory
+- Ensure both the type AND the columns constant are updated together for consistency
+---
