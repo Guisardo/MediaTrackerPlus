@@ -24,6 +24,8 @@ rest-api/index.ts
 
 docs/dist
 
+/ralph/
+
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
