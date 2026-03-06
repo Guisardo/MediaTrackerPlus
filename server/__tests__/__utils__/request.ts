@@ -10,6 +10,7 @@ export const request = (
     userId: number;
     pathParams?: Record<string, unknown>;
     requestQuery?: Record<string, unknown>;
+    requestBody?: Record<string, unknown>;
   }
 ) => {
   return new Promise<{
@@ -21,6 +22,7 @@ export const request = (
         user: args.userId,
         params: args.pathParams,
         query: args.requestQuery,
+        body: args.requestBody,
       } as unknown as Express.Request,
       {
         send: (data: unknown) =>
