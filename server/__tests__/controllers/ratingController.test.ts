@@ -227,4 +227,253 @@ describe('RatingController', () => {
 
     await Database.knex('userRating').delete();
   });
+
+  describe('auto-mark as seen on rating', () => {
+    afterEach(async () => {
+      await Database.knex('userRating').delete();
+      await Database.knex('seen').delete();
+      await Database.knex('listItem').delete();
+    });
+
+    test('should auto-mark a movie as seen when a numeric rating is set', async () => {
+      const ratingController = new RatingController();
+
+      await request(ratingController.add, {
+        userId: Data.user.id,
+        requestBody: {
+          mediaItemId: Data.movie.id,
+          rating: 8,
+        },
+      });
+
+      const seenEntry = await Database.knex('seen')
+        .where('userId', Data.user.id)
+        .where('mediaItemId', Data.movie.id)
+        .whereNull('episodeId')
+        .first();
+
+      expect(seenEntry).toBeDefined();
+    });
+
+    test('should not create a duplicate seen entry when the movie is already seen', async () => {
+      const ratingController = new RatingController();
+
+      await Database.knex('seen').insert({
+        userId: Data.user.id,
+        mediaItemId: Data.movie.id,
+        episodeId: null,
+        date: Date.now(),
+      });
+
+      await request(ratingController.add, {
+        userId: Data.user.id,
+        requestBody: {
+          mediaItemId: Data.movie.id,
+          rating: 8,
+        },
+      });
+
+      const seenEntries = await Database.knex('seen')
+        .where('userId', Data.user.id)
+        .where('mediaItemId', Data.movie.id)
+        .whereNull('episodeId');
+
+      expect(seenEntries.length).toEqual(1);
+    });
+
+    test('should remove the movie from the watchlist when auto-marked as seen on rating', async () => {
+      const ratingController = new RatingController();
+
+      await Database.knex('listItem').insert({
+        listId: Data.watchlist.id,
+        mediaItemId: Data.movie.id,
+        seasonId: null,
+        episodeId: null,
+        addedAt: Date.now(),
+      });
+
+      await request(ratingController.add, {
+        userId: Data.user.id,
+        requestBody: {
+          mediaItemId: Data.movie.id,
+          rating: 7,
+        },
+      });
+
+      const watchlistItem = await Database.knex('listItem')
+        .where('listId', Data.watchlist.id)
+        .where('mediaItemId', Data.movie.id)
+        .whereNull('episodeId')
+        .whereNull('seasonId')
+        .first();
+
+      expect(watchlistItem).toBeUndefined();
+    });
+
+    test('should auto-mark a TV episode as seen when rated', async () => {
+      const ratingController = new RatingController();
+
+      await request(ratingController.add, {
+        userId: Data.user.id,
+        requestBody: {
+          mediaItemId: Data.tvShow.id,
+          seasonId: Data.season.id,
+          episodeId: Data.episode.id,
+          rating: 9,
+        },
+      });
+
+      const seenEntry = await Database.knex('seen')
+        .where('userId', Data.user.id)
+        .where('mediaItemId', Data.tvShow.id)
+        .where('episodeId', Data.episode.id)
+        .first();
+
+      expect(seenEntry).toBeDefined();
+    });
+
+    test('should not create a duplicate seen entry when the episode is already seen', async () => {
+      const ratingController = new RatingController();
+
+      await Database.knex('seen').insert({
+        userId: Data.user.id,
+        mediaItemId: Data.tvShow.id,
+        episodeId: Data.episode.id,
+        date: Date.now(),
+      });
+
+      await request(ratingController.add, {
+        userId: Data.user.id,
+        requestBody: {
+          mediaItemId: Data.tvShow.id,
+          seasonId: Data.season.id,
+          episodeId: Data.episode.id,
+          rating: 9,
+        },
+      });
+
+      const seenEntries = await Database.knex('seen')
+        .where('userId', Data.user.id)
+        .where('mediaItemId', Data.tvShow.id)
+        .where('episodeId', Data.episode.id);
+
+      expect(seenEntries.length).toEqual(1);
+    });
+
+    test('should NOT auto-mark as seen when submitting only a review without a numeric rating', async () => {
+      const ratingController = new RatingController();
+
+      await request(ratingController.add, {
+        userId: Data.user.id,
+        requestBody: {
+          mediaItemId: Data.movie.id,
+          review: 'Just a text review, no star rating',
+        },
+      });
+
+      const seenEntry = await Database.knex('seen')
+        .where('userId', Data.user.id)
+        .where('mediaItemId', Data.movie.id)
+        .whereNull('episodeId')
+        .first();
+
+      expect(seenEntry).toBeUndefined();
+    });
+
+    describe('with multiple episodes in the season', () => {
+      beforeAll(async () => {
+        await Database.knex('episode').insert(Data.episode2);
+        await Database.knex('episode').insert(Data.episode3);
+      });
+
+      afterAll(async () => {
+        await Database.knex('episode')
+          .whereIn('id', [Data.episode2.id, Data.episode3.id])
+          .delete();
+      });
+
+      test('should auto-mark all episodes in a season as seen when the season is rated', async () => {
+        const ratingController = new RatingController();
+
+        await request(ratingController.add, {
+          userId: Data.user.id,
+          requestBody: {
+            mediaItemId: Data.tvShow.id,
+            seasonId: Data.season.id,
+            rating: 8,
+          },
+        });
+
+        const seenEntries = await Database.knex('seen')
+          .where('userId', Data.user.id)
+          .where('mediaItemId', Data.tvShow.id)
+          .whereIn('episodeId', [
+            Data.episode.id,
+            Data.episode2.id,
+            Data.episode3.id,
+          ]);
+
+        expect(seenEntries.length).toEqual(3);
+      });
+
+      test('should only mark unseen episodes when rating a season with partial seen history', async () => {
+        const ratingController = new RatingController();
+
+        await Database.knex('seen').insert({
+          userId: Data.user.id,
+          mediaItemId: Data.tvShow.id,
+          episodeId: Data.episode.id,
+          date: Date.now(),
+        });
+
+        await request(ratingController.add, {
+          userId: Data.user.id,
+          requestBody: {
+            mediaItemId: Data.tvShow.id,
+            seasonId: Data.season.id,
+            rating: 7,
+          },
+        });
+
+        const seenEntries = await Database.knex('seen')
+          .where('userId', Data.user.id)
+          .where('mediaItemId', Data.tvShow.id);
+
+        const seenEpisodeIds = seenEntries.map((s: { episodeId: number }) => s.episodeId);
+
+        expect(seenEntries.length).toEqual(3);
+        expect(seenEpisodeIds).toContain(Data.episode.id);
+        expect(seenEpisodeIds).toContain(Data.episode2.id);
+        expect(seenEpisodeIds).toContain(Data.episode3.id);
+
+        const episodeOneSeen = seenEntries.filter(
+          (s: { episodeId: number }) => s.episodeId === Data.episode.id
+        );
+        expect(episodeOneSeen.length).toEqual(1);
+      });
+
+      test('should auto-mark all TV show episodes as seen when the TV show is rated', async () => {
+        const ratingController = new RatingController();
+
+        await request(ratingController.add, {
+          userId: Data.user.id,
+          requestBody: {
+            mediaItemId: Data.tvShow.id,
+            rating: 10,
+          },
+        });
+
+        const seenEntries = await Database.knex('seen')
+          .where('userId', Data.user.id)
+          .where('mediaItemId', Data.tvShow.id)
+          .whereIn('episodeId', [
+            Data.episode.id,
+            Data.episode2.id,
+            Data.episode3.id,
+          ]);
+
+        expect(seenEntries.length).toEqual(3);
+      });
+    });
+  });
 });
