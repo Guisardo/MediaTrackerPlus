@@ -10,6 +10,7 @@ import { TvEpisodeFilters } from 'src/entity/tvepisode';
 import { tvEpisodeRepository } from 'src/repository/episode';
 import { mediaItemRepository } from 'src/repository/mediaItem';
 import { listItemRepository } from 'src/repository/listItemRepository';
+import { userRepository } from 'src/repository/user';
 import { Database } from 'src/dbconfig';
 
 /**
@@ -278,10 +279,16 @@ export class RatingController {
     // This executes AFTER the response is sent, so HTTP latency is unaffected.
     if (rating !== undefined) {
       setImmediate(() => {
-        getRecommendationService()
-          .then((service) =>
-            service.processRating(userId, mediaItemId, rating)
-          )
+        userRepository
+          .findOne({ id: userId })
+          .then((user) => {
+            if (user.addRecommendedToWatchlist === false) {
+              return;
+            }
+            return getRecommendationService().then((service) =>
+              service.processRating(userId, mediaItemId, rating)
+            );
+          })
           .catch((err) => {
             logger.error('Unhandled error in recommendation pipeline', { err });
           });
