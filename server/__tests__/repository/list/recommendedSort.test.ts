@@ -1,5 +1,6 @@
 import { Database } from 'src/dbconfig';
 import { listRepository } from 'src/repository/list';
+import { mediaItemRepository } from 'src/repository/mediaItem';
 import { Data } from '__tests__/__utils__/data';
 import { clearDatabase, runMigrations } from '__tests__/__utils__/utils';
 
@@ -263,5 +264,160 @@ describe('listRepository.items() — estimatedRating and tmdbRating exposure', (
 
     expect(item.estimatedRating).toBe(9.0);
     expect(item.mediaItem.tmdbRating).toBe(7.5);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Integration tests: mediaItemRepository.items() — 'recommended' SQL sort
+// Verifies the actual SQL CASE expressions in knex/queries/items.ts execute
+// correctly against a live SQLite database and produce the expected row order.
+// ---------------------------------------------------------------------------
+
+describe("mediaItemRepository.items({ orderBy: 'recommended' }) — SQL integration", () => {
+  const user = {
+    id: 1,
+    name: 'user',
+    password: 'password',
+  };
+
+  const watchlist = {
+    id: 1,
+    userId: 1,
+    name: 'Watchlist',
+    privacy: 'private',
+    sortBy: 'recently-watched',
+    sortOrder: 'desc',
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+    isWatchlist: true,
+  };
+
+  // Alpha: estimatedRating=9.0, tmdbRating=8.0 → combined score = 9.0*0.6 + 8.0*0.4 = 8.6
+  const itemAlpha = {
+    id: 1,
+    lastTimeUpdated: Date.now(),
+    mediaType: 'movie',
+    source: 'tmdb',
+    title: 'Alpha',
+    tmdbRating: 8.0,
+  };
+
+  // Beta: estimatedRating=7.0, tmdbRating=null → score = 7.0 (no formula)
+  const itemBeta = {
+    id: 2,
+    lastTimeUpdated: Date.now(),
+    mediaType: 'movie',
+    source: 'tmdb',
+    title: 'Beta',
+  };
+
+  // Gamma: estimatedRating=null → sorts last (after all scored items), then by title
+  const itemGamma = {
+    id: 3,
+    lastTimeUpdated: Date.now(),
+    mediaType: 'movie',
+    source: 'tmdb',
+    title: 'Gamma',
+    tmdbRating: 9.0,
+  };
+
+  beforeAll(async () => {
+    await runMigrations();
+    await Database.knex('user').insert(user);
+    await Database.knex('mediaItem').insert(itemAlpha);
+    await Database.knex('mediaItem').insert(itemBeta);
+    await Database.knex('mediaItem').insert(itemGamma);
+    await Database.knex('list').insert(watchlist);
+    await Database.knex('listItem').insert([
+      {
+        listId: watchlist.id,
+        mediaItemId: itemAlpha.id,
+        addedAt: Date.now(),
+        estimatedRating: 9.0,
+      },
+      {
+        listId: watchlist.id,
+        mediaItemId: itemBeta.id,
+        addedAt: Date.now(),
+        estimatedRating: 7.0,
+      },
+      {
+        listId: watchlist.id,
+        mediaItemId: itemGamma.id,
+        addedAt: Date.now(),
+        // estimatedRating intentionally omitted (null) — should sort last
+      },
+    ]);
+  });
+
+  afterAll(clearDatabase);
+
+  test('higher combined score sorts before lower score — Alpha (8.6) > Beta (7.0) > Gamma (null)', async () => {
+    const items = await mediaItemRepository.items({
+      userId: user.id,
+      orderBy: 'recommended',
+      sortOrder: 'desc',
+    });
+
+    expect(items.length).toBe(3);
+    // Alpha: 9.0*0.6 + 8.0*0.4 = 8.6
+    // Beta:  7.0 (no tmdbRating, formula falls back to estimatedRating only)
+    // Gamma: null estimatedRating → last
+    expect(items[0].title).toBe('Alpha');
+    expect(items[1].title).toBe('Beta');
+    expect(items[2].title).toBe('Gamma');
+  });
+
+  test('estimatedRating is exposed on all items returned by recommended sort', async () => {
+    const items = await mediaItemRepository.items({
+      userId: user.id,
+      orderBy: 'recommended',
+      sortOrder: 'desc',
+    });
+
+    const alpha = items.find((i) => i.title === 'Alpha');
+    const beta = items.find((i) => i.title === 'Beta');
+    const gamma = items.find((i) => i.title === 'Gamma');
+
+    expect(alpha?.estimatedRating).toBe(9.0);
+    expect(beta?.estimatedRating).toBe(7.0);
+    expect(gamma?.estimatedRating).toBeUndefined();
+  });
+
+  test('items with null estimatedRating sort last and then alphabetically by title', async () => {
+    const itemAaaa = {
+      id: 4,
+      lastTimeUpdated: Date.now(),
+      mediaType: 'movie',
+      source: 'tmdb',
+      title: 'Aaaa',
+      tmdbRating: 9.5,
+    };
+    await Database.knex('mediaItem').insert(itemAaaa);
+    await Database.knex('listItem').insert({
+      listId: watchlist.id,
+      mediaItemId: itemAaaa.id,
+      addedAt: Date.now(),
+      // null estimatedRating — must sort after Beta and before/after Gamma by title
+    });
+
+    try {
+      const items = await mediaItemRepository.items({
+        userId: user.id,
+        orderBy: 'recommended',
+        sortOrder: 'desc',
+      });
+
+      expect(items.length).toBe(4);
+      // Scored items first: Alpha (8.6), Beta (7.0)
+      expect(items[0].title).toBe('Alpha');
+      expect(items[1].title).toBe('Beta');
+      // Null-estimatedRating items last, sorted alphabetically: Aaaa < Gamma
+      expect(items[2].title).toBe('Aaaa');
+      expect(items[3].title).toBe('Gamma');
+    } finally {
+      await Database.knex('listItem').where('mediaItemId', itemAaaa.id).delete();
+      await Database.knex('mediaItem').where('id', itemAaaa.id).delete();
+    }
   });
 });
