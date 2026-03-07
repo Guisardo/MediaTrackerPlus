@@ -1,13 +1,15 @@
 import axios from 'axios';
-import { MediaItemForProvider } from 'src/entity/mediaItem';
+import { ExternalIds, MediaItemForProvider } from 'src/entity/mediaItem';
 import { MetadataProvider } from 'src/metadata/metadataProvider';
+import { logger } from 'src/logger';
+import { SimilarItem } from 'src/services/recommendations/types';
 
 export class OpenLibrary extends MetadataProvider {
   readonly name = 'openlibrary';
   readonly mediaType = 'book';
 
   async search(query: string): Promise<MediaItemForProvider[]> {
-    const res = await axios.get('http://openlibrary.org/search.json', {
+    const res = await axios.get('https://openlibrary.org/search.json', {
       params: {
         q: query,
         fields: [
@@ -71,6 +73,66 @@ export class OpenLibrary extends MetadataProvider {
           : args.externalPosterUrl,
       numberOfPages: args.numberOfPages,
     };
+  }
+
+  async similar(ids: ExternalIds): Promise<SimilarItem[]> {
+    if (!ids.openlibraryId) {
+      logger.warn(
+        `OpenLibrary.similar: no openlibraryId provided — returning empty results`
+      );
+      return [];
+    }
+
+    const strippedId = ids.openlibraryId.replace(/^\/works\//, '');
+
+    let workDetails: DetailsResponse;
+    try {
+      const res = await axios.get<DetailsResponse>(
+        `https://openlibrary.org/works/${strippedId}.json`
+      );
+      workDetails = res.data;
+    } catch (err: unknown) {
+      const axiosError = err as { response?: { status?: number } };
+      throw new Error(
+        `OpenLibrary work details request failed with HTTP ${
+          axiosError?.response?.status ?? 'unknown'
+        } for /works/${strippedId}.json`
+      );
+    }
+
+    if (!workDetails.subjects || workDetails.subjects.length === 0) {
+      logger.warn(
+        `OpenLibrary.similar: work "${ids.openlibraryId}" has no subjects — returning empty results`
+      );
+      return [];
+    }
+
+    const firstSubject = workDetails.subjects[0];
+    const normalizedSubject = firstSubject.toLowerCase().replace(/\s+/g, '_');
+
+    let subjectWorks: OpenLibrarySubjectWork[];
+    try {
+      const res = await axios.get<OpenLibrarySubjectResponse>(
+        `https://openlibrary.org/subjects/${normalizedSubject}.json`
+      );
+      subjectWorks = res.data.works ?? [];
+    } catch (err: unknown) {
+      const axiosError = err as { response?: { status?: number } };
+      throw new Error(
+        `OpenLibrary subjects request failed with HTTP ${
+          axiosError?.response?.status ?? 'unknown'
+        } for /subjects/${normalizedSubject}.json`
+      );
+    }
+
+    return subjectWorks.map(
+      (work): SimilarItem => ({
+        externalId: work.key,
+        mediaType: 'book',
+        title: work.title,
+        externalRating: null,
+      })
+    );
   }
 }
 
@@ -161,4 +223,15 @@ interface DetailsResponse {
     type: string;
     value: string;
   };
+}
+
+interface OpenLibrarySubjectWork {
+  key: string;
+  title: string;
+}
+
+interface OpenLibrarySubjectResponse {
+  name: string;
+  works: OpenLibrarySubjectWork[];
+  work_count: number;
 }

@@ -1,4 +1,5 @@
 import { createExpressRoute } from 'typescript-routes-to-openapi-server';
+import type { RecommendationService } from 'src/services/recommendations/recommendationService';
 import { UserRating } from 'src/entity/userRating';
 import { userRatingRepository } from 'src/repository/userRating';
 import { logger } from 'src/logger';
@@ -15,46 +16,25 @@ import { Database } from 'src/dbconfig';
  * Lazy-initialized singleton for RecommendationService.
  * Instantiated on first rating event and cached for reuse.
  */
-let recommendationService: any = null;
+let recommendationService: RecommendationService | null = null;
 
-/**
- * Factory function to create and cache the RecommendationService instance.
- * Pulls all dependencies from existing providers and repositories to avoid
- * hardcoding secrets or duplicating instances.
- */
-async function getRecommendationService() {
+async function getRecommendationService(): Promise<RecommendationService> {
   if (recommendationService) {
     return recommendationService;
   }
 
-  // Lazy imports to avoid circular dependencies
   const { metadataProviders } = await import('src/metadata/metadataProviders');
-  const { IGDB } = await import('src/metadata/provider/igdb');
   const { findMediaItemByExternalId } = await import('src/metadata/findByExternalId');
   const { mediaItemRepository: lazyMediaItemRepository } = await import('src/repository/mediaItem');
-  const { RecommendationService } = await import('src/services/recommendations/RecommendationService');
-  const { TmdbSimilarClient } = await import('src/services/recommendations/TmdbSimilarClient');
-  const { IgdbSimilarClient } = await import('src/services/recommendations/IgdbSimilarClient');
-  const { OpenLibrarySimilarClient } = await import('src/services/recommendations/OpenLibrarySimilarClient');
-  const { WatchlistWriter } = await import('src/services/recommendations/WatchlistWriter');
-
-  const tmdbApiKey = Config.TMDB_API_KEY;
-
-  // Get the IGDB provider to extract RequestQueue and OAuth credentials
-  const igdbProvider = metadataProviders.get('video_game') as InstanceType<typeof IGDB>;
+  const { RecommendationService } = await import('src/services/recommendations/recommendationService');
+  const { WatchlistWriter } = await import('src/services/recommendations/watchlistWriter');
 
   recommendationService = new RecommendationService({
-    tmdbClient: new TmdbSimilarClient(tmdbApiKey),
-    igdbClient: new IgdbSimilarClient({
-      requestQueue: igdbProvider.getRequestQueue(),
-      clientId: igdbProvider.getClientId(),
-      clientSecret: igdbProvider.getClientSecret(),
-    }),
-    openLibraryClient: new OpenLibrarySimilarClient(),
+    metadataProviders,
     watchlistWriter: new WatchlistWriter({
       findMediaItemByExternalId,
     }),
-    findMediaItemById: (mediaItemId) =>
+    findMediaItemById: (mediaItemId: number) =>
       lazyMediaItemRepository.findOne({ id: mediaItemId }),
   });
 
@@ -293,16 +273,19 @@ export class RatingController {
 
     res.send();
 
-    // Fire-and-forget recommendation pipeline using setImmediate
-    // This executes AFTER the response is sent, so HTTP latency is unaffected
-    setImmediate(() => {
-      getRecommendationService()
-        .then((service) =>
-          service.processRating(userId, mediaItemId, rating)
-        )
-        .catch((err) => {
-          logger.error('Unhandled error in recommendation pipeline', { err });
-        });
-    });
+    // Fire-and-forget recommendation pipeline using setImmediate.
+    // Only triggered when a numeric rating is provided.
+    // This executes AFTER the response is sent, so HTTP latency is unaffected.
+    if (rating !== undefined) {
+      setImmediate(() => {
+        getRecommendationService()
+          .then((service) =>
+            service.processRating(userId, mediaItemId, rating)
+          )
+          .catch((err) => {
+            logger.error('Unhandled error in recommendation pipeline', { err });
+          });
+      });
+    }
   });
 }

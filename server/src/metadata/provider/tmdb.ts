@@ -6,8 +6,13 @@ import { MediaItemForProvider, ExternalIds } from 'src/entity/mediaItem';
 import { MetadataProvider } from 'src/metadata/metadataProvider';
 import { GlobalConfiguration } from 'src/repository/globalSettings';
 import { Config } from 'src/config';
+import { logger } from 'src/logger';
+import { SimilarItem } from 'src/services/recommendations/types';
 
 const TMDB_API_KEY = Config.TMDB_API_KEY;
+
+/** Minimum vote count required to include a TMDB similar item in results. */
+const TMDB_SIMILAR_MINIMUM_VOTE_COUNT = 10;
 
 type PosterSize =
   | 'w92'
@@ -24,6 +29,70 @@ const getPosterUrl = (p: string, size: PosterSize = 'original') => {
 
 abstract class TMDb extends MetadataProvider {
   readonly name = 'tmdb';
+
+  protected async fetchTmdbSimilar(
+    tmdbId: number,
+    mediaType: 'movie' | 'tv'
+  ): Promise<SimilarItem[]> {
+    const endpointPath = `/3/${mediaType}/${tmdbId}/similar`;
+    const url = `https://api.themoviedb.org${endpointPath}`;
+
+    let response: { data: TMDbApi.SimilarResponse; status: number };
+
+    try {
+      response = await axios.get<TMDbApi.SimilarResponse>(url, {
+        params: { api_key: TMDB_API_KEY },
+      });
+    } catch (err: unknown) {
+      const axiosError = err as {
+        response?: { status?: number; headers?: Record<string, string> };
+      };
+      const status = axiosError?.response?.status;
+
+      if (status === 429) {
+        const retryAfter = axiosError?.response?.headers?.['retry-after'];
+        logger.warn(
+          `TMDB rate limit hit on ${endpointPath}. Retry-After: ${retryAfter ?? 'unknown'}`
+        );
+        return [];
+      }
+
+      throw new Error(
+        `TMDB API request failed with HTTP ${status ?? 'unknown'} for ${endpointPath}`
+      );
+    }
+
+    return response.data.results
+      .filter((item) => item.vote_count >= TMDB_SIMILAR_MINIMUM_VOTE_COUNT)
+      .map((item): SimilarItem | null => {
+        const title = mediaType === 'movie' ? item.title : item.name;
+
+        if (!title) {
+          return null;
+        }
+
+        let externalRating: number | null = item.vote_average;
+
+        if (externalRating === 0) {
+          externalRating = null;
+        }
+
+        if (
+          externalRating !== null &&
+          (externalRating < 0 || externalRating > 10)
+        ) {
+          externalRating = null;
+        }
+
+        return {
+          externalId: String(item.id),
+          mediaType,
+          title,
+          externalRating,
+        };
+      })
+      .filter((item): item is SimilarItem => item !== null);
+  }
 
   protected mapItem(
     response:
@@ -87,6 +156,14 @@ export class TMDbMovie extends TMDb {
     movie.needsDetails = false;
 
     return movie;
+  }
+
+  async similar(ids: ExternalIds): Promise<SimilarItem[]> {
+    if (!ids.tmdbId) {
+      logger.warn(`TMDbMovie.similar: no tmdbId provided — returning empty results`);
+      return [];
+    }
+    return this.fetchTmdbSimilar(ids.tmdbId, 'movie');
   }
 
   async findByImdbId(imdbId: string): Promise<MediaItemForProvider> {
@@ -184,6 +261,14 @@ export class TMDbTv extends TMDb {
     tvShow.needsDetails = false;
 
     return tvShow;
+  }
+
+  async similar(ids: ExternalIds): Promise<SimilarItem[]> {
+    if (!ids.tmdbId) {
+      logger.warn(`TMDbTv.similar: no tmdbId provided — returning empty results`);
+      return [];
+    }
+    return this.fetchTmdbSimilar(ids.tmdbId, 'tv');
   }
 
   async findByImdbId(imdbId: string): Promise<MediaItemForProvider> {
@@ -322,6 +407,21 @@ export class TMDbTv extends TMDb {
 }
 
 namespace TMDbApi {
+  export interface SimilarResultItem {
+    id: number;
+    title?: string;
+    name?: string;
+    vote_average: number;
+    vote_count: number;
+  }
+
+  export interface SimilarResponse {
+    page: number;
+    results: SimilarResultItem[];
+    total_pages: number;
+    total_results: number;
+  }
+
   export interface SeasonDetailsResponse {
     _id: string;
     air_date: string;

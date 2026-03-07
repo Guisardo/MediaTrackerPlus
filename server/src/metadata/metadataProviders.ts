@@ -1,10 +1,11 @@
-import { MediaItemForProvider, MediaType } from 'src/entity/mediaItem';
+import { MediaItemBase, MediaItemForProvider, MediaType } from 'src/entity/mediaItem';
 import { Audible } from 'src/metadata/provider/audible';
 import { IGDB } from 'src/metadata/provider/igdb';
 import { OpenLibrary } from 'src/metadata/provider/openlibrary';
 import { TMDbMovie, TMDbTv } from 'src/metadata/provider/tmdb';
 import _ from 'lodash';
 import { MetadataProvider } from 'src/metadata/metadataProvider';
+import { SimilarItem } from 'src/services/recommendations/types';
 
 const providers = <const>[
   new IGDB(),
@@ -39,6 +40,11 @@ class MetadataProviders {
     mediaItem: MediaItemForProvider
   ): Promise<MediaItemForProvider> | null {
     return this.get(mediaItem.mediaType, mediaItem.source)?.details(mediaItem);
+  }
+
+  public similar(mediaItem: MediaItemBase): Promise<SimilarItem[]> | null {
+    const provider = this.get(mediaItem.mediaType, mediaItem.source);
+    return provider?.similar ? provider.similar(mediaItem) : null;
   }
 }
 

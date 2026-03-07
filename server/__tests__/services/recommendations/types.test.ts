@@ -45,12 +45,12 @@ describe('SimilarItem type', () => {
     test('accepts game mediaType', () => {
       const item: SimilarItem = {
         externalId: 'igdb-12345',
-        mediaType: 'game',
+        mediaType: 'video_game',
         title: 'The Legend of Zelda',
         externalRating: 9.0,
       };
 
-      expect(item.mediaType).toBe('game');
+      expect(item.mediaType).toBe('video_game');
     });
 
     test('accepts book mediaType', () => {
@@ -177,7 +177,7 @@ describe('SimilarItem type', () => {
     test('IGDB game example with normalized rating', () => {
       const igdbGame: SimilarItem = {
         externalId: 'igdb-12345',
-        mediaType: 'game',
+        mediaType: 'video_game',
         title: 'The Legend of Zelda',
         externalRating: 9.2, // Normalized from 92 (0-100 scale)
       };
@@ -212,7 +212,7 @@ describe('SimilarItem type', () => {
         },
         {
           externalId: 'igdb-1',
-          mediaType: 'game',
+          mediaType: 'video_game',
           title: 'The Last of Us',
           externalRating: 9.3,
         },
