@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ExternalIds, MediaItemForProvider } from 'src/entity/mediaItem';
 import { MetadataProvider } from 'src/metadata/metadataProvider';
 import { logger } from 'src/logger';
-import { SimilarItem } from 'src/services/recommendations/types';
+import { SimilarItem } from 'src/metadata/types';
 
 export class OpenLibrary extends MetadataProvider {
   readonly name = 'openlibrary';

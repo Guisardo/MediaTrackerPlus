@@ -6,7 +6,7 @@ import { RequestQueue } from 'src/requestQueue';
 import { MetadataProvider } from 'src/metadata/metadataProvider';
 import { GlobalConfiguration } from 'src/repository/globalSettings';
 import { logger } from 'src/logger';
-import { SimilarItem } from 'src/services/recommendations/types';
+import { SimilarItem } from 'src/metadata/types';
 
 const getPosterUrl = (path: string, size: CoverSize = 't_original') => {
   return urljoin(

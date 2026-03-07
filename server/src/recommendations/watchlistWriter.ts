@@ -10,7 +10,7 @@ import { Seen } from 'src/entity/seen';
 import { UserRating } from 'src/entity/userRating';
 import { ExternalIds, MediaType } from 'src/entity/mediaItem';
 import { logger } from 'src/logger';
-import { SimilarItem } from 'src/services/recommendations/types';
+import { SimilarItem } from 'src/metadata/types';
 
 const toExternalIds = (item: SimilarItem): ExternalIds => {
   switch (item.mediaType) {

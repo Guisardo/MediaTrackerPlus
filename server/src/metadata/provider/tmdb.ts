@@ -7,7 +7,7 @@ import { MetadataProvider } from 'src/metadata/metadataProvider';
 import { GlobalConfiguration } from 'src/repository/globalSettings';
 import { Config } from 'src/config';
 import { logger } from 'src/logger';
-import { SimilarItem } from 'src/services/recommendations/types';
+import { SimilarItem } from 'src/metadata/types';
 
 const TMDB_API_KEY = Config.TMDB_API_KEY;
 

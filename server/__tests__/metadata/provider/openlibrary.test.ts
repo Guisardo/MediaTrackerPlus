@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { OpenLibrary } from 'src/metadata/provider/openlibrary';
 import { clearDatabase, runMigrations } from '__tests__/__utils__/utils';
-import { SimilarItem } from 'src/services/recommendations/types';
+import { SimilarItem } from 'src/metadata/types';
 
 import searchResponse from './mock/openlibrary/searchResponse.json';
 import detailsResponse from './mock/openlibrary/detailsResponse.json';

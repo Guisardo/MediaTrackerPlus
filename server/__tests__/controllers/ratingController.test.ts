@@ -92,7 +92,7 @@ describe('RatingController', () => {
     global.setImmediate = jest.fn((callback) => {
       setImmediateCallback = callback as () => void;
       return 1 as unknown as NodeJS.Immediate;
-    });
+    }) as unknown as typeof setImmediate;
 
     try {
       const res = await request(ratingController.add, {
@@ -123,7 +123,7 @@ describe('RatingController', () => {
     global.setImmediate = jest.fn((callback) => {
       executedCallbacks.push(callback as () => void);
       return 1 as unknown as NodeJS.Immediate;
-    });
+    }) as unknown as typeof setImmediate;
 
     try {
       // Make a request and verify the hook captures errors gracefully
@@ -495,7 +495,7 @@ describe('RatingController', () => {
       global.setImmediate = jest.fn((callback) => {
         capturedCallback = callback as () => void;
         return 1 as unknown as NodeJS.Immediate;
-      });
+      }) as unknown as typeof setImmediate;
 
       try {
         const res = await request(ratingController.add, {
@@ -530,7 +530,7 @@ describe('RatingController', () => {
       global.setImmediate = jest.fn((callback) => {
         capturedCallback = callback as () => void;
         return 1 as unknown as NodeJS.Immediate;
-      });
+      }) as unknown as typeof setImmediate;
 
       try {
         const res = await request(ratingController.add, {
@@ -567,7 +567,7 @@ describe('RatingController', () => {
       global.setImmediate = jest.fn(() => {
         setImmediateCalled = true;
         return 1 as unknown as NodeJS.Immediate;
-      });
+      }) as unknown as typeof setImmediate;
 
       try {
         await request(ratingController.add, {

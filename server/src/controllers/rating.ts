@@ -1,5 +1,5 @@
 import { createExpressRoute } from 'typescript-routes-to-openapi-server';
-import type { RecommendationService } from 'src/services/recommendations/recommendationService';
+import type { RecommendationService } from 'src/recommendations/recommendationService';
 import { UserRating } from 'src/entity/userRating';
 import { userRatingRepository } from 'src/repository/userRating';
 import { logger } from 'src/logger';
@@ -27,8 +27,8 @@ async function getRecommendationService(): Promise<RecommendationService> {
   const { metadataProviders } = await import('src/metadata/metadataProviders');
   const { findMediaItemByExternalId } = await import('src/metadata/findByExternalId');
   const { mediaItemRepository: lazyMediaItemRepository } = await import('src/repository/mediaItem');
-  const { RecommendationService } = await import('src/services/recommendations/recommendationService');
-  const { WatchlistWriter } = await import('src/services/recommendations/watchlistWriter');
+  const { RecommendationService } = await import('src/recommendations/recommendationService');
+  const { WatchlistWriter } = await import('src/recommendations/watchlistWriter');
 
   recommendationService = new RecommendationService({
     metadataProviders,

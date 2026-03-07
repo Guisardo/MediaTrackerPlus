@@ -20,7 +20,7 @@ const mockFindMediaItemByExternalId = findMediaItemByExternalId as jest.MockedFu
   typeof findMediaItemByExternalId
 >;
 
-const mockMetadataProviders = metadataProviders as {
+const mockMetadataProviders = metadataProviders as unknown as {
   has: jest.Mock;
   get: jest.Mock;
   details: jest.Mock;

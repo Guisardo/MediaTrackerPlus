@@ -1,4 +1,4 @@
-import { SimilarItem } from 'src/services/recommendations/types';
+import { SimilarItem } from 'src/metadata/types';
 
 describe('SimilarItem type', () => {
   describe('Structure and exports', () => {

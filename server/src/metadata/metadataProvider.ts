@@ -5,7 +5,7 @@ import {
   MediaItemForProvider,
   MediaType,
 } from 'src/entity/mediaItem';
-import { SimilarItem } from 'src/services/recommendations/types';
+import { SimilarItem } from 'src/metadata/types';
 
 export abstract class MetadataProvider<Name extends string = string> {
   public abstract readonly name: Name;

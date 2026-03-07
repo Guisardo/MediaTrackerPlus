@@ -1,6 +1,6 @@
 /**
- * Shared type definitions for the recommendations service module.
- * All providers (TMDB, IGDB, OpenLibrary) and WatchlistWriter operate on this common contract.
+ * Shared type definitions for the metadata module.
+ * All providers (TMDB, IGDB, OpenLibrary) operate on this common contract.
  */
 
 /**

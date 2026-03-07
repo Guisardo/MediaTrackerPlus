@@ -17,13 +17,13 @@ import {
   RecommendationService,
   RecommendationServiceDeps,
   SimilarityProviders,
-} from 'src/services/recommendations/recommendationService';
+} from 'src/recommendations/recommendationService';
 import {
   WatchlistWriter,
   WatchlistWriterDeps,
   WriteResult,
-} from 'src/services/recommendations/watchlistWriter';
-import { SimilarItem } from 'src/services/recommendations/types';
+} from 'src/recommendations/watchlistWriter';
+import { SimilarItem } from 'src/metadata/types';
 import { MediaItemBase, MediaType } from 'src/entity/mediaItem';
 import { logger } from 'src/logger';
 

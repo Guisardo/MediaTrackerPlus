@@ -5,7 +5,7 @@ import { OpenLibrary } from 'src/metadata/provider/openlibrary';
 import { TMDbMovie, TMDbTv } from 'src/metadata/provider/tmdb';
 import _ from 'lodash';
 import { MetadataProvider } from 'src/metadata/metadataProvider';
-import { SimilarItem } from 'src/services/recommendations/types';
+import { SimilarItem } from 'src/metadata/types';
 
 const providers = <const>[
   new IGDB(),

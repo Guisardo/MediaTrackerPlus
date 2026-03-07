@@ -1,6 +1,6 @@
 import knexLib, { Knex } from 'knex';
-import { WatchlistWriter, WatchlistWriterDeps, WriteResult } from 'src/services/recommendations/watchlistWriter';
-import { SimilarItem } from 'src/services/recommendations/types';
+import { WatchlistWriter, WatchlistWriterDeps, WriteResult } from 'src/recommendations/watchlistWriter';
+import { SimilarItem } from 'src/metadata/types';
 import { logger } from 'src/logger';
 
 jest.mock('src/logger', () => ({

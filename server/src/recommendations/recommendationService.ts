@@ -4,8 +4,8 @@
 
 import { logger } from 'src/logger';
 import { MediaItemBase } from 'src/entity/mediaItem';
-import { WatchlistWriter } from 'src/services/recommendations/watchlistWriter';
-import { SimilarItem } from 'src/services/recommendations/types';
+import { WatchlistWriter } from 'src/recommendations/watchlistWriter';
+import { SimilarItem } from 'src/metadata/types';
 
 export interface SimilarityProviders {
   similar(mediaItem: MediaItemBase): Promise<SimilarItem[]> | null;
