@@ -34,7 +34,8 @@ export type MediaItemOrderBy =
   | 'lastAiring'
   | 'status'
   | 'progress'
-  | 'mediaType';
+  | 'mediaType'
+  | 'recommended';
 export type SortOrder = 'asc' | 'desc';
 
 export type LastSeenAt = 'now' | 'release_date' | 'unknown' | 'custom_date';

@@ -3854,6 +3854,10 @@
               "totalRuntime": {
                 "type": "number",
                 "nullable": true
+              },
+              "estimatedRating": {
+                "type": "number",
+                "nullable": true
               }
             }
           }
@@ -4048,6 +4052,7 @@
           "mediaType",
           "nextAiring",
           "progress",
+          "recommended",
           "releaseDate",
           "status",
           "title",

@@ -121,6 +121,7 @@ export type MediaItemItemsResponse = Omit<MediaItemBase, 'lockedAt'> & {
   firstUnwatchedEpisode?: TvEpisode;
   progress?: number;
   totalRuntime?: number;
+  estimatedRating?: number | null;
 };
 
 export const mediaItemColumns = <const>[
