@@ -17,6 +17,7 @@
     "node/no-missing-import": "off",
     "import/no-unresolved": "off",
     "@typescript-eslint/no-namespace": "off",
-    "node/no-unpublished-import": "off"
+    "node/no-unpublished-import": "off",
+    "node/no-unsupported-features/es-syntax": "off"
   }
 }

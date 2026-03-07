@@ -46,6 +46,8 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: 'npm'
       - run: npm ci
+      - name: Generate routes
+        run: npm run build:routes --prefix server
       - name: Run backend tests
         run: npm run test --prefix server
 
@@ -74,6 +76,8 @@ jobs:
           node-version: 22
           cache: 'npm'
       - run: npm ci
+      - name: Generate routes
+        run: npm run build:routes --prefix server
       - name: Backend test coverage
         run: npm run test:coverage --prefix server
       - name: Frontend test coverage
