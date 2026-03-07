@@ -1810,5 +1810,39 @@ describe('migrations', () => {
     expect(hasColumnAfterSecondUp).toBe(true);
   });
 
+  test('20990101000001_userRecommendationSetting', async () => {
+    await Database.knex.migrate.up({
+      name: `20990101000001_userRecommendationSetting.${Config.MIGRATIONS_EXTENSION}`,
+      directory: Config.MIGRATIONS_DIRECTORY,
+    });
+
+    const hasColumnAfterUp = await Database.knex.schema.hasColumn(
+      'user',
+      'addRecommendedToWatchlist'
+    );
+    expect(hasColumnAfterUp).toBe(true);
+
+    await Database.knex.migrate.down({
+      directory: Config.MIGRATIONS_DIRECTORY,
+    });
+
+    const hasColumnAfterDown = await Database.knex.schema.hasColumn(
+      'user',
+      'addRecommendedToWatchlist'
+    );
+    expect(hasColumnAfterDown).toBe(false);
+
+    await Database.knex.migrate.up({
+      name: `20990101000001_userRecommendationSetting.${Config.MIGRATIONS_EXTENSION}`,
+      directory: Config.MIGRATIONS_DIRECTORY,
+    });
+
+    const hasColumnAfterSecondUp = await Database.knex.schema.hasColumn(
+      'user',
+      'addRecommendedToWatchlist'
+    );
+    expect(hasColumnAfterSecondUp).toBe(true);
+  });
+
   afterAll(clearDatabase);
 });

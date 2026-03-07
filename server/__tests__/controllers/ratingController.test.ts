@@ -3,6 +3,7 @@ import { Database } from 'src/dbconfig';
 import { Data } from '__tests__/__utils__/data';
 import { request } from '__tests__/__utils__/request';
 import { clearDatabase, runMigrations } from '__tests__/__utils__/utils';
+import { userRepository } from 'src/repository/user';
 
 describe('RatingController', () => {
   beforeAll(async () => {
@@ -474,6 +475,113 @@ describe('RatingController', () => {
 
         expect(seenEntries.length).toEqual(3);
       });
+    });
+  });
+
+  describe('addRecommendedToWatchlist preference gate', () => {
+    afterEach(async () => {
+      await Database.knex('userRating').delete();
+      await Database.knex('user')
+        .where('id', Data.user.id)
+        .update({ addRecommendedToWatchlist: true });
+    });
+
+    test('should check user preference via userRepository before running recommendation pipeline', async () => {
+      const ratingController = new RatingController();
+      const findOneSpy = jest.spyOn(userRepository, 'findOne');
+
+      let capturedCallback: (() => void) | null = null;
+      const originalSetImmediate = global.setImmediate;
+      global.setImmediate = jest.fn((callback) => {
+        capturedCallback = callback as () => void;
+        return 1 as unknown as NodeJS.Immediate;
+      });
+
+      try {
+        const res = await request(ratingController.add, {
+          userId: Data.user.id,
+          requestBody: { mediaItemId: Data.movie.id, rating: 8 },
+        });
+
+        expect(res.statusCode).toEqual(200);
+        expect(capturedCallback).toBeDefined();
+
+        capturedCallback!();
+        // Flush microtasks so the async promise chain inside the callback settles
+        await new Promise<void>((resolve) => originalSetImmediate(resolve));
+
+        expect(findOneSpy).toHaveBeenCalledWith({ id: Data.user.id });
+      } finally {
+        findOneSpy.mockRestore();
+        global.setImmediate = originalSetImmediate;
+      }
+    });
+
+    test('should skip recommendation pipeline when user has opted out', async () => {
+      await Database.knex('user')
+        .where('id', Data.user.id)
+        .update({ addRecommendedToWatchlist: false });
+
+      const ratingController = new RatingController();
+      const findOneSpy = jest.spyOn(userRepository, 'findOne');
+
+      let capturedCallback: (() => void) | null = null;
+      const originalSetImmediate = global.setImmediate;
+      global.setImmediate = jest.fn((callback) => {
+        capturedCallback = callback as () => void;
+        return 1 as unknown as NodeJS.Immediate;
+      });
+
+      try {
+        const res = await request(ratingController.add, {
+          userId: Data.user.id,
+          requestBody: { mediaItemId: Data.movie.id, rating: 8 },
+        });
+
+        expect(res.statusCode).toEqual(200);
+        expect(capturedCallback).toBeDefined();
+
+        capturedCallback!();
+        // Flush microtasks so the async promise chain inside the callback settles
+        await new Promise<void>((resolve) => originalSetImmediate(resolve));
+
+        // The preference was checked
+        expect(findOneSpy).toHaveBeenCalledWith({ id: Data.user.id });
+
+        // The promise chain resolved via the early-return path:
+        // userRepository.findOne returned a user with addRecommendedToWatchlist = false,
+        // so getRecommendationService() was never called (no external API errors to catch).
+        const user = await Database.knex('user').where('id', Data.user.id).first();
+        expect(user.addRecommendedToWatchlist).toBe(0);
+      } finally {
+        findOneSpy.mockRestore();
+        global.setImmediate = originalSetImmediate;
+      }
+    });
+
+    test('should not schedule recommendation pipeline when no rating is provided', async () => {
+      const ratingController = new RatingController();
+
+      let setImmediateCalled = false;
+      const originalSetImmediate = global.setImmediate;
+      global.setImmediate = jest.fn(() => {
+        setImmediateCalled = true;
+        return 1 as unknown as NodeJS.Immediate;
+      });
+
+      try {
+        await request(ratingController.add, {
+          userId: Data.user.id,
+          requestBody: {
+            mediaItemId: Data.movie.id,
+            review: 'Review with no numeric rating',
+          },
+        });
+
+        expect(setImmediateCalled).toBe(false);
+      } finally {
+        global.setImmediate = originalSetImmediate;
+      }
     });
   });
 });
