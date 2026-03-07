@@ -5,7 +5,7 @@ export const WatchlistPage: FunctionComponent = () => {
   return (
     <PaginatedGridItems
       args={{
-        orderBy: 'lastSeen',
+        orderBy: 'recommended',
         sortOrder: 'desc',
         onlyOnWatchlist: true,
       }}
