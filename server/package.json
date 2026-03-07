@@ -38,6 +38,7 @@
     "watch:start": "nodemon --watch build --ignore *.test.js --ext .* --signal SIGHUP --exec \"node build/index.js\"",
     "build": "npm run lingui:extract && npm run lingui:compile && npm run build:routes && npm run build:server",
     "start": "cross-env NODE_ENV=production node build/index.js",
+    "dev:start": "cross-env NODE_ENV=production DATABASE_PATH=./data.db node build/index.js",
     "check-types": "tsc --noEmit",
     "lint": "eslint src && npm run check-types",
     "watch:lint": "nodemon --watch src --ext * --exec \"npm run lint\""
