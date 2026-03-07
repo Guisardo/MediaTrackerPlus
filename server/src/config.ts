@@ -59,6 +59,8 @@ export class Config {
     this.NODE_ENV === 'development' || this.NODE_ENV === 'test' ? 'ts' : 'js';
 
   static readonly DEMO = process.env.DEMO ? Boolean(process.env.DEMO) : false;
+  static readonly TMDB_API_KEY =
+    process.env.TMDB_API_KEY || '779734046efc1e6127485c54d3b29627';
   static readonly IGDB_CLIENT_ID = process.env.IGDB_CLIENT_ID;
   static readonly IGDB_CLIENT_SECRET = process.env.IGDB_CLIENT_SECRET;
 

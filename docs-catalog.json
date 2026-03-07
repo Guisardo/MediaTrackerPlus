@@ -1,7 +1,7 @@
 {
   "repo_root": "/Users/lucas.rancez/Documents/Code/MediaTrackerPlus",
-  "total_files": 6,
-  "total_size_bytes": 66300,
+  "total_files": 8,
+  "total_size_bytes": 120145,
   "files": [
     {
       "rel_path": "LICENSE.md",
@@ -39,6 +39,41 @@
       ]
     },
     {
+      "rel_path": "tasks/prd-upnext-recommendations.md",
+      "abs_path": "/Users/lucas.rancez/Documents/Code/MediaTrackerPlus/tasks/prd-upnext-recommendations.md",
+      "size_bytes": 27686,
+      "line_count": 402,
+      "title": "PRD: upnext Recommendation Engine",
+      "h1_count": 0,
+      "h2_sections": [],
+      "has_frontmatter": false,
+      "is_generated": false,
+      "links_count": 0,
+      "images_count": 0,
+      "code_blocks_without_lang": 3,
+      "issues": [
+        "missing-h1",
+        "code-fences-without-lang:3"
+      ]
+    },
+    {
+      "rel_path": "ralph/progress.txt",
+      "abs_path": "/Users/lucas.rancez/Documents/Code/MediaTrackerPlus/ralph/progress.txt",
+      "size_bytes": 26159,
+      "line_count": 372,
+      "title": "Ralph Progress Log",
+      "h1_count": 0,
+      "h2_sections": [],
+      "has_frontmatter": false,
+      "is_generated": false,
+      "links_count": 0,
+      "images_count": 0,
+      "code_blocks_without_lang": 0,
+      "issues": [
+        "missing-h1"
+      ]
+    },
+    {
       "rel_path": "server/README.md",
       "abs_path": "/Users/lucas.rancez/Documents/Code/MediaTrackerPlus/server/README.md",
       "size_bytes": 25644,
@@ -57,8 +92,8 @@
       ]
     },
     {
-      "rel_path": "server/public/main_a5877708.js.LICENSE.txt",
-      "abs_path": "/Users/lucas.rancez/Documents/Code/MediaTrackerPlus/server/public/main_a5877708.js.LICENSE.txt",
+      "rel_path": "server/public/main_4a1b8694.js.LICENSE.txt",
+      "abs_path": "/Users/lucas.rancez/Documents/Code/MediaTrackerPlus/server/public/main_4a1b8694.js.LICENSE.txt",
       "size_bytes": 1985,
       "line_count": 80,
       "title": null,
@@ -112,8 +147,8 @@
   ],
   "generated_files": [],
   "issue_summary": {
-    "missing-h1": 6,
-    "code-fences-without-lang": 3,
+    "missing-h1": 8,
+    "code-fences-without-lang": 4,
     "non-standard-list-marker": 1
   }
 }

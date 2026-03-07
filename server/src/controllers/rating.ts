@@ -2,6 +2,7 @@ import { createExpressRoute } from 'typescript-routes-to-openapi-server';
 import { UserRating } from 'src/entity/userRating';
 import { userRatingRepository } from 'src/repository/userRating';
 import { logger } from 'src/logger';
+import { Config } from 'src/config';
 
 /**
  * Lazy-initialized singleton for RecommendationService.
@@ -30,23 +31,7 @@ async function getRecommendationService() {
   const { OpenLibrarySimilarClient } = await import('src/services/recommendations/OpenLibrarySimilarClient');
   const { WatchlistWriter } = await import('src/services/recommendations/WatchlistWriter');
 
-  // Get the TMDB provider to extract its API key via reflection
-  const tmdbProvider = metadataProviders.get('movie');
-  // The TMDB API key is stored as a private const in tmdb.ts.
-  // We access it via reflection: since axios is imported at module level in TmdbSimilarClient,
-  // we can retrieve the key from the provider instance's closure.
-  // For now, we'll use a deferred approach that retrieves it indirectly.
-
-  // WORKAROUND: Since we cannot hardcode or read the private key, we'll get it from
-  // the TMDB provider by creating a temporary instance and checking for getApiKey method
-  let tmdbApiKey: string;
-  if (typeof (tmdbProvider as any).getApiKey === 'function') {
-    tmdbApiKey = (tmdbProvider as any).getApiKey();
-  } else {
-    // Fallback: this shouldn't happen in production, but for robustness
-    logger.warn('Could not retrieve TMDB API key from provider, using empty string');
-    tmdbApiKey = '';
-  }
+  const tmdbApiKey = Config.TMDB_API_KEY;
 
   // Get the IGDB provider to extract RequestQueue and OAuth credentials
   const igdbProvider = metadataProviders.get('video_game') as InstanceType<typeof IGDB>;

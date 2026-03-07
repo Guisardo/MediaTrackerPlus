@@ -4,11 +4,11 @@ Self hosted platform for tracking movies, tv shows, video games, books and audio
 This is a fork from [Mediatracker](https://github.com/bonukai/MediaTracker) because I wanted new features and the original repository is at this time abandoned. But feel free to check out the original repository.
 This is a drop in replacement of the original repository. For now, the databases are compartible.
 
-# API Documentation
+## API Documentation
 
 [https://dnlwttnbrg.github.io/MediaTrackerPlus/](https://dnlwttnbrg.github.io/MediaTrackerPlus/)
 
-# Installation
+## Installation
 
 ## Building from source
 
@@ -99,32 +99,68 @@ volumes:
 | HOSTNAME           | IP address that the server will listen on                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | PORT               | Port that the server will listen on                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
-# Building docker image
+## upnext Recommendation Engine
+
+Every time a user submits a rating, MediaTrackerPlus automatically fetches similar content and adds it to the user's watchlist. The process runs asynchronously after the HTTP response is sent, so rating saves are never delayed.
+
+### How it works
+
+- **Movies and TV shows** — similar items are fetched from the TMDB `/similar` endpoint. No additional credentials are required beyond the embedded TMDB API key.
+- **Games** — similar games are fetched from IGDB using the two-step `similar_games` query. The `IGDB_CLIENT_ID` and `IGDB_CLIENT_SECRET` credentials (configured in Settings → Configuration in the UI) must be set for game recommendations to work.
+- **Books** — related books are retrieved from the OpenLibrary subjects API. No credentials are required; OpenLibrary is a public API.
+- **Audiobooks** — not supported by the recommendation engine in the current version.
+
+### Watchlist sort order
+
+A new **Recommended** sort option is available in the watchlist view. Items are scored using the formula:
+
+- When both an `estimatedRating` (derived from the trigger rating) and a TMDB community rating are available: `score = (estimatedRating × 0.6) + (tmdbRating × 0.4)`
+- When only `estimatedRating` is available (games, books, or items without a TMDB rating): `score = estimatedRating`
+- Items with no `estimatedRating` sort to the bottom.
+
+### Database migration
+
+This feature adds an `estimatedRating` column to the `listItem` table. The migration runs automatically on first startup and is idempotent — running it more than once is safe.
+
+Migration file: `server/src/migrations/20990101000000_listItemEstimatedRating.ts`
+
+### Credential requirements
+
+| Feature | Credential | Where to configure |
+|---------|------------|-------------------|
+| Movie and TV recommendations | None (uses embedded TMDB key) | — |
+| Game recommendations | `IGDB_CLIENT_ID` and `IGDB_CLIENT_SECRET` | Settings → Configuration in the UI |
+| Book recommendations | None (OpenLibrary is public) | — |
+
+> **Note:** IGDB credentials are also required for game metadata search. If games already appear when you search, game recommendations will work automatically. Credentials can be obtained at <https://api-docs.igdb.com/#account-creation>.
+
+## Building docker image
 
 ```bash
 docker build --tag mediatracker-plus:latest https://github.com/dnlwttnbrg/MediaTrackerPlus.git
 docker run -p 7481:7481 mediatracker
 ```
 
-# Features
+## Features
 
 - notifications
 - calendar
 - multiple users
 - REST API
 - watchlist
+- upnext recommendations (automatic watchlist population after every rating)
 - docker image
 - import from [Trakt](https://trakt.tv)
 - import from [goodreads](https://www.goodreads.com)
 
-# Import
+## Import
 
 | Service                                | Imported data                                  |
 | -------------------------------------- | ---------------------------------------------- |
 | [Trakt](https://trakt.tv)              | Watchlist, watched history, ratings            |
 | [goodreads](https://www.goodreads.com) | Read, Currently Reading, Want to Read, ratings |
 
-# Metadata providers
+## Metadata providers
 
 | Provider                                                                       | Media type     | Localization |
 | ------------------------------------------------------------------------------ | -------------- | :----------: |
@@ -135,7 +171,7 @@ docker run -p 7481:7481 mediatracker
 
 \* IGDB has a limit of 4 requests per second. Because of that IGDB API key is not provided with MediaTracker, it can be acquired [here](https://api-docs.igdb.com/#account-creation) and set in [http://localhost:7481/#/settings/configuration](http://localhost:7481/#/settings/configuration)
 
-# Notification platforms
+## Notification platforms
 
 - [gotify](https://gotify.net)
 - [ntfy](https://ntfy.sh)
@@ -144,17 +180,17 @@ docker run -p 7481:7481 mediatracker
 - [Pushover](https://pushover.net)
 - [Pushsafer](https://www.pushsafer.com)
 
-# Integrations
+## Integrations
 
 - [Jellyfin](https://jellyfin.org/) - [Plugin](https://github.com/bonukai/jellyfin-plugin-mediatracker), minimum MediaTracker version: `0.1.0`
 - [Plex](https://www.plex.tv/) - Generate Application token in your MediaTracker instance, and add a [webhook](https://app.plex.tv/desktop/#!/settings/webhooks) in plex `[your MediaTracker url]/api/plex?token=[MediaTracker Application Token]`
 - [Kodi](https://kodi.tv/) - [Plugin](https://github.com/bonukai/script.mediatracker), minimum MediaTracker version: `0.1.0`
 
-# Contributors
+## Contributors
 
 - [URBANsUNITED](https://github.com/URBANsUNITED) (German translation)
 
-# Similar projects
+## Similar projects
 
 - [devfake/flox](https://github.com/devfake/flox)
 - [FuzzyGrim/Yamtrack](https://github.com/FuzzyGrim/Yamtrack)

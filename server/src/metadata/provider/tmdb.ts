@@ -5,8 +5,9 @@ import axios from 'axios';
 import { MediaItemForProvider, ExternalIds } from 'src/entity/mediaItem';
 import { MetadataProvider } from 'src/metadata/metadataProvider';
 import { GlobalConfiguration } from 'src/repository/globalSettings';
+import { Config } from 'src/config';
 
-const TMDB_API_KEY = '779734046efc1e6127485c54d3b29627';
+const TMDB_API_KEY = Config.TMDB_API_KEY;
 
 type PosterSize =
   | 'w92'
