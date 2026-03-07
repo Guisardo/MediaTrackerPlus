@@ -5,6 +5,8 @@ import { ExternalIds, MediaItemForProvider } from 'src/entity/mediaItem';
 import { RequestQueue } from 'src/requestQueue';
 import { MetadataProvider } from 'src/metadata/metadataProvider';
 import { GlobalConfiguration } from 'src/repository/globalSettings';
+import { logger } from 'src/logger';
+import { SimilarItem } from 'src/metadata/types';
 
 const getPosterUrl = (path: string, size: CoverSize = 't_original') => {
   return urljoin(
@@ -27,6 +29,77 @@ export class IGDB extends MetadataProvider {
   async details(mediaItem: ExternalIds): Promise<MediaItemForProvider> {
     const result = await this.game(mediaItem.igdbId);
     return result ? this.mapGame(result) : null;
+  }
+
+  async similar(ids: ExternalIds): Promise<SimilarItem[]> {
+    if (!ids.igdbId) {
+      logger.warn(`IGDB.similar: no igdbId provided — returning empty results`);
+      return [];
+    }
+
+    const similarGameIds = await this.fetchSimilarGameIds(ids.igdbId);
+
+    if (similarGameIds.length === 0) {
+      logger.debug(`IGDB.similar: no similar games found for igdbId=${ids.igdbId}`);
+      return [];
+    }
+
+    const gameDetails = await this.fetchSimilarGameDetails(similarGameIds);
+    return this.mapGamesToSimilarItems(gameDetails);
+  }
+
+  private async fetchSimilarGameIds(igdbId: number): Promise<number[]> {
+    const query = `fields similar_games; where id = ${igdbId};`;
+    const results = (await this.get('games', query)) as IgdbGameSimilar[];
+
+    if (!results || results.length === 0) {
+      return [];
+    }
+
+    return results[0].similar_games ?? [];
+  }
+
+  private async fetchSimilarGameDetails(
+    gameIds: number[]
+  ): Promise<IgdbGameDetail[]> {
+    const idList = gameIds.join(',');
+    const query = `fields name,total_rating,total_rating_count; where id = (${idList});`;
+    const results = (await this.get('games', query)) as IgdbGameDetail[];
+    return results ?? [];
+  }
+
+  private mapGamesToSimilarItems(games: IgdbGameDetail[]): SimilarItem[] {
+    return games
+      .map((game): SimilarItem | null => {
+        if (!game.name) {
+          return null;
+        }
+
+        let externalRating: number | null = null;
+
+        if (
+          game.total_rating !== undefined &&
+          game.total_rating !== null &&
+          game.total_rating !== 0
+        ) {
+          externalRating = game.total_rating / 10;
+        }
+
+        if (
+          externalRating !== null &&
+          (externalRating < 0 || externalRating > 10)
+        ) {
+          externalRating = null;
+        }
+
+        return {
+          externalId: String(game.id),
+          mediaType: 'video_game',
+          title: game.name,
+          externalRating,
+        };
+      })
+      .filter((item): item is SimilarItem => item !== null);
   }
 
   private mapGame(searchResult: Game): MediaItemForProvider {
@@ -145,6 +218,19 @@ export class IGDB extends MetadataProvider {
   private readonly requestQueue = new RequestQueue({
     timeBetweenRequests: 250,
   });
+
+}
+
+interface IgdbGameSimilar {
+  id: number;
+  similar_games?: number[];
+}
+
+interface IgdbGameDetail {
+  id: number;
+  name: string;
+  total_rating?: number;
+  total_rating_count?: number;
 }
 
 interface Token {

@@ -169,6 +169,37 @@ export const useSortedList = (args: {
         (listItem) => listItem.mediaItem.title,
         stringComparator
       ),
+      recommended: (a: ListItem, b: ListItem): number => {
+        const scoreOf = (listItem: ListItem): number | undefined => {
+          const estimatedRating = listItem.estimatedRating;
+          if (estimatedRating == null) {
+            return undefined;
+          }
+          const tmdbRating = listItem.mediaItem.tmdbRating;
+          if (tmdbRating != null) {
+            return estimatedRating * 0.6 + tmdbRating * 0.4;
+          }
+          return estimatedRating;
+        };
+
+        const scoreA = scoreOf(a);
+        const scoreB = scoreOf(b);
+
+        if (scoreA == null && scoreB == null) {
+          return a.mediaItem.title.localeCompare(b.mediaItem.title);
+        }
+        if (scoreA == null) {
+          return 1;
+        }
+        if (scoreB == null) {
+          return -1;
+        }
+        // Higher score = more recommended → descending regardless of sortOrder
+        if (scoreB !== scoreA) {
+          return scoreB - scoreA;
+        }
+        return a.mediaItem.title.localeCompare(b.mediaItem.title);
+      },
     };
 
     return listItems.sort(sortFunctions[sortBy]);

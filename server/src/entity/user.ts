@@ -15,6 +15,7 @@ export type User = {
   notificationPlatform?: keyof NotificationPlatformsCredentialsType;
   hideOverviewForUnseenSeasons?: boolean;
   hideEpisodeTitleForUnseenEpisodes?: boolean;
+  addRecommendedToWatchlist?: boolean;
 };
 
 export const userNonSensitiveColumns = <const>[
@@ -30,6 +31,7 @@ export const userNonSensitiveColumns = <const>[
   'notificationPlatform',
   'hideOverviewForUnseenSeasons',
   'hideEpisodeTitleForUnseenEpisodes',
+  'addRecommendedToWatchlist',
 ];
 
 export const userColumns = <const>[...userNonSensitiveColumns, 'password'];

@@ -16,13 +16,21 @@ server/data.db
 server/test.db
 server/testDatabase
 server/junit.xml
+client/junit.xml
 
 */src/i18n/locales/*/*.ts
 
 rest-api/index.js
 rest-api/index.ts
 
+server/openapi.json
+
 docs/dist
+
+/tasks/
+/ralph/
+/.planning/
+/docs-catalog.json
 
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
@@ -30,6 +38,7 @@ docs/dist
 /dist
 /tmp
 /out-tsc
+**/generated/**
 
 # Runtime data
 pids
@@ -63,6 +72,7 @@ bower_components
 *.launch
 .settings/
 *.sublime-workspace
+/.claude/
 
 # IDE - VSCode
 .vscode/*

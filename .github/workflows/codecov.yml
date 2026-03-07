@@ -7,25 +7,41 @@ on:
       - dev
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  build:
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
-      cancel-in-progress: true
+  coverage:
     runs-on: ubuntu-22.04
     name: Codecov
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: 'npm'
       - run: npm ci
-      - run: npm run test:coverage
-      - name: Upload coverage to Codecov
+      - name: Generate routes
+        run: npm run build:routes --prefix server
+      - name: Backend test coverage
+        run: npm run test:coverage --prefix server
+      - name: Frontend test coverage
+        run: npm run test:coverage --prefix client
+      - name: Upload backend coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: true
+          fail_ci_if_error: false
           files: server/coverage/clover.xml
+          flags: backend
+          verbose: true
+      - name: Upload frontend coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+          files: client/coverage/lcov.info
+          flags: frontend
           verbose: true

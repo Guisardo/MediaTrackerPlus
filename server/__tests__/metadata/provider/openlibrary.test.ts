@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { OpenLibrary } from 'src/metadata/provider/openlibrary';
 import { clearDatabase, runMigrations } from '__tests__/__utils__/utils';
+import { SimilarItem } from 'src/metadata/types';
 
 import searchResponse from './mock/openlibrary/searchResponse.json';
 import detailsResponse from './mock/openlibrary/detailsResponse.json';
@@ -44,7 +45,134 @@ describe('openlibrary', () => {
 
     expect(res).toStrictEqual(detailsResult2);
   });
+
+  describe('OpenLibrary.similar', () => {
+    test('returns empty array when openlibraryId is not provided', async () => {
+      const res = await openlibraryApi.similar({});
+      expect(res).toStrictEqual([]);
+    });
+
+    test('returns empty array when work has no subjects', async () => {
+      mockedAxios.get.mockResolvedValueOnce({ data: { title: 'Some Book' } });
+
+      const res = await openlibraryApi.similar({
+        openlibraryId: '/works/OL82563W',
+      });
+      expect(res).toStrictEqual([]);
+    });
+
+    test('returns empty array when subjects list is empty', async () => {
+      mockedAxios.get.mockResolvedValueOnce({
+        data: { title: 'Some Book', subjects: [] },
+      });
+
+      const res = await openlibraryApi.similar({
+        openlibraryId: '/works/OL82563W',
+      });
+      expect(res).toStrictEqual([]);
+    });
+
+    test('returns mapped SimilarItem array from subject works', async () => {
+      mockedAxios.get
+        .mockResolvedValueOnce({
+          data: { title: "Harry Potter and the Philosopher's Stone", subjects: ['Fantasy Fiction'] },
+        })
+        .mockResolvedValueOnce({
+          data: openLibrarySubjectWorksResponse,
+        });
+
+      const res = await openlibraryApi.similar({
+        openlibraryId: '/works/OL82563W',
+      });
+      expect(res).toStrictEqual(openLibrarySimilarResult);
+    });
+
+    test('strips leading /works/ prefix when building the work details URL', async () => {
+      mockedAxios.get
+        .mockResolvedValueOnce({
+          data: { title: 'Some Book', subjects: ['Fantasy Fiction'] },
+        })
+        .mockResolvedValueOnce({ data: { works: [] } });
+
+      await openlibraryApi.similar({ openlibraryId: '/works/OL82563W' });
+
+      expect(mockedAxios.get).toHaveBeenCalledWith(
+        'https://openlibrary.org/works/OL82563W.json'
+      );
+    });
+
+    test('normalizes subject to lowercase with underscores for the subjects URL', async () => {
+      mockedAxios.get
+        .mockResolvedValueOnce({
+          data: { title: 'Some Book', subjects: ['Young Adult Fiction'] },
+        })
+        .mockResolvedValueOnce({ data: { works: [] } });
+
+      await openlibraryApi.similar({ openlibraryId: '/works/OL82563W' });
+
+      expect(mockedAxios.get).toHaveBeenCalledWith(
+        'https://openlibrary.org/subjects/young_adult_fiction.json'
+      );
+    });
+
+    test('throws when work details request fails', async () => {
+      mockedAxios.get.mockRejectedValueOnce({ response: { status: 404 } });
+
+      await expect(
+        openlibraryApi.similar({ openlibraryId: '/works/OL82563W' })
+      ).rejects.toThrow('OpenLibrary work details request failed with HTTP 404');
+    });
+
+    test('throws when subject works request fails', async () => {
+      mockedAxios.get
+        .mockResolvedValueOnce({
+          data: { title: 'Some Book', subjects: ['Fantasy Fiction'] },
+        })
+        .mockRejectedValueOnce({ response: { status: 503 } });
+
+      await expect(
+        openlibraryApi.similar({ openlibraryId: '/works/OL82563W' })
+      ).rejects.toThrow('OpenLibrary subjects request failed with HTTP 503');
+    });
+
+    test('sets externalRating to null for all returned books', async () => {
+      mockedAxios.get
+        .mockResolvedValueOnce({
+          data: { title: "Harry Potter and the Philosopher's Stone", subjects: ['Fantasy Fiction'] },
+        })
+        .mockResolvedValueOnce({
+          data: openLibrarySubjectWorksResponse,
+        });
+
+      const res = await openlibraryApi.similar({
+        openlibraryId: '/works/OL82563W',
+      });
+      expect(res.every((item) => item.externalRating === null)).toBe(true);
+    });
+  });
 });
+
+const openLibrarySubjectWorksResponse = {
+  works: [
+    { key: '/works/OL3120537W', title: 'The Hobbit' },
+    { key: '/works/OL7109345W', title: 'Eragon' },
+  ],
+};
+
+const openLibrarySimilarResult: SimilarItem[] = [
+  {
+    externalId: '/works/OL3120537W',
+    mediaType: 'book',
+    title: 'The Hobbit',
+    externalRating: null,
+  },
+  {
+    externalId: '/works/OL7109345W',
+    mediaType: 'book',
+    title: 'Eragon',
+    externalRating: null,
+  },
+];
 
 const searchResult = [
   {

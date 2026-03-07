@@ -87,6 +87,156 @@ describe('TMDb', () => {
 
     expect(res).toStrictEqual(tvDetailsResult);
   });
+
+  describe('TMDbMovie.similar', () => {
+    test('returns empty array when tmdbId is not provided', async () => {
+      const res = await tmdbMovie.similar({});
+      expect(res).toStrictEqual([]);
+    });
+
+    test('returns empty array on 429 rate limit', async () => {
+      mockedAxios.get.mockRejectedValueOnce({
+        response: { status: 429, headers: { 'retry-after': '1' } },
+      });
+      const res = await tmdbMovie.similar({ tmdbId: 671 });
+      expect(res).toStrictEqual([]);
+    });
+
+    test('throws on HTTP errors other than 429', async () => {
+      mockedAxios.get.mockRejectedValueOnce({ response: { status: 500 } });
+      await expect(tmdbMovie.similar({ tmdbId: 671 })).rejects.toThrow(
+        'TMDB API request failed with HTTP 500'
+      );
+    });
+
+    test('returns mapped SimilarItem array', async () => {
+      mockedAxios.get.mockResolvedValueOnce({
+        data: tmdbMovieSimilarResponse,
+        status: 200,
+      });
+      const res = await tmdbMovie.similar({ tmdbId: 671 });
+      expect(res).toStrictEqual(tmdbMovieSimilarResult);
+    });
+
+    test('filters items below minimum vote count threshold', async () => {
+      mockedAxios.get.mockResolvedValueOnce({
+        data: {
+          results: [
+            { id: 672, title: 'HP 2', vote_average: 7.7, vote_count: 5 },
+            { id: 674, title: 'HP 4', vote_average: 7.8, vote_count: 15000 },
+          ],
+        },
+        status: 200,
+      });
+      const res = await tmdbMovie.similar({ tmdbId: 671 });
+      expect(res).toHaveLength(1);
+      expect(res[0].externalId).toBe('674');
+    });
+
+    test('converts vote_average of 0 to null externalRating', async () => {
+      mockedAxios.get.mockResolvedValueOnce({
+        data: {
+          results: [
+            { id: 999, title: 'Unrated Movie', vote_average: 0, vote_count: 100 },
+          ],
+        },
+        status: 200,
+      });
+      const res = await tmdbMovie.similar({ tmdbId: 671 });
+      expect(res).toHaveLength(1);
+      expect(res[0].externalRating).toBeNull();
+    });
+
+    test('filters items with no title', async () => {
+      mockedAxios.get.mockResolvedValueOnce({
+        data: {
+          results: [
+            { id: 1, title: '', vote_average: 7.0, vote_count: 100 },
+            { id: 2, title: 'Valid Movie', vote_average: 7.0, vote_count: 100 },
+          ],
+        },
+        status: 200,
+      });
+      const res = await tmdbMovie.similar({ tmdbId: 671 });
+      expect(res).toHaveLength(1);
+      expect(res[0].externalId).toBe('2');
+    });
+  });
+
+  describe('TMDbTv.similar', () => {
+    test('returns empty array when tmdbId is not provided', async () => {
+      const res = await tmdbTv.similar({});
+      expect(res).toStrictEqual([]);
+    });
+
+    test('returns empty array on 429 rate limit', async () => {
+      mockedAxios.get.mockRejectedValueOnce({
+        response: { status: 429, headers: { 'retry-after': '2' } },
+      });
+      const res = await tmdbTv.similar({ tmdbId: 4607 });
+      expect(res).toStrictEqual([]);
+    });
+
+    test('throws on HTTP errors other than 429', async () => {
+      mockedAxios.get.mockRejectedValueOnce({ response: { status: 503 } });
+      await expect(tmdbTv.similar({ tmdbId: 4607 })).rejects.toThrow(
+        'TMDB API request failed with HTTP 503'
+      );
+    });
+
+    test('returns mapped SimilarItem array', async () => {
+      mockedAxios.get.mockResolvedValueOnce({
+        data: tmdbTvSimilarResponse,
+        status: 200,
+      });
+      const res = await tmdbTv.similar({ tmdbId: 4607 });
+      expect(res).toStrictEqual(tmdbTvSimilarResult);
+    });
+
+    test('filters items below minimum vote count threshold', async () => {
+      mockedAxios.get.mockResolvedValueOnce({
+        data: {
+          results: [
+            { id: 100, name: 'Low Vote Show', vote_average: 7.0, vote_count: 3 },
+            { id: 200, name: 'Popular Show', vote_average: 8.5, vote_count: 5000 },
+          ],
+        },
+        status: 200,
+      });
+      const res = await tmdbTv.similar({ tmdbId: 4607 });
+      expect(res).toHaveLength(1);
+      expect(res[0].externalId).toBe('200');
+    });
+
+    test('converts vote_average of 0 to null externalRating', async () => {
+      mockedAxios.get.mockResolvedValueOnce({
+        data: {
+          results: [
+            { id: 999, name: 'Unrated Show', vote_average: 0, vote_count: 100 },
+          ],
+        },
+        status: 200,
+      });
+      const res = await tmdbTv.similar({ tmdbId: 4607 });
+      expect(res).toHaveLength(1);
+      expect(res[0].externalRating).toBeNull();
+    });
+
+    test('filters items with no name', async () => {
+      mockedAxios.get.mockResolvedValueOnce({
+        data: {
+          results: [
+            { id: 1, name: '', vote_average: 7.0, vote_count: 100 },
+            { id: 2, name: 'Valid Show', vote_average: 7.0, vote_count: 100 },
+          ],
+        },
+        status: 200,
+      });
+      const res = await tmdbTv.similar({ tmdbId: 4607 });
+      expect(res).toHaveLength(1);
+      expect(res[0].externalId).toBe('2');
+    });
+  });
 });
 
 const movieDetailsResult = {
@@ -1820,3 +1970,67 @@ const tvDetailsResult = {
   ],
   needsDetails: false,
 };
+
+const tmdbMovieSimilarResponse = {
+  results: [
+    {
+      id: 672,
+      title: 'Harry Potter and the Chamber of Secrets',
+      vote_average: 7.7,
+      vote_count: 15000,
+    },
+    {
+      id: 674,
+      title: 'Harry Potter and the Goblet of Fire',
+      vote_average: 7.8,
+      vote_count: 20000,
+    },
+  ],
+};
+
+const tmdbMovieSimilarResult = [
+  {
+    externalId: '672',
+    mediaType: 'movie',
+    title: 'Harry Potter and the Chamber of Secrets',
+    externalRating: 7.7,
+  },
+  {
+    externalId: '674',
+    mediaType: 'movie',
+    title: 'Harry Potter and the Goblet of Fire',
+    externalRating: 7.8,
+  },
+];
+
+const tmdbTvSimilarResponse = {
+  results: [
+    {
+      id: 1402,
+      name: 'The Walking Dead',
+      vote_average: 8.1,
+      vote_count: 8000,
+    },
+    {
+      id: 63186,
+      name: 'Fear the Walking Dead',
+      vote_average: 7.5,
+      vote_count: 3000,
+    },
+  ],
+};
+
+const tmdbTvSimilarResult = [
+  {
+    externalId: '1402',
+    mediaType: 'tv',
+    title: 'The Walking Dead',
+    externalRating: 8.1,
+  },
+  {
+    externalId: '63186',
+    mediaType: 'tv',
+    title: 'Fear the Walking Dead',
+    externalRating: 7.5,
+  },
+];

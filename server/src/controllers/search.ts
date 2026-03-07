@@ -2,8 +2,13 @@ import _ from 'lodash';
 import { createExpressRoute } from 'typescript-routes-to-openapi-server';
 
 import { MediaItemItemsResponse, MediaType } from 'src/entity/mediaItem';
+import { findMediaItemByExternalId } from 'src/metadata/findByExternalId';
 import { metadataProviders } from 'src/metadata/metadataProviders';
 import { mediaItemRepository } from 'src/repository/mediaItem';
+
+const IMDB_ID_PATTERN = /^tt\d{7,8}$/i;
+
+const isImdbId = (query: string): boolean => IMDB_ID_PATTERN.test(query.trim());
 
 /**
  * @openapi_tags Search
@@ -26,6 +31,26 @@ export class SearchController {
 
     if (typeof query !== 'string' || query?.trim()?.length === 0) {
       res.sendStatus(400);
+      return;
+    }
+
+    if (isImdbId(query) && (mediaType === 'movie' || mediaType === 'tv')) {
+      const mediaItem = await findMediaItemByExternalId({
+        id: { imdbId: query.trim().toLowerCase() },
+        mediaType,
+      });
+
+      if (!mediaItem) {
+        res.send([]);
+        return;
+      }
+
+      const existingItemsDetails = await mediaItemRepository.items({
+        userId: userId,
+        mediaItemIds: [mediaItem.id],
+      });
+
+      res.send(existingItemsDetails);
       return;
     }
 

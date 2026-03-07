@@ -506,6 +506,16 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
         query.orderBy('mediaItem.title', 'asc');
         break;
 
+      case 'recommended':
+        query.orderByRaw(`CASE WHEN "listItem"."estimatedRating" IS NULL THEN 1 ELSE 0 END ASC`);
+        query.orderByRaw(`CASE
+                            WHEN "listItem"."estimatedRating" IS NOT NULL AND "mediaItem"."tmdbRating" IS NOT NULL
+                              THEN ("listItem"."estimatedRating" * 0.6 + "mediaItem"."tmdbRating" * 0.4)
+                            ELSE "listItem"."estimatedRating"
+                          END DESC NULLS LAST`);
+        query.orderBy('mediaItem.title', 'asc');
+        break;
+
       default:
         throw new Error(`Unsupported orderBy value: ${orderBy}`);
     }
@@ -603,6 +613,7 @@ const mapRawResult = (row: any): MediaItemItemsResponse => {
         : Boolean(row['lastSeen2.mediaItemId']),
 
     onWatchlist: Boolean(row['listItem.id']),
+    estimatedRating: row['listItem.estimatedRating'] ?? undefined,
     unseenEpisodesCount: row.unseenEpisodesCount || 0,
     seenEpisodesCount: row['seenEpisodesCount'],
     numberOfEpisodes: row.numberOfEpisodes,

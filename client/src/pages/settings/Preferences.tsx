@@ -36,6 +36,13 @@ export const SettingsPreferencesPage: FunctionComponent = () => {
           })
         }
       />
+
+      <CheckboxWithTitleAndDescription
+        title={t`Add recommendations to watchlist`}
+        description={t`Automatically add similar items to your watchlist when you rate content`}
+        checked={user.addRecommendedToWatchlist ?? true}
+        onChange={(value) => updateUser({ addRecommendedToWatchlist: value })}
+      />
     </>
   );
 };

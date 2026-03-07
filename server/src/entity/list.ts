@@ -8,7 +8,8 @@ export type ListSortBy =
   | 'next-airing'
   | 'release-date'
   | 'runtime'
-  | 'title';
+  | 'title'
+  | 'recommended';
 
 export type List = {
   id: number;
@@ -33,6 +34,7 @@ export type ListItem = {
   seasonId?: number;
   episodeId?: number;
   addedAt: number;
+  estimatedRating?: number;
 };
 
 export const listColumns = <const>[
@@ -53,4 +55,5 @@ export const listItemColumns = <const>[
   'mediaItemId',
   'seasonId',
   'episodeId',
+  'estimatedRating',
 ];

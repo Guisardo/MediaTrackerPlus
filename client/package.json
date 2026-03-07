@@ -9,7 +9,9 @@
     "dev": "npm run lingui:compile && webpack serve --config webpack.dev.ts",
     "build": "npm run lingui:extract && npm run lingui:compile && cross-env NODE_ENV=production webpack --config webpack.prod.ts",
     "check-types": "tsc --noEmit",
-    "lint": "eslint src && npm run check-types"
+    "lint": "eslint src && npm run check-types",
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "eslintConfig": {
     "extends": [
@@ -19,12 +21,20 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.18.2",
-    "@babel/plugin-transform-runtime": "^7.18.2",
-    "@babel/preset-env": "^7.18.2",
-    "@babel/preset-react": "^7.17.12",
-    "@babel/preset-typescript": "^7.17.12",
-    "@babel/runtime": "^7.18.3",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^12.1.5",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/jest": "^28.1.8",
+    "babel-jest": "^28.1.3",
+    "jest": "^28.1.3",
+    "jest-environment-jsdom": "^28.1.3",
+    "jest-junit": "^13.2.0",
+    "@babel/core": "^7.26.0",
+    "@babel/plugin-transform-runtime": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.26.0",
+    "@babel/preset-typescript": "^7.26.0",
+    "@babel/runtime": "^7.26.0",
     "@lingui/cli": "^3.13.3",
     "@lingui/loader": "^3.13.3",
     "@lingui/macro": "^3.13.3",

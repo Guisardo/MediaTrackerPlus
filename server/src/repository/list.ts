@@ -26,6 +26,7 @@ export type ListDetailsResponse = Omit<List, 'userId'> & {
 export type ListItemsResponse = {
   id: number;
   listedAt: string;
+  estimatedRating?: number;
   type: MediaType | 'season' | 'episode';
   mediaItem: MediaItemItemsResponse;
   season?: TvSeason;
@@ -297,6 +298,7 @@ class ListRepository extends repository<List>({
         'episode.watchlist.id': 'episodeWatchlist.id',
         'listItem.addedAt': 'listItem.addedAt',
         'listItem.episodeId': 'listItem.episodeId',
+        'listItem.estimatedRating': 'listItem.estimatedRating',
         'listItem.id': 'listItem.id',
         'listItem.mediaItemId': 'listItem.mediaItemId',
         'listItem.seasonId': 'listItem.seasonId',
@@ -391,6 +393,7 @@ class ListRepository extends repository<List>({
         'mediaItem.source': 'mediaItem.source',
         'mediaItem.title': 'mediaItem.title',
         'mediaItem.tmdbId': 'mediaItem.tmdbId',
+        'mediaItem.tmdbRating': 'mediaItem.tmdbRating',
         'mediaItem.totalRuntime': 'mediaItemTotalRuntime.totalRuntime',
         'mediaItem.traktId': 'mediaItem.traktId',
         'mediaItem.tvdbId': 'mediaItem.tvdbId',
@@ -870,6 +873,7 @@ class ListRepository extends repository<List>({
     return res.map((listItem) => ({
       id: Number(listItem['listItem.id']),
       listedAt: new Date(listItem['listItem.addedAt']).toISOString(),
+      estimatedRating: listItem['listItem.estimatedRating'] ?? undefined,
       type: listItem['listItem.seasonId']
         ? 'season'
         : listItem['listItem.episodeId']
@@ -900,6 +904,7 @@ class ListRepository extends repository<List>({
         status: listItem['mediaItem.status']?.toLowerCase(),
         title: listItem['mediaItem.title'],
         tmdbId: listItem['mediaItem.tmdbId'],
+        tmdbRating: listItem['mediaItem.tmdbRating'] ?? undefined,
         traktId: listItem['mediaItem.traktId'],
         tvdbId: listItem['mediaItem.tvdbId'],
         url: listItem['mediaItem.url'],

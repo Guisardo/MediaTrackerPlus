@@ -1773,5 +1773,76 @@ describe('migrations', () => {
     expect(updatedSeason.posterId).toEqual('poster-2');
   });
 
+  test('20990101000000_listItemEstimatedRating', async () => {
+    // Test that migration adds the column
+    await Database.knex.migrate.up({
+      name: `20990101000000_listItemEstimatedRating.${Config.MIGRATIONS_EXTENSION}`,
+      directory: Config.MIGRATIONS_DIRECTORY,
+    });
+
+    const hasColumnAfterUp = await Database.knex.schema.hasColumn(
+      'listItem',
+      'estimatedRating'
+    );
+    expect(hasColumnAfterUp).toBe(true);
+
+    // Test rollback
+    await Database.knex.migrate.down({
+      directory: Config.MIGRATIONS_DIRECTORY,
+    });
+
+    const hasColumnAfterDown = await Database.knex.schema.hasColumn(
+      'listItem',
+      'estimatedRating'
+    );
+    expect(hasColumnAfterDown).toBe(false);
+
+    // Test that migration can be applied again after rollback (tests idempotency)
+    await Database.knex.migrate.up({
+      name: `20990101000000_listItemEstimatedRating.${Config.MIGRATIONS_EXTENSION}`,
+      directory: Config.MIGRATIONS_DIRECTORY,
+    });
+
+    const hasColumnAfterSecondUp = await Database.knex.schema.hasColumn(
+      'listItem',
+      'estimatedRating'
+    );
+    expect(hasColumnAfterSecondUp).toBe(true);
+  });
+
+  test('20990101000001_userRecommendationSetting', async () => {
+    await Database.knex.migrate.up({
+      name: `20990101000001_userRecommendationSetting.${Config.MIGRATIONS_EXTENSION}`,
+      directory: Config.MIGRATIONS_DIRECTORY,
+    });
+
+    const hasColumnAfterUp = await Database.knex.schema.hasColumn(
+      'user',
+      'addRecommendedToWatchlist'
+    );
+    expect(hasColumnAfterUp).toBe(true);
+
+    await Database.knex.migrate.down({
+      directory: Config.MIGRATIONS_DIRECTORY,
+    });
+
+    const hasColumnAfterDown = await Database.knex.schema.hasColumn(
+      'user',
+      'addRecommendedToWatchlist'
+    );
+    expect(hasColumnAfterDown).toBe(false);
+
+    await Database.knex.migrate.up({
+      name: `20990101000001_userRecommendationSetting.${Config.MIGRATIONS_EXTENSION}`,
+      directory: Config.MIGRATIONS_DIRECTORY,
+    });
+
+    const hasColumnAfterSecondUp = await Database.knex.schema.hasColumn(
+      'user',
+      'addRecommendedToWatchlist'
+    );
+    expect(hasColumnAfterSecondUp).toBe(true);
+  });
+
   afterAll(clearDatabase);
 });

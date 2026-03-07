@@ -19,6 +19,7 @@ class UserRepository extends repository<User>({
     'sendNotificationWhenStatusChanges',
     'hideEpisodeTitleForUnseenEpisodes',
     'hideOverviewForUnseenSeasons',
+    'addRecommendedToWatchlist',
   ],
 }) {
   public async find(where: Partial<User>): Promise<User[]> {
