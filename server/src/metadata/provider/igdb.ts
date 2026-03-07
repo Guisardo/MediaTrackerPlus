@@ -145,6 +145,30 @@ export class IGDB extends MetadataProvider {
   private readonly requestQueue = new RequestQueue({
     timeBetweenRequests: 250,
   });
+
+  /**
+   * Public getter for the shared RequestQueue.
+   * Used by IgdbSimilarClient to respect the 4 req/sec rate limit.
+   */
+  public getRequestQueue(): RequestQueue {
+    return this.requestQueue;
+  }
+
+  /**
+   * Public getter for IGDB client ID.
+   * Used by IgdbSimilarClient for OAuth token management.
+   */
+  public getClientId(): string {
+    return GlobalConfiguration.configuration.igdbClientId;
+  }
+
+  /**
+   * Public getter for IGDB client secret.
+   * Used by IgdbSimilarClient for OAuth token management.
+   */
+  public getClientSecret(): string {
+    return GlobalConfiguration.configuration.igdbClientSecret;
+  }
 }
 
 interface Token {

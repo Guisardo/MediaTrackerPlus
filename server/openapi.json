@@ -4167,6 +4167,10 @@
             "listedAt": {
               "type": "string"
             },
+            "estimatedRating": {
+              "type": "number",
+              "nullable": true
+            },
             "type": {
               "enum": [
                 "audiobook",

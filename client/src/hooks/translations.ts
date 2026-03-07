@@ -13,6 +13,7 @@ export const useListSortByKeys = () =>
     runtime: t`Runtime`,
     title: t`Title`,
     'next-airing': t`Next airing`,
+    recommended: t`Recommended`,
   });
 
 export const useListPrivacyKeys = () =>
