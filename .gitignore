@@ -22,6 +22,8 @@ server/junit.xml
 rest-api/index.js
 rest-api/index.ts
 
+server/openapi.json
+
 docs/dist
 
 /ralph/
@@ -32,6 +34,7 @@ docs/dist
 /dist
 /tmp
 /out-tsc
+**/generated/**
 
 # Runtime data
 pids
