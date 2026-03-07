@@ -30,6 +30,7 @@ docs/dist
 /tasks/
 /ralph/
 /.planning/
+/trees/
 /docs-catalog.json
 
 # See http://help.github.com/ignore-files/ for more about ignoring files.
