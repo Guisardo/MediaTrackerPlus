@@ -32,6 +32,10 @@ describe('config', () => {
     expect(Config.LOGS_PATH).toBe(newLogsPath);
   });
 
+  test('TMDB_API_KEY should default to the bundled key when env var is not set', () => {
+    expect(Config.TMDB_API_KEY).toBe('779734046efc1e6127485c54d3b29627');
+  });
+
   afterEach(jest.clearAllMocks);
 
   test('should copy directories to new config', () => {
