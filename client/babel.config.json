@@ -10,5 +10,14 @@
     "@babel/preset-react",
     "@babel/preset-typescript"
   ],
-  "plugins": ["@babel/plugin-transform-runtime", "macros"]
+  "plugins": ["@babel/plugin-transform-runtime", "macros"],
+  "env": {
+    "test": {
+      "presets": [
+        ["@babel/preset-env", {"targets": {"node": "current"}}],
+        "@babel/preset-react",
+        "@babel/preset-typescript"
+      ]
+    }
+  }
 }

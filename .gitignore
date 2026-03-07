@@ -16,6 +16,7 @@ server/data.db
 server/test.db
 server/testDatabase
 server/junit.xml
+client/junit.xml
 
 */src/i18n/locales/*/*.ts
 

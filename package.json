@@ -9,7 +9,10 @@
     "format": "prettier --list-different --write .",
     "lint": "npm run lint --prefix client && npm run lint --prefix server",
     "test": "npm run test --prefix server",
-    "test:coverage": "npm run test:coverage --prefix server"
+    "test:client": "npm run test --prefix client",
+    "test:coverage": "npm run test:coverage --prefix server",
+    "test:client:coverage": "npm run test:coverage --prefix client",
+    "check-types": "npm run check-types --prefix server && npm run check-types --prefix client"
   },
   "devDependencies": {
     "@types/jest": "^28.1.1",
