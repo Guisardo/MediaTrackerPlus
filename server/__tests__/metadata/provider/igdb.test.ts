@@ -34,6 +34,102 @@ describe('IGDB', () => {
     });
     expect(res).toStrictEqual(detailsResult);
   });
+
+  describe('IGDB.similar', () => {
+    const tokenRefreshMock = {
+      status: 200,
+      data: { access_token: 'test-token', expires_in: 0, token_type: 'bearer' },
+    };
+
+    test('returns empty array when igdbId is not provided', async () => {
+      const res = await igdb.similar({});
+      expect(res).toStrictEqual([]);
+    });
+
+    test('returns empty array when no similar games are found', async () => {
+      mockedAxios.post
+        .mockResolvedValueOnce(tokenRefreshMock)
+        .mockResolvedValueOnce({ status: 200, data: [{ id: 19560 }] });
+
+      const res = await igdb.similar({ igdbId: 19560 });
+      expect(res).toStrictEqual([]);
+    });
+
+    test('returns empty array when similar_games list is empty', async () => {
+      mockedAxios.post
+        .mockResolvedValueOnce(tokenRefreshMock)
+        .mockResolvedValueOnce({
+          status: 200,
+          data: [{ id: 19560, similar_games: [] }],
+        });
+
+      const res = await igdb.similar({ igdbId: 19560 });
+      expect(res).toStrictEqual([]);
+    });
+
+    test('returns mapped SimilarItem array with normalized ratings', async () => {
+      mockedAxios.post
+        .mockResolvedValueOnce(tokenRefreshMock)
+        .mockResolvedValueOnce({
+          status: 200,
+          data: [{ id: 19560, similar_games: [551, 1291] }],
+        })
+        .mockResolvedValueOnce(tokenRefreshMock)
+        .mockResolvedValueOnce({
+          status: 200,
+          data: [
+            { id: 551, name: 'God of War II', total_rating: 85 },
+            { id: 1291, name: 'God of War: Ascension', total_rating: 70 },
+          ],
+        });
+
+      const res = await igdb.similar({ igdbId: 19560 });
+      expect(res).toStrictEqual(igdbSimilarResult);
+    });
+
+    test('converts zero or missing total_rating to null externalRating', async () => {
+      mockedAxios.post
+        .mockResolvedValueOnce(tokenRefreshMock)
+        .mockResolvedValueOnce({
+          status: 200,
+          data: [{ id: 19560, similar_games: [1, 2] }],
+        })
+        .mockResolvedValueOnce(tokenRefreshMock)
+        .mockResolvedValueOnce({
+          status: 200,
+          data: [
+            { id: 1, name: 'No Rating Game', total_rating: 0 },
+            { id: 2, name: 'Missing Rating Game' },
+          ],
+        });
+
+      const res = await igdb.similar({ igdbId: 19560 });
+      expect(res).toHaveLength(2);
+      expect(res[0].externalRating).toBeNull();
+      expect(res[1].externalRating).toBeNull();
+    });
+
+    test('filters out games with no name', async () => {
+      mockedAxios.post
+        .mockResolvedValueOnce(tokenRefreshMock)
+        .mockResolvedValueOnce({
+          status: 200,
+          data: [{ id: 19560, similar_games: [1, 2] }],
+        })
+        .mockResolvedValueOnce(tokenRefreshMock)
+        .mockResolvedValueOnce({
+          status: 200,
+          data: [
+            { id: 1 },
+            { id: 2, name: 'Valid Game', total_rating: 80 },
+          ],
+        });
+
+      const res = await igdb.similar({ igdbId: 19560 });
+      expect(res).toHaveLength(1);
+      expect(res[0].externalId).toBe('2');
+    });
+  });
 });
 
 const searchResult = [
@@ -99,6 +195,21 @@ const searchResult = [
     url: 'http://godofwar.playstation.com',
     developer: 'SIE Santa Monica Studio',
     platform: ['PlayStation 3'],
+  },
+];
+
+const igdbSimilarResult = [
+  {
+    externalId: '551',
+    mediaType: 'video_game',
+    title: 'God of War II',
+    externalRating: 8.5,
+  },
+  {
+    externalId: '1291',
+    mediaType: 'video_game',
+    title: 'God of War: Ascension',
+    externalRating: 7.0,
   },
 ];
 
