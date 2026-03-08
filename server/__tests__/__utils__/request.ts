@@ -17,25 +17,73 @@ export const request = (
     statusCode: number;
     data?: unknown;
   }>((resolve, reject) => {
-    handler(
+    let resolved = false;
+    let currentStatusCode = 200;
+
+    const res = {
+      send: (data: unknown) => {
+        if (!resolved) {
+          resolved = true;
+          resolve({
+            statusCode: currentStatusCode,
+            data: data,
+          });
+        }
+      },
+      sendStatus: (status: number) => {
+        if (!resolved) {
+          resolved = true;
+          resolve({
+            statusCode: status,
+          });
+        }
+      },
+      status: (code: number) => {
+        currentStatusCode = code;
+        return res;
+      },
+      redirect: (url: string) => {
+        if (!resolved) {
+          resolved = true;
+          resolve({
+            statusCode: 302,
+            data: url,
+          });
+        }
+      },
+    };
+
+    const result = handler(
       {
         user: args.userId,
         params: args.pathParams,
         query: args.requestQuery,
         body: args.requestBody,
       } as unknown as Express.Request,
-      {
-        send: (data: unknown) =>
-          resolve({
-            statusCode: 200,
-            data: data,
-          }),
-        sendStatus: (status: number) =>
-          resolve({
-            statusCode: status,
-          }),
-      },
-      reject
+      res as unknown as Express.Response,
+      ((err?: unknown) => {
+        if (err) {
+          reject(err);
+        }
+      }) as NextFunction
     );
+
+    // If the handler returns a promise, resolve when it completes
+    // (handles cases where handler calls res.status() without res.send())
+    if ((result as unknown) && typeof (result as any).then === 'function') {
+      (result as unknown as Promise<void>).then(() => {
+        if (!resolved) {
+          resolved = true;
+          resolve({
+            statusCode: currentStatusCode,
+          });
+        }
+      }).catch((err) => {
+        if (!resolved) {
+          resolved = true;
+          reject(err);
+        }
+      });
+    }
   });
 };
