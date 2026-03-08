@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
 import { omitUndefinedValues, repository } from 'src/repository/repository';
+import { splitCreatorField } from 'src/utils/normalizeCreators';
 import { getItemsKnex, generateColumnNames } from 'src/knex/queries/items';
 import { Database } from 'src/dbconfig';
 import { getDetailsKnex } from 'src/knex/queries/details';
@@ -129,8 +130,12 @@ class MediaItemRepository extends repository<MediaItemBase>({
     return super.deserialize({
       ...value,
       genres: (value.genres as unknown as string)?.split(',') || null,
-      narrators: (value.narrators as unknown as string)?.split(',') || null,
-      authors: (value.authors as unknown as string)?.split(',') || null,
+      narrators: splitCreatorField(
+        (value.narrators as unknown as string) || null
+      ),
+      authors: splitCreatorField(
+        (value.authors as unknown as string) || null
+      ),
       platform: value.platform
         ? JSON.parse(value.platform as unknown as string)
         : null,

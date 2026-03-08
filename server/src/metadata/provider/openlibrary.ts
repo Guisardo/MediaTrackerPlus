@@ -3,6 +3,7 @@ import { ExternalIds, MediaItemForProvider } from 'src/entity/mediaItem';
 import { MetadataProvider } from 'src/metadata/metadataProvider';
 import { logger } from 'src/logger';
 import { SimilarItem } from 'src/metadata/types';
+import { normalizeCreatorField } from 'src/utils/normalizeCreators';
 
 export class OpenLibrary extends MetadataProvider {
   readonly name = 'openlibrary';
@@ -43,7 +44,9 @@ export class OpenLibrary extends MetadataProvider {
           : undefined,
         releaseDate: doc.first_publish_year?.toString(),
         numberOfPages: doc.number_of_pages_median,
-        authors: doc.author_name,
+        authors: doc.author_name
+          ? normalizeCreatorField(doc.author_name)
+          : undefined,
         openlibraryId: doc.key,
       };
     });

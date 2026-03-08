@@ -9,6 +9,7 @@ import { Seen, SeenFilters } from 'src/entity/seen';
 import { Database } from 'src/dbconfig';
 import { List } from 'src/entity/list';
 import { Progress } from 'src/entity/progress';
+import { splitCreatorField } from 'src/utils/normalizeCreators';
 
 export const getDetailsKnex = async (params: {
   mediaItemId: number;
@@ -202,8 +203,12 @@ export const getDetailsKnex = async (params: {
       : null,
     hasDetails: true,
     genres: (mediaItem.genres as unknown as string)?.split(','),
-    narrators: (mediaItem.narrators as unknown as string)?.split(','),
-    authors: (mediaItem.authors as unknown as string)?.split(','),
+    narrators: splitCreatorField(
+      (mediaItem.narrators as unknown as string) || null
+    ),
+    authors: splitCreatorField(
+      (mediaItem.authors as unknown as string) || null
+    ),
     progress: progressValue !== 1 ? progressValue ?? null : null,
     seenHistory: seenHistory,
     seen: seen,

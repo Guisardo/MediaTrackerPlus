@@ -13,6 +13,7 @@ import { TvEpisode, tvEpisodeColumns } from 'src/entity/tvepisode';
 import knex, { Knex } from 'knex';
 import { List, listItemColumns } from 'src/entity/list';
 import { Progress } from 'src/entity/progress';
+import { splitCreatorField } from 'src/utils/normalizeCreators';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getItemsKnex = async (args: any): Promise<any> => {
@@ -591,8 +592,8 @@ const mapRawResult = (row: any): MediaItemItemsResponse => {
     network: row['mediaItem.network'],
     language: row['mediaItem.language'],
     genres: row['mediaItem.genres']?.split(','),
-    authors: row['mediaItem.authors']?.split(','),
-    narrators: row['mediaItem.narrators']?.split(','),
+    authors: splitCreatorField(row['mediaItem.authors'] ?? null),
+    narrators: splitCreatorField(row['mediaItem.narrators'] ?? null),
     url: row['mediaItem.url'],
     developer: row['mediaItem.developer'],
     lastSeenAt: row['lastSeenAt'],
