@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="23" failures="0" errors="0" time="2.102">
+  <testsuite name="FetchError" errors="0" failures="0" skipped="0" timestamp="2026-03-08T00:26:43" time="0.888" tests="23">
+    <testcase classname="FetchError sets status on the instance" name="FetchError sets status on the instance" time="0.003">
+    </testcase>
+    <testcase classname="FetchError sets statusText when provided" name="FetchError sets statusText when provided" time="0.001">
+    </testcase>
+    <testcase classname="FetchError sets statusText to undefined when omitted" name="FetchError sets statusText to undefined when omitted" time="0.003">
+    </testcase>
+    <testcase classname="FetchError sets body when provided" name="FetchError sets body when provided" time="0">
+    </testcase>
+    <testcase classname="FetchError sets body to undefined when omitted" name="FetchError sets body to undefined when omitted" time="0">
+    </testcase>
+    <testcase classname="FetchError sets name to &quot;FetchError&quot;" name="FetchError sets name to &quot;FetchError&quot;" time="0">
+    </testcase>
+    <testcase classname="FetchError formats message as &quot;status (statusText)&quot; when statusText is present" name="FetchError formats message as &quot;status (statusText)&quot; when statusText is present" time="0.001">
+    </testcase>
+    <testcase classname="FetchError formats message as the status code string when statusText is absent" name="FetchError formats message as the status code string when statusText is absent" time="0">
+    </testcase>
+    <testcase classname="FetchError is an instance of Error" name="FetchError is an instance of Error" time="0.001">
+    </testcase>
+    <testcase classname="MediaTrackerError sets the message" name="MediaTrackerError sets the message" time="0">
+    </testcase>
+    <testcase classname="MediaTrackerError sets name to &quot;MediaTrackerError&quot;" name="MediaTrackerError sets name to &quot;MediaTrackerError&quot;" time="0">
+    </testcase>
+    <testcase classname="MediaTrackerError is an instance of Error" name="MediaTrackerError is an instance of Error" time="0">
+    </testcase>
+    <testcase classname="unwrapError returns { data: undefined, error: errorMessage } for a RequestError-shaped object" name="unwrapError returns { data: undefined, error: errorMessage } for a RequestError-shaped object" time="0.001">
+    </testcase>
+    <testcase classname="unwrapError returns { data, error: undefined } for normal response data" name="unwrapError returns { data, error: undefined } for normal response data" time="0.001">
+    </testcase>
+    <testcase classname="unwrapError returns { data, error: undefined } for a string value" name="unwrapError returns { data, error: undefined } for a string value" time="0">
+    </testcase>
+    <testcase classname="unwrapError returns { data, error: undefined } for an array" name="unwrapError returns { data, error: undefined } for an array" time="0">
+    </testcase>
+    <testcase classname="unwrapError distinguishes an object with &quot;errorMessage&quot; but without MediaTrackerError: true" name="unwrapError distinguishes an object with &quot;errorMessage&quot; but without MediaTrackerError: true" time="0.001">
+    </testcase>
+    <testcase classname="unwrapError distinguishes an object with MediaTrackerError: true but missing errorMessage" name="unwrapError distinguishes an object with MediaTrackerError: true but missing errorMessage" time="0">
+    </testcase>
+    <testcase classname="unwrapError handles null response as normal data" name="unwrapError handles null response as normal data" time="0">
+    </testcase>
+    <testcase classname="errorHandler calls the wrapped function with the provided args and returns unwrapped data" name="errorHandler calls the wrapped function with the provided args and returns unwrapped data" time="0">
+    </testcase>
+    <testcase classname="errorHandler propagates a RequestError from the inner function as an error string" name="errorHandler propagates a RequestError from the inner function as an error string" time="0">
+    </testcase>
+    <testcase classname="errorHandler calls the wrapped function exactly once per invocation" name="errorHandler calls the wrapped function exactly once per invocation" time="0">
+    </testcase>
+    <testcase classname="errorHandler passes undefined args when the wrapped function expects no parameters" name="errorHandler passes undefined args when the wrapped function expects no parameters" time="0.001">
+    </testcase>
+  </testsuite>
+</testsuites>

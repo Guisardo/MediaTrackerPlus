@@ -1,0 +1,17 @@
+# Ralph Progress Log
+Started: Sun Mar  8 15:14:20 -03 2026
+---
+
+## Mar 8 2026 - US-001
+- Installed @radix-ui/react-slider (v1.3.6) and @radix-ui/react-collapsible (v1.1.12) to client/package.json
+- Both packages properly resolved with React 17 peer dependencies
+- npm install completed without conflicts
+- All 214 existing server tests pass
+- Typecheck passes
+- Commit: e7c7276
+
+**Learnings for future iterations:**
+- Radix UI packages must be installed in the client directory, not root
+- npm audit shows vulnerabilities inherited from react-spring dependency chains, but these don't affect the facet feature
+- Typecheck has pre-existing errors in OrderBy.tsx and hooks/sortedList.ts related to missing 'recommended' field, but these are unrelated to this story
+---

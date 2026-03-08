@@ -42,6 +42,7 @@ export type MediaItemBase = ExternalIds & {
   genres?: string[];
   numberOfEpisodes?: number;
   developer?: string;
+  creator?: string;
   authors?: string[];
   narrators?: string[];
   language?: string;
@@ -125,6 +126,7 @@ export type MediaItemItemsResponse = Omit<MediaItemBase, 'lockedAt'> & {
 };
 
 export const mediaItemColumns = <const>[
+  'creator',
   'developer',
   'genres',
   'id',

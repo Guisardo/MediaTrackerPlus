@@ -1,0 +1,251 @@
+{
+  "project": "MediaTrackerPlus",
+  "branchName": "feature/upnext-recommendations",
+  "description": "upnext Recommendation Engine — automatically populate the watchlist with similar content after every rating event, seed each entry with an estimatedRating, and surface results via a Recommended sort order blending personal and crowd signals",
+  "jiraEpicKey": null,
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Add estimatedRating column to listItem table",
+      "description": "As a backend agent, I want to add a dedicated estimatedRating column to the listItem table so that recommendation scores persist between sessions and are directly queryable without touching JSON blobs.",
+      "acceptanceCriteria": [
+        "Create migration at server/src/migrations/20990101000000_listItemEstimatedRating.ts — timestamp is intentional (far-future avoids upstream collision)",
+        "Migration adds estimatedRating FLOAT NULL column to the listItem table",
+        "Migration is idempotent: use await knex.schema.hasColumn('listItem', 'estimatedRating') guard before calling alterTable",
+        "Migration runs successfully on both SQLite and PostgreSQL",
+        "Unit tests verify: migration adds the column, running it twice does not throw",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "Delegate to gsd-executor agent for atomic commit. Simple ALTER TABLE — no business logic. Study existing migrations in server/src/migrations/ for the exact Knex migration class pattern used in this codebase.",
+      "jiraKey": null,
+      "reasoningLevel": "LOW"
+    },
+    {
+      "id": "US-002",
+      "title": "Extend ListSortBy type and ListItem entity with recommendation fields",
+      "description": "As a backend agent, I want the ListSortBy union type to include 'recommended' and the ListItem entity to carry an optional estimatedRating field so the sort pipeline and API can reference these without TypeScript errors.",
+      "acceptanceCriteria": [
+        "Add 'recommended' to the ListSortBy union in server/src/entity/list.ts",
+        "Add estimatedRating?: number field to the ListItem entity/type definition in server/src/entity/list.ts",
+        "No existing sort options or entity fields removed or renamed",
+        "Unit tests verify: 'recommended' is an accepted ListSortBy value, ListItem type accepts estimatedRating as optional number",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": "Pure TypeScript type extension — no runtime logic, no DB changes. Modify only server/src/entity/list.ts. This is a prerequisite for US-010 (sort implementation).",
+      "jiraKey": null,
+      "reasoningLevel": "LOW"
+    },
+    {
+      "id": "US-003",
+      "title": "Create recommendations module directory and SimilarItem shared type",
+      "description": "As a backend agent, I want a shared SimilarItem interface in a new recommendations module directory so all API clients, the WatchlistWriter, and the RecommendationService operate on a common contract.",
+      "acceptanceCriteria": [
+        "Create directory server/src/services/recommendations/",
+        "Create server/src/services/recommendations/types.ts with SimilarItem interface: { externalId: string; mediaType: 'movie' | 'tv' | 'game' | 'book'; title: string; externalRating: number | null; }",
+        "externalRating invariant is documented in the type: must be null or within [0.0, 10.0]; each client must enforce this before returning",
+        "Export SimilarItem from types.ts",
+        "Unit tests verify: SimilarItem type is correctly exported and structured",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": "Prerequisite for US-004, US-005, US-006, US-007. Create types.ts only — no implementation classes yet. Use software-architect agent to validate the interface design matches all three API clients' data shapes before committing.",
+      "jiraKey": null,
+      "reasoningLevel": "LOW"
+    },
+    {
+      "id": "US-004",
+      "title": "Implement TmdbSimilarClient for movies and TV shows",
+      "description": "As a backend agent, I want a TMDB API client that fetches similar movies and TV shows from the TMDB /similar endpoints so the recommendation engine can populate the watchlist for those media types.",
+      "acceptanceCriteria": [
+        "Create server/src/services/recommendations/TmdbSimilarClient.ts",
+        "Implement fetchSimilar(tmdbId: number, mediaType: 'movie' | 'tv'): Promise<SimilarItem[]>",
+        "Call GET /3/movie/{id}/similar for movies and GET /3/tv/{id}/similar for TV shows",
+        "Return all results from the first page (up to 20 items)",
+        "Filter out items where vote_count < 10 before returning",
+        "Coerce externalRating to null if vote_average is 0 (unreleased/no-data items that escape the vote_count filter)",
+        "Validate externalRating is null or within [0.0, 10.0] before returning each SimilarItem",
+        "On HTTP 429: log Retry-After header value at WARN level and return empty array (no retry in v1)",
+        "On any other non-2xx: throw descriptive Error with HTTP status code and endpoint path",
+        "Reuse existing TMDB apiKey from shared config — do not introduce new config keys",
+        "Unit tests verify: vote_count filter works, 429 returns empty array and logs, non-2xx throws descriptive error, externalRating=0 coerced to null",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": "Reuse the shared axios instance and apiKey from TmdbProvider (server/src/metadata/provider/tmdb.ts) — do not create a new HTTP client. Inject the provider or its axios instance via constructor.",
+      "jiraKey": null,
+      "reasoningLevel": "MID"
+    },
+    {
+      "id": "US-005",
+      "title": "Implement IgdbSimilarClient for games (two-step query with shared RequestQueue)",
+      "description": "As a backend agent, I want an IGDB API client that fetches similar games via the two-step query pattern and reuses the shared RequestQueue so the recommendation engine respects the 4 req/sec rate limit even during concurrent metadata updates.",
+      "acceptanceCriteria": [
+        "Create server/src/services/recommendations/IgdbSimilarClient.ts",
+        "Implement fetchSimilar(igdbId: number): Promise<SimilarItem[]>",
+        "Step 1: POST /v4/games with body 'fields similar_games; where id = {igdbId};' to retrieve similar game IDs",
+        "Step 2: POST /v4/games with body 'fields name,total_rating,total_rating_count; where id = ({id1},{id2},...);' to fetch full details for all similar IDs in one batched call if possible, or per-ID calls throttled via the shared RequestQueue",
+        "All requests MUST use the SHARED RequestQueue instance from the existing IGDB provider — creating a second independent queue would allow the combined rate to exceed 4 req/sec",
+        "Normalize total_rating (0–100 scale) by dividing by 10 to produce externalRating in [0.0, 10.0]",
+        "Check OAuth token expiry before every call: const expiresAt = tokenAcquiredAt.getTime() + token.expires_in * 1000; const needsRefresh = expiresAt - Date.now() < 60_000; if (needsRefresh) await refreshToken();",
+        "Reuse existing IGDB client credentials from shared config — do not introduce new config keys",
+        "Unit tests verify: Step 1 and Step 2 flow, total_rating normalization (e.g. 75 → 7.5), token refresh when within 60s of expiry, shared RequestQueue is injected and used",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": "COMPLEX: Use software-architect agent to review the shared-queue injection pattern before writing code. Study server/src/metadata/provider/igdb.ts carefully — reuse its RequestQueue singleton, OAuth refresh logic, and axios instance via injection. Worst-case I/O: 1 Step-1 + up to 20 Step-2 requests × 250ms = ~5.25 seconds, within 10-second SLA.",
+      "jiraKey": null,
+      "reasoningLevel": "HIGH"
+    },
+    {
+      "id": "US-006",
+      "title": "Implement OpenLibrarySimilarClient for books (subject-based search)",
+      "description": "As a backend agent, I want an OpenLibrary API client that retrieves related books via subject-based search so the recommendation engine can suggest books despite the absence of a dedicated similarity API.",
+      "acceptanceCriteria": [
+        "Create server/src/services/recommendations/OpenLibrarySimilarClient.ts",
+        "Implement fetchSimilar(workId: string): Promise<SimilarItem[]>",
+        "The mediaItem table stores workId in full-path format (/works/OL82563W) — strip the /works/ prefix before constructing API requests",
+        "Fetch work subjects via GET https://openlibrary.org/works/{strippedId}.json",
+        "Search books via GET https://openlibrary.org/subjects/{subject}.json using the first subject from the work",
+        "Return all items from the subject response's works array",
+        "All returned SimilarItem objects must have externalRating: null (OpenLibrary provides no rating signal)",
+        "If work has no subjects or subjects array is empty, return [] and log WARN with workId",
+        "Unit tests verify: /works/ prefix is stripped, subject fetch uses first subject, externalRating is always null, no-subjects case returns empty array",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": "No authentication required for OpenLibrary. Create a simple axios instance — do not reuse the OpenLibrary metadata provider (its endpoints differ). Reference server/src/metadata/provider/openlibrary.ts only for the workId format confirmation.",
+      "jiraKey": null,
+      "reasoningLevel": "MID"
+    },
+    {
+      "id": "US-007",
+      "title": "Implement WatchlistWriter with transactional upsert and minimum-wins estimatedRating strategy",
+      "description": "As a backend agent, I want a WatchlistWriter that adds similar items to the user's watchlist with estimatedRating, uses Knex transactions for concurrency safety, and applies the conservative minimum-value update strategy when an item already exists.",
+      "acceptanceCriteria": [
+        "Create server/src/services/recommendations/WatchlistWriter.ts",
+        "Implement write(userId: number, items: SimilarItem[], estimatedRating: number): Promise<void>",
+        "For each SimilarItem, call findMediaItemByExternalId from server/src/metadata/findByExternalId.ts to ensure mediaItem row exists before inserting listItem",
+        "If findMediaItemByExternalId returns undefined (import failure), log WARN with external ID and skip that item — continue processing remaining items in the batch",
+        "Wrap each check-and-insert in a Knex transaction to prevent duplicate listItem rows under concurrent invocations",
+        "New item (not in watchlist): INSERT with estimatedRating = provided value",
+        "Existing item, has been watched or rated: skip without modification",
+        "Existing item, not watched/rated, existing estimatedRating > provided value: UPDATE estimatedRating to the new lower value",
+        "Existing item, not watched/rated, existing estimatedRating <= provided value: keep existing without modification",
+        "Log all add/update/skip decisions at DEBUG level with item ID and reason",
+        "Unit tests verify: new item add, skip on watched, skip on rated, update when lower, keep when not lower, import failure skips item and continues batch, concurrent calls produce no duplicate rows",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": "COMPLEX: Use software-architect agent to review the Knex transaction pattern before implementing. Key dependency: findMediaItemByExternalId from server/src/metadata/findByExternalId.ts handles the full lookup-or-create pipeline for TMDB, IGDB, and OpenLibrary IDs. Study server/src/repository/ for existing transaction patterns before writing new ones.",
+      "jiraKey": null,
+      "reasoningLevel": "HIGH"
+    },
+    {
+      "id": "US-008",
+      "title": "Implement RecommendationService orchestrator",
+      "description": "As a backend agent, I want a central RecommendationService that dispatches a rating event to the correct similarity API client by media type and coordinates with WatchlistWriter so the full pipeline is encapsulated behind a single processRating method.",
+      "acceptanceCriteria": [
+        "Create server/src/services/recommendations/RecommendationService.ts",
+        "Implement processRating(userId: number, mediaItemId: number, rating: number): Promise<void>",
+        "Read mediaItem record from database to determine media type",
+        "Dispatch to TmdbSimilarClient for 'movie' and 'tv', IgdbSimilarClient for 'game', OpenLibrarySimilarClient for 'book'",
+        "Pass rating as the estimatedRating value to WatchlistWriter.write(userId, similarItems, rating)",
+        "Log at INFO on entry: userId, mediaItemId, mediaType, rating",
+        "Log at INFO on completion: API result count, items added count, items updated count, items skipped count",
+        "Catch all errors from API clients or WatchlistWriter; log at ERROR level with full stack trace (logger.error(message, { err })); swallow — do not rethrow",
+        "Inject TmdbSimilarClient, IgdbSimilarClient, OpenLibrarySimilarClient, and WatchlistWriter via constructor for testability",
+        "Unit tests verify: correct client dispatched per media type, WatchlistWriter called with correct args, errors from clients are caught logged and swallowed not rethrown",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 8,
+      "passes": true,
+      "notes": "Orchestration layer only — no direct API calls or DB writes beyond the mediaItem lookup. Use gsd-executor agent for atomic commit. Constructor injection makes all dependencies mockable in tests.",
+      "jiraKey": null,
+      "reasoningLevel": "MID"
+    },
+    {
+      "id": "US-009",
+      "title": "Add fire-and-forget recommendation hook to RatingController",
+      "description": "As a backend agent, I want the RatingController to trigger RecommendationService asynchronously after each rating is saved using setImmediate so HTTP response latency is never increased by recommendation processing.",
+      "acceptanceCriteria": [
+        "Modify server/src/controllers/rating.ts to add the following strictly AFTER res.send(): setImmediate(() => { recommendationService.processRating(userId, itemId, rating).catch((err) => { logger.error('Unhandled error in recommendation pipeline', { err }); }); });",
+        ".catch() is used — NOT try/catch — because a try/catch around an unawaited async call does not catch rejected promises",
+        "Placement is strictly after res.send() — the setImmediate call must appear after the response-sending statement, not before",
+        "Inject RecommendationService into the controller using the existing DI pattern in the codebase",
+        "Unit tests verify: res.send() is invoked before processRating executes (verified via mock setImmediate), rejected processRating promise does not propagate to the HTTP layer",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 9,
+      "passes": true,
+      "notes": "Minimal change: ~5 lines in one existing file. Study server/src/controllers/rating.ts to confirm the exact method and DI mechanism before editing. Delegate to gsd-executor agent for atomic commit.",
+      "jiraKey": null,
+      "reasoningLevel": "LOW"
+    },
+    {
+      "id": "US-010",
+      "title": "Implement Recommended sort order in list repository",
+      "description": "As a backend agent, I want the watchlist to support a Recommended sort order that blends estimatedRating and tmdbRating into a single engagement score so users can surface the most relevant unwatched content at the top.",
+      "acceptanceCriteria": [
+        "When sortBy === 'recommended', listItemRepository.items() orders results by score DESC",
+        "Add mediaItem.tmdbRating to the listRepository.items() select projection (tmdbRating is already a column on the mediaItem table — it is the externalRating source for movies and TV)",
+        "Score formula when both estimatedRating and tmdbRating are present: score = (estimatedRating * 0.6) + (tmdbRating * 0.4)",
+        "Score formula when tmdbRating is null (games, books, or movies without a TMDB rating): score = estimatedRating",
+        "Items where estimatedRating IS NULL sort last (after all scored items)",
+        "Sort is applied in-memory in TypeScript consistent with the existing sort pattern in listItemRepository",
+        "All existing sort options (addedAt, title, releaseDate, etc.) remain unaffected",
+        "Unit tests verify: score formula for both cases, null estimatedRating sorts last, null tmdbRating falls back to estimatedRating only, existing sorts unaffected",
+        "Typecheck passes",
+        "Tests pass"
+      ],
+      "priority": 10,
+      "passes": true,
+      "notes": "Confirm the actual filename — it may be listItemRepository.ts or list.ts. In-memory sort is consistent with the existing codebase pattern and will need a DB-level ORDER BY if pagination is added later (documented limitation). tmdbRating on mediaItem is already 0–10 scale; no normalization needed.",
+      "jiraKey": null,
+      "reasoningLevel": "MID"
+    },
+    {
+      "id": "US-011",
+      "title": "Integration tests for the upnext Recommendation Engine",
+      "description": "As a developer, I want integration tests that verify the complete recommendation pipeline end-to-end so all product requirements are confirmed to work together and regressions are caught before any deployment.",
+      "acceptanceCriteria": [
+        "Integration test: rating a movie triggers TmdbSimilarClient; returned items added to watchlist with estimatedRating equal to trigger rating",
+        "Integration test: rating a game triggers IgdbSimilarClient two-step query",
+        "Integration test: rating a book triggers OpenLibrarySimilarClient subject fetch",
+        "Integration test: item in watchlist (unwatched, unrated, estimatedRating=9) is NOT updated when new trigger rating >= 9",
+        "Integration test: item in watchlist (unwatched, unrated, estimatedRating=9) IS updated to estimatedRating=7 when trigger rating=7",
+        "Integration test: item already watched by user is skipped without modification",
+        "Integration test: item already rated by user is skipped without modification",
+        "Integration test: RatingController sends HTTP 200 response before processRating executes (setImmediate ordering verified via mock)",
+        "Integration test: IGDB OAuth token expired at call time — IgdbSimilarClient refreshes token and completes two-step fetch successfully",
+        "Integration test: one TMDB similar item fails findMediaItemByExternalId (returns undefined) — remaining items in same batch are still added to watchlist",
+        "Integration test: two concurrent processRating invocations for same (userId, mediaItemId) — each similar item appears exactly once in watchlist (no duplicates)",
+        "All unit tests from US-001 through US-010 still pass",
+        "Integration tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 11,
+      "passes": true,
+      "notes": "This story runs AFTER all feature stories complete. Use software-architect agent to review the test suite structure before writing. Use debug-agent to investigate any flaky tests, particularly the concurrent invocation test (concurrency test may require explicit transaction isolation verification on PostgreSQL). Reference existing test patterns in the project's test directory.",
+      "jiraKey": null,
+      "reasoningLevel": "HIGH"
+    }
+  ]
+}
