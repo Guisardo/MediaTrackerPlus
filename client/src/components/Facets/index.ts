@@ -9,3 +9,4 @@ export { FacetRangeSlider } from './FacetRangeSlider';
 export { YearSection } from './YearSection';
 export { RatingSection } from './RatingSection';
 export { LanguageSection } from './LanguageSection';
+export { CreatorSection } from './CreatorSection';
