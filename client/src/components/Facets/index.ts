@@ -10,3 +10,4 @@ export { YearSection } from './YearSection';
 export { RatingSection } from './RatingSection';
 export { LanguageSection } from './LanguageSection';
 export { CreatorSection } from './CreatorSection';
+export { StatusSection } from './StatusSection';

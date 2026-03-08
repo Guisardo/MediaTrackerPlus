@@ -83,8 +83,14 @@ export const PaginatedGridItems: FunctionComponent<{
   isStatisticsPage?: boolean;
   showSearch?: boolean;
   gridItemAppearance?: GridItemAppearanceArgs;
+  /**
+   * When true, the FacetPanel is rendered alongside the grid and the Status
+   * facet section replaces the FilterByComponent dropdown in the toolbar.
+   * When false (default), FilterByComponent continues to render unchanged.
+   */
+  showFacets?: boolean;
 }> = (props) => {
-  const { args, showSortOrderControls, showSearch, gridItemAppearance } = props;
+  const { args, showSortOrderControls, showSearch, gridItemAppearance, showFacets } = props;
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState<string>();
@@ -218,9 +224,11 @@ export const PaginatedGridItems: FunctionComponent<{
 
                     {showSortOrderControls && !searchQuery && (
                       <>
-                        <div className="flex ml-auto">
-                          <FilterByComponent />
-                        </div>
+                        {!showFacets && (
+                          <div className="flex ml-auto">
+                            <FilterByComponent />
+                          </div>
+                        )}
                         &nbsp;
                         <div className="">
                           <OrderByComponent />
