@@ -1879,5 +1879,40 @@ describe('migrations', () => {
     expect(resultWithoutCreator.creator).toBeNull();
   });
 
+  test('20260308_addDirectorColumn', async () => {
+    await Database.knex.migrate.up({
+      name: `20260308_addDirectorColumn.${Config.MIGRATIONS_EXTENSION}`,
+      directory: Config.MIGRATIONS_DIRECTORY,
+    });
+
+    await Database.knex<MediaItemBase>('mediaItem').insert({
+      id: 999997,
+      title: 'title',
+      source: 'user',
+      director: 'Chris Columbus',
+      lastTimeUpdated: new Date().getTime(),
+    });
+
+    const result = await Database.knex('mediaItem')
+      .where('id', 999997)
+      .first();
+
+    expect(result.director).toEqual('Chris Columbus');
+
+    // Test that director column accepts null values
+    await Database.knex<MediaItemBase>('mediaItem').insert({
+      id: 999996,
+      title: 'title without director',
+      source: 'user',
+      lastTimeUpdated: new Date().getTime(),
+    });
+
+    const resultWithoutDirector = await Database.knex('mediaItem')
+      .where('id', 999996)
+      .first();
+
+    expect(resultWithoutDirector.director).toBeNull();
+  });
+
   afterAll(clearDatabase);
 });

@@ -258,6 +258,7 @@ const movieDetailsResult = {
   releaseDate: '2001-11-16',
   runtime: 152,
   tmdbRating: 7.9,
+  director: 'Chris Columbus',
   needsDetails: false,
 };
 
@@ -281,6 +282,7 @@ const movieSearchResult = [
     releaseDate: '2001-11-16',
     runtime: undefined,
     tmdbRating: 7.9,
+    director: undefined,
     needsDetails: true,
   },
   {
@@ -302,6 +304,7 @@ const movieSearchResult = [
     releaseDate: '2009-07-07',
     runtime: undefined,
     tmdbRating: 7.7,
+    director: undefined,
     needsDetails: true,
   },
   {
@@ -323,6 +326,7 @@ const movieSearchResult = [
     releaseDate: '2005-11-16',
     runtime: undefined,
     tmdbRating: 7.8,
+    director: undefined,
     needsDetails: true,
   },
   {
@@ -344,6 +348,7 @@ const movieSearchResult = [
     releaseDate: '2002-11-13',
     runtime: undefined,
     tmdbRating: 7.7,
+    director: undefined,
     needsDetails: true,
   },
   {
@@ -365,6 +370,7 @@ const movieSearchResult = [
     releaseDate: '2004-05-31',
     runtime: undefined,
     tmdbRating: 8,
+    director: undefined,
     needsDetails: true,
   },
 ] as unknown;
