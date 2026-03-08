@@ -75,6 +75,16 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
     selectRandom,
     year,
     genre,
+    genres,
+    languages,
+    creators,
+    publishers,
+    mediaTypes,
+    yearMin,
+    yearMax,
+    ratingMin,
+    ratingMax,
+    status,
   } = args;
 
   const currentDateString = new Date().toISOString();
@@ -378,6 +388,127 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
 
     if (genre) {
       query.andWhere('mediaItem.genres', 'LIKE', `%${genre}%`);
+    }
+
+    // Multi-value genres filter (OR logic within dimension, CSV LIKE matching)
+    if (genres) {
+      const genreArray = genres
+        .split(',')
+        .map((g) => g.trim())
+        .filter(Boolean);
+      if (genreArray.length > 0) {
+        query.andWhere((qb) => {
+          genreArray.forEach((g, index) => {
+            if (index === 0) {
+              qb.where('mediaItem.genres', 'LIKE', `%${g}%`);
+            } else {
+              qb.orWhere('mediaItem.genres', 'LIKE', `%${g}%`);
+            }
+          });
+        });
+      }
+    }
+
+    // Languages filter (OR logic, matches language column)
+    if (languages) {
+      const languageArray = languages
+        .split(',')
+        .map((l) => l.trim())
+        .filter(Boolean);
+      if (languageArray.length > 0) {
+        query.whereIn('mediaItem.language', languageArray);
+      }
+    }
+
+    // Creators filter (OR logic, searches across director/creator/authors/developer columns)
+    if (creators) {
+      const creatorArray = creators
+        .split(',')
+        .map((c) => c.trim())
+        .filter(Boolean);
+      if (creatorArray.length > 0) {
+        query.andWhere((qb) => {
+          creatorArray.forEach((c) => {
+            qb.orWhere('mediaItem.director', 'LIKE', `%${c}%`);
+            qb.orWhere('mediaItem.creator', 'LIKE', `%${c}%`);
+            qb.orWhere('mediaItem.authors', 'LIKE', `%${c}%`);
+            qb.orWhere('mediaItem.developer', 'LIKE', `%${c}%`);
+          });
+        });
+      }
+    }
+
+    // Publishers filter (OR logic, matches publisher column, plain string equality)
+    if (publishers) {
+      const publisherArray = publishers
+        .split(',')
+        .map((p) => p.trim())
+        .filter(Boolean);
+      if (publisherArray.length > 0) {
+        query.whereIn('mediaItem.publisher', publisherArray);
+      }
+    }
+
+    // MediaTypes filter (OR logic, matches mediaType column)
+    if (mediaTypes) {
+      const mediaTypeArray = mediaTypes
+        .split(',')
+        .map((m) => m.trim())
+        .filter(Boolean);
+      if (mediaTypeArray.length > 0) {
+        query.whereIn('mediaItem.mediaType', mediaTypeArray);
+      }
+    }
+
+    // Year range filter (inclusive bounds on releaseDate year)
+    if (yearMin !== undefined || yearMax !== undefined) {
+      if (yearMin !== undefined) {
+        query.andWhere(
+          'mediaItem.releaseDate',
+          '>=',
+          new Date(yearMin, 0, 1).toISOString()
+        );
+      }
+      if (yearMax !== undefined) {
+        query.andWhere(
+          'mediaItem.releaseDate',
+          '<=',
+          new Date(yearMax, 11, 31, 23, 59, 59, 999).toISOString()
+        );
+      }
+    }
+
+    // Rating range filter (inclusive bounds, excludes items with no rating when ratingMin > 0)
+    if (ratingMin !== undefined || ratingMax !== undefined) {
+      if (ratingMin !== undefined && ratingMin > 0) {
+        query
+          .whereNotNull('mediaItem.tmdbRating')
+          .andWhere('mediaItem.tmdbRating', '>=', ratingMin);
+      }
+      if (ratingMax !== undefined) {
+        query.andWhere('mediaItem.tmdbRating', '<=', ratingMax);
+      }
+    }
+
+    // Status filter: maps comma-separated status keys to boolean flags
+    // Applies AND logic -- item must satisfy all selected status constraints
+    if (status) {
+      const statusArray = status
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
+      if (statusArray.includes('rated')) {
+        query.whereNotNull('userRating.rating');
+      }
+      if (statusArray.includes('unrated')) {
+        query.whereNull('userRating.rating');
+      }
+      if (statusArray.includes('watchlist')) {
+        query.whereNotNull('listItem.mediaItemId');
+      }
+      if (statusArray.includes('seen')) {
+        query.whereNotNull('lastSeen2.mediaItemId');
+      }
     }
 
     // Next airing

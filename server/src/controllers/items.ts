@@ -40,6 +40,16 @@ export class ItemsController {
       onlyWithoutUserRating,
       onlyWithProgress,
       selectRandom,
+      genres,
+      languages,
+      creators,
+      publishers,
+      mediaTypes,
+      yearMin,
+      yearMax,
+      ratingMin,
+      ratingMax,
+      status,
     } = req.query;
 
     const orderBy = req.query.orderBy || 'title';
@@ -66,9 +76,19 @@ export class ItemsController {
       onlyWithUserRating: onlyWithUserRating,
       onlyWithoutUserRating: onlyWithoutUserRating,
       onlyWithProgress: onlyWithProgress,
+      genres: genres,
+      languages: languages,
+      creators: creators,
+      publishers: publishers,
+      mediaTypes: mediaTypes,
+      yearMin: yearMin,
+      yearMax: yearMax,
+      ratingMin: ratingMin,
+      ratingMax: ratingMax,
+      status: status,
     });
 
-    res.send(result);
+    res.json(result);
   });
 
   /**
@@ -115,7 +135,7 @@ export class ItemsController {
       onlyWithProgress: onlyWithProgress,
     });
 
-    res.send(result);
+    res.json(result);
   });
 
   /**
@@ -163,6 +183,6 @@ export class ItemsController {
       selectRandom: selectRandom,
     });
 
-    res.send(result);
+    res.json(result);
   });
 }

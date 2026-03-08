@@ -97,6 +97,57 @@ export type GetItemsArgs = {
    */
   genre?: string;
 
+  /**
+   * @description Filter by multiple genres (comma-separated, OR logic within dimension)
+   */
+  genres?: string;
+
+  /**
+   * @description Filter by multiple languages (comma-separated language codes, OR logic)
+   */
+  languages?: string;
+
+  /**
+   * @description Filter by multiple creators (comma-separated names, OR logic)
+   */
+  creators?: string;
+
+  /**
+   * @description Filter by multiple publishers (comma-separated names, OR logic)
+   */
+  publishers?: string;
+
+  /**
+   * @description Filter by multiple media types (comma-separated, OR logic)
+   */
+  mediaTypes?: string;
+
+  /**
+   * @description Filter by minimum release year (inclusive)
+   */
+  yearMin?: number;
+
+  /**
+   * @description Filter by maximum release year (inclusive)
+   */
+  yearMax?: number;
+
+  /**
+   * @description Filter by minimum TMDB rating (inclusive, 0-10)
+   */
+  ratingMin?: number;
+
+  /**
+   * @description Filter by maximum TMDB rating (inclusive, 0-10)
+   */
+  ratingMax?: number;
+
+  /**
+   * @description Filter by status keys (comma-separated: rated, unrated, watchlist, seen)
+   * Maps to: rated -> onlyWithUserRating, unrated -> onlyWithoutUserRating, watchlist -> onlyOnWatchlist, seen -> onlySeenItems
+   */
+  status?: string;
+
   onlyWithProgress?: boolean;
 
   page?: number;
