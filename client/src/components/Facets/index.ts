@@ -8,3 +8,4 @@ export { GenreSection } from './GenreSection';
 export { FacetRangeSlider } from './FacetRangeSlider';
 export { YearSection } from './YearSection';
 export { RatingSection } from './RatingSection';
+export { LanguageSection } from './LanguageSection';
