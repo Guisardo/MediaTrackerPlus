@@ -1,6 +1,7 @@
 import _, { random } from 'lodash';
 import {
   MediaItemBase,
+  MediaType,
   mediaItemColumns,
   MediaItemItemsResponse,
 } from 'src/entity/mediaItem';
@@ -8,7 +9,7 @@ import { Database } from 'src/dbconfig';
 
 import { Seen } from 'src/entity/seen';
 import { UserRating, userRatingColumns } from 'src/entity/userRating';
-import { GetItemsArgs } from 'src/repository/mediaItem';
+import { FacetQueryArgs, GetItemsArgs } from 'src/repository/mediaItem';
 import { TvEpisode, tvEpisodeColumns } from 'src/entity/tvepisode';
 import knex, { Knex } from 'knex';
 import { List, listItemColumns } from 'src/entity/list';
@@ -837,6 +838,356 @@ const mapRawResult = (row: any): MediaItemItemsResponse => {
         }
       : undefined,
   } as unknown as MediaItemItemsResponse;
+};
+
+export type FacetOption = {
+  value: string;
+  count: number;
+};
+
+export type FacetsResponse = {
+  genres: FacetOption[];
+  years: FacetOption[];
+  languages: FacetOption[];
+  creators: FacetOption[];
+  publishers: FacetOption[];
+  mediaTypes: FacetOption[];
+};
+
+/**
+ * Builds a base query scoped to the current user's library (mirrors getItemsKnexSql's
+ * listItem/seen joins) and applies the same filter params, then fetches only the columns
+ * needed for facet aggregation. Aggregation is done in application layer because genres
+ * is stored as CSV, not as a normalized table.
+ */
+export const getFacetsKnex = async (
+  args: FacetQueryArgs
+): Promise<FacetsResponse> => {
+  const {
+    userId,
+    mediaType,
+    filter,
+    genres,
+    languages,
+    creators,
+    publishers,
+    mediaTypes,
+    yearMin,
+    yearMax,
+    ratingMin,
+    ratingMax,
+    status,
+    onlyOnWatchlist,
+    onlySeenItems,
+    onlyWithNextAiring,
+    onlyWithNextEpisodesToWatch,
+    onlyWithUserRating,
+    onlyWithoutUserRating,
+    onlyWithProgress,
+  } = args;
+
+  const currentDateString = new Date().toISOString();
+
+  const watchlist = await Database.knex('list')
+    .select('id')
+    .where('userId', userId)
+    .where('isWatchlist', true)
+    .first();
+
+  if (watchlist === undefined) {
+    throw new Error(`user ${userId} has no watchlist`);
+  }
+
+  const watchlistId = watchlist.id;
+
+  // Build query selecting only the columns needed for faceting
+  const query = Database.knex
+    .select(
+      'mediaItem.genres as genres',
+      'mediaItem.language as language',
+      'mediaItem.releaseDate as releaseDate',
+      'mediaItem.mediaType as mediaType',
+      'mediaItem.director as director',
+      'mediaItem.creator as creator',
+      'mediaItem.authors as authors',
+      'mediaItem.developer as developer',
+      'mediaItem.publisher as publisher',
+      'mediaItem.tmdbRating as tmdbRating'
+    )
+    .from<MediaItemBase>('mediaItem')
+    // lastSeen join (user scoping)
+    .leftJoin<Seen>(
+      (qb) =>
+        qb
+          .select('mediaItemId')
+          .max('date', { as: 'date' })
+          .from<Seen>('seen')
+          .where('userId', userId)
+          .groupBy('mediaItemId')
+          .as('lastSeen'),
+      'lastSeen.mediaItemId',
+      'mediaItem.id'
+    )
+    // On watchlist join
+    .leftJoin<List>('listItem', (qb) => {
+      qb.on('listItem.mediaItemId', 'mediaItem.id')
+        .andOnNull('listItem.seasonId')
+        .andOnNull('listItem.episodeId')
+        .andOnVal('listItem.listId', watchlistId);
+    })
+    // User rating join (needed for status filters)
+    .leftJoin<UserRating>(
+      (qb) =>
+        qb
+          .from('userRating')
+          .whereNotNull('userRating.rating')
+          .orWhereNotNull('userRating.review')
+          .as('userRating'),
+      (qb) =>
+        qb
+          .on('userRating.mediaItemId', 'mediaItem.id')
+          .andOnVal('userRating.userId', userId)
+          .andOnNull('userRating.episodeId')
+          .andOnNull('userRating.seasonId')
+    );
+
+  // User-scoping: only items in user's library (on watchlist OR seen)
+  query.where((qb) =>
+    qb
+      .whereNotNull('listItem.mediaItemId')
+      .orWhereNotNull('lastSeen.mediaItemId')
+  );
+
+  // Apply filters (same logic as getItemsKnexSql)
+  if (mediaType) {
+    query.andWhere('mediaItem.mediaType', mediaType);
+  }
+
+  if (filter && filter.trim().length > 0) {
+    query.andWhere('mediaItem.title', 'LIKE', `%${filter}%`);
+  }
+
+  if (genres) {
+    const genreArray = genres
+      .split(',')
+      .map((g) => g.trim())
+      .filter(Boolean);
+    if (genreArray.length > 0) {
+      query.andWhere((qb) => {
+        genreArray.forEach((g, index) => {
+          if (index === 0) {
+            qb.where('mediaItem.genres', 'LIKE', `%${g}%`);
+          } else {
+            qb.orWhere('mediaItem.genres', 'LIKE', `%${g}%`);
+          }
+        });
+      });
+    }
+  }
+
+  if (languages) {
+    const languageArray = languages
+      .split(',')
+      .map((l) => l.trim())
+      .filter(Boolean);
+    if (languageArray.length > 0) {
+      query.whereIn('mediaItem.language', languageArray);
+    }
+  }
+
+  if (creators) {
+    const creatorArray = creators
+      .split(',')
+      .map((c) => c.trim())
+      .filter(Boolean);
+    if (creatorArray.length > 0) {
+      query.andWhere((qb) => {
+        creatorArray.forEach((c) => {
+          qb.orWhere('mediaItem.director', 'LIKE', `%${c}%`);
+          qb.orWhere('mediaItem.creator', 'LIKE', `%${c}%`);
+          qb.orWhere('mediaItem.authors', 'LIKE', `%${c}%`);
+          qb.orWhere('mediaItem.developer', 'LIKE', `%${c}%`);
+        });
+      });
+    }
+  }
+
+  if (publishers) {
+    const publisherArray = publishers
+      .split(',')
+      .map((p) => p.trim())
+      .filter(Boolean);
+    if (publisherArray.length > 0) {
+      query.whereIn('mediaItem.publisher', publisherArray);
+    }
+  }
+
+  if (mediaTypes) {
+    const mediaTypeArray = mediaTypes
+      .split(',')
+      .map((m) => m.trim())
+      .filter(Boolean);
+    if (mediaTypeArray.length > 0) {
+      query.whereIn('mediaItem.mediaType', mediaTypeArray);
+    }
+  }
+
+  if (yearMin !== undefined || yearMax !== undefined) {
+    if (yearMin !== undefined) {
+      query.andWhere(
+        'mediaItem.releaseDate',
+        '>=',
+        new Date(yearMin, 0, 1).toISOString()
+      );
+    }
+    if (yearMax !== undefined) {
+      query.andWhere(
+        'mediaItem.releaseDate',
+        '<=',
+        new Date(yearMax, 11, 31, 23, 59, 59, 999).toISOString()
+      );
+    }
+  }
+
+  if (ratingMin !== undefined || ratingMax !== undefined) {
+    if (ratingMin !== undefined && ratingMin > 0) {
+      query
+        .whereNotNull('mediaItem.tmdbRating')
+        .andWhere('mediaItem.tmdbRating', '>=', ratingMin);
+    }
+    if (ratingMax !== undefined) {
+      query.andWhere('mediaItem.tmdbRating', '<=', ratingMax);
+    }
+  }
+
+  if (status) {
+    const statusArray = status
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (statusArray.includes('rated')) {
+      query.whereNotNull('userRating.rating');
+    }
+    if (statusArray.includes('unrated')) {
+      query.whereNull('userRating.rating');
+    }
+    if (statusArray.includes('watchlist')) {
+      query.whereNotNull('listItem.mediaItemId');
+    }
+    if (statusArray.includes('seen')) {
+      query.whereNotNull('lastSeen.mediaItemId');
+    }
+  }
+
+  if (onlyOnWatchlist) {
+    query.whereNotNull('listItem.mediaItemId');
+  }
+
+  if (onlySeenItems === true) {
+    query.whereNotNull('lastSeen.mediaItemId');
+  }
+
+  if (onlyWithUserRating === true) {
+    query.whereNotNull('userRating.rating');
+  }
+
+  if (onlyWithoutUserRating === true) {
+    query.whereNull('userRating.rating');
+  }
+
+  // Fetch all matching rows for application-layer aggregation
+  const rows = await query;
+
+  // Aggregate facets in application layer
+  const genreCounts = new Map<string, number>();
+  const yearCounts = new Map<string, number>();
+  const languageCounts = new Map<string, number>();
+  const creatorCounts = new Map<string, number>();
+  const publisherCounts = new Map<string, number>();
+  const mediaTypeCounts = new Map<string, number>();
+
+  for (const row of rows) {
+    // Genres: split CSV and count each individual genre
+    if (row.genres) {
+      const genreList = (row.genres as string).split(',');
+      for (const genre of genreList) {
+        const trimmed = genre.trim();
+        if (trimmed) {
+          genreCounts.set(trimmed, (genreCounts.get(trimmed) || 0) + 1);
+        }
+      }
+    }
+
+    // Years: extract year from releaseDate
+    if (row.releaseDate) {
+      const yearStr = String(row.releaseDate).substring(0, 4);
+      if (yearStr && /^\d{4}$/.test(yearStr)) {
+        yearCounts.set(yearStr, (yearCounts.get(yearStr) || 0) + 1);
+      }
+    }
+
+    // Languages
+    if (row.language) {
+      const lang = row.language as string;
+      languageCounts.set(lang, (languageCounts.get(lang) || 0) + 1);
+    }
+
+    // Creators: aggregate from director (movies), creator (TV), authors (books/audiobooks), developer (games)
+    const creatorFields: (string | null)[] = [
+      row.director as string | null,
+      row.creator as string | null,
+      row.authors as string | null,
+      row.developer as string | null,
+    ];
+    for (const field of creatorFields) {
+      if (field) {
+        const names = splitCreatorField(field);
+        for (const name of names) {
+          creatorCounts.set(name, (creatorCounts.get(name) || 0) + 1);
+        }
+      }
+    }
+
+    // Publishers
+    if (row.publisher) {
+      const pub = row.publisher as string;
+      publisherCounts.set(pub, (publisherCounts.get(pub) || 0) + 1);
+    }
+
+    // Media types
+    if (row.mediaType) {
+      const mt = row.mediaType as string;
+      mediaTypeCounts.set(mt, (mediaTypeCounts.get(mt) || 0) + 1);
+    }
+  }
+
+  // Convert maps to sorted arrays (descending by count), excluding zero counts
+  const mapToSortedArray = (map: Map<string, number>): FacetOption[] =>
+    Array.from(map.entries())
+      .filter(([, count]) => count > 0)
+      .map(([value, count]) => ({ value, count }))
+      .sort((a, b) => b.count - a.count);
+
+  const result: FacetsResponse = {
+    genres: mapToSortedArray(genreCounts),
+    years: mapToSortedArray(yearCounts),
+    languages: mapToSortedArray(languageCounts),
+    creators: mapToSortedArray(creatorCounts),
+    publishers: mapToSortedArray(publisherCounts),
+    mediaTypes: mapToSortedArray(mediaTypeCounts),
+  };
+
+  // When mediaType is specified, omit mediaTypes from response (already scoped)
+  if (mediaType) {
+    result.mediaTypes = [];
+  }
+
+  // Publishers only included when mediaType=video_game or when no mediaType
+  if (mediaType && mediaType !== 'video_game') {
+    result.publishers = [];
+  }
+
+  return result;
 };
 
 export class QueryBuilderHelper {
