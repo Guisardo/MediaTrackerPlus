@@ -146,6 +146,7 @@ const searchResult = [
     genres: ["Hack and slash/Beat 'em up", 'Adventure'],
     url: 'https://godofwar.playstation.com',
     developer: 'SIE Santa Monica Studio',
+    publisher: 'Sony Interactive Entertainment',
     platform: ['PC (Microsoft Windows)', 'PlayStation 4'],
   },
   {
@@ -161,6 +162,7 @@ const searchResult = [
     genres: ['Platform', "Hack and slash/Beat 'em up", 'Adventure'],
     url: 'https://en.wikipedia.org/wiki/God_of_War_II',
     developer: 'SIE Santa Monica Studio',
+    publisher: 'Sony Computer Entertainment, Inc. (SCEI)',
     platform: ['PlayStation 2'],
   },
   {
@@ -179,6 +181,7 @@ const searchResult = [
     genres: ["Hack and slash/Beat 'em up", 'Adventure'],
     url: 'https://en.wikipedia.org/wiki/God_of_War_II',
     developer: 'Bluepoint Games',
+    publisher: 'Sony Computer Entertainment, Inc. (SCEI)',
     platform: ['PlayStation 3'],
   },
   {
@@ -194,6 +197,7 @@ const searchResult = [
     genres: ["Hack and slash/Beat 'em up", 'Adventure'],
     url: 'http://godofwar.playstation.com',
     developer: 'SIE Santa Monica Studio',
+    publisher: 'Sony Computer Entertainment, Inc. (SCEI)',
     platform: ['PlayStation 3'],
   },
 ];
@@ -226,5 +230,6 @@ const detailsResult = {
   genres: ["Hack and slash/Beat 'em up", 'Adventure'],
   url: 'https://godofwar.playstation.com',
   developer: 'SIE Santa Monica Studio',
+  publisher: 'Sony Interactive Entertainment',
   platform: ['PC (Microsoft Windows)', 'PlayStation 4'],
 };

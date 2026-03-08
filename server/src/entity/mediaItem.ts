@@ -44,6 +44,7 @@ export type MediaItemBase = ExternalIds & {
   developer?: string;
   director?: string;
   creator?: string;
+  publisher?: string;
   authors?: string[];
   narrators?: string[];
   language?: string;
@@ -143,6 +144,7 @@ export const mediaItemColumns = <const>[
   'originalTitle',
   'overview',
   'platform',
+  'publisher',
   'releaseDate',
   'tmdbRating',
   'runtime',

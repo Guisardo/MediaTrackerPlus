@@ -23,7 +23,8 @@
                     "id": 10100,
                     "name": "Sony Interactive Entertainment"
                 },
-                "developer": false
+                "developer": false,
+                "publisher": true
             },
             {
                 "id": 38707,
@@ -31,7 +32,8 @@
                     "id": 4357,
                     "name": "SIE Santa Monica Studio"
                 },
-                "developer": true
+                "developer": true,
+                "publisher": false
             },
             {
                 "id": 154522,
@@ -39,7 +41,8 @@
                     "id": 38814,
                     "name": "Jetpack Interactive"
                 },
-                "developer": false
+                "developer": false,
+                "publisher": false
             }
         ],
         "name": "God of War",
@@ -139,7 +142,8 @@
                     "id": 45,
                     "name": "Sony Computer Entertainment, Inc. (SCEI)"
                 },
-                "developer": false
+                "developer": false,
+                "publisher": true
             },
             {
                 "id": 104744,
@@ -147,7 +151,8 @@
                     "id": 37,
                     "name": "Capcom"
                 },
-                "developer": false
+                "developer": false,
+                "publisher": false
             },
             {
                 "id": 104745,
@@ -155,7 +160,8 @@
                     "id": 4357,
                     "name": "SIE Santa Monica Studio"
                 },
-                "developer": true
+                "developer": true,
+                "publisher": false
             }
         ],
         "name": "God of War II",
@@ -246,7 +252,8 @@
                     "id": 1030,
                     "name": "Bluepoint Games"
                 },
-                "developer": true
+                "developer": true,
+                "publisher": false
             },
             {
                 "id": 104759,
@@ -254,7 +261,8 @@
                     "id": 45,
                     "name": "Sony Computer Entertainment, Inc. (SCEI)"
                 },
-                "developer": false
+                "developer": false,
+                "publisher": true
             },
             {
                 "id": 104760,
@@ -262,7 +270,8 @@
                     "id": 4357,
                     "name": "SIE Santa Monica Studio"
                 },
-                "developer": false
+                "developer": false,
+                "publisher": false
             }
         ],
         "name": "God of War II HD",
@@ -349,7 +358,8 @@
                     "id": 45,
                     "name": "Sony Computer Entertainment, Inc. (SCEI)"
                 },
-                "developer": false
+                "developer": false,
+                "publisher": true
             },
             {
                 "id": 38700,
@@ -357,7 +367,8 @@
                     "id": 4357,
                     "name": "SIE Santa Monica Studio"
                 },
-                "developer": true
+                "developer": true,
+                "publisher": false
             }
         ],
         "name": "God of War: Ascension",
