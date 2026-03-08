@@ -499,9 +499,9 @@ describe('all translation hooks – independence', () => {
     const orderKeys = new Set(orderResult.keys);
 
     // No overlap between privacy keys and sortBy keys
-    privacyKeys.forEach((k) => expect(sortByKeys.has(k)).toBe(false));
+    privacyKeys.forEach((k) => expect(sortByKeys.has(k as any)).toBe(false));
     // No overlap between orderKeys and privacyKeys
-    orderKeys.forEach((k) => expect(privacyKeys.has(k)).toBe(false));
+    orderKeys.forEach((k) => expect(privacyKeys.has(k as any)).toBe(false));
   });
 
   it('each hook is stable across re-renders (memoised)', () => {

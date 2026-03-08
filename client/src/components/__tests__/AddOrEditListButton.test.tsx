@@ -219,7 +219,7 @@ const renderAddButton = () =>
     </MemoryRouter>
   );
 
-const renderEditButton = (list = EXISTING_LIST) =>
+const renderEditButton = (list: typeof EXISTING_LIST | any = EXISTING_LIST) =>
   render(
     <MemoryRouter initialEntries={['/lists']}>
       <EditListButton list={list} />

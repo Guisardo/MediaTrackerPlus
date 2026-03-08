@@ -98,7 +98,7 @@ type YearQuery = Statistics.StatisticsSeeninyearList.RequestQuery;
 // Helpers
 // ---------------------------------------------------------------------------
 
-const yearQuery = (year: number | null): YearQuery => ({ year });
+const yearQuery = (year: number | null): YearQuery => ({ year } as unknown as YearQuery);
 
 const resetCaptures = () => {
   capturedQueryKey = null;
