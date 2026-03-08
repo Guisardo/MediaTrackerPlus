@@ -38,7 +38,7 @@
         "Tests pass"
       ],
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "notes": "TMDB already fetches created_by in TvDetailsResponse but discards it in mapTvShow(). This is a one-line mapping addition plus migration.",
       "jiraKey": null,
       "reasoningLevel": "LOW"
@@ -60,7 +60,7 @@
         "Tests pass"
       ],
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "notes": "The Crew type is already defined in tmdb.ts (~lines 457-469). The details call needs append_to_response=credits added to the existing request params.",
       "jiraKey": null,
       "reasoningLevel": "MID"
@@ -80,7 +80,7 @@
         "Tests pass"
       ],
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "notes": "The involved_companies data is already fetched by the IGDB provider for the developer field. Filter entries by publisher === true, map to names, join with ', '.",
       "jiraKey": null,
       "reasoningLevel": "MID"
@@ -99,7 +99,7 @@
         "Tests pass"
       ],
       "priority": 5,
-      "passes": false,
+      "passes": true,
       "notes": "All name sources confirmed 'First Last' format -- no Last,First conversion needed. Normalization is defensive trimming and dedup only. splitCreatorField handles the leading-space problem from join(', ') storage pattern.",
       "jiraKey": null,
       "reasoningLevel": "MID"
@@ -131,7 +131,7 @@
         "Tests pass"
       ],
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "notes": "Follow the existing single-value genre LIKE pattern for the plural genres param. The existing `year` URL param filters by seen-date year (not releaseDate) -- do not conflict with yearMin/yearMax. Add yearMin, yearMax, ratingMin, ratingMax, genres, languages, creators, publishers, mediaTypes, status as new optional fields on GetItemsArgs.",
       "jiraKey": null,
       "reasoningLevel": "MID"
@@ -157,7 +157,7 @@
         "Tests pass"
       ],
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "notes": "Most complex backend story. The query must mirror getItemsKnexSql's user-scoping joins. Genre splitting must happen in TS application layer, not SQL, because genres is a CSV column. The server uses typescript-routes-to-openapi -- build:routes regenerates routes.ts and rest-api/index.ts.",
       "jiraKey": null,
       "reasoningLevel": "HIGH"
@@ -180,7 +180,7 @@
         "Tests pass"
       ],
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "notes": "Separate from existing scalar useUpdateSearchParams to avoid breaking OrderBy, pagination, and useMenuComponent. useFacets is the foundation for all frontend facet components. useFilterBy hook is no longer called when showFacets={true}.",
       "jiraKey": null,
       "reasoningLevel": "MID"
@@ -207,7 +207,7 @@
         "Verify in browser using Selenium MCP"
       ],
       "priority": 9,
-      "passes": false,
+      "passes": true,
       "notes": "Creates the shell component structure. Individual facet section content (genre, year, etc.) will be added by subsequent stories. The grid area shrinks to accommodate the sidebar on desktop.",
       "jiraKey": null,
       "reasoningLevel": "MID"
@@ -233,7 +233,7 @@
         "Verify in browser using Selenium MCP"
       ],
       "priority": 10,
-      "passes": false,
+      "passes": true,
       "notes": "No animated transitions required (functional behavior only; enhancement deferred). FacetPanel content inside drawer is the same accordion structure as the desktop sidebar.",
       "jiraKey": null,
       "reasoningLevel": "MID"
@@ -257,7 +257,7 @@
         "Verify in browser using Selenium MCP"
       ],
       "priority": 11,
-      "passes": false,
+      "passes": true,
       "notes": "FacetCheckboxList is a shared component reused by genre, language, creator, and publisher sections. Reuses existing Checkbox from /client/src/components/Checkbox.tsx for consistent styling.",
       "jiraKey": null,
       "reasoningLevel": "MID"
@@ -280,7 +280,7 @@
         "Verify in browser using Selenium MCP"
       ],
       "priority": 12,
-      "passes": false,
+      "passes": true,
       "notes": "FacetRangeSlider is a shared component reused by the rating range facet (US-013). Uses @radix-ui/react-slider for accessible dual-handle range with TailwindCSS styling.",
       "jiraKey": null,
       "reasoningLevel": "MID"
@@ -302,7 +302,7 @@
         "Verify in browser using Selenium MCP"
       ],
       "priority": 13,
-      "passes": false,
+      "passes": true,
       "notes": "Reuses FacetRangeSlider from US-012 with rating-specific props: min=0, max=10, step=0.5. Backend excludes items with no tmdbRating when ratingMin > 0 (already handled in US-006).",
       "jiraKey": null,
       "reasoningLevel": "LOW"
@@ -323,7 +323,7 @@
         "Verify in browser using Selenium MCP"
       ],
       "priority": 14,
-      "passes": false,
+      "passes": true,
       "notes": "Uses Intl.DisplayNames for zero-bundle-size locale name resolution instead of a hardcoded mapping table. Reuses FacetCheckboxList from US-011.",
       "jiraKey": null,
       "reasoningLevel": "LOW"
@@ -344,7 +344,7 @@
         "Verify in browser using Selenium MCP"
       ],
       "priority": 15,
-      "passes": false,
+      "passes": true,
       "notes": "Label mapping depends on the mediaType prop passed to FacetPanel. On mixed-content pages (no mediaType), backend returns a union of all creator fields and the generic 'Creator' label is used.",
       "jiraKey": null,
       "reasoningLevel": "MID"
@@ -367,7 +367,7 @@
         "Verify in browser using Selenium MCP"
       ],
       "priority": 16,
-      "passes": false,
+      "passes": true,
       "notes": "Backend mapping (rated -> onlyWithUserRating, etc.) already implemented in US-006. This story is frontend-only: Status accordion section + FilterByComponent suppression when showFacets={true}.",
       "jiraKey": null,
       "reasoningLevel": "MID"
