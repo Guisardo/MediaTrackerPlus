@@ -162,8 +162,8 @@ describe('Pushbullet notification platform', () => {
       });
 
       const [, payload] = mockedAxios.post.mock.calls[0];
-      expect(payload.body).toBe(body.plainText);
-      expect(payload.body).not.toBe(body.markdown);
+      expect((payload as any).body).toBe(body.plainText);
+      expect((payload as any).body).not.toBe(body.markdown);
     });
   });
 

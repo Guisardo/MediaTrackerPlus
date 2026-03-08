@@ -39,11 +39,11 @@ function buildMockResponse(): Response & {
   const res = {
     _status: undefined as number | undefined,
     _body: undefined as unknown,
-    status(code: number) {
+    status(this: any, code: number) {
       this._status = code;
       return this;
     },
-    send(body: unknown) {
+    send(this: any, body: unknown) {
       this._body = body;
       return this;
     },
@@ -63,7 +63,7 @@ describe('errorLoggerMiddleware', () => {
   // ---------------------------------------------------------------------------
 
   describe('when the error is a ValidationError', () => {
-    const validationError = new ValidationError('field is required');
+    const validationError = new ValidationError([], 'field is required');
     const req = buildMockRequest({
       method: 'PUT',
       url: '/api/items',
@@ -224,7 +224,7 @@ describe('errorLoggerMiddleware', () => {
 
   describe('response body shape', () => {
     test('ValidationError body is a non-empty string', () => {
-      const err = new ValidationError('bad input');
+      const err = new ValidationError([], 'bad input');
       const req = buildMockRequest();
       const res = buildMockResponse();
 

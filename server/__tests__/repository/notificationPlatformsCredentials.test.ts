@@ -511,7 +511,7 @@ describe('notificationPlatformsCredentialsRepository', () => {
         await notificationPlatformsCredentialsRepository.get(Data.user.id);
 
       expect(result).toHaveProperty('pushover');
-      expect(result['pushover']).toEqual({
+      expect((result as any)['pushover']).toEqual({
         token: 'po-token',
         userKey: 'po-userkey',
       });
@@ -536,8 +536,8 @@ describe('notificationPlatformsCredentialsRepository', () => {
 
       expect(result).toHaveProperty('gotify');
       expect(result).toHaveProperty('discord');
-      expect(result['gotify']).toEqual({ token: 'gotify-val' });
-      expect(result['discord']).toEqual({
+      expect((result as any)['gotify']).toEqual({ token: 'gotify-val' });
+      expect((result as any)['discord']).toEqual({
         webhookUrl: 'https://discord.example.com/hook',
       });
     });

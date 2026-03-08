@@ -15,7 +15,7 @@ jest.mock('mediatracker-api', () => {
   return {
     Api: jest.fn().mockImplementation(() => ({})),
   };
-});
+}, { virtual: true });
 
 // ---------------------------------------------------------------------------
 // FetchError
