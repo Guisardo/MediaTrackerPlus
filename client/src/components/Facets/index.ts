@@ -13,3 +13,4 @@ export { CreatorSection } from './CreatorSection';
 export { StatusSection } from './StatusSection';
 export { PublisherSection } from './PublisherSection';
 export { MediaTypeSection } from './MediaTypeSection';
+export { ActiveFacetChips } from './ActiveFacetChips';
