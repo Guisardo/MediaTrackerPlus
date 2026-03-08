@@ -21,5 +21,14 @@
       "pragma": "React",
       "version": "detect"
     }
-  }
+  },
+  "overrides": [
+    {
+      "files": ["**/__tests__/**/*.{ts,tsx}", "**/*.test.{ts,tsx}"],
+      "rules": {
+        "@typescript-eslint/no-var-requires": "off",
+        "react/display-name": "off"
+      }
+    }
+  ]
 }

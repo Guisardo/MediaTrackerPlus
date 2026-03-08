@@ -35,7 +35,7 @@ function renderHook<T>(callback: () => T): {
   const result = { current: undefined as unknown as T };
   const container = document.createElement('div');
   document.body.appendChild(container);
-  let latestCallback = callback;
+  const latestCallback = callback;
   function TestComponent() {
     result.current = latestCallback();
     return null;
