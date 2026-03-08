@@ -18,6 +18,7 @@ export const ItemsPage: FunctionComponent<{
       }}
       showSortOrderControls={true}
       showSearch={true}
+      showFacets={true}
       gridItemAppearance={{
         showRating: true,
         showAddToWatchlistAndMarkAsSeenButtons: true,

@@ -37,6 +37,26 @@ export const LanguageSection: FunctionComponent<{
     return null;
   }
 
+  return (
+    <LanguageSectionInner
+      languages={languages}
+      selectedLanguages={selectedLanguages}
+      setLanguages={setLanguages}
+    />
+  );
+};
+
+/**
+ * Inner rendering component that handles display label transformation.
+ *
+ * Separated so that hooks (useMemo) are only called when the section is
+ * actually visible (mirrors the MediaTypeSection pattern).
+ */
+const LanguageSectionInner: FunctionComponent<{
+  languages: FacetOption[];
+  selectedLanguages: string[];
+  setLanguages: (values: string[]) => void;
+}> = ({ languages, selectedLanguages, setLanguages }) => {
   // Create a display name mapper using browser's Intl.DisplayNames API.
   // This handles all language codes and provides localized names.
   const displayNameMapper = useMemo(() => {

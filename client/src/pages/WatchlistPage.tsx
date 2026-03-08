@@ -16,6 +16,7 @@ export const WatchlistPage: FunctionComponent = () => {
       }}
       showSortOrderControls={true}
       showSearch={false}
+      showFacets={true}
       gridItemAppearance={{
         showRating: true,
         topBar: {

@@ -1,11 +1,36 @@
 import React, { FunctionComponent, useState } from 'react';
 import clsx from 'clsx';
 import { t, Trans } from '@lingui/macro';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useSearchParams } from 'react-router-dom';
 import { animated, Transition, Spring } from '@react-spring/web';
 
 import { useUser } from 'src/api/user';
 import { useDarkMode } from 'src/hooks/darkMode';
+
+/**
+ * URL param names that should be forwarded when navigating between single-type
+ * content pages (/movies, /tv, /games, /books, /audiobooks).
+ *
+ * Dropped on cross-type navigation (type-specific facets):
+ *   - creators (source field changes: director vs creator vs author vs developer)
+ *   - publishers (games-specific)
+ *   - status (labels change per type)
+ *   - mediaTypes (single-type pages are already scoped)
+ *   - page (always reset on navigation)
+ */
+const CROSS_TYPE_FORWARDED_PARAMS = [
+  'genres',
+  'yearMin',
+  'yearMax',
+  'ratingMin',
+  'ratingMax',
+  'languages',
+  'orderBy',
+  'sortOrder',
+] as const;
+
+/** Routes for single-type content pages (facets-enabled, type-scoped). */
+const SINGLE_TYPE_PATHS = new Set(['/tv', '/movies', '/games', '/books', '/audiobooks']);
 
 export const useRouteNames = () => {
   return [
@@ -26,6 +51,47 @@ export const useRouteNames = () => {
   ];
 };
 
+/**
+ * Returns a function that builds the `to` prop for nav links, forwarding
+ * cross-type-compatible facet params when navigating between single-type
+ * content pages.
+ *
+ * When the current page and the destination are both single-type content pages,
+ * the forwarded params (genres, yearMin, yearMax, ratingMin, ratingMax,
+ * languages, orderBy, sortOrder) are preserved in the destination URL.
+ * Type-specific params (creators, publishers, status, mediaTypes, page) are
+ * always dropped.
+ *
+ * For all other navigation targets (home, watchlist, statistics, etc.), the
+ * destination path is returned as-is (no param forwarding).
+ */
+function useCrossTypeNavTarget(): (targetPath: string) => string {
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
+
+  return (targetPath: string) => {
+    const isFromSingleTypePage = SINGLE_TYPE_PATHS.has(location.pathname);
+    const isToSingleTypePage = SINGLE_TYPE_PATHS.has(targetPath);
+
+    if (!isFromSingleTypePage || !isToSingleTypePage) {
+      return targetPath;
+    }
+
+    // Build forwarded params by extracting only CROSS_TYPE_FORWARDED_PARAMS.
+    const forwardedEntries = CROSS_TYPE_FORWARDED_PARAMS.flatMap((param) => {
+      const value = searchParams.get(param);
+      return value !== null ? [[param, value] as [string, string]] : [];
+    });
+
+    if (forwardedEntries.length === 0) {
+      return targetPath;
+    }
+
+    const queryString = new URLSearchParams(forwardedEntries).toString();
+    return `${targetPath}?${queryString}`;
+  };
+}
+
 export const NavComponent: FunctionComponent = () => {
   const { user, logout } = useUser();
 
@@ -34,6 +100,7 @@ export const NavComponent: FunctionComponent = () => {
 
   const location = useLocation();
   const routes = useRouteNames();
+  const getCrossTypeNavTarget = useCrossTypeNavTarget();
 
   return (
     <>
@@ -48,7 +115,7 @@ export const NavComponent: FunctionComponent = () => {
                     className="m-1 mr-2 text-xl whitespace-nowrap"
                   >
                     <NavLink
-                      to={route.path}
+                      to={getCrossTypeNavTarget(route.path)}
                       className={({ isActive }) =>
                         clsx(isActive && 'underline')
                       }
@@ -132,6 +199,7 @@ const SideBar: FunctionComponent<{
 }> = (props) => {
   const { showSidebar, hideSidebar } = props;
   const routes = useRouteNames();
+  const getCrossTypeNavTarget = useCrossTypeNavTarget();
 
   return (
     <Transition
@@ -174,7 +242,7 @@ const SideBar: FunctionComponent<{
                     <span key={route.path} className="my-2 ml-1 mr-3 text-xl">
                       <NavLink
                         onClick={() => hideSidebar()}
-                        to={route.path}
+                        to={getCrossTypeNavTarget(route.path)}
                         className={({ isActive }) =>
                           clsx(isActive && 'selected')
                         }
