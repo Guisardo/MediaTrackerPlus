@@ -5,3 +5,5 @@ export { FacetDrawer } from './FacetDrawer';
 export { FacetMobileButton } from './FacetMobileButton';
 export { FacetCheckboxList } from './FacetCheckboxList';
 export { GenreSection } from './GenreSection';
+export { FacetRangeSlider } from './FacetRangeSlider';
+export { YearSection } from './YearSection';
