@@ -61,6 +61,8 @@ export class OpenLibrary extends MetadataProvider {
       `https://openlibrary.org${args.openlibraryId}.json`
     );
 
+    const authors = await this.resolveAuthorNames(res.data.authors);
+
     return {
       mediaType: this.mediaType,
       source: this.name,
@@ -75,7 +77,44 @@ export class OpenLibrary extends MetadataProvider {
           ? `https://covers.openlibrary.org/b/id/${res.data.covers[0]}.jpg`
           : args.externalPosterUrl,
       numberOfPages: args.numberOfPages,
+      authors:
+        authors.length > 0 ? normalizeCreatorField(authors) : undefined,
     };
+  }
+
+  /**
+   * Resolves OpenLibrary author key references (e.g. "/authors/OL1234A")
+   * into human-readable author names by fetching each author's record.
+   */
+  private async resolveAuthorNames(
+    authorRefs?: DetailsResponse['authors']
+  ): Promise<string[]> {
+    if (!authorRefs || authorRefs.length === 0) {
+      return [];
+    }
+
+    const names = await Promise.all(
+      authorRefs.map(async (ref) => {
+        const authorKey = ref.author?.key;
+        if (!authorKey) {
+          return null;
+        }
+
+        try {
+          const res = await axios.get<AuthorResponse>(
+            `https://openlibrary.org${authorKey}.json`
+          );
+          return res.data.name || null;
+        } catch (error) {
+          logger.error(
+            `Failed to fetch OpenLibrary author ${authorKey}: ${error}`
+          );
+          return null;
+        }
+      })
+    );
+
+    return names.filter((name): name is string => name !== null);
   }
 
   async similar(ids: ExternalIds): Promise<SimilarItem[]> {
@@ -226,6 +265,13 @@ interface DetailsResponse {
     type: string;
     value: string;
   };
+}
+
+interface AuthorResponse {
+  name: string;
+  key: string;
+  personal_name?: string;
+  bio?: string | { type: string; value: string };
 }
 
 interface OpenLibrarySubjectWork {
