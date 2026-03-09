@@ -55,8 +55,9 @@ export class Config {
   static readonly DATABASE_SSL = process.env.DATABASE_SSL
     ? Boolean(process.env.DATABASE_SSL)
     : undefined;
-  static readonly MIGRATIONS_EXTENSION =
-    this.NODE_ENV === 'development' || this.NODE_ENV === 'test' ? 'ts' : 'js';
+  static readonly MIGRATIONS_EXTENSION = __filename.endsWith('.ts')
+    ? 'ts'
+    : 'js';
 
   static readonly DEMO = process.env.DEMO ? Boolean(process.env.DEMO) : false;
   static readonly TMDB_API_KEY =
