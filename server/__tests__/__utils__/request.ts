@@ -30,6 +30,15 @@ export const request = (
           });
         }
       },
+      json: (data: unknown) => {
+        if (!resolved) {
+          resolved = true;
+          resolve({
+            statusCode: currentStatusCode,
+            data: data,
+          });
+        }
+      },
       sendStatus: (status: number) => {
         if (!resolved) {
           resolved = true;
