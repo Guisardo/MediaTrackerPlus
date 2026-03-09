@@ -169,6 +169,10 @@ export const useSortedList = (args: {
         (listItem) => listItem.mediaItem.title,
         stringComparator
       ),
+      'platform-recommended': (_a: ListItem, _b: ListItem): number => {
+        // Placeholder — real implementation in US-005
+        return 0;
+      },
       recommended: (a: ListItem, b: ListItem): number => {
         const scoreOf = (listItem: ListItem): number | undefined => {
           const estimatedRating = listItem.estimatedRating;

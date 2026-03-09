@@ -9,7 +9,8 @@ export type ListSortBy =
   | 'release-date'
   | 'runtime'
   | 'title'
-  | 'recommended';
+  | 'recommended'
+  | 'platform-recommended';
 
 export type List = {
   id: number;
