@@ -126,7 +126,7 @@ class ListRepository extends repository<List>({
         name: name,
         privacy: privacy || 'private',
         description: description,
-        sortBy: sortBy || 'recently-watched',
+        sortBy: sortBy || 'platform-recommended',
         sortOrder: sortOrder || 'desc',
         createdAt: createdAt,
         updatedAt: createdAt,
