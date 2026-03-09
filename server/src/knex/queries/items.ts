@@ -649,6 +649,21 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
         query.orderBy('mediaItem.title', 'asc');
         break;
 
+      // platform-recommended: community consensus (70%) weighted higher than external aggregators (30%).
+      // Uses platformRating (cached average of all user ratings on this platform) instead of estimatedRating
+      // (personal AI estimate for the current user). The 70/30 weighting reflects stronger trust in
+      // aggregated community data vs. external sources, contrasting with 'recommended' which uses
+      // 60/40 for personal estimates (single-user signal is weaker than community signal).
+      case 'platformRecommended':
+        query.orderByRaw(`CASE WHEN "mediaItem"."platformRating" IS NULL THEN 1 ELSE 0 END ASC`);
+        query.orderByRaw(`CASE
+                            WHEN "mediaItem"."platformRating" IS NOT NULL AND "mediaItem"."tmdbRating" IS NOT NULL
+                              THEN ("mediaItem"."platformRating" * 0.7 + "mediaItem"."tmdbRating" * 0.3)
+                            ELSE "mediaItem"."platformRating"
+                          END DESC NULLS LAST`);
+        query.orderBy('mediaItem.title', 'asc');
+        break;
+
       default:
         throw new Error(`Unsupported orderBy value: ${orderBy}`);
     }
@@ -747,6 +762,7 @@ const mapRawResult = (row: any): MediaItemItemsResponse => {
 
     onWatchlist: Boolean(row['listItem.id']),
     estimatedRating: row['listItem.estimatedRating'] ?? undefined,
+    platformRating: row['mediaItem.platformRating'] ?? undefined,
     unseenEpisodesCount: row.unseenEpisodesCount || 0,
     seenEpisodesCount: row['seenEpisodesCount'],
     numberOfEpisodes: row.numberOfEpisodes,

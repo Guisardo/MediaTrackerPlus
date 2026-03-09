@@ -52,6 +52,7 @@ export type MediaItemBase = ExternalIds & {
   audibleCountryCode?: AudibleCountryCode;
   needsDetails?: boolean;
   lockedAt?: number;
+  platformRating?: number;
 };
 
 export type MediaItemBaseWithSeasons = MediaItemBase & {
@@ -125,7 +126,6 @@ export type MediaItemItemsResponse = Omit<MediaItemBase, 'lockedAt'> & {
   progress?: number;
   totalRuntime?: number;
   estimatedRating?: number | null;
-  platformRating?: number;
 };
 
 export const mediaItemColumns = <const>[
@@ -168,6 +168,7 @@ export const mediaItemColumns = <const>[
   'externalBackdropUrl',
   'posterId',
   'backdropId',
+  'platformRating',
 ];
 
 export const mediaItemPosterPath = (
