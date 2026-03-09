@@ -128,3 +128,7 @@ lerna-debug.log
 # System Files
 .DS_Store
 Thumbs.db
+
+/ralph/
+/archive/
+client/junit.xml

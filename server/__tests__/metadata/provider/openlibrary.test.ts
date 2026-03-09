@@ -46,6 +46,153 @@ describe('openlibrary', () => {
     expect(res).toStrictEqual(detailsResult2);
   });
 
+  describe('resolveAuthorNames via details', () => {
+    const workWithAuthors = {
+      title: "Harry Potter and the Philosopher's Stone",
+      authors: [
+        { author: { key: '/authors/OL23919A' }, type: { key: '/type/author_role' } },
+        { author: { key: '/authors/OL456B' }, type: { key: '/type/author_role' } },
+      ],
+    };
+
+    test('populates authors field when all author fetches succeed', async () => {
+      mockedAxios.get
+        .mockResolvedValueOnce({ data: workWithAuthors })
+        .mockResolvedValueOnce({ data: { key: '/authors/OL23919A', name: 'J.K. Rowling' } })
+        .mockResolvedValueOnce({ data: { key: '/authors/OL456B', name: 'Some Coauthor' } });
+
+      const res = await openlibraryApi.details({ openlibraryId: 'works/OL82563W' });
+
+      expect((res as { authors: string[] }).authors).toStrictEqual([
+        'J.K. Rowling',
+        'Some Coauthor',
+      ]);
+    });
+
+    test('populates authors field with a single author', async () => {
+      mockedAxios.get
+        .mockResolvedValueOnce({
+          data: {
+            title: 'Some Book',
+            authors: [{ author: { key: '/authors/OL23919A' } }],
+          },
+        })
+        .mockResolvedValueOnce({ data: { key: '/authors/OL23919A', name: 'J.K. Rowling' } });
+
+      const res = await openlibraryApi.details({ openlibraryId: 'works/OL82563W' });
+
+      expect((res as { authors: string[] }).authors).toStrictEqual(['J.K. Rowling']);
+    });
+
+    test('fetches author using full openlibrary.org URL built from the author key', async () => {
+      mockedAxios.get
+        .mockResolvedValueOnce({
+          data: {
+            title: 'Some Book',
+            authors: [{ author: { key: '/authors/OL23919A' } }],
+          },
+        })
+        .mockResolvedValueOnce({ data: { name: 'J.K. Rowling' } });
+
+      await openlibraryApi.details({ openlibraryId: 'works/OL82563W' });
+
+      expect(mockedAxios.get).toHaveBeenCalledWith(
+        'https://openlibrary.org/authors/OL23919A.json'
+      );
+    });
+
+    test('authors field is undefined when work has no authors array', async () => {
+      mockedAxios.get.mockResolvedValueOnce({
+        data: { title: 'Some Book' },
+      });
+
+      const res = await openlibraryApi.details({ openlibraryId: 'works/OL82563W' });
+
+      expect((res as Record<string, unknown>).authors).toBeUndefined();
+    });
+
+    test('authors field is undefined when work has empty authors array', async () => {
+      mockedAxios.get.mockResolvedValueOnce({
+        data: { title: 'Some Book', authors: [] },
+      });
+
+      const res = await openlibraryApi.details({ openlibraryId: 'works/OL82563W' });
+
+      expect((res as Record<string, unknown>).authors).toBeUndefined();
+    });
+
+    test('gracefully skips author ref with missing author.key', async () => {
+      mockedAxios.get.mockResolvedValueOnce({
+        data: {
+          title: 'Some Book',
+          authors: [{ type: { key: '/type/author_role' } }],
+        },
+      });
+
+      const res = await openlibraryApi.details({ openlibraryId: 'works/OL82563W' });
+
+      expect((res as Record<string, unknown>).authors).toBeUndefined();
+    });
+
+    test('gracefully handles author fetch failure and excludes failed author from results', async () => {
+      mockedAxios.get
+        .mockResolvedValueOnce({ data: workWithAuthors })
+        .mockResolvedValueOnce({ data: { name: 'J.K. Rowling' } })
+        .mockRejectedValueOnce(new Error('Network error'));
+
+      const res = await openlibraryApi.details({ openlibraryId: 'works/OL82563W' });
+
+      expect((res as { authors: string[] }).authors).toStrictEqual(['J.K. Rowling']);
+    });
+
+    test('authors field is undefined when all author fetches fail', async () => {
+      mockedAxios.get
+        .mockResolvedValueOnce({ data: workWithAuthors })
+        .mockRejectedValueOnce(new Error('Network error'))
+        .mockRejectedValueOnce(new Error('Network error'));
+
+      const res = await openlibraryApi.details({ openlibraryId: 'works/OL82563W' });
+
+      expect((res as Record<string, unknown>).authors).toBeUndefined();
+    });
+
+    test('deduplicates author names via normalizeCreatorField', async () => {
+      mockedAxios.get
+        .mockResolvedValueOnce({
+          data: {
+            title: 'Some Book',
+            authors: [
+              { author: { key: '/authors/OL1A' } },
+              { author: { key: '/authors/OL2A' } },
+            ],
+          },
+        })
+        .mockResolvedValueOnce({ data: { name: '  J.K. Rowling ' } })
+        .mockResolvedValueOnce({ data: { name: 'J.K. Rowling' } });
+
+      const res = await openlibraryApi.details({ openlibraryId: 'works/OL82563W' });
+
+      expect((res as { authors: string[] }).authors).toStrictEqual(['J.K. Rowling']);
+    });
+
+    test('author name with only whitespace is excluded by normalizeCreatorField', async () => {
+      mockedAxios.get
+        .mockResolvedValueOnce({
+          data: {
+            title: 'Some Book',
+            authors: [{ author: { key: '/authors/OL1A' } }],
+          },
+        })
+        .mockResolvedValueOnce({ data: { name: '   ' } });
+
+      const res = await openlibraryApi.details({ openlibraryId: 'works/OL82563W' });
+
+      // The raw names array has one entry ('   '), so the branch executes normalizeCreatorField
+      // which strips whitespace-only names, producing an empty array.
+      expect((res as Record<string, unknown>).authors).toStrictEqual([]);
+    });
+  });
+
   describe('OpenLibrary.similar', () => {
     test('returns empty array when openlibraryId is not provided', async () => {
       const res = await openlibraryApi.similar({});
@@ -228,7 +375,7 @@ const detailsResult = {
     '\r\n' +
     'They are swiftly confiscated by his aunt and uncle.\r\n' +
     '\r\n' +
-    'Then, on Harry’s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n' +
+    'Then, on Harry\u2019s eleventh birthday, a strange man bursts in with some important news: Harry Potter is a wizard and has been awarded a place to study at Hogwarts.\r\n' +
     '\r\n' +
     'And so the first of the Harry Potter adventures is set to begin.\r\n' +
     '([source][1])\r\n' +
@@ -238,6 +385,7 @@ const detailsResult = {
   releaseDate: undefined,
   numberOfPages: 123,
   externalPosterUrl: 'poster',
+  authors: undefined,
 } as unknown;
 
 const detailsResult2 = {
@@ -249,4 +397,5 @@ const detailsResult2 = {
   releaseDate: '2009',
   numberOfPages: undefined,
   externalPosterUrl: 'https://covers.openlibrary.org/b/id/5732360.jpg',
+  authors: undefined,
 } as unknown;

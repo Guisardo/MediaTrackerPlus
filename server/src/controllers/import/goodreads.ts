@@ -13,6 +13,7 @@ import { listItemRepository } from 'src/repository/listItemRepository';
 import { listRepository } from 'src/repository/list';
 import { Progress } from 'src/entity/progress';
 import { progressRepository } from 'src/repository/progress';
+import { normalizeCreatorField } from 'src/utils/normalizeCreators';
 
 /**
  * @openapi_tags GoodreadsImport
@@ -35,7 +36,7 @@ export class GoodreadsImportController {
 
     const summary = await importFromGoodreadsRss(url, userId);
 
-    res.send(summary);
+    res.json(summary);
   });
 }
 
@@ -64,7 +65,7 @@ export const importFromGoodreadsRss = async (
       goodreadsId: item.book_id,
       overview: item.book_description,
       externalPosterUrl: item.book_large_image_url,
-      authors: [item.author_name],
+      authors: normalizeCreatorField([item.author_name]),
       releaseDate: item.book_published?.toString(),
       numberOfPages:
         typeof item.book?.num_pages === 'number'

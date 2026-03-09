@@ -23,7 +23,8 @@
                     "id": 10100,
                     "name": "Sony Interactive Entertainment"
                 },
-                "developer": false
+                "developer": false,
+                "publisher": true
             },
             {
                 "id": 38707,
@@ -31,7 +32,8 @@
                     "id": 4357,
                     "name": "SIE Santa Monica Studio"
                 },
-                "developer": true
+                "developer": true,
+                "publisher": false
             },
             {
                 "id": 154522,
@@ -39,7 +41,8 @@
                     "id": 38814,
                     "name": "Jetpack Interactive"
                 },
-                "developer": false
+                "developer": false,
+                "publisher": false
             }
         ],
         "name": "God of War",

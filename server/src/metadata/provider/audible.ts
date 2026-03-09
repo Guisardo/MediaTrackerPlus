@@ -4,6 +4,7 @@ import { AudibleCountryCode } from 'src/entity/configuration';
 import { MediaItemForProvider, ExternalIds } from 'src/entity/mediaItem';
 import { MetadataProvider } from 'src/metadata/metadataProvider';
 import { GlobalConfiguration } from 'src/repository/globalSettings';
+import { normalizeCreatorField } from 'src/utils/normalizeCreators';
 
 export class Audible extends MetadataProvider {
   readonly name = 'audible';
@@ -130,8 +131,12 @@ export class Audible extends MetadataProvider {
       audibleCountryCode: countryCode,
       title: item.title,
       audibleId: item.asin,
-      authors: item.authors?.map((author) => author.name),
-      narrators: item.narrators?.map((narrator) => narrator.name),
+      authors: item.authors
+        ? normalizeCreatorField(item.authors.map((author) => author.name))
+        : undefined,
+      narrators: item.narrators
+        ? normalizeCreatorField(item.narrators.map((narrator) => narrator.name))
+        : undefined,
       externalPosterUrl: item.product_images?.[2400],
       language: item.language,
       releaseDate: item.release_date,

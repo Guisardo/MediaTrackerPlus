@@ -71,5 +71,35 @@
     "title": "Harry Potter and the Philosopher's Stone",
     "video": false,
     "vote_average": 7.9,
-    "vote_count": 22108
+    "vote_count": 22108,
+    "credits": {
+        "crew": [
+            {
+                "department": "Directing",
+                "job": "Director",
+                "credit_id": "52fe4267c3a36847f8014a77",
+                "adult": false,
+                "gender": 2,
+                "id": 7879,
+                "known_for_department": "Directing",
+                "name": "Chris Columbus",
+                "original_name": "Chris Columbus",
+                "popularity": 4.5,
+                "profile_path": "/4Hu7Uxe1c4T0JvLrMnXCHiMiB28.jpg"
+            },
+            {
+                "department": "Production",
+                "job": "Producer",
+                "credit_id": "52fe4267c3a36847f8014a7b",
+                "adult": false,
+                "gender": 1,
+                "id": 476,
+                "known_for_department": "Production",
+                "name": "David Heyman",
+                "original_name": "David Heyman",
+                "popularity": 3.2,
+                "profile_path": null
+            }
+        ]
+    }
 }

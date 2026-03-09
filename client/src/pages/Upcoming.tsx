@@ -12,6 +12,7 @@ export const UpcomingPage: FunctionComponent = () => {
       }}
       showSortOrderControls={false}
       showSearch={false}
+      showFacets={true}
       gridItemAppearance={{
         showNextAiring: true,
         showRating: true,

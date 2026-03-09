@@ -123,6 +123,10 @@ export class IGDB extends MetadataProvider {
         searchResult.websites?.length > 0 ? searchResult.websites[0].url : null,
       developer: searchResult.involved_companies?.find((item) => item.developer)
         ?.company.name,
+      publisher: searchResult.involved_companies
+        ?.filter((item) => item.publisher)
+        .map((item) => item.company.name)
+        .join(', ') || undefined,
       platform: searchResult.platforms?.map((value) => value.name),
     };
   }
@@ -135,8 +139,9 @@ export class IGDB extends MetadataProvider {
         first_release_date,
         summary,
         cover.image_id, 
-        involved_companies.company.name, 
-        involved_companies.developer, 
+        involved_companies.company.name,
+        involved_companies.developer,
+        involved_companies.publisher,
         platforms.name, 
         platforms.platform_logo.id, 
         genres.name, 
@@ -159,8 +164,9 @@ export class IGDB extends MetadataProvider {
         first_release_date,
         summary,
         cover.image_id, 
-        involved_companies.company.name, 
-        involved_companies.developer, 
+        involved_companies.company.name,
+        involved_companies.developer,
+        involved_companies.publisher,
         platforms.name, 
         platforms.platform_logo.id, 
         genres.name, 

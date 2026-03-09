@@ -258,6 +258,7 @@ const movieDetailsResult = {
   releaseDate: '2001-11-16',
   runtime: 152,
   tmdbRating: 7.9,
+  director: 'Chris Columbus',
   needsDetails: false,
 };
 
@@ -281,6 +282,7 @@ const movieSearchResult = [
     releaseDate: '2001-11-16',
     runtime: undefined,
     tmdbRating: 7.9,
+    director: undefined,
     needsDetails: true,
   },
   {
@@ -302,6 +304,7 @@ const movieSearchResult = [
     releaseDate: '2009-07-07',
     runtime: undefined,
     tmdbRating: 7.7,
+    director: undefined,
     needsDetails: true,
   },
   {
@@ -323,6 +326,7 @@ const movieSearchResult = [
     releaseDate: '2005-11-16',
     runtime: undefined,
     tmdbRating: 7.8,
+    director: undefined,
     needsDetails: true,
   },
   {
@@ -344,6 +348,7 @@ const movieSearchResult = [
     releaseDate: '2002-11-13',
     runtime: undefined,
     tmdbRating: 7.7,
+    director: undefined,
     needsDetails: true,
   },
   {
@@ -365,6 +370,7 @@ const movieSearchResult = [
     releaseDate: '2004-05-31',
     runtime: undefined,
     tmdbRating: 8,
+    director: undefined,
     needsDetails: true,
   },
 ] as unknown;
@@ -386,6 +392,7 @@ const tvSearchResult = [
     genres: undefined,
     tvdbId: undefined,
     imdbId: undefined,
+    creator: undefined,
     originalTitle: 'Lost',
     releaseDate: '2004-09-22',
     numberOfSeasons: undefined,
@@ -411,6 +418,7 @@ const tvSearchResult = [
     genres: undefined,
     tvdbId: undefined,
     imdbId: undefined,
+    creator: undefined,
     originalTitle: "Dan Brown's The Lost Symbol",
     releaseDate: '2021-09-16',
     numberOfSeasons: undefined,
@@ -436,6 +444,7 @@ const tvSearchResult = [
     genres: undefined,
     tvdbId: undefined,
     imdbId: undefined,
+    creator: undefined,
     originalTitle: 'Lost Girl',
     releaseDate: '2010-09-12',
     numberOfSeasons: undefined,
@@ -461,6 +470,7 @@ const tvSearchResult = [
     genres: undefined,
     tvdbId: undefined,
     imdbId: undefined,
+    creator: undefined,
     originalTitle: 'Lost in Space',
     releaseDate: '2018-04-13',
     numberOfSeasons: undefined,
@@ -486,6 +496,7 @@ const tvSearchResult = [
     genres: undefined,
     tvdbId: undefined,
     imdbId: undefined,
+    creator: undefined,
     originalTitle: 'Lost in Space',
     releaseDate: '1965-09-15',
     numberOfSeasons: undefined,
@@ -519,6 +530,7 @@ const tvDetailsResult = {
   tvdbId: 73739,
   network: 'ABC',
   runtime: 45,
+  creator: 'J.J. Abrams, Damon Lindelof, Jeffrey Lieber',
   seasons: [
     {
       tmdbId: 14047,

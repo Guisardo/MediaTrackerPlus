@@ -1,16 +1,21 @@
 import { createExpressRoute } from 'typescript-routes-to-openapi-server';
 import {
+  FacetQueryArgs,
   GetItemsArgs,
   mediaItemRepository,
   Pagination,
 } from 'src/repository/mediaItem';
 import { MediaItemItemsResponse } from 'src/entity/mediaItem';
+import { FacetsResponse } from 'src/knex/queries/items';
 
 export type GetItemsRequest = Omit<
   GetItemsArgs,
   'userId' | 'mediaType' | 'mediaItemIds'
 > &
   Partial<Pick<GetItemsArgs, 'mediaType'>>;
+
+export type GetFacetsRequest = Omit<FacetQueryArgs, 'userId'>;
+
 
 export class ItemsController {
   /**
@@ -40,6 +45,16 @@ export class ItemsController {
       onlyWithoutUserRating,
       onlyWithProgress,
       selectRandom,
+      genres,
+      languages,
+      creators,
+      publishers,
+      mediaTypes,
+      yearMin,
+      yearMax,
+      ratingMin,
+      ratingMax,
+      status,
     } = req.query;
 
     const orderBy = req.query.orderBy || 'title';
@@ -66,9 +81,80 @@ export class ItemsController {
       onlyWithUserRating: onlyWithUserRating,
       onlyWithoutUserRating: onlyWithoutUserRating,
       onlyWithProgress: onlyWithProgress,
+      genres: genres,
+      languages: languages,
+      creators: creators,
+      publishers: publishers,
+      mediaTypes: mediaTypes,
+      yearMin: yearMin,
+      yearMax: yearMax,
+      ratingMin: ratingMin,
+      ratingMax: ratingMax,
+      status: status,
     });
 
-    res.send(result);
+    res.json(result);
+  });
+
+  /**
+   * @description Get facet counts
+   * @openapi_tags Items
+   * @openapi_operationId facets
+   */
+  getFacets = createExpressRoute<{
+    method: 'get';
+    path: '/api/items/facets';
+    requestQuery: GetFacetsRequest;
+    responseBody: FacetsResponse;
+  }>(async (req, res) => {
+    const userId = Number(req.user);
+
+    const {
+      mediaType,
+      filter,
+      genres,
+      languages,
+      creators,
+      publishers,
+      mediaTypes,
+      yearMin,
+      yearMax,
+      ratingMin,
+      ratingMax,
+      status,
+      onlyOnWatchlist,
+      onlySeenItems,
+      onlyWithNextAiring,
+      onlyWithNextEpisodesToWatch,
+      onlyWithUserRating,
+      onlyWithoutUserRating,
+      onlyWithProgress,
+    } = req.query;
+
+    const result = await mediaItemRepository.facets({
+      userId,
+      mediaType,
+      filter,
+      genres,
+      languages,
+      creators,
+      publishers,
+      mediaTypes,
+      yearMin,
+      yearMax,
+      ratingMin,
+      ratingMax,
+      status,
+      onlyOnWatchlist,
+      onlySeenItems,
+      onlyWithNextAiring,
+      onlyWithNextEpisodesToWatch,
+      onlyWithUserRating,
+      onlyWithoutUserRating,
+      onlyWithProgress,
+    });
+
+    res.json(result);
   });
 
   /**
@@ -115,7 +201,7 @@ export class ItemsController {
       onlyWithProgress: onlyWithProgress,
     });
 
-    res.send(result);
+    res.json(result);
   });
 
   /**
@@ -163,6 +249,6 @@ export class ItemsController {
       selectRandom: selectRandom,
     });
 
-    res.send(result);
+    res.json(result);
   });
 }

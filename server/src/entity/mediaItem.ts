@@ -42,6 +42,9 @@ export type MediaItemBase = ExternalIds & {
   genres?: string[];
   numberOfEpisodes?: number;
   developer?: string;
+  director?: string;
+  creator?: string;
+  publisher?: string;
   authors?: string[];
   narrators?: string[];
   language?: string;
@@ -125,7 +128,9 @@ export type MediaItemItemsResponse = Omit<MediaItemBase, 'lockedAt'> & {
 };
 
 export const mediaItemColumns = <const>[
+  'creator',
   'developer',
+  'director',
   'genres',
   'id',
   'igdbId',
@@ -139,6 +144,7 @@ export const mediaItemColumns = <const>[
   'originalTitle',
   'overview',
   'platform',
+  'publisher',
   'releaseDate',
   'tmdbRating',
   'runtime',

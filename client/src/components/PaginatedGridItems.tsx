@@ -14,10 +14,26 @@ import { Plural, Trans } from '@lingui/macro';
 import { useSearch } from 'src/api/search';
 import { Items } from 'mediatracker-api';
 import { useItems } from 'src/api/items';
+import { useFacetsData } from 'src/api/facets';
 import { GridItemAppearanceArgs, GridItem } from 'src/components/GridItem';
 import { useOrderByComponent } from 'src/components/OrderBy';
 import { useFilterBy } from 'src/components/FilterBy';
 import { useUpdateSearchParams } from 'src/hooks/updateSearchParamsHook';
+import { useFacets } from 'src/hooks/facets';
+import {
+  FacetPanel,
+  FacetDrawer,
+  FacetMobileButton,
+  ActiveFacetChips,
+  GenreSection,
+  YearSection,
+  RatingSection,
+  LanguageSection,
+  CreatorSection,
+  StatusSection,
+  PublisherSection,
+  MediaTypeSection,
+} from 'src/components/Facets';
 
 const Search: FunctionComponent<{
   onSearch: (value: string) => void;
@@ -83,11 +99,18 @@ export const PaginatedGridItems: FunctionComponent<{
   isStatisticsPage?: boolean;
   showSearch?: boolean;
   gridItemAppearance?: GridItemAppearanceArgs;
+  /**
+   * When true, the FacetPanel is rendered alongside the grid and the Status
+   * facet section replaces the FilterByComponent dropdown in the toolbar.
+   * When false (default), FilterByComponent continues to render unchanged.
+   */
+  showFacets?: boolean;
 }> = (props) => {
-  const { args, showSortOrderControls, showSearch, gridItemAppearance } = props;
+  const { args, showSortOrderControls, showSearch, gridItemAppearance, showFacets } = props;
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState<string>();
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const { currentValue, updateSearchParams } = useUpdateSearchParams<number>({
     filterParam: 'page',
     initialValue: 1,
@@ -109,26 +132,47 @@ export const PaginatedGridItems: FunctionComponent<{
     handleFilterChange: handleArgumentChange,
   });
 
+  // useFilterBy hook must remain unconditional (React hooks rules).
+  // When showFacets=true, the FilterByComponent JSX is suppressed, but the
+  // hook still runs to avoid breaking hook call order.
   const { filter, FilterByComponent } = useFilterBy(
     args.mediaType,
     props.isStatisticsPage,
     handleArgumentChange
   );
 
+  // useFacets hook must remain unconditional (React hooks rules).
+  // When showFacets=false, the facets state is not used.
+  const facets = useFacets(handleArgumentChange);
+
   const mainContainerRef = useRef<HTMLDivElement>();
+
+  // Build the items query args: merge static page args, filter (when not using
+  // facets), and facet params (when showFacets=true).
+  const itemsQueryArgs: Items.Paginated.RequestQuery = {
+    ...args,
+    ...(showFacets ? facets.facetParams : filter),
+    page: page,
+    orderBy: orderBy,
+    sortOrder: sortOrder,
+  };
 
   const {
     isLoading: isLoadingItems,
     items,
     numberOfPages,
     numberOfItemsTotal,
-  } = useItems({
+  } = useItems(itemsQueryArgs);
+
+  // Facets API query: runs in parallel with items query when showFacets=true.
+  // staleTime=30000 is set in useFacetsData; keepPreviousData prevents flash.
+  const facetsQueryArgs: Items.Facets.RequestQuery = {
     ...args,
-    ...filter,
-    page: page,
-    orderBy: orderBy,
-    sortOrder: sortOrder,
-  });
+    ...facets.facetParams,
+    mediaType: args.mediaType,
+  };
+
+  const { facetsData } = useFacetsData(facetsQueryArgs, Boolean(showFacets));
 
   const {
     items: searchResult,
@@ -158,17 +202,90 @@ export const PaginatedGridItems: FunctionComponent<{
   }, [args.mediaType, searchQuery]);
 
   const isLoading = isLoadingSearchResult || isLoadingItems;
+  // When showFacets is true, the status facet replaces FilterByComponent so we
+  // should not gate on filter object keys for the noItems display.
   const noItems =
     !isLoading &&
     !searchQuery &&
     items.length === 0 &&
-    Object.keys(filter).length === 0;
+    (showFacets
+      ? facets.activeFacetCount === 0
+      : Object.keys(filter).length === 0);
+
+  // Empty facets response used as fallback before the API responds.
+  const emptyFacets = {
+    genres: [],
+    years: [],
+    languages: [],
+    creators: [],
+    publishers: [],
+    mediaTypes: [],
+  };
+  const facetData = facetsData ?? emptyFacets;
+
+  // The facet sections rendered inside both the sidebar and the mobile drawer.
+  const facetSections = showFacets ? (
+    <>
+      <StatusSection
+        selectedStatus={facets.status}
+        setStatus={facets.setStatus}
+        mediaType={args.mediaType as string | undefined}
+      />
+      <GenreSection
+        genres={facetData.genres}
+        selectedGenres={facets.genres}
+        setGenres={facets.setGenres}
+      />
+      <YearSection
+        years={facetData.years}
+        yearMin={facets.yearMin}
+        yearMax={facets.yearMax}
+        setYearMin={facets.setYearMin}
+        setYearMax={facets.setYearMax}
+      />
+      <RatingSection
+        ratings={facetData.genres.length > 0 || facetData.years.length > 0 ? [{ value: '1', count: 1 }] : []}
+        ratingMin={facets.ratingMin}
+        ratingMax={facets.ratingMax}
+        setRatingMin={facets.setRatingMin}
+        setRatingMax={facets.setRatingMax}
+      />
+      <LanguageSection
+        languages={facetData.languages}
+        selectedLanguages={facets.languages}
+        setLanguages={facets.setLanguages}
+      />
+      <CreatorSection
+        creators={facetData.creators}
+        selectedCreators={facets.creators}
+        setCreators={facets.setCreators}
+        mediaType={args.mediaType as string | undefined}
+      />
+      <PublisherSection
+        publishers={facetData.publishers}
+        selectedPublishers={facets.publishers}
+        setPublishers={facets.setPublishers}
+        mediaType={args.mediaType as string | undefined}
+      />
+      <MediaTypeSection
+        mediaTypes={facetData.mediaTypes}
+        selectedMediaTypes={facets.mediaTypes}
+        setMediaTypes={facets.setMediaTypes}
+        mediaType={args.mediaType as string | undefined}
+      />
+    </>
+  ) : null;
 
   return (
     <>
       <div className="flex justify-center w-full" ref={mainContainerRef}>
-        <div className="flex flex-row flex-wrap items-grid">
-          <div className="mb-1 header">
+        {/* Desktop facet sidebar — hidden on < 1024px */}
+        {showFacets && (
+          <FacetPanel facets={facets}>{facetSections}</FacetPanel>
+        )}
+
+        <div className="flex flex-row flex-wrap items-grid flex-1 min-w-0">
+          <div className="mb-1 header w-full">
             {showSearch && args.mediaType && (
               <Search onSearch={setSearchQuery} />
             )}
@@ -216,11 +333,22 @@ export const PaginatedGridItems: FunctionComponent<{
                       )}
                     </div>
 
+                    {/* Mobile Filters button — shown when showFacets=true, regardless of sort controls */}
+                    {showFacets && !searchQuery && (
+                      <FacetMobileButton
+                        activeFacetCount={facets.activeFacetCount}
+                        onClick={() => setDrawerOpen(true)}
+                      />
+                    )}
+
                     {showSortOrderControls && !searchQuery && (
                       <>
-                        <div className="flex ml-auto">
-                          <FilterByComponent />
-                        </div>
+                        {/* FilterByComponent — shown only when showFacets=false */}
+                        {!showFacets && (
+                          <div className="flex ml-auto">
+                            <FilterByComponent />
+                          </div>
+                        )}
                         &nbsp;
                         <div className="">
                           <OrderByComponent />
@@ -228,6 +356,14 @@ export const PaginatedGridItems: FunctionComponent<{
                       </>
                     )}
                   </div>
+                )}
+
+                {/* Active facet chips row — rendered between toolbar and grid */}
+                {showFacets && (
+                  <ActiveFacetChips
+                    facets={facets}
+                    mediaType={args.mediaType as string | undefined}
+                  />
                 )}
               </>
             )}
@@ -269,6 +405,17 @@ export const PaginatedGridItems: FunctionComponent<{
           )}
         </div>
       </div>
+
+      {/* Mobile drawer — Portal-mounted, full FacetPanel content */}
+      {showFacets && (
+        <FacetDrawer
+          isOpen={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+          facets={facets}
+        >
+          {facetSections}
+        </FacetDrawer>
+      )}
     </>
   );
 };

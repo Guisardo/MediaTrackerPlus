@@ -1,7 +1,13 @@
 import _ from 'lodash';
 
 import { omitUndefinedValues, repository } from 'src/repository/repository';
-import { getItemsKnex, generateColumnNames } from 'src/knex/queries/items';
+import { splitCreatorField } from 'src/utils/normalizeCreators';
+import {
+  getItemsKnex,
+  getFacetsKnex,
+  FacetsResponse,
+  generateColumnNames,
+} from 'src/knex/queries/items';
 import { Database } from 'src/dbconfig';
 import { getDetailsKnex } from 'src/knex/queries/details';
 import { Seen } from 'src/entity/seen';
@@ -96,10 +102,135 @@ export type GetItemsArgs = {
    */
   genre?: string;
 
+  /**
+   * @description Filter by multiple genres (comma-separated, OR logic within dimension)
+   */
+  genres?: string;
+
+  /**
+   * @description Filter by multiple languages (comma-separated language codes, OR logic)
+   */
+  languages?: string;
+
+  /**
+   * @description Filter by multiple creators (comma-separated names, OR logic)
+   */
+  creators?: string;
+
+  /**
+   * @description Filter by multiple publishers (comma-separated names, OR logic)
+   */
+  publishers?: string;
+
+  /**
+   * @description Filter by multiple media types (comma-separated, OR logic)
+   */
+  mediaTypes?: string;
+
+  /**
+   * @description Filter by minimum release year (inclusive)
+   */
+  yearMin?: number;
+
+  /**
+   * @description Filter by maximum release year (inclusive)
+   */
+  yearMax?: number;
+
+  /**
+   * @description Filter by minimum TMDB rating (inclusive, 0-10)
+   */
+  ratingMin?: number;
+
+  /**
+   * @description Filter by maximum TMDB rating (inclusive, 0-10)
+   */
+  ratingMax?: number;
+
+  /**
+   * @description Filter by status keys (comma-separated: rated, unrated, watchlist, seen)
+   * Maps to: rated -> onlyWithUserRating, unrated -> onlyWithoutUserRating, watchlist -> onlyOnWatchlist, seen -> onlySeenItems
+   */
+  status?: string;
+
   onlyWithProgress?: boolean;
 
   page?: number;
   mediaItemIds?: number[];
+};
+
+export type FacetQueryArgs = {
+  userId: number;
+  mediaType?: MediaType;
+  /**
+   * @description Return only items with title including this phrase
+   */
+  filter?: string;
+  /**
+   * @description Filter by multiple genres (comma-separated, OR logic within dimension)
+   */
+  genres?: string;
+  /**
+   * @description Filter by multiple languages (comma-separated language codes, OR logic)
+   */
+  languages?: string;
+  /**
+   * @description Filter by multiple creators (comma-separated names, OR logic)
+   */
+  creators?: string;
+  /**
+   * @description Filter by multiple publishers (comma-separated names, OR logic)
+   */
+  publishers?: string;
+  /**
+   * @description Filter by multiple media types (comma-separated, OR logic)
+   */
+  mediaTypes?: string;
+  /**
+   * @description Filter by minimum release year (inclusive)
+   */
+  yearMin?: number;
+  /**
+   * @description Filter by maximum release year (inclusive)
+   */
+  yearMax?: number;
+  /**
+   * @description Filter by minimum TMDB rating (inclusive, 0-10)
+   */
+  ratingMin?: number;
+  /**
+   * @description Filter by maximum TMDB rating (inclusive, 0-10)
+   */
+  ratingMax?: number;
+  /**
+   * @description Filter by status keys (comma-separated: rated, unrated, watchlist, seen)
+   */
+  status?: string;
+  /**
+   * @description Return only items on watchlist
+   */
+  onlyOnWatchlist?: boolean;
+  /**
+   * @description Return only seen items
+   */
+  onlySeenItems?: boolean;
+  /**
+   * @description Return only items with upcoming episode or release
+   */
+  onlyWithNextAiring?: boolean;
+  /**
+   * @description Return only TV shows with next episodes to watch
+   */
+  onlyWithNextEpisodesToWatch?: boolean;
+  /**
+   * @description Return only items with user rating
+   */
+  onlyWithUserRating?: boolean;
+  /**
+   * @description Return only items without user rating
+   */
+  onlyWithoutUserRating?: boolean;
+  onlyWithProgress?: boolean;
 };
 
 class MediaItemRepository extends repository<MediaItemBase>({
@@ -121,6 +252,10 @@ class MediaItemRepository extends repository<MediaItemBase>({
     return getItemsKnex(args);
   }
 
+  public facets(args: FacetQueryArgs): Promise<FacetsResponse> {
+    return getFacetsKnex(args);
+  }
+
   public async details(params: { mediaItemId: number; userId: number }) {
     return getDetailsKnex(params);
   }
@@ -129,8 +264,12 @@ class MediaItemRepository extends repository<MediaItemBase>({
     return super.deserialize({
       ...value,
       genres: (value.genres as unknown as string)?.split(',') || null,
-      narrators: (value.narrators as unknown as string)?.split(',') || null,
-      authors: (value.authors as unknown as string)?.split(',') || null,
+      narrators: splitCreatorField(
+        (value.narrators as unknown as string) || null
+      ),
+      authors: splitCreatorField(
+        (value.authors as unknown as string) || null
+      ),
       platform: value.platform
         ? JSON.parse(value.platform as unknown as string)
         : null,

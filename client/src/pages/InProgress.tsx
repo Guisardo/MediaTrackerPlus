@@ -12,6 +12,7 @@ export const InProgressPage: FunctionComponent = () => {
       }}
       showSortOrderControls={false}
       showSearch={false}
+      showFacets={true}
       gridItemAppearance={{
         showRating: true,
         topBar: {

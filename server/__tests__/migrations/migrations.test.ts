@@ -1844,5 +1844,110 @@ describe('migrations', () => {
     expect(hasColumnAfterSecondUp).toBe(true);
   });
 
+  test('20260308_addCreatorColumn', async () => {
+    await Database.knex.migrate.up({
+      name: `20260308_addCreatorColumn.${Config.MIGRATIONS_EXTENSION}`,
+      directory: Config.MIGRATIONS_DIRECTORY,
+    });
+
+    await Database.knex<MediaItemBase>('mediaItem').insert({
+      id: 999999,
+      title: 'title',
+      source: 'user',
+      creator: 'John Doe',
+      lastTimeUpdated: new Date().getTime(),
+    });
+
+    const result = await Database.knex('mediaItem')
+      .where('id', 999999)
+      .first();
+
+    expect(result.creator).toEqual('John Doe');
+
+    // Test that creator column accepts null values
+    await Database.knex<MediaItemBase>('mediaItem').insert({
+      id: 999998,
+      title: 'title without creator',
+      source: 'user',
+      lastTimeUpdated: new Date().getTime(),
+    });
+
+    const resultWithoutCreator = await Database.knex('mediaItem')
+      .where('id', 999998)
+      .first();
+
+    expect(resultWithoutCreator.creator).toBeNull();
+  });
+
+  test('20260308_addDirectorColumn', async () => {
+    await Database.knex.migrate.up({
+      name: `20260308_addDirectorColumn.${Config.MIGRATIONS_EXTENSION}`,
+      directory: Config.MIGRATIONS_DIRECTORY,
+    });
+
+    await Database.knex<MediaItemBase>('mediaItem').insert({
+      id: 999997,
+      title: 'title',
+      source: 'user',
+      director: 'Chris Columbus',
+      lastTimeUpdated: new Date().getTime(),
+    });
+
+    const result = await Database.knex('mediaItem')
+      .where('id', 999997)
+      .first();
+
+    expect(result.director).toEqual('Chris Columbus');
+
+    // Test that director column accepts null values
+    await Database.knex<MediaItemBase>('mediaItem').insert({
+      id: 999996,
+      title: 'title without director',
+      source: 'user',
+      lastTimeUpdated: new Date().getTime(),
+    });
+
+    const resultWithoutDirector = await Database.knex('mediaItem')
+      .where('id', 999996)
+      .first();
+
+    expect(resultWithoutDirector.director).toBeNull();
+  });
+
+  test('20260308_addPublisherColumn', async () => {
+    await Database.knex.migrate.up({
+      name: `20260308_addPublisherColumn.${Config.MIGRATIONS_EXTENSION}`,
+      directory: Config.MIGRATIONS_DIRECTORY,
+    });
+
+    await Database.knex<MediaItemBase>('mediaItem').insert({
+      id: 999995,
+      title: 'title',
+      source: 'user',
+      publisher: 'Sony Interactive Entertainment',
+      lastTimeUpdated: new Date().getTime(),
+    });
+
+    const result = await Database.knex('mediaItem')
+      .where('id', 999995)
+      .first();
+
+    expect(result.publisher).toEqual('Sony Interactive Entertainment');
+
+    // Test that publisher column accepts null values
+    await Database.knex<MediaItemBase>('mediaItem').insert({
+      id: 999994,
+      title: 'title without publisher',
+      source: 'user',
+      lastTimeUpdated: new Date().getTime(),
+    });
+
+    const resultWithoutPublisher = await Database.knex('mediaItem')
+      .where('id', 999994)
+      .first();
+
+    expect(resultWithoutPublisher.publisher).toBeNull();
+  });
+
   afterAll(clearDatabase);
 });

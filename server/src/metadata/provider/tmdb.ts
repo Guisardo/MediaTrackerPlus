@@ -148,6 +148,7 @@ export class TMDbMovie extends TMDb {
         params: {
           api_key: TMDB_API_KEY,
           language: GlobalConfiguration.configuration.tmdbLang,
+          append_to_response: 'credits',
         },
       }
     );
@@ -198,6 +199,11 @@ export class TMDbMovie extends TMDb {
     movie.title = item.title;
     movie.runtime = item.runtime;
     movie.tmdbRating = item.vote_average;
+    movie.director =
+      item.credits?.crew
+        ?.filter((c) => c.job === 'Director')
+        .map((c) => c.name)
+        .join(', ') || undefined;
 
     return movie;
   }
@@ -372,6 +378,7 @@ export class TMDbTv extends TMDb {
     tvShow.releaseDate = item.first_air_date || null;
     tvShow.numberOfSeasons = item.number_of_seasons;
     tvShow.tmdbRating = item.vote_average;
+    tvShow.creator = item.created_by?.map(c => c.name).join(', ') || undefined;
     tvShow.network =
       item.networks?.length > 0 ? item.networks[0].name : undefined;
     tvShow.runtime =
@@ -633,6 +640,7 @@ namespace TMDbApi {
     video: boolean;
     vote_average: number;
     vote_count: number;
+    credits?: { crew: Crew[] };
   }
 
   export interface Genre {

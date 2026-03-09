@@ -3,6 +3,7 @@ import { ExternalIds, MediaItemForProvider } from 'src/entity/mediaItem';
 import { MetadataProvider } from 'src/metadata/metadataProvider';
 import { logger } from 'src/logger';
 import { SimilarItem } from 'src/metadata/types';
+import { normalizeCreatorField } from 'src/utils/normalizeCreators';
 
 export class OpenLibrary extends MetadataProvider {
   readonly name = 'openlibrary';
@@ -43,7 +44,9 @@ export class OpenLibrary extends MetadataProvider {
           : undefined,
         releaseDate: doc.first_publish_year?.toString(),
         numberOfPages: doc.number_of_pages_median,
-        authors: doc.author_name,
+        authors: doc.author_name
+          ? normalizeCreatorField(doc.author_name)
+          : undefined,
         openlibraryId: doc.key,
       };
     });
@@ -57,6 +60,8 @@ export class OpenLibrary extends MetadataProvider {
     const res = await axios.get<DetailsResponse>(
       `https://openlibrary.org${args.openlibraryId}.json`
     );
+
+    const authors = await this.resolveAuthorNames(res.data.authors);
 
     return {
       mediaType: this.mediaType,
@@ -72,7 +77,44 @@ export class OpenLibrary extends MetadataProvider {
           ? `https://covers.openlibrary.org/b/id/${res.data.covers[0]}.jpg`
           : args.externalPosterUrl,
       numberOfPages: args.numberOfPages,
+      authors:
+        authors.length > 0 ? normalizeCreatorField(authors) : undefined,
     };
+  }
+
+  /**
+   * Resolves OpenLibrary author key references (e.g. "/authors/OL1234A")
+   * into human-readable author names by fetching each author's record.
+   */
+  private async resolveAuthorNames(
+    authorRefs?: DetailsResponse['authors']
+  ): Promise<string[]> {
+    if (!authorRefs || authorRefs.length === 0) {
+      return [];
+    }
+
+    const names = await Promise.all(
+      authorRefs.map(async (ref) => {
+        const authorKey = ref.author?.key;
+        if (!authorKey) {
+          return null;
+        }
+
+        try {
+          const res = await axios.get<AuthorResponse>(
+            `https://openlibrary.org${authorKey}.json`
+          );
+          return res.data.name || null;
+        } catch (error) {
+          logger.error(
+            `Failed to fetch OpenLibrary author ${authorKey}: ${error}`
+          );
+          return null;
+        }
+      })
+    );
+
+    return names.filter((name): name is string => name !== null);
   }
 
   async similar(ids: ExternalIds): Promise<SimilarItem[]> {
@@ -223,6 +265,13 @@ interface DetailsResponse {
     type: string;
     value: string;
   };
+}
+
+interface AuthorResponse {
+  name: string;
+  key: string;
+  personal_name?: string;
+  bio?: string | { type: string; value: string };
 }
 
 interface OpenLibrarySubjectWork {
