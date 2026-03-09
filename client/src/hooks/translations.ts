@@ -14,6 +14,7 @@ export const useListSortByKeys = () =>
     title: t`Title`,
     'next-airing': t`Next airing`,
     recommended: t`Recommended`,
+    'platform-recommended': t`Platform Recommended`,
   });
 
 export const useListPrivacyKeys = () =>

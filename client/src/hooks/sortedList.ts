@@ -169,9 +169,39 @@ export const useSortedList = (args: {
         (listItem) => listItem.mediaItem.title,
         stringComparator
       ),
-      'platform-recommended': (_a: ListItem, _b: ListItem): number => {
-        // Placeholder — real implementation in US-005
-        return 0;
+      'platform-recommended': (a: ListItem, b: ListItem): number => {
+        // Score = platformRating * 0.7 + externalRating * 0.3
+        // Community consensus (platform average) weighted higher than external aggregators.
+        // Contrast with 'recommended' which uses 60/40 for personal rating estimates vs external.
+        const scoreOf = (listItem: ListItem): number | undefined => {
+          const platformRating = listItem.mediaItem.platformRating;
+          if (platformRating == null) {
+            return undefined;
+          }
+          const tmdbRating = listItem.mediaItem.tmdbRating;
+          if (tmdbRating != null) {
+            return platformRating * 0.7 + tmdbRating * 0.3;
+          }
+          return platformRating;
+        };
+
+        const scoreA = scoreOf(a);
+        const scoreB = scoreOf(b);
+
+        if (scoreA == null && scoreB == null) {
+          return a.mediaItem.title.localeCompare(b.mediaItem.title);
+        }
+        if (scoreA == null) {
+          return 1;
+        }
+        if (scoreB == null) {
+          return -1;
+        }
+        // Higher score = more recommended → descending regardless of sortOrder
+        if (scoreB !== scoreA) {
+          return scoreB - scoreA;
+        }
+        return a.mediaItem.title.localeCompare(b.mediaItem.title);
       },
       recommended: (a: ListItem, b: ListItem): number => {
         const scoreOf = (listItem: ListItem): number | undefined => {
