@@ -852,6 +852,30 @@ class MediaItemRepository extends repository<MediaItemBase>({
     );
   }
 
+  /**
+   * Recalculates the platformRating cache for one or more mediaItems.
+   *
+   * Computes the average of all media-level user ratings (episodeId IS NULL
+   * AND seasonId IS NULL) and writes the result to the platformRating column.
+   * When no ratings exist for an item, AVG() returns NULL, which sets
+   * platformRating to NULL — clearing any stale cached value.
+   *
+   * This must be called via setImmediate() so it executes after the HTTP
+   * response is sent and does not affect endpoint latency.
+   *
+   * @param mediaItemId - The ID of the mediaItem whose cache should be refreshed.
+   */
+  public async recalculatePlatformRating(mediaItemId: number): Promise<void> {
+    await Database.knex<MediaItemBase>(this.tableName)
+      .update({
+        platformRating: Database.knex.raw(
+          `(SELECT AVG("rating") FROM "userRating" WHERE "mediaItemId" = ? AND "episodeId" IS NULL AND "seasonId" IS NULL)`,
+          [mediaItemId]
+        ),
+      })
+      .where('id', mediaItemId);
+  }
+
   public async unlockLockedMediaItems() {
     return await Database.knex<MediaItemBase>(this.tableName)
       .update('lockedAt', null)

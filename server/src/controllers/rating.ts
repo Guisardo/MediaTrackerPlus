@@ -274,6 +274,24 @@ export class RatingController {
 
     res.send();
 
+    // Fire-and-forget platformRating cache update via setImmediate.
+    // Only fires for media-level ratings (not episode- or season-level),
+    // and only when a numeric rating value is present (review-only writes
+    // don't change the average, so no recalculation is needed).
+    // This executes AFTER the response is sent, so HTTP latency is unaffected.
+    if (!episodeId && !seasonId && rating !== undefined) {
+      setImmediate(() => {
+        mediaItemRepository
+          .recalculatePlatformRating(mediaItemId)
+          .catch((err) => {
+            logger.error('Unhandled error in platformRating recalculation', {
+              err,
+              mediaItemId,
+            });
+          });
+      });
+    }
+
     // Fire-and-forget recommendation pipeline using setImmediate.
     // Only triggered when a numeric rating is provided.
     // This executes AFTER the response is sent, so HTTP latency is unaffected.

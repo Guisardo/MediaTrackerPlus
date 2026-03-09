@@ -6,6 +6,7 @@ import { Seen } from 'src/entity/seen';
 import { UserRating } from 'src/entity/userRating';
 import { TraktApi, TraktTvExport } from 'src/export/trakttv';
 import { findMediaItemByExternalIdInExternalSources } from 'src/metadata/findByExternalId';
+import { logger } from 'src/logger';
 import { listRepository } from 'src/repository/list';
 import { listItemRepository } from 'src/repository/listItemRepository';
 import { mediaItemRepository } from 'src/repository/mediaItem';
@@ -600,6 +601,28 @@ export class TraktTvImportController {
           await userRatingRepository.createMany(ratedSeasons);
           incrementImportingStep();
           await userRatingRepository.createMany(ratedEpisodes);
+
+          // Fire-and-forget platformRating cache update for all media-level rated items.
+          // ratedSeasons and ratedEpisodes are excluded — only media-level ratings
+          // (no episodeId/seasonId) affect the platformRating cache.
+          const mediaLevelRatings = [...ratedMovies, ...ratedTvShows];
+          if (mediaLevelRatings.length > 0) {
+            const affectedMediaItemIds = [
+              ...new Set(mediaLevelRatings.map((r) => r.mediaItemId)),
+            ];
+            setImmediate(() => {
+              Promise.all(
+                affectedMediaItemIds.map((mediaItemId) =>
+                  mediaItemRepository.recalculatePlatformRating(mediaItemId)
+                )
+              ).catch((err) => {
+                logger.error(
+                  'Unhandled error in platformRating recalculation after Trakt.tv import',
+                  { err }
+                );
+              });
+            });
+          }
 
           this.updateState({
             userId: userId,

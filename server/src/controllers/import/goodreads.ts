@@ -3,6 +3,7 @@ import { XMLParser } from 'fast-xml-parser';
 import axios from 'axios';
 import _ from 'lodash';
 
+import { logger } from 'src/logger';
 import { MediaItemBase } from 'src/entity/mediaItem';
 import { Seen } from 'src/entity/seen';
 import { UserRating } from 'src/entity/userRating';
@@ -174,6 +175,24 @@ export const importFromGoodreadsRss = async (
   await seenRepository.createManyUnique(read, seenUniqueBy);
   await progressRepository.createManyUnique(currentlyReading, progressUniqueBy);
   await userRatingRepository.createMany(rating);
+
+  // Fire-and-forget platformRating cache update for all rated mediaItems.
+  // Runs after createMany so ratings are committed before recalculation.
+  if (rating && rating.length > 0) {
+    const affectedMediaItemIds = [...new Set(rating.map((r) => r.mediaItemId))];
+    setImmediate(() => {
+      Promise.all(
+        affectedMediaItemIds.map((mediaItemId) =>
+          mediaItemRepository.recalculatePlatformRating(mediaItemId)
+        )
+      ).catch((err) => {
+        logger.error(
+          'Unhandled error in platformRating recalculation after Goodreads import',
+          { err }
+        );
+      });
+    });
+  }
 
   return {
     currentlyReading: currentlyReading.length,
