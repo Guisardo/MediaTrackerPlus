@@ -208,7 +208,7 @@ export const ActiveFacetChips: FunctionComponent<{
     if (ratingMin !== null) {
       return `${ratingMin.toFixed(1)}–`;
     }
-    return `–${ratingMax!.toFixed(1)}`;
+    return `–${(ratingMax as number).toFixed(1)}`;
   };
 
   const creatorDimensionLabel = getCreatorDimensionLabel(mediaType);
