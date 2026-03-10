@@ -13,13 +13,16 @@ function computeScore(
   platformRating: number | null | undefined,
   tmdbRating: number | null | undefined
 ): number | undefined {
-  if (platformRating == null) {
-    return undefined;
-  }
-  if (tmdbRating != null) {
+  if (platformRating != null && tmdbRating != null) {
     return platformRating * 0.7 + tmdbRating * 0.3;
   }
-  return platformRating;
+  if (platformRating != null) {
+    return platformRating;
+  }
+  if (tmdbRating != null) {
+    return tmdbRating;
+  }
+  return undefined;
 }
 
 type SimplifiedItem = {
@@ -70,14 +73,26 @@ describe('platform-recommended sort — score formula (pure unit tests)', () => 
     expect(score).toBe(8.0);
   });
 
-  test('score formula: platformRating is null — returns undefined (sorts last)', () => {
+  test('score formula: platformRating is null but tmdbRating present — falls back to tmdbRating', () => {
     const score = computeScore(null, 7.0);
+    expect(score).toBe(7.0);
+  });
+
+  test('score formula: platformRating is undefined but tmdbRating present — falls back to tmdbRating', () => {
+    const score = computeScore(undefined, 7.0);
+    expect(score).toBe(7.0);
+  });
+
+  test('score formula: both platformRating and tmdbRating null — returns undefined (sorts last)', () => {
+    const score = computeScore(null, null);
     expect(score).toBeUndefined();
   });
 
-  test('score formula: platformRating is undefined — returns undefined (sorts last)', () => {
-    const score = computeScore(undefined, 7.0);
-    expect(score).toBeUndefined();
+  test('score formula: platformRating is null, tmdbRating present — score equals tmdbRating (no weighting)', () => {
+    // When only the external rating is available, it is used directly as a proxy score.
+    // No weighting is applied since there is no platform signal to blend with.
+    expect(computeScore(null, 6.5)).toBe(6.5);
+    expect(computeScore(undefined, 9.0)).toBe(9.0);
   });
 
   test('score formula: platformRating = 0 — treated as valid scored item (does not sort last)', () => {
@@ -125,16 +140,16 @@ describe('platform-recommended sort — ordering (pure unit tests)', () => {
     expect(sorted[1].title).toBe('Low');
   });
 
-  test('null platformRating sorts last — after all scored items', () => {
+  test('item with only tmdbRating ranks by that score against platform-rated items', () => {
     const items: SimplifiedItem[] = [
       { platformRating: null, title: 'No score', tmdbRating: 9.0 },
       { platformRating: 3.0, title: 'Low score', tmdbRating: null },
       { platformRating: 8.0, title: 'High score', tmdbRating: null },
     ];
     const sorted = sortByPlatformRecommended(items);
-    expect(sorted[0].title).toBe('High score');
-    expect(sorted[1].title).toBe('Low score');
-    expect(sorted[2].title).toBe('No score');
+    expect(sorted[0].title).toBe('No score');
+    expect(sorted[1].title).toBe('High score');
+    expect(sorted[2].title).toBe('Low score');
   });
 
   test('null tmdbRating falls back to platformRating only (no formula)', () => {
@@ -150,16 +165,16 @@ describe('platform-recommended sort — ordering (pure unit tests)', () => {
     expect(sorted[1].title).toBe('Item B');
   });
 
-  test('multiple items with null platformRating sort by title among themselves', () => {
+  test('items with only tmdbRating rank by that score; ties broken alphabetically', () => {
     const items: SimplifiedItem[] = [
       { platformRating: null, title: 'Zebra', tmdbRating: 8.0 },
       { platformRating: null, title: 'Alpha', tmdbRating: 5.0 },
       { platformRating: 5.0, title: 'Middle', tmdbRating: null },
     ];
     const sorted = sortByPlatformRecommended(items);
-    expect(sorted[0].title).toBe('Middle');
+    expect(sorted[0].title).toBe('Zebra');
     expect(sorted[1].title).toBe('Alpha');
-    expect(sorted[2].title).toBe('Zebra');
+    expect(sorted[2].title).toBe('Middle');
   });
 
   test('equal scores sort alphabetically by title', () => {
@@ -172,30 +187,28 @@ describe('platform-recommended sort — ordering (pure unit tests)', () => {
     expect(sorted[1].title).toBe('Zorro');
   });
 
-  test('all items have null platformRating — sort entirely by title', () => {
+  test('items with neither platformRating nor tmdbRating sort last alphabetically', () => {
     const items: SimplifiedItem[] = [
       { platformRating: null, title: 'Zorro', tmdbRating: 9.0 },
       { platformRating: null, title: 'Alpha', tmdbRating: 5.0 },
       { platformRating: null, title: 'Middle', tmdbRating: null },
     ];
     const sorted = sortByPlatformRecommended(items);
-    expect(sorted[0].title).toBe('Alpha');
-    expect(sorted[1].title).toBe('Middle');
-    expect(sorted[2].title).toBe('Zorro');
+    expect(sorted[0].title).toBe('Zorro');
+    expect(sorted[1].title).toBe('Alpha');
+    expect(sorted[2].title).toBe('Middle');
   });
 
-  test('item with platformRating = 0 sorts before items with null platformRating', () => {
+  test('item with only tmdbRating outranks items with low platformRating when score is higher', () => {
     const items: SimplifiedItem[] = [
       { platformRating: null, title: 'No rating', tmdbRating: 9.0 },
       { platformRating: 0, title: 'Zero rating', tmdbRating: null },
       { platformRating: 5.0, title: 'Good rating', tmdbRating: null },
     ];
     const sorted = sortByPlatformRecommended(items);
-    // Scored items first: Good rating (5.0), Zero rating (0.0)
-    // Null last: No rating
-    expect(sorted[0].title).toBe('Good rating');
-    expect(sorted[1].title).toBe('Zero rating');
-    expect(sorted[2].title).toBe('No rating');
+    expect(sorted[0].title).toBe('No rating');
+    expect(sorted[1].title).toBe('Good rating');
+    expect(sorted[2].title).toBe('Zero rating');
   });
 });
 
@@ -317,7 +330,7 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — SQL 
     platformRating: 7.0,
   };
 
-  // Gamma: platformRating=null → sorts last (after all scored items), then by title
+  // Gamma: platformRating=null, tmdbRating=9.0 → score = 9.0 (tmdbRating fallback) → sorts first
   const itemGamma = {
     id: 3,
     lastTimeUpdated: Date.now(),
@@ -325,7 +338,7 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — SQL 
     source: 'tmdb',
     title: 'Gamma',
     tmdbRating: 9.0,
-    // platformRating intentionally omitted (null) — should sort last
+    // platformRating intentionally omitted (null) — falls back to tmdbRating
   };
 
   beforeAll(async () => {
@@ -356,7 +369,7 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — SQL 
 
   afterAll(clearDatabase);
 
-  test('higher combined score sorts before lower score — Alpha (8.7) > Beta (7.0) > Gamma (null)', async () => {
+  test('score tiers: Gamma (tmdb-only 9.0) > Alpha (blended 8.7) > Beta (platform-only 7.0)', async () => {
     const items = await mediaItemRepository.items({
       userId: user.id,
       orderBy: 'platformRecommended',
@@ -364,12 +377,12 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — SQL 
     });
 
     expect(items.length).toBe(3);
+    // Gamma: tmdbRating fallback = 9.0 (highest score)
     // Alpha: 9.0*0.7 + 8.0*0.3 = 8.7
     // Beta:  7.0 (no tmdbRating, formula falls back to platformRating only)
-    // Gamma: null platformRating → last
-    expect(items[0].title).toBe('Alpha');
-    expect(items[1].title).toBe('Beta');
-    expect(items[2].title).toBe('Gamma');
+    expect(items[0].title).toBe('Gamma');
+    expect(items[1].title).toBe('Alpha');
+    expect(items[2].title).toBe('Beta');
   });
 
   test('platformRating is exposed on all items returned by platform-recommended sort', async () => {
@@ -388,10 +401,10 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — SQL 
     expect(gamma?.platformRating).toBeUndefined();
   });
 
-  test('when only platformRating is available (no tmdbRating) — score equals platformRating only', async () => {
-    // itemBeta has platformRating=7.0 and no tmdbRating
-    // itemGamma has no platformRating but tmdbRating=9.0
-    // Beta must score above Gamma even though Gamma has higher external rating
+  test('tmdbRating-only item outranks platformRating-only item when its score is higher', async () => {
+    // itemBeta has platformRating=7.0 and no tmdbRating → score 7.0
+    // itemGamma has no platformRating but tmdbRating=9.0 → score 9.0 (fallback)
+    // Gamma ranks above Beta
     const items = await mediaItemRepository.items({
       userId: user.id,
       orderBy: 'platformRecommended',
@@ -401,18 +414,39 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — SQL 
     const betaIndex = items.findIndex((i) => i.title === 'Beta');
     const gammaIndex = items.findIndex((i) => i.title === 'Gamma');
 
-    expect(betaIndex).toBeLessThan(gammaIndex);
+    expect(gammaIndex).toBeLessThan(betaIndex);
   });
 
-  test('items with platformRating IS NULL sort below all items that have any platform rating', async () => {
-    const items = await mediaItemRepository.items({
-      userId: user.id,
-      orderBy: 'platformRecommended',
-      sortOrder: 'desc',
+  test('items with BOTH platformRating and tmdbRating null sort last', async () => {
+    const itemNoRatings = {
+      id: 8,
+      lastTimeUpdated: Date.now(),
+      mediaType: 'movie',
+      source: 'tmdb',
+      title: 'NoRatings',
+      // both platformRating and tmdbRating intentionally omitted
+    };
+
+    await Database.knex('mediaItem').insert(itemNoRatings);
+    await Database.knex('listItem').insert({
+      listId: watchlist.id,
+      mediaItemId: itemNoRatings.id,
+      addedAt: Date.now(),
     });
 
-    // Gamma has null platformRating — must come after both Alpha and Beta
-    expect(items[items.length - 1].title).toBe('Gamma');
+    try {
+      const items = await mediaItemRepository.items({
+        userId: user.id,
+        orderBy: 'platformRecommended',
+        sortOrder: 'desc',
+      });
+
+      // NoRatings has neither platformRating nor tmdbRating — must be last
+      expect(items[items.length - 1].title).toBe('NoRatings');
+    } finally {
+      await Database.knex('listItem').where('mediaItemId', itemNoRatings.id).delete();
+      await Database.knex('mediaItem').where('id', itemNoRatings.id).delete();
+    }
   });
 
   test('sortOrder asc still produces descending score order — score-based sort ignores direction', async () => {
@@ -424,9 +458,9 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — SQL 
 
     // Score-based sorts must always order by score descending regardless of sortOrder
     expect(items.length).toBe(3);
-    expect(items[0].title).toBe('Alpha');
-    expect(items[1].title).toBe('Beta');
-    expect(items[2].title).toBe('Gamma');
+    expect(items[0].title).toBe('Gamma');
+    expect(items[1].title).toBe('Alpha');
+    expect(items[2].title).toBe('Beta');
   });
 
   test('equal-score items ordered alphabetically by title ascending', async () => {
@@ -488,7 +522,7 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — SQL 
     }
   });
 
-  test('item with platformRating = 0 treated as valid scored item — does not sort to bottom', async () => {
+  test('item with platformRating = 0 treated as valid scored item — scores above items with neither rating', async () => {
     const itemZeroRating = {
       id: 6,
       lastTimeUpdated: Date.now(),
@@ -497,13 +531,21 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — SQL 
       title: 'ZeroRated',
       platformRating: 0,
     };
+    const itemNoRatings = {
+      id: 9,
+      lastTimeUpdated: Date.now(),
+      mediaType: 'movie',
+      source: 'tmdb',
+      title: 'TrulyUnrated',
+      // no platformRating, no tmdbRating
+    };
 
     await Database.knex('mediaItem').insert(itemZeroRating);
-    await Database.knex('listItem').insert({
-      listId: watchlist.id,
-      mediaItemId: itemZeroRating.id,
-      addedAt: Date.now(),
-    });
+    await Database.knex('mediaItem').insert(itemNoRatings);
+    await Database.knex('listItem').insert([
+      { listId: watchlist.id, mediaItemId: itemZeroRating.id, addedAt: Date.now() },
+      { listId: watchlist.id, mediaItemId: itemNoRatings.id, addedAt: Date.now() },
+    ]);
 
     try {
       const items = await mediaItemRepository.items({
@@ -512,18 +554,19 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — SQL 
         sortOrder: 'desc',
       });
 
-      const gammaIndex = items.findIndex((i) => i.title === 'Gamma');
       const zeroRatedIndex = items.findIndex((i) => i.title === 'ZeroRated');
+      const trulyUnratedIndex = items.findIndex((i) => i.title === 'TrulyUnrated');
 
-      // ZeroRated has platformRating=0 (valid scored item)
-      // Gamma has platformRating=null (sorts to bottom)
-      // ZeroRated must appear before Gamma
-      expect(zeroRatedIndex).toBeLessThan(gammaIndex);
+      // ZeroRated has platformRating=0 (valid scored item, score=0)
+      // TrulyUnrated has no ratings at all → sorts last
+      expect(zeroRatedIndex).toBeLessThan(trulyUnratedIndex);
     } finally {
       await Database.knex('listItem')
-        .where('mediaItemId', itemZeroRating.id)
+        .whereIn('mediaItemId', [itemZeroRating.id, itemNoRatings.id])
         .delete();
-      await Database.knex('mediaItem').where('id', itemZeroRating.id).delete();
+      await Database.knex('mediaItem')
+        .whereIn('id', [itemZeroRating.id, itemNoRatings.id])
+        .delete();
     }
   });
 
@@ -540,7 +583,7 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — SQL 
     expect(result.data.length).toBeGreaterThanOrEqual(1);
   });
 
-  test('items with null platformRating sort after scored items and then by title alphabetically', async () => {
+  test('tmdbRating-only items rank by their score among all items', async () => {
     const itemAaaa = {
       id: 7,
       lastTimeUpdated: Date.now(),
@@ -548,7 +591,7 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — SQL 
       source: 'tmdb',
       title: 'Aaaa',
       tmdbRating: 9.5,
-      // platformRating intentionally null — must sort after scored items, then alphabetically
+      // platformRating intentionally null — falls back to tmdbRating score
     };
 
     await Database.knex('mediaItem').insert(itemAaaa);
@@ -566,15 +609,135 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — SQL 
       });
 
       expect(items.length).toBe(4);
-      // Scored items first: Alpha (8.7), Beta (7.0)
-      expect(items[0].title).toBe('Alpha');
-      expect(items[1].title).toBe('Beta');
-      // Null-platformRating items last, sorted alphabetically: Aaaa < Gamma
-      expect(items[2].title).toBe('Aaaa');
-      expect(items[3].title).toBe('Gamma');
+      // All items now have a score (Aaaa and Gamma via tmdbRating fallback)
+      // Aaaa: tmdbRating=9.5 → 9.5, Gamma: tmdbRating=9.0 → 9.0
+      // Alpha: 9.0*0.7+8.0*0.3 = 8.7, Beta: platformRating=7.0 → 7.0
+      expect(items[0].title).toBe('Aaaa');
+      expect(items[1].title).toBe('Gamma');
+      expect(items[2].title).toBe('Alpha');
+      expect(items[3].title).toBe('Beta');
     } finally {
       await Database.knex('listItem').where('mediaItemId', itemAaaa.id).delete();
       await Database.knex('mediaItem').where('id', itemAaaa.id).delete();
     }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Integration tests: platformSeen filter — items watched by any platform user
+// are excluded from the platform-recommended view.
+// ---------------------------------------------------------------------------
+
+describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — excludes platform-watched items", () => {
+  const user1 = { id: 10, name: 'user1', password: 'password' };
+  const user2 = { id: 11, name: 'user2', password: 'password' };
+
+  const watchlist = {
+    id: 20,
+    userId: user1.id,
+    name: 'Watchlist',
+    privacy: 'private',
+    sortBy: 'recently-watched',
+    sortOrder: 'desc',
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+    isWatchlist: true,
+  };
+
+  const unwatchedMovie = {
+    id: 20,
+    lastTimeUpdated: Date.now(),
+    mediaType: 'movie',
+    source: 'tmdb',
+    title: 'Unwatched Movie',
+    tmdbRating: 7.0,
+    platformRating: 8.0,
+  };
+
+  const watchedMovie = {
+    id: 21,
+    lastTimeUpdated: Date.now(),
+    mediaType: 'movie',
+    source: 'tmdb',
+    title: 'Watched Movie',
+    tmdbRating: 9.0,
+    platformRating: 9.5, // high score, but already watched — should be excluded
+  };
+
+  beforeAll(async () => {
+    await runMigrations();
+    await Database.knex('user').insert(user1);
+    await Database.knex('user').insert(user2);
+    await Database.knex('mediaItem').insert(unwatchedMovie);
+    await Database.knex('mediaItem').insert(watchedMovie);
+    await Database.knex('list').insert(watchlist);
+    await Database.knex('listItem').insert([
+      { listId: watchlist.id, mediaItemId: unwatchedMovie.id, addedAt: Date.now() },
+      { listId: watchlist.id, mediaItemId: watchedMovie.id, addedAt: Date.now() },
+    ]);
+    // user2 has watched 'Watched Movie' (non-TV: seen entry with episodeId IS NULL)
+    await Database.knex('seen').insert({
+      mediaItemId: watchedMovie.id,
+      userId: user2.id,
+      date: Date.now(),
+      episodeId: null,
+    });
+  });
+
+  afterAll(clearDatabase);
+
+  test('item watched by another platform user is excluded from platform-recommended results', async () => {
+    const items = await mediaItemRepository.items({
+      userId: user1.id,
+      orderBy: 'platformRecommended',
+      sortOrder: 'desc',
+    });
+
+    const titles = items.map((i) => i.title);
+    // watchedMovie has higher score (9.5*0.7+9.0*0.3=9.35) but must be excluded
+    expect(titles).not.toContain('Watched Movie');
+    expect(titles).toContain('Unwatched Movie');
+  });
+
+  test('item watched only by the requesting user is also excluded (platform-wide filter)', async () => {
+    // user1 watches unwatchedMovie
+    await Database.knex('seen').insert({
+      mediaItemId: unwatchedMovie.id,
+      userId: user1.id,
+      date: Date.now(),
+      episodeId: null,
+    });
+
+    try {
+      const items = await mediaItemRepository.items({
+        userId: user1.id,
+        orderBy: 'platformRecommended',
+        sortOrder: 'desc',
+      });
+
+      const titles = items.map((i) => i.title);
+      // Both items are now watched by at least one platform user — both excluded
+      expect(titles).not.toContain('Unwatched Movie');
+      expect(titles).not.toContain('Watched Movie');
+    } finally {
+      await Database.knex('seen')
+        .where('mediaItemId', unwatchedMovie.id)
+        .where('userId', user1.id)
+        .delete();
+    }
+  });
+
+  test('other sort orders are not affected by the platform-seen filter', async () => {
+    // watchedMovie should still appear when NOT using platform-recommended sort
+    const items = await mediaItemRepository.items({
+      userId: user1.id,
+      orderBy: 'title',
+      sortOrder: 'asc',
+    });
+
+    const titles = items.map((i) => i.title);
+    // Both items present — filter only applies to platformRecommended sort
+    expect(titles).toContain('Watched Movie');
+    expect(titles).toContain('Unwatched Movie');
   });
 });

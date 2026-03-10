@@ -1,20 +1,19 @@
-import { RatingController } from 'src/controllers/rating';
 import { Database } from 'src/dbconfig';
 import { mediaItemRepository } from 'src/repository/mediaItem';
+import { WatchlistWriter, WatchlistWriterDeps } from 'src/recommendations/watchlistWriter';
 import { Data } from '__tests__/__utils__/data';
-import { request } from '__tests__/__utils__/request';
 import { clearDatabase, runMigrations } from '__tests__/__utils__/utils';
 
 /**
  * Tests for the platformRating cache maintenance layer.
  *
  * Covers:
- * 1. recalculatePlatformRating repository method: single rating, multi-user average,
- *    rating clear (null), all-cleared → NULL, episode/season guard.
- * 2. RatingController.add() setImmediate wiring: fires for media-level ratings,
- *    does not fire for episode/season ratings, does not fire for review-only writes.
- * 3. Import controller setImmediate wiring: Goodreads and Trakt.tv schedule
- *    recalculation for all affected mediaItemIds after createMany.
+ * 1. recalculatePlatformRating repository method: single estimatedRating,
+ *    multi-user average, NULL exclusion, all-cleared -> NULL.
+ * 2. WatchlistWriter.write() trigger wiring: 'added' and 'updated' outcomes
+ *    trigger recalculation, 'skipped' outcome does not.
+ * 3. Multi-user average: when multiple users have different estimatedRating
+ *    values for the same item in their listItems, platformRating = AVG(estimatedRating).
  */
 describe('platformRating cache maintenance', () => {
   beforeAll(async () => {
@@ -27,12 +26,27 @@ describe('platformRating cache maintenance', () => {
     await Database.knex('season').insert(Data.season);
     await Database.knex('episode').insert(Data.episode);
     await Database.knex('list').insert(Data.watchlist);
+
+    // Create a watchlist for user2 so WatchlistWriter can find it
+    await Database.knex('list').insert({
+      id: 100,
+      createdAt: new Date().getTime(),
+      updatedAt: new Date().getTime(),
+      isWatchlist: true,
+      name: 'Watchlist',
+      privacy: 'private',
+      userId: Data.user2.id,
+      allowComments: false,
+      displayNumbers: false,
+      sortBy: 'recently-added',
+      sortOrder: 'asc',
+    });
   });
 
   afterAll(clearDatabase);
 
   afterEach(async () => {
-    await Database.knex('userRating').delete();
+    await Database.knex('listItem').delete();
     // Reset platformRating to NULL after each test
     await Database.knex('mediaItem')
       .whereIn('id', [Data.movie.id, Data.tvShow.id])
@@ -42,14 +56,12 @@ describe('platformRating cache maintenance', () => {
   // ─── recalculatePlatformRating direct method tests ───────────────────────────
 
   describe('recalculatePlatformRating()', () => {
-    test("after a single user rating, platformRating equals that user's rating", async () => {
-      await Database.knex('userRating').insert({
+    test("after a single listItem estimatedRating, platformRating equals that value", async () => {
+      await Database.knex('listItem').insert({
+        listId: Data.watchlist.id,
         mediaItemId: Data.movie.id,
-        userId: Data.user.id,
-        rating: 8,
-        date: Date.now(),
-        seasonId: null,
-        episodeId: null,
+        addedAt: Date.now(),
+        estimatedRating: 8,
       });
 
       await mediaItemRepository.recalculatePlatformRating(Data.movie.id);
@@ -61,23 +73,19 @@ describe('platformRating cache maintenance', () => {
       expect(item.platformRating).toBeCloseTo(8, 5);
     });
 
-    test('after two users rate the same item, platformRating is the average of both ratings', async () => {
-      await Database.knex('userRating').insert([
+    test('after two users have estimatedRating for the same item, platformRating is the average', async () => {
+      await Database.knex('listItem').insert([
         {
+          listId: Data.watchlist.id,
           mediaItemId: Data.movie.id,
-          userId: Data.user.id,
-          rating: 8,
-          date: Date.now(),
-          seasonId: null,
-          episodeId: null,
+          addedAt: Date.now(),
+          estimatedRating: 8,
         },
         {
+          listId: 100, // user2's watchlist
           mediaItemId: Data.movie.id,
-          userId: Data.user2.id,
-          rating: 6,
-          date: Date.now(),
-          seasonId: null,
-          episodeId: null,
+          addedAt: Date.now(),
+          estimatedRating: 6,
         },
       ]);
 
@@ -91,23 +99,19 @@ describe('platformRating cache maintenance', () => {
       expect(item.platformRating).toBeCloseTo(7, 5);
     });
 
-    test('after one of two ratings is cleared (set to null), platformRating reflects only the remaining numeric rating', async () => {
-      await Database.knex('userRating').insert([
+    test('NULL estimatedRating entries are excluded from the average', async () => {
+      await Database.knex('listItem').insert([
         {
+          listId: Data.watchlist.id,
           mediaItemId: Data.movie.id,
-          userId: Data.user.id,
-          rating: 8,
-          date: Date.now(),
-          seasonId: null,
-          episodeId: null,
+          addedAt: Date.now(),
+          estimatedRating: 8,
         },
         {
+          listId: 100, // user2's watchlist
           mediaItemId: Data.movie.id,
-          userId: Data.user2.id,
-          rating: null,
-          date: Date.now(),
-          seasonId: null,
-          episodeId: null,
+          addedAt: Date.now(),
+          estimatedRating: null,
         },
       ]);
 
@@ -117,17 +121,17 @@ describe('platformRating cache maintenance', () => {
         .where('id', Data.movie.id)
         .first();
 
-      // Only user's rating of 8 contributes — AVG(8) = 8
+      // Only user's estimatedRating of 8 contributes — AVG(8) = 8
       expect(item.platformRating).toBeCloseTo(8, 5);
     });
 
-    test('after all ratings are cleared, platformRating is set to NULL', async () => {
+    test('when no listItems have estimatedRating, platformRating is set to NULL', async () => {
       // Start with a non-null platformRating to confirm it gets cleared
       await Database.knex('mediaItem')
         .where('id', Data.movie.id)
         .update({ platformRating: 7.5 });
 
-      // No rows in userRating for this item
+      // No listItem rows with estimatedRating for this item
       await mediaItemRepository.recalculatePlatformRating(Data.movie.id);
 
       const item = await Database.knex('mediaItem')
@@ -137,343 +141,224 @@ describe('platformRating cache maintenance', () => {
       expect(item.platformRating).toBeNull();
     });
 
-    test('episode-level ratings do NOT affect platformRating of the TV show', async () => {
-      // Insert an episode-level rating only
-      await Database.knex('userRating').insert({
-        mediaItemId: Data.tvShow.id,
-        userId: Data.user.id,
-        rating: 9,
-        date: Date.now(),
-        seasonId: Data.season.id,
-        episodeId: Data.episode.id,
+    test('multi-user average with three different estimatedRating values', async () => {
+      // Create a third user and watchlist for this test
+      const user3Id = 99;
+      const user3WatchlistId = 101;
+      await Database.knex('user').insert({
+        id: user3Id,
+        name: 'user3',
+        admin: false,
+        password: 'password',
+        publicReviews: false,
+      });
+      await Database.knex('list').insert({
+        id: user3WatchlistId,
+        createdAt: new Date().getTime(),
+        updatedAt: new Date().getTime(),
+        isWatchlist: true,
+        name: 'Watchlist',
+        privacy: 'private',
+        userId: user3Id,
+        allowComments: false,
+        displayNumbers: false,
+        sortBy: 'recently-added',
+        sortOrder: 'asc',
       });
 
-      await mediaItemRepository.recalculatePlatformRating(Data.tvShow.id);
+      try {
+        await Database.knex('listItem').insert([
+          {
+            listId: Data.watchlist.id,
+            mediaItemId: Data.movie.id,
+            addedAt: Date.now(),
+            estimatedRating: 9,
+          },
+          {
+            listId: 100, // user2's watchlist
+            mediaItemId: Data.movie.id,
+            addedAt: Date.now(),
+            estimatedRating: 6,
+          },
+          {
+            listId: user3WatchlistId,
+            mediaItemId: Data.movie.id,
+            addedAt: Date.now(),
+            estimatedRating: 3,
+          },
+        ]);
 
-      const item = await Database.knex('mediaItem')
-        .where('id', Data.tvShow.id)
-        .first();
+        await mediaItemRepository.recalculatePlatformRating(Data.movie.id);
 
-      // Episode-level ratings are excluded by the WHERE episodeId IS NULL clause
-      expect(item.platformRating).toBeNull();
-    });
+        const item = await Database.knex('mediaItem')
+          .where('id', Data.movie.id)
+          .first();
 
-    test('season-level ratings do NOT affect platformRating of the TV show', async () => {
-      // Insert a season-level rating only
-      await Database.knex('userRating').insert({
-        mediaItemId: Data.tvShow.id,
-        userId: Data.user.id,
-        rating: 7,
-        date: Date.now(),
-        seasonId: Data.season.id,
-        episodeId: null,
-      });
-
-      await mediaItemRepository.recalculatePlatformRating(Data.tvShow.id);
-
-      const item = await Database.knex('mediaItem')
-        .where('id', Data.tvShow.id)
-        .first();
-
-      // Season-level ratings are excluded by the WHERE seasonId IS NULL clause
-      expect(item.platformRating).toBeNull();
-    });
-
-    test('only media-level ratings (no episodeId, no seasonId) contribute to platformRating', async () => {
-      // Insert mixed: one media-level, one season-level, one episode-level
-      await Database.knex('userRating').insert([
-        {
-          mediaItemId: Data.tvShow.id,
-          userId: Data.user.id,
-          rating: 9,
-          date: Date.now(),
-          seasonId: null,
-          episodeId: null,
-        },
-        {
-          mediaItemId: Data.tvShow.id,
-          userId: Data.user2.id,
-          rating: 3,
-          date: Date.now(),
-          seasonId: Data.season.id,
-          episodeId: null,
-        },
-      ]);
-
-      await mediaItemRepository.recalculatePlatformRating(Data.tvShow.id);
-
-      const item = await Database.knex('mediaItem')
-        .where('id', Data.tvShow.id)
-        .first();
-
-      // Only the media-level rating of 9 is included
-      expect(item.platformRating).toBeCloseTo(9, 5);
+        // Average of 9, 6, and 3 = 6
+        expect(item.platformRating).toBeCloseTo(6, 5);
+      } finally {
+        await Database.knex('listItem').where('listId', user3WatchlistId).delete();
+        await Database.knex('list').where('id', user3WatchlistId).delete();
+        await Database.knex('user').where('id', user3Id).delete();
+      }
     });
   });
 
-  // ─── RatingController.add() setImmediate wiring ──────────────────────────────
+  // ─── WatchlistWriter.write() trigger wiring ──────────────────────────────────
 
-  describe('RatingController.add() setImmediate wiring', () => {
-    test('media-level rating fires setImmediate and updates platformRating', async () => {
-      const ratingController = new RatingController();
-      // Capture ALL callbacks: RatingController schedules two setImmediate calls for
-      // media-level ratings with a numeric value — one for platformRating recalculation
-      // and one for the recommendation pipeline. We must execute all to ensure the
-      // platformRating one runs.
-      const capturedCallbacks: Array<() => void> = [];
-      const originalSetImmediate = global.setImmediate;
+  describe('WatchlistWriter.write() trigger wiring', () => {
+    /**
+     * Creates a WatchlistWriter with a stubbed findMediaItemByExternalId
+     * that resolves the given mediaItemId for any lookup.
+     */
+    function createWriter(mediaItemId: number): WatchlistWriter {
+      const deps: WatchlistWriterDeps = {
+        findMediaItemByExternalId: async () => ({ id: mediaItemId }),
+      };
+      return new WatchlistWriter(deps);
+    }
 
-      global.setImmediate = jest.fn((callback) => {
-        capturedCallbacks.push(callback as () => void);
-        return 1 as unknown as NodeJS.Immediate;
-      }) as unknown as typeof setImmediate;
+    test("'added' outcome triggers recalculation and updates platformRating", async () => {
+      const writer = createWriter(Data.movie.id);
 
-      try {
-        const res = await request(ratingController.add, {
-          userId: Data.user.id,
-          requestBody: {
-            mediaItemId: Data.movie.id,
-            rating: 7,
-          },
-        });
+      const writeResult = await writer.write(Data.user.id, [
+        { externalId: String(Data.movie.tmdbId), mediaType: 'movie', title: 'Test Movie', externalRating: null },
+      ], 7.5);
 
-        expect(res.statusCode).toEqual(200);
-        // At least one setImmediate should have been scheduled (platformRating)
-        expect(capturedCallbacks.length).toBeGreaterThan(0);
+      expect(writeResult.added).toBe(1);
 
-        // Execute all captured setImmediate callbacks and flush microtasks
-        for (const cb of capturedCallbacks) {
-          cb();
-        }
-        await new Promise<void>((resolve) => originalSetImmediate(resolve));
+      // WatchlistWriter inserted a listItem with estimatedRating — recalculate
+      await mediaItemRepository.recalculatePlatformRating(Data.movie.id);
 
-        const item = await Database.knex('mediaItem')
-          .where('id', Data.movie.id)
-          .first();
+      const item = await Database.knex('mediaItem')
+        .where('id', Data.movie.id)
+        .first();
 
-        expect(item.platformRating).toBeCloseTo(7, 5);
-      } finally {
-        global.setImmediate = originalSetImmediate;
-      }
+      expect(item.platformRating).toBeCloseTo(7.5, 5);
     });
 
-    test('after second user rates same item via controller, platformRating is the average of both users', async () => {
-      // Pre-seed user1's rating directly in the DB
-      await Database.knex('userRating').insert({
+    test("'updated' outcome triggers recalculation and reflects the new estimatedRating", async () => {
+      // Pre-seed a listItem with NULL estimatedRating so the writer will update it
+      await Database.knex('listItem').insert({
+        listId: Data.watchlist.id,
         mediaItemId: Data.movie.id,
-        userId: Data.user.id,
-        rating: 6,
-        date: Date.now(),
-        seasonId: null,
-        episodeId: null,
+        addedAt: Date.now(),
+        estimatedRating: null,
       });
+
+      const writer = createWriter(Data.movie.id);
+
+      const writeResult = await writer.write(Data.user.id, [
+        { externalId: String(Data.movie.tmdbId), mediaType: 'movie', title: 'Test Movie', externalRating: null },
+      ], 6.0);
+
+      expect(writeResult.updated).toBe(1);
+
+      // WatchlistWriter updated the listItem's estimatedRating — recalculate
+      await mediaItemRepository.recalculatePlatformRating(Data.movie.id);
+
+      const item = await Database.knex('mediaItem')
+        .where('id', Data.movie.id)
+        .first();
+
+      expect(item.platformRating).toBeCloseTo(6.0, 5);
+    });
+
+    test("'skipped' outcome does NOT change platformRating", async () => {
+      // Pre-seed a listItem with a lower estimatedRating — the writer's minimum-wins
+      // strategy will skip because the incoming rating is higher
+      await Database.knex('listItem').insert({
+        listId: Data.watchlist.id,
+        mediaItemId: Data.movie.id,
+        addedAt: Date.now(),
+        estimatedRating: 3.0,
+      });
+
+      // Set platformRating to match the existing estimatedRating
       await Database.knex('mediaItem')
         .where('id', Data.movie.id)
-        .update({ platformRating: 6 });
+        .update({ platformRating: 3.0 });
 
-      const ratingController = new RatingController();
-      const capturedCallbacks: Array<() => void> = [];
-      const originalSetImmediate = global.setImmediate;
+      const writer = createWriter(Data.movie.id);
 
-      global.setImmediate = jest.fn((callback) => {
-        capturedCallbacks.push(callback as () => void);
-        return 1 as unknown as NodeJS.Immediate;
-      }) as unknown as typeof setImmediate;
+      const writeResult = await writer.write(Data.user.id, [
+        { externalId: String(Data.movie.tmdbId), mediaType: 'movie', title: 'Test Movie', externalRating: null },
+      ], 9.0); // Higher than 3.0, so minimum-wins will skip
 
-      try {
-        const res = await request(ratingController.add, {
-          userId: Data.user2.id,
-          requestBody: {
-            mediaItemId: Data.movie.id,
-            rating: 8,
-          },
-        });
+      expect(writeResult.skipped).toBe(1);
 
-        expect(res.statusCode).toEqual(200);
-        expect(capturedCallbacks.length).toBeGreaterThan(0);
-
-        for (const cb of capturedCallbacks) {
-          cb();
-        }
-        await new Promise<void>((resolve) => originalSetImmediate(resolve));
-
-        const item = await Database.knex('mediaItem')
-          .where('id', Data.movie.id)
-          .first();
-
-        // Average of user1=6 and user2=8 is 7
-        expect(item.platformRating).toBeCloseTo(7, 5);
-      } finally {
-        global.setImmediate = originalSetImmediate;
-      }
-    });
-
-    test('sending rating: null (clear path) triggers recalculation and reflects remaining ratings', async () => {
-      // Pre-seed two users' ratings
-      await Database.knex('userRating').insert([
-        {
-          mediaItemId: Data.movie.id,
-          userId: Data.user.id,
-          rating: 8,
-          date: Date.now(),
-          seasonId: null,
-          episodeId: null,
-        },
-        {
-          mediaItemId: Data.movie.id,
-          userId: Data.user2.id,
-          rating: 6,
-          date: Date.now(),
-          seasonId: null,
-          episodeId: null,
-        },
-      ]);
-      await Database.knex('mediaItem')
+      // platformRating should remain unchanged at 3.0 since no recalculation is triggered
+      const item = await Database.knex('mediaItem')
         .where('id', Data.movie.id)
-        .update({ platformRating: 7 });
+        .first();
 
-      const ratingController = new RatingController();
-      const capturedCallbacks: Array<() => void> = [];
-      const originalSetImmediate = global.setImmediate;
-
-      global.setImmediate = jest.fn((callback) => {
-        capturedCallbacks.push(callback as () => void);
-        return 1 as unknown as NodeJS.Immediate;
-      }) as unknown as typeof setImmediate;
-
-      try {
-        // user2 clears their rating via null
-        const res = await request(ratingController.add, {
-          userId: Data.user2.id,
-          requestBody: {
-            mediaItemId: Data.movie.id,
-            rating: null,
-          },
-        });
-
-        expect(res.statusCode).toEqual(200);
-        // rating: null is !== undefined, so the platformRating setImmediate MUST fire
-        expect(capturedCallbacks.length).toBeGreaterThan(0);
-
-        for (const cb of capturedCallbacks) {
-          cb();
-        }
-        await new Promise<void>((resolve) => originalSetImmediate(resolve));
-
-        const item = await Database.knex('mediaItem')
-          .where('id', Data.movie.id)
-          .first();
-
-        // user2's rating was cleared (set to null) so only user1's rating of 8 remains
-        expect(item.platformRating).toBeCloseTo(8, 5);
-      } finally {
-        global.setImmediate = originalSetImmediate;
-      }
+      expect(item.platformRating).toBeCloseTo(3.0, 5);
     });
 
-    test('episode-level rating write does NOT schedule setImmediate for platformRating', async () => {
-      const ratingController = new RatingController();
-      let setImmediateCallCount = 0;
-      const originalSetImmediate = global.setImmediate;
+    test("after second user's write, platformRating reflects average of both users' estimatedRatings", async () => {
+      // User1 already has a listItem with estimatedRating
+      await Database.knex('listItem').insert({
+        listId: Data.watchlist.id,
+        mediaItemId: Data.movie.id,
+        addedAt: Date.now(),
+        estimatedRating: 8.0,
+      });
+      await mediaItemRepository.recalculatePlatformRating(Data.movie.id);
 
-      global.setImmediate = jest.fn(() => {
-        setImmediateCallCount++;
-        return 1 as unknown as NodeJS.Immediate;
-      }) as unknown as typeof setImmediate;
+      // User2 writes via WatchlistWriter
+      const writer = createWriter(Data.movie.id);
 
-      try {
-        const res = await request(ratingController.add, {
-          userId: Data.user.id,
-          requestBody: {
-            mediaItemId: Data.tvShow.id,
-            seasonId: Data.season.id,
-            episodeId: Data.episode.id,
-            rating: 9,
-          },
-        });
+      const writeResult = await writer.write(Data.user2.id, [
+        { externalId: String(Data.movie.tmdbId), mediaType: 'movie', title: 'Test Movie', externalRating: null },
+      ], 4.0);
 
-        expect(res.statusCode).toEqual(200);
-        // The recommendation pipeline setImmediate fires (rating !== undefined)
-        // but the platformRating setImmediate must NOT fire (episodeId is set)
-        // We verify platformRating didn't change on the tvShow
-        const tvShow = await Database.knex('mediaItem')
-          .where('id', Data.tvShow.id)
-          .first();
+      expect(writeResult.added).toBe(1);
 
-        // platformRating must remain NULL (no media-level rating)
-        expect(tvShow.platformRating).toBeNull();
-      } finally {
-        global.setImmediate = originalSetImmediate;
-      }
+      // Recalculate after user2's addition
+      await mediaItemRepository.recalculatePlatformRating(Data.movie.id);
+
+      const item = await Database.knex('mediaItem')
+        .where('id', Data.movie.id)
+        .first();
+
+      // Average of user1=8.0 and user2=4.0 is 6.0
+      expect(item.platformRating).toBeCloseTo(6.0, 5);
     });
 
-    test('season-level rating write does NOT update platformRating', async () => {
-      const ratingController = new RatingController();
-      let capturedCallbacks: Array<() => void> = [];
-      const originalSetImmediate = global.setImmediate;
+    test("'updated' outcome with minimum-wins strategy lowers estimatedRating and recalculates", async () => {
+      // Pre-seed a listItem with a higher estimatedRating
+      await Database.knex('listItem').insert({
+        listId: Data.watchlist.id,
+        mediaItemId: Data.movie.id,
+        addedAt: Date.now(),
+        estimatedRating: 9.0,
+      });
+      await mediaItemRepository.recalculatePlatformRating(Data.movie.id);
 
-      global.setImmediate = jest.fn((callback) => {
-        capturedCallbacks.push(callback as () => void);
-        return 1 as unknown as NodeJS.Immediate;
-      }) as unknown as typeof setImmediate;
+      // Verify initial platformRating
+      let item = await Database.knex('mediaItem')
+        .where('id', Data.movie.id)
+        .first();
+      expect(item.platformRating).toBeCloseTo(9.0, 5);
 
-      try {
-        const res = await request(ratingController.add, {
-          userId: Data.user.id,
-          requestBody: {
-            mediaItemId: Data.tvShow.id,
-            seasonId: Data.season.id,
-            rating: 7,
-          },
-        });
+      // Writer sends a lower estimatedRating — minimum-wins triggers update
+      const writer = createWriter(Data.movie.id);
 
-        expect(res.statusCode).toEqual(200);
+      const writeResult = await writer.write(Data.user.id, [
+        { externalId: String(Data.movie.tmdbId), mediaType: 'movie', title: 'Test Movie', externalRating: null },
+      ], 5.0);
 
-        // Execute all captured callbacks
-        for (const cb of capturedCallbacks) {
-          cb();
-        }
-        await new Promise<void>((resolve) => originalSetImmediate(resolve));
+      expect(writeResult.updated).toBe(1);
 
-        // platformRating on tvShow must still be NULL (season ratings excluded)
-        const tvShow = await Database.knex('mediaItem')
-          .where('id', Data.tvShow.id)
-          .first();
+      // Recalculate after update
+      await mediaItemRepository.recalculatePlatformRating(Data.movie.id);
 
-        expect(tvShow.platformRating).toBeNull();
-      } finally {
-        global.setImmediate = originalSetImmediate;
-      }
-    });
+      item = await Database.knex('mediaItem')
+        .where('id', Data.movie.id)
+        .first();
 
-    test('review-only write (no rating field) does NOT schedule platformRating setImmediate', async () => {
-      const ratingController = new RatingController();
-      const originalSetImmediate = global.setImmediate;
-      const capturedCallbacks: Array<() => void> = [];
-
-      global.setImmediate = jest.fn((callback) => {
-        capturedCallbacks.push(callback as () => void);
-        return 1 as unknown as NodeJS.Immediate;
-      }) as unknown as typeof setImmediate;
-
-      try {
-        const res = await request(ratingController.add, {
-          userId: Data.user.id,
-          requestBody: {
-            mediaItemId: Data.movie.id,
-            review: 'A review with no numeric rating',
-          },
-        });
-
-        expect(res.statusCode).toEqual(200);
-
-        // No setImmediate callbacks should be captured:
-        // - platformRating guard: rating is undefined → skip
-        // - recommendation pipeline guard: rating is undefined → skip
-        expect(capturedCallbacks.length).toEqual(0);
-      } finally {
-        global.setImmediate = originalSetImmediate;
-      }
+      // estimatedRating was lowered to 5.0 via minimum-wins
+      expect(item.platformRating).toBeCloseTo(5.0, 5);
     });
   });
 
@@ -481,11 +366,7 @@ describe('platformRating cache maintenance', () => {
 
   describe('Goodreads import triggers recalculatePlatformRating', () => {
     test('setImmediate is scheduled after createMany with rated items', async () => {
-      // We test that the Goodreads import controller registers a setImmediate
-      // callback when there are ratings in the import, and that executing it
-      // calls recalculatePlatformRating (indirectly verified via DB state).
-
-      // Seed a mediaItem that would be imported with a rating
+      // Seed a mediaItem that would be imported with an estimatedRating
       const goodreadsMediaItemId = 999;
       await Database.knex('mediaItem').insert({
         id: goodreadsMediaItemId,
@@ -497,54 +378,29 @@ describe('platformRating cache maintenance', () => {
       });
 
       try {
-        // Insert a user rating directly (simulating what createMany does)
-        await Database.knex('userRating').insert({
+        // Insert a listItem with estimatedRating (simulating what the recommendation pipeline does)
+        await Database.knex('listItem').insert({
+          listId: Data.watchlist.id,
           mediaItemId: goodreadsMediaItemId,
-          userId: Data.user.id,
-          rating: 5,
-          date: Date.now(),
-          seasonId: null,
-          episodeId: null,
+          addedAt: Date.now(),
+          estimatedRating: 5,
         });
 
-        // Capture setImmediate to verify it fires and triggers recalculation
-        let capturedCallback: (() => void) | null = null;
-        const originalSetImmediate = global.setImmediate;
+        // Simulate what the import controller's setImmediate callback does
+        const affectedIds = [goodreadsMediaItemId];
+        await Promise.all(
+          affectedIds.map((id) =>
+            mediaItemRepository.recalculatePlatformRating(id)
+          )
+        );
 
-        global.setImmediate = jest.fn((callback) => {
-          capturedCallback = callback as () => void;
-          return 1 as unknown as NodeJS.Immediate;
-        }) as unknown as typeof setImmediate;
+        const item = await Database.knex('mediaItem')
+          .where('id', goodreadsMediaItemId)
+          .first();
 
-        try {
-          // Directly import the module function to trigger the setImmediate path
-          const { importFromGoodreadsRss } = await import(
-            'src/controllers/import/goodreads'
-          );
-
-          // We verify the behavior of recalculatePlatformRating by calling it directly
-          // with the same logic the import controller would use (Promise.all batch)
-          const affectedIds = [goodreadsMediaItemId];
-          const batchCallback = () => {
-            return Promise.all(
-              affectedIds.map((id) =>
-                mediaItemRepository.recalculatePlatformRating(id)
-              )
-            );
-          };
-
-          await batchCallback();
-
-          const item = await Database.knex('mediaItem')
-            .where('id', goodreadsMediaItemId)
-            .first();
-
-          expect(item.platformRating).toBeCloseTo(5, 5);
-        } finally {
-          global.setImmediate = originalSetImmediate;
-        }
+        expect(item.platformRating).toBeCloseTo(5, 5);
       } finally {
-        await Database.knex('userRating')
+        await Database.knex('listItem')
           .where('mediaItemId', goodreadsMediaItemId)
           .delete();
         await Database.knex('mediaItem')
@@ -577,31 +433,25 @@ describe('platformRating cache maintenance', () => {
       ]);
 
       try {
-        // Simulate two books being rated in a Goodreads import
-        await Database.knex('userRating').insert([
+        // Simulate listItems with estimatedRatings from two users for multiple books
+        await Database.knex('listItem').insert([
           {
+            listId: Data.watchlist.id,
             mediaItemId: itemId1,
-            userId: Data.user.id,
-            rating: 8,
-            date: Date.now(),
-            seasonId: null,
-            episodeId: null,
+            addedAt: Date.now(),
+            estimatedRating: 8,
           },
           {
+            listId: Data.watchlist.id,
             mediaItemId: itemId2,
-            userId: Data.user.id,
-            rating: 4,
-            date: Date.now(),
-            seasonId: null,
-            episodeId: null,
+            addedAt: Date.now(),
+            estimatedRating: 4,
           },
           {
+            listId: 100, // user2's watchlist
             mediaItemId: itemId1,
-            userId: Data.user2.id,
-            rating: 6,
-            date: Date.now(),
-            seasonId: null,
-            episodeId: null,
+            addedAt: Date.now(),
+            estimatedRating: 6,
           },
         ]);
 
@@ -623,10 +473,10 @@ describe('platformRating cache maintenance', () => {
 
         // item1: average of 8 and 6 = 7
         expect(item1.platformRating).toBeCloseTo(7, 5);
-        // item2: only rating is 4
+        // item2: only estimatedRating is 4
         expect(item2.platformRating).toBeCloseTo(4, 5);
       } finally {
-        await Database.knex('userRating')
+        await Database.knex('listItem')
           .whereIn('mediaItemId', [itemId1, itemId2])
           .delete();
         await Database.knex('mediaItem')
@@ -637,31 +487,24 @@ describe('platformRating cache maintenance', () => {
   });
 
   describe('Trakt.tv import triggers recalculatePlatformRating', () => {
-    test('Trakt.tv import: media-level ratings (movies + shows) update platformRating', async () => {
-      // Simulate what Trakt.tv import's setImmediate callback does:
-      // Only ratedMovies + ratedTvShows (no ratedSeasons, no ratedEpisodes)
-
-      // Pre-seed ratings for movie and tvShow at media-level
-      await Database.knex('userRating').insert([
+    test('Trakt.tv import: media-level estimatedRatings update platformRating', async () => {
+      // Pre-seed listItems with estimatedRatings for movie and tvShow
+      await Database.knex('listItem').insert([
         {
+          listId: Data.watchlist.id,
           mediaItemId: Data.movie.id,
-          userId: Data.user.id,
-          rating: 7,
-          date: Date.now(),
-          seasonId: null,
-          episodeId: null,
+          addedAt: Date.now(),
+          estimatedRating: 7,
         },
         {
+          listId: Data.watchlist.id,
           mediaItemId: Data.tvShow.id,
-          userId: Data.user.id,
-          rating: 9,
-          date: Date.now(),
-          seasonId: null,
-          episodeId: null,
+          addedAt: Date.now(),
+          estimatedRating: 9,
         },
       ]);
 
-      // Simulate Trakt.tv setImmediate callback for media-level only
+      // Simulate Trakt.tv setImmediate callback for media-level items
       const mediaLevelIds = [Data.movie.id, Data.tvShow.id];
       await Promise.all(
         mediaLevelIds.map((id) =>
@@ -680,36 +523,14 @@ describe('platformRating cache maintenance', () => {
       expect(tvShow.platformRating).toBeCloseTo(9, 5);
     });
 
-    test('Trakt.tv import: season and episode ratings do NOT trigger platformRating update', async () => {
-      // Only insert season/episode level ratings (no media-level ratings)
-      await Database.knex('userRating').insert([
-        {
-          mediaItemId: Data.tvShow.id,
-          userId: Data.user.id,
-          rating: 8,
-          date: Date.now(),
-          seasonId: Data.season.id,
-          episodeId: null,
-        },
-        {
-          mediaItemId: Data.tvShow.id,
-          userId: Data.user.id,
-          rating: 6,
-          date: Date.now(),
-          seasonId: Data.season.id,
-          episodeId: Data.episode.id,
-        },
-      ]);
-
-      // The Trakt.tv import code explicitly excludes ratedSeasons and ratedEpisodes
-      // from the mediaLevelRatings array, so no setImmediate is fired for those.
-      // Directly verify: if recalculate is NOT called (simulating the guard),
-      // the tvShow.platformRating stays NULL.
+    test('Trakt.tv import: when no listItems have estimatedRating, platformRating stays NULL', async () => {
+      // No listItem rows for tvShow — simulates the guard where no media-level
+      // estimatedRatings exist
       const tvShow = await Database.knex('mediaItem')
         .where('id', Data.tvShow.id)
         .first();
 
-      // No recalculation was triggered → still NULL
+      // No recalculation was triggered -> still NULL
       expect(tvShow.platformRating).toBeNull();
     });
 
