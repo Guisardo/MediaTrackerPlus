@@ -11,6 +11,7 @@ import { UserRating } from 'src/entity/userRating';
 import { ExternalIds, MediaType } from 'src/entity/mediaItem';
 import { logger } from 'src/logger';
 import { mediaItemRepository } from 'src/repository/mediaItem';
+import { recalculateGroupPlatformRatingsForUser } from 'src/repository/groupPlatformRatingCache';
 import { SimilarItem } from 'src/metadata/types';
 
 const toExternalIds = (item: SimilarItem): ExternalIds => {
@@ -141,6 +142,16 @@ export class WatchlistWriter {
               { err, mediaItemId }
             );
           });
+      });
+      setImmediate(() => {
+        recalculateGroupPlatformRatingsForUser(userId, mediaItemId).catch(
+          (err) => {
+            logger.error(
+              'WatchlistWriter: Unhandled error in groupPlatformRating recalculation',
+              { err, userId, mediaItemId }
+            );
+          }
+        );
       });
     }
 
