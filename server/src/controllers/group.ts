@@ -1,4 +1,5 @@
 import { Database } from 'src/dbconfig';
+import { User } from 'src/entity/user';
 import { UserGroup, UserGroupMember, UserGroupRole } from 'src/entity/userGroup';
 import { createExpressRoute } from 'typescript-routes-to-openapi-server';
 
@@ -298,6 +299,251 @@ export class GroupController {
     await Database.knex('userGroup').where('id', groupId).update({
       deletedAt: Date.now(),
     });
+
+    res.sendStatus(200);
+  });
+
+  /**
+   * @openapi_operationId addGroupMember
+   */
+  addGroupMember = createExpressRoute<{
+    method: 'post';
+    path: '/api/group/:groupId/member';
+    pathParams: {
+      groupId: number;
+    };
+    requestBody: {
+      userId: number;
+      role: UserGroupRole;
+    };
+  }>(async (req, res) => {
+    const requestUserId = Number(req.user);
+    const { groupId } = req.params;
+    const { userId: targetUserId, role } = req.body;
+
+    // Validate role
+    if (role !== 'admin' && role !== 'viewer') {
+      res.sendStatus(400);
+      return;
+    }
+
+    // Verify group exists and is not soft-deleted
+    const group = await Database.knex<UserGroup>('userGroup')
+      .where('id', groupId)
+      .whereNull('deletedAt')
+      .first();
+
+    if (!group) {
+      res.sendStatus(404);
+      return;
+    }
+
+    // Verify requester is admin
+    const requesterRole = await getUserRoleInGroup(groupId, requestUserId);
+
+    if (requesterRole !== 'admin') {
+      res.sendStatus(403);
+      return;
+    }
+
+    // Verify target user exists
+    const targetUser = await Database.knex<User>('user')
+      .where('id', targetUserId)
+      .first();
+
+    if (!targetUser) {
+      res.sendStatus(404);
+      return;
+    }
+
+    // Check for duplicate membership
+    const existingMembership = await Database.knex<UserGroupMember>(
+      'userGroupMember'
+    )
+      .where('groupId', groupId)
+      .where('userId', targetUserId)
+      .first();
+
+    if (existingMembership) {
+      res.sendStatus(409);
+      return;
+    }
+
+    await Database.knex('userGroupMember').insert({
+      groupId,
+      userId: targetUserId,
+      role,
+      addedAt: Date.now(),
+    });
+
+    res.sendStatus(200);
+  });
+
+  /**
+   * @openapi_operationId removeGroupMember
+   */
+  removeGroupMember = createExpressRoute<{
+    method: 'delete';
+    path: '/api/group/:groupId/member/:userId';
+    pathParams: {
+      groupId: number;
+      userId: number;
+    };
+  }>(async (req, res) => {
+    const requestUserId = Number(req.user);
+    const { groupId, userId: targetUserId } = req.params;
+
+    // Verify group exists and is not soft-deleted
+    const group = await Database.knex<UserGroup>('userGroup')
+      .where('id', groupId)
+      .whereNull('deletedAt')
+      .first();
+
+    if (!group) {
+      res.sendStatus(404);
+      return;
+    }
+
+    // Verify requester is admin
+    const requesterRole = await getUserRoleInGroup(groupId, requestUserId);
+
+    if (requesterRole !== 'admin') {
+      res.sendStatus(403);
+      return;
+    }
+
+    // Verify target user is a member
+    const targetMembership = await Database.knex<UserGroupMember>(
+      'userGroupMember'
+    )
+      .where('groupId', groupId)
+      .where('userId', targetUserId)
+      .first();
+
+    if (!targetMembership) {
+      res.sendStatus(404);
+      return;
+    }
+
+    // Check if target is the sole admin and other members exist
+    if (targetMembership.role === 'admin') {
+      const adminCount = await Database.knex('userGroupMember')
+        .where('groupId', groupId)
+        .where('role', 'admin')
+        .count('id as count')
+        .first();
+
+      const memberCount = await Database.knex('userGroupMember')
+        .where('groupId', groupId)
+        .count('id as count')
+        .first();
+
+      const numAdmins = Number((adminCount as any).count);
+      const numMembers = Number((memberCount as any).count);
+
+      // If this is the sole admin and there are other members, soft-delete the group
+      if (numAdmins === 1 && numMembers > 1) {
+        await Database.knex('userGroup').where('id', groupId).update({
+          deletedAt: Date.now(),
+        });
+
+        res.sendStatus(200);
+        return;
+      }
+    }
+
+    // Remove the member
+    await Database.knex('userGroupMember')
+      .where('groupId', groupId)
+      .where('userId', targetUserId)
+      .delete();
+
+    res.sendStatus(200);
+  });
+
+  /**
+   * @openapi_operationId updateGroupMemberRole
+   */
+  updateGroupMemberRole = createExpressRoute<{
+    method: 'put';
+    path: '/api/group/:groupId/member/:userId';
+    pathParams: {
+      groupId: number;
+      userId: number;
+    };
+    requestBody: {
+      role: UserGroupRole;
+    };
+  }>(async (req, res) => {
+    const requestUserId = Number(req.user);
+    const { groupId, userId: targetUserId } = req.params;
+    const { role } = req.body;
+
+    // Validate role
+    if (role !== 'admin' && role !== 'viewer') {
+      res.sendStatus(400);
+      return;
+    }
+
+    // Verify group exists and is not soft-deleted
+    const group = await Database.knex<UserGroup>('userGroup')
+      .where('id', groupId)
+      .whereNull('deletedAt')
+      .first();
+
+    if (!group) {
+      res.sendStatus(404);
+      return;
+    }
+
+    // Verify requester is admin
+    const requesterRole = await getUserRoleInGroup(groupId, requestUserId);
+
+    if (requesterRole !== 'admin') {
+      res.sendStatus(403);
+      return;
+    }
+
+    // Verify target user is a member
+    const targetMembership = await Database.knex<UserGroupMember>(
+      'userGroupMember'
+    )
+      .where('groupId', groupId)
+      .where('userId', targetUserId)
+      .first();
+
+    if (!targetMembership) {
+      res.sendStatus(404);
+      return;
+    }
+
+    // Prevent demoting the last admin if other members exist
+    if (targetMembership.role === 'admin' && role === 'viewer') {
+      const adminCount = await Database.knex('userGroupMember')
+        .where('groupId', groupId)
+        .where('role', 'admin')
+        .count('id as count')
+        .first();
+
+      const memberCount = await Database.knex('userGroupMember')
+        .where('groupId', groupId)
+        .count('id as count')
+        .first();
+
+      const numAdmins = Number((adminCount as any).count);
+      const numMembers = Number((memberCount as any).count);
+
+      // Cannot demote the last admin if other members exist
+      if (numAdmins === 1 && numMembers > 1) {
+        res.sendStatus(400);
+        return;
+      }
+    }
+
+    await Database.knex('userGroupMember')
+      .where('groupId', groupId)
+      .where('userId', targetUserId)
+      .update({ role });
 
     res.sendStatus(200);
   });

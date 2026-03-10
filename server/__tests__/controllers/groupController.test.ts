@@ -20,6 +20,17 @@ import { clearDatabase, runMigrations } from '__tests__/__utils__/utils';
  *  - updateGroup: validates non-empty name
  *  - deleteGroup: soft-deletes the group by setting deletedAt
  *  - deleteGroup: returns 403 for non-admin
+ *  - addGroupMember: admin can add a member with role
+ *  - addGroupMember: viewer gets 403
+ *  - addGroupMember: duplicate member gets 409
+ *  - addGroupMember: nonexistent user gets 404
+ *  - removeGroupMember: admin can remove a member
+ *  - removeGroupMember: viewer gets 403
+ *  - removeGroupMember: sole admin removal soft-deletes group when other members exist
+ *  - removeGroupMember: sole admin can remove themselves when they are the only member
+ *  - updateGroupMemberRole: admin can change roles
+ *  - updateGroupMemberRole: cannot demote last admin when other members exist
+ *  - updateGroupMemberRole: viewer gets 403
  */
 describe('GroupController', () => {
   let groupController: GroupController;
@@ -501,6 +512,420 @@ describe('GroupController', () => {
       const res = await request(groupController.deleteGroup, {
         userId: Data.user.id,
         pathParams: { groupId: 999999 },
+      });
+
+      expect(res.statusCode).toBe(404);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // addGroupMember
+  // ---------------------------------------------------------------------------
+
+  describe('addGroupMember', () => {
+    test('admin can add a user with viewer role', async () => {
+      const groupId = await insertGroup({
+        name: 'Add Member Group',
+        createdBy: Data.user.id,
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+
+      const res = await request(groupController.addGroupMember, {
+        userId: Data.user.id,
+        pathParams: { groupId },
+        requestBody: { userId: Data.user2.id, role: 'viewer' },
+      });
+
+      expect(res.statusCode).toBe(200);
+
+      const membership = await Database.knex('userGroupMember')
+        .where('groupId', groupId)
+        .where('userId', Data.user2.id)
+        .first();
+
+      expect(membership).toBeDefined();
+      expect(membership.role).toBe('viewer');
+    });
+
+    test('admin can add a user with admin role', async () => {
+      const groupId = await insertGroup({
+        name: 'Admin Add Group',
+        createdBy: Data.user.id,
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+
+      const res = await request(groupController.addGroupMember, {
+        userId: Data.user.id,
+        pathParams: { groupId },
+        requestBody: { userId: Data.user2.id, role: 'admin' },
+      });
+
+      expect(res.statusCode).toBe(200);
+
+      const membership = await Database.knex('userGroupMember')
+        .where('groupId', groupId)
+        .where('userId', Data.user2.id)
+        .first();
+
+      expect(membership).toBeDefined();
+      expect(membership.role).toBe('admin');
+    });
+
+    test('viewer gets 403 when trying to add a member', async () => {
+      const groupId = await insertGroup({
+        name: 'Viewer Cannot Add',
+        createdBy: Data.user.id,
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+      await insertMember(groupId, Data.user2.id, 'viewer');
+
+      // Use a third user id that doesn't exist in DB — but we expect 403 first
+      const res = await request(groupController.addGroupMember, {
+        userId: Data.user2.id,
+        pathParams: { groupId },
+        requestBody: { userId: 999, role: 'viewer' },
+      });
+
+      expect(res.statusCode).toBe(403);
+    });
+
+    test('returns 409 when user is already a member', async () => {
+      const groupId = await insertGroup({
+        name: 'Duplicate Member Group',
+        createdBy: Data.user.id,
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+      await insertMember(groupId, Data.user2.id, 'viewer');
+
+      const res = await request(groupController.addGroupMember, {
+        userId: Data.user.id,
+        pathParams: { groupId },
+        requestBody: { userId: Data.user2.id, role: 'viewer' },
+      });
+
+      expect(res.statusCode).toBe(409);
+    });
+
+    test('returns 404 when target user does not exist', async () => {
+      const groupId = await insertGroup({
+        name: 'Nonexistent User Group',
+        createdBy: Data.user.id,
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+
+      const res = await request(groupController.addGroupMember, {
+        userId: Data.user.id,
+        pathParams: { groupId },
+        requestBody: { userId: 999999, role: 'viewer' },
+      });
+
+      expect(res.statusCode).toBe(404);
+    });
+
+    test('returns 400 for invalid role', async () => {
+      const groupId = await insertGroup({
+        name: 'Invalid Role Group',
+        createdBy: Data.user.id,
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+
+      const res = await request(groupController.addGroupMember, {
+        userId: Data.user.id,
+        pathParams: { groupId },
+        requestBody: { userId: Data.user2.id, role: 'superuser' as any },
+      });
+
+      expect(res.statusCode).toBe(400);
+    });
+
+    test('returns 404 for soft-deleted group', async () => {
+      const groupId = await insertGroup({
+        name: 'Deleted Group',
+        createdBy: Data.user.id,
+        deletedAt: Date.now(),
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+
+      const res = await request(groupController.addGroupMember, {
+        userId: Data.user.id,
+        pathParams: { groupId },
+        requestBody: { userId: Data.user2.id, role: 'viewer' },
+      });
+
+      expect(res.statusCode).toBe(404);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // removeGroupMember
+  // ---------------------------------------------------------------------------
+
+  describe('removeGroupMember', () => {
+    test('admin can remove a viewer member', async () => {
+      const groupId = await insertGroup({
+        name: 'Remove Viewer Group',
+        createdBy: Data.user.id,
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+      await insertMember(groupId, Data.user2.id, 'viewer');
+
+      const res = await request(groupController.removeGroupMember, {
+        userId: Data.user.id,
+        pathParams: { groupId, userId: Data.user2.id },
+      });
+
+      expect(res.statusCode).toBe(200);
+
+      const membership = await Database.knex('userGroupMember')
+        .where('groupId', groupId)
+        .where('userId', Data.user2.id)
+        .first();
+
+      expect(membership).toBeUndefined();
+    });
+
+    test('viewer gets 403 when trying to remove a member', async () => {
+      const groupId = await insertGroup({
+        name: 'Viewer Cannot Remove',
+        createdBy: Data.user.id,
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+      await insertMember(groupId, Data.user2.id, 'viewer');
+
+      const res = await request(groupController.removeGroupMember, {
+        userId: Data.user2.id,
+        pathParams: { groupId, userId: Data.user.id },
+      });
+
+      expect(res.statusCode).toBe(403);
+    });
+
+    test('sole admin removal soft-deletes the group when other members exist', async () => {
+      const beforeDelete = Date.now();
+      const groupId = await insertGroup({
+        name: 'Sole Admin Group',
+        createdBy: Data.user.id,
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+      await insertMember(groupId, Data.user2.id, 'viewer');
+
+      // Admin removes themselves (the sole admin) while another member exists
+      const res = await request(groupController.removeGroupMember, {
+        userId: Data.user.id,
+        pathParams: { groupId, userId: Data.user.id },
+      });
+
+      expect(res.statusCode).toBe(200);
+
+      const dbRow = await Database.knex('userGroup')
+        .where('id', groupId)
+        .first();
+
+      expect(dbRow.deletedAt).toBeGreaterThanOrEqual(beforeDelete);
+    });
+
+    test('sole admin can remove themselves when they are the only member', async () => {
+      const groupId = await insertGroup({
+        name: 'Solo Admin Group',
+        createdBy: Data.user.id,
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+
+      const res = await request(groupController.removeGroupMember, {
+        userId: Data.user.id,
+        pathParams: { groupId, userId: Data.user.id },
+      });
+
+      expect(res.statusCode).toBe(200);
+
+      // Member should be removed (not soft-deleted group — only 1 member so no other members remain)
+      const membership = await Database.knex('userGroupMember')
+        .where('groupId', groupId)
+        .where('userId', Data.user.id)
+        .first();
+
+      expect(membership).toBeUndefined();
+
+      // Group should not be soft-deleted (only 1 member, no orphan scenario)
+      const dbRow = await Database.knex('userGroup')
+        .where('id', groupId)
+        .first();
+      expect(dbRow.deletedAt).toBeNull();
+    });
+
+    test('returns 404 when target user is not a member', async () => {
+      const groupId = await insertGroup({
+        name: 'Not A Member Group',
+        createdBy: Data.user.id,
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+
+      const res = await request(groupController.removeGroupMember, {
+        userId: Data.user.id,
+        pathParams: { groupId, userId: Data.user2.id },
+      });
+
+      expect(res.statusCode).toBe(404);
+    });
+
+    test('returns 404 for soft-deleted group', async () => {
+      const groupId = await insertGroup({
+        name: 'Deleted Remove Group',
+        createdBy: Data.user.id,
+        deletedAt: Date.now(),
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+      await insertMember(groupId, Data.user2.id, 'viewer');
+
+      const res = await request(groupController.removeGroupMember, {
+        userId: Data.user.id,
+        pathParams: { groupId, userId: Data.user2.id },
+      });
+
+      expect(res.statusCode).toBe(404);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // updateGroupMemberRole
+  // ---------------------------------------------------------------------------
+
+  describe('updateGroupMemberRole', () => {
+    test('admin can promote a viewer to admin', async () => {
+      const groupId = await insertGroup({
+        name: 'Role Update Group',
+        createdBy: Data.user.id,
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+      await insertMember(groupId, Data.user2.id, 'viewer');
+
+      const res = await request(groupController.updateGroupMemberRole, {
+        userId: Data.user.id,
+        pathParams: { groupId, userId: Data.user2.id },
+        requestBody: { role: 'admin' },
+      });
+
+      expect(res.statusCode).toBe(200);
+
+      const membership = await Database.knex('userGroupMember')
+        .where('groupId', groupId)
+        .where('userId', Data.user2.id)
+        .first();
+
+      expect(membership.role).toBe('admin');
+    });
+
+    test('admin can demote another admin to viewer when multiple admins exist', async () => {
+      const groupId = await insertGroup({
+        name: 'Multi Admin Group',
+        createdBy: Data.user.id,
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+      await insertMember(groupId, Data.user2.id, 'admin');
+
+      const res = await request(groupController.updateGroupMemberRole, {
+        userId: Data.user.id,
+        pathParams: { groupId, userId: Data.user2.id },
+        requestBody: { role: 'viewer' },
+      });
+
+      expect(res.statusCode).toBe(200);
+
+      const membership = await Database.knex('userGroupMember')
+        .where('groupId', groupId)
+        .where('userId', Data.user2.id)
+        .first();
+
+      expect(membership.role).toBe('viewer');
+    });
+
+    test('returns 400 when trying to demote the last admin with other members', async () => {
+      const groupId = await insertGroup({
+        name: 'Last Admin Group',
+        createdBy: Data.user.id,
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+      await insertMember(groupId, Data.user2.id, 'viewer');
+
+      const res = await request(groupController.updateGroupMemberRole, {
+        userId: Data.user.id,
+        pathParams: { groupId, userId: Data.user.id },
+        requestBody: { role: 'viewer' },
+      });
+
+      expect(res.statusCode).toBe(400);
+
+      // Role should be unchanged
+      const membership = await Database.knex('userGroupMember')
+        .where('groupId', groupId)
+        .where('userId', Data.user.id)
+        .first();
+      expect(membership.role).toBe('admin');
+    });
+
+    test('viewer gets 403 when trying to update a member role', async () => {
+      const groupId = await insertGroup({
+        name: 'Viewer Cannot Update Role',
+        createdBy: Data.user.id,
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+      await insertMember(groupId, Data.user2.id, 'viewer');
+
+      const res = await request(groupController.updateGroupMemberRole, {
+        userId: Data.user2.id,
+        pathParams: { groupId, userId: Data.user.id },
+        requestBody: { role: 'viewer' },
+      });
+
+      expect(res.statusCode).toBe(403);
+    });
+
+    test('returns 404 when target user is not a member', async () => {
+      const groupId = await insertGroup({
+        name: 'Update NonMember Role',
+        createdBy: Data.user.id,
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+
+      const res = await request(groupController.updateGroupMemberRole, {
+        userId: Data.user.id,
+        pathParams: { groupId, userId: Data.user2.id },
+        requestBody: { role: 'viewer' },
+      });
+
+      expect(res.statusCode).toBe(404);
+    });
+
+    test('returns 400 for invalid role value', async () => {
+      const groupId = await insertGroup({
+        name: 'Invalid Role Update Group',
+        createdBy: Data.user.id,
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+      await insertMember(groupId, Data.user2.id, 'viewer');
+
+      const res = await request(groupController.updateGroupMemberRole, {
+        userId: Data.user.id,
+        pathParams: { groupId, userId: Data.user2.id },
+        requestBody: { role: 'superuser' as any },
+      });
+
+      expect(res.statusCode).toBe(400);
+    });
+
+    test('returns 404 for soft-deleted group', async () => {
+      const groupId = await insertGroup({
+        name: 'Deleted Role Group',
+        createdBy: Data.user.id,
+        deletedAt: Date.now(),
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+      await insertMember(groupId, Data.user2.id, 'viewer');
+
+      const res = await request(groupController.updateGroupMemberRole, {
+        userId: Data.user.id,
+        pathParams: { groupId, userId: Data.user2.id },
+        requestBody: { role: 'admin' },
       });
 
       expect(res.statusCode).toBe(404);
