@@ -17,6 +17,7 @@ import { useItems } from 'src/api/items';
 import { useFacetsData } from 'src/api/facets';
 import { GridItemAppearanceArgs, GridItem } from 'src/components/GridItem';
 import { useOrderByComponent } from 'src/components/OrderBy';
+import { useGroupSelectorComponent } from 'src/components/GroupSelector';
 import { useFilterBy } from 'src/components/FilterBy';
 import { useUpdateSearchParams } from 'src/hooks/updateSearchParamsHook';
 import { useFacets } from 'src/hooks/facets';
@@ -132,6 +133,11 @@ export const PaginatedGridItems: FunctionComponent<{
     handleFilterChange: handleArgumentChange,
   });
 
+  const { selectedGroupId, GroupSelectorComponent } = useGroupSelectorComponent({
+    orderBy,
+    handleFilterChange: handleArgumentChange,
+  });
+
   // useFilterBy hook must remain unconditional (React hooks rules).
   // When showFacets=true, the FilterByComponent JSX is suppressed, but the
   // hook still runs to avoid breaking hook call order.
@@ -155,6 +161,7 @@ export const PaginatedGridItems: FunctionComponent<{
     page: page,
     orderBy: orderBy,
     sortOrder: sortOrder,
+    ...(selectedGroupId !== undefined ? { groupId: selectedGroupId } : {}),
   };
 
   const {
@@ -171,6 +178,7 @@ export const PaginatedGridItems: FunctionComponent<{
     ...facets.facetParams,
     mediaType: args.mediaType,
     orderBy: orderBy,
+    ...(selectedGroupId !== undefined ? { groupId: selectedGroupId } : {}),
   };
 
   const { facetsData } = useFacetsData(facetsQueryArgs, Boolean(showFacets));
@@ -354,6 +362,7 @@ export const PaginatedGridItems: FunctionComponent<{
                         <div className="">
                           <OrderByComponent />
                         </div>
+                        <GroupSelectorComponent />
                       </>
                     )}
                   </div>
