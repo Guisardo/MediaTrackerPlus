@@ -7,6 +7,8 @@ import {
 } from 'src/repository/mediaItem';
 import { MediaItemItemsResponse } from 'src/entity/mediaItem';
 import { FacetsResponse } from 'src/knex/queries/items';
+import { Database } from 'src/dbconfig';
+import { UserGroupMember } from 'src/entity/userGroup';
 
 export type GetItemsRequest = Omit<
   GetItemsArgs,
@@ -16,6 +18,52 @@ export type GetItemsRequest = Omit<
 
 export type GetFacetsRequest = Omit<FacetQueryArgs, 'userId'>;
 
+/**
+ * Validates the groupId for a given userId.
+ *
+ * Returns:
+ *  - { groupId: number } if the user is a member of a non-deleted group
+ *  - { groupId: undefined } if the group is soft-deleted (silent fallback to all-users)
+ *  - { groupId: null } if the user is NOT a member (caller should return 403)
+ *  - { groupId: undefined } if groupId is undefined (no groupId provided)
+ */
+async function validateGroupMembership(
+  groupId: number | undefined,
+  userId: number
+): Promise<{ valid: true; resolvedGroupId: number | undefined } | { valid: false }> {
+  if (groupId === undefined) {
+    return { valid: true, resolvedGroupId: undefined };
+  }
+
+  // Check if the group exists (including soft-deleted state) and if the user is a member
+  const result = await Database.knex('userGroup')
+    .leftJoin<UserGroupMember>('userGroupMember', (qb) => {
+      qb.on('userGroupMember.groupId', 'userGroup.id').andOnVal(
+        'userGroupMember.userId',
+        userId
+      );
+    })
+    .where('userGroup.id', groupId)
+    .select('userGroup.deletedAt', 'userGroupMember.userId as memberUserId')
+    .first();
+
+  if (!result) {
+    // Group doesn't exist — fall back silently (treat as if no groupId)
+    return { valid: true, resolvedGroupId: undefined };
+  }
+
+  if (result.deletedAt !== null && result.deletedAt !== undefined) {
+    // Soft-deleted group — fall back silently to all-users behavior
+    return { valid: true, resolvedGroupId: undefined };
+  }
+
+  if (result.memberUserId === null || result.memberUserId === undefined) {
+    // Active group but user is not a member — return 403
+    return { valid: false };
+  }
+
+  return { valid: true, resolvedGroupId: groupId };
+}
 
 export class ItemsController {
   /**
@@ -60,8 +108,20 @@ export class ItemsController {
     const orderBy = req.query.orderBy || 'title';
     const sortOrder = req.query.sortOrder || 'asc';
 
+    const rawGroupId = req.query.groupId;
+    const parsedGroupId =
+      rawGroupId !== undefined && !isNaN(Number(rawGroupId))
+        ? Number(rawGroupId)
+        : undefined;
+
     if (page <= 0) {
       res.status(400);
+      return;
+    }
+
+    const membershipResult = await validateGroupMembership(parsedGroupId, userId);
+    if (!membershipResult.valid) {
+      res.sendStatus(403);
       return;
     }
 
@@ -91,6 +151,7 @@ export class ItemsController {
       ratingMin: ratingMin,
       ratingMax: ratingMax,
       status: status,
+      groupId: membershipResult.resolvedGroupId,
     });
 
     res.json(result);
@@ -132,6 +193,18 @@ export class ItemsController {
       orderBy,
     } = req.query;
 
+    const rawGroupId = req.query.groupId;
+    const parsedGroupId =
+      rawGroupId !== undefined && !isNaN(Number(rawGroupId))
+        ? Number(rawGroupId)
+        : undefined;
+
+    const membershipResult = await validateGroupMembership(parsedGroupId, userId);
+    if (!membershipResult.valid) {
+      res.sendStatus(403);
+      return;
+    }
+
     const result = await mediaItemRepository.facets({
       userId,
       mediaType,
@@ -154,6 +227,7 @@ export class ItemsController {
       onlyWithoutUserRating,
       onlyWithProgress,
       orderBy,
+      groupId: membershipResult.resolvedGroupId,
     });
 
     res.json(result);
@@ -188,6 +262,18 @@ export class ItemsController {
     const orderBy = req.query.orderBy || 'title';
     const sortOrder = req.query.sortOrder || 'asc';
 
+    const rawGroupId = req.query.groupId;
+    const parsedGroupId =
+      rawGroupId !== undefined && !isNaN(Number(rawGroupId))
+        ? Number(rawGroupId)
+        : undefined;
+
+    const membershipResult = await validateGroupMembership(parsedGroupId, userId);
+    if (!membershipResult.valid) {
+      res.sendStatus(403);
+      return;
+    }
+
     const result = await mediaItemRepository.items({
       userId: userId,
       mediaType: mediaType,
@@ -201,6 +287,7 @@ export class ItemsController {
       onlyWithUserRating: onlyWithUserRating,
       onlyWithoutUserRating: onlyWithoutUserRating,
       onlyWithProgress: onlyWithProgress,
+      groupId: membershipResult.resolvedGroupId,
     });
 
     res.json(result);
@@ -235,6 +322,18 @@ export class ItemsController {
     const orderBy = req.query.orderBy || 'title';
     const sortOrder = req.query.sortOrder || 'asc';
 
+    const rawGroupId = req.query.groupId;
+    const parsedGroupId =
+      rawGroupId !== undefined && !isNaN(Number(rawGroupId))
+        ? Number(rawGroupId)
+        : undefined;
+
+    const membershipResult = await validateGroupMembership(parsedGroupId, userId);
+    if (!membershipResult.valid) {
+      res.sendStatus(403);
+      return;
+    }
+
     const result = await mediaItemRepository.items({
       userId: userId,
       mediaType: mediaType,
@@ -249,6 +348,7 @@ export class ItemsController {
       onlyWithoutUserRating: onlyWithoutUserRating,
       onlyWithProgress: onlyWithProgress,
       selectRandom: selectRandom,
+      groupId: membershipResult.resolvedGroupId,
     });
 
     res.json(result);

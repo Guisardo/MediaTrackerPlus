@@ -244,6 +244,13 @@ export type FacetQueryArgs = {
    * across all users' lists rather than only the current user's watchlist.
    */
   orderBy?: MediaItemOrderBy;
+
+  /**
+   * @description When provided with orderBy === 'platformRecommended', scopes the
+   * facet counts to use group-scoped exclusion (majority-watched threshold) instead
+   * of global exclusion. Ignored for all other sort modes.
+   */
+  groupId?: number;
 };
 
 class MediaItemRepository extends repository<MediaItemBase>({
