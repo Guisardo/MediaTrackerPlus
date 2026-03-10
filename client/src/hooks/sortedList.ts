@@ -170,10 +170,26 @@ export const useSortedList = (args: {
         stringComparator
       ),
       'platform-recommended': (a: ListItem, b: ListItem): number => {
-        // Score = platformRating * 0.7 + externalRating * 0.3 when both are present.
-        // Falls back to platformRating alone, then tmdbRating alone for unrated items.
-        // Community consensus (platform average) weighted higher than external aggregators.
-        // Contrast with 'recommended' which uses 60/40 for personal rating estimates vs external.
+        // Two-tier ordering that mirrors the SQL sort in server/src/knex/queries/items.ts:
+        //   Tier 1 — items with a real platformRating (community average from estimatedRating data):
+        //            sorted by the 70/30 blend descending (or platformRating alone when
+        //            tmdbRating is absent).
+        //   Tier 2 — items with no platformRating (not yet rated on this platform):
+        //            sorted by tmdbRating descending as a proxy; absent tmdbRating sorts last.
+        //
+        // Cross-tier: all tier-1 items rank above all tier-2 items regardless of raw score.
+        // This prevents seeded/external-only ratings from displacing genuine community consensus.
+        const tierOf = (item: ListItem): 0 | 1 =>
+          item.mediaItem.platformRating != null ? 0 : 1;
+
+        const tierA = tierOf(a);
+        const tierB = tierOf(b);
+
+        if (tierA !== tierB) {
+          return tierA - tierB;
+        }
+
+        // Within the same tier, rank by score descending.
         const scoreOf = (listItem: ListItem): number | undefined => {
           const platformRating = listItem.mediaItem.platformRating;
           const tmdbRating = listItem.mediaItem.tmdbRating;
@@ -183,7 +199,7 @@ export const useSortedList = (args: {
           if (platformRating != null) {
             return platformRating;
           }
-          // Fall back to external rating for items without any platform rating yet.
+          // Tier 2: rank by tmdbRating; items with neither sort last.
           return tmdbRating ?? undefined;
         };
 

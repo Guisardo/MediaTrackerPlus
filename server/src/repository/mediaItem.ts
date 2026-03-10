@@ -232,6 +232,11 @@ export type FacetQueryArgs = {
    */
   onlyWithoutUserRating?: boolean;
   onlyWithProgress?: boolean;
+  /**
+   * @description Sort order key — when 'platformRecommended', facets are computed
+   * across all users' lists rather than only the current user's watchlist.
+   */
+  orderBy?: MediaItemOrderBy;
 };
 
 class MediaItemRepository extends repository<MediaItemBase>({

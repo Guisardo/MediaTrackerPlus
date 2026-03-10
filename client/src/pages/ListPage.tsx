@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Plural, t, Trans } from '@lingui/macro';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 import { GridItem } from 'src/components/GridItem';
 import { Pagination } from 'src/components/PaginatedGridItems';
@@ -22,11 +22,16 @@ export const ListPage: FunctionComponent = () => {
   const { darkMode } = useDarkMode();
 
   const { list } = useList({ listId: Number(listId) });
-  const { listItems } = useListItems({ listId: Number(listId) });
-
-  const [searchQuery, setSearchQuery] = useState('');
 
   const sortByTranslation = useListSortByKeys();
+  const [searchParams] = useSearchParams();
+  const sortBy =
+    sortByTranslation.translationToKey(searchParams.get('orderBy') as string) ??
+    list?.sortBy;
+
+  const { listItems } = useListItems({ listId: Number(listId), sortBy });
+
+  const [searchQuery, setSearchQuery] = useState('');
 
   const [sortOrder, setSortOrder] = useState<ListSortOrder>(list?.sortOrder);
 
@@ -69,12 +74,10 @@ export const ListPage: FunctionComponent = () => {
       handleFilterChange: handleFIlterChange,
     });
 
-  const sortBy = sortByTranslation.translationToKey(translatedSortBy);
-
   const data = getPaginatedItems(
     useSortedList({
       listItems: filteredItems,
-      sortBy: sortByTranslation.translationToKey(translatedSortBy),
+      sortBy: sortBy,
       sortOrder: sortOrder,
     })
   );

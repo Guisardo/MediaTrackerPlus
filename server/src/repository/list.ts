@@ -267,14 +267,21 @@ class ListRepository extends repository<List>({
   public async items(args: {
     listId: number;
     userId: number;
+    sortBy?: ListSortBy;
   }): Promise<ListItemsResponse> {
-    const { listId, userId } = args;
+    const { listId, userId, sortBy: sortByArg } = args;
 
     const { id: watchlistId } = await Database.knex('list')
       .select('id')
       .where('userId', userId)
       .where('isWatchlist', true)
       .first();
+
+    // Use the caller-provided sortBy when available (reflects current UI selection
+    // which may differ from the persisted list.sortBy), falling back to the stored value.
+    const list = await Database.knex<List>('list').where('id', listId).first();
+    const effectiveSortBy = sortByArg ?? list?.sortBy;
+    const isPlatformRecommended = effectiveSortBy === 'platform-recommended';
 
     const currentDateString = new Date().toISOString();
 
@@ -463,7 +470,25 @@ class ListRepository extends repository<List>({
         'season.totalRuntime': 'seasonTotalRuntime.totalRuntime',
         'season.watchlist.id': 'seasonWatchlist.id',
       })
-      .where('listItem.listId', listId)
+      .modify((qb) => {
+        if (isPlatformRecommended) {
+          // For platform-recommended sort, surface items from ALL users' lists so that
+          // every platform member sees a mixed-content view regardless of what they
+          // personally have added.  We deduplicate by mediaItemId (keeping the lowest
+          // id representative row) and restrict to top-level media items only (no
+          // season or episode entries).
+          qb.whereNull('listItem.seasonId')
+            .whereNull('listItem.episodeId')
+            .whereRaw(`"listItem"."id" = (
+              SELECT MIN("li2"."id") FROM "listItem" "li2"
+              WHERE "li2"."mediaItemId" = "listItem"."mediaItemId"
+                AND "li2"."seasonId" IS NULL
+                AND "li2"."episodeId" IS NULL
+            )`);
+        } else {
+          qb.where('listItem.listId', listId);
+        }
+      })
       .leftJoin('mediaItem', 'mediaItem.id', 'listItem.mediaItemId')
       .leftJoin('season', 'season.id', 'listItem.seasonId')
       .leftJoin('episode', 'episode.id', 'listItem.episodeId')
