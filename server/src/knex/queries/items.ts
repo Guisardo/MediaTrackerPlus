@@ -394,38 +394,87 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
         );
     }
 
-    // Platform-recommended view: exclude items already watched by any platform member.
-    // Non-TV: exclude if any user has a seen entry (episodeId IS NULL).
-    // TV shows: exclude if any user has completed all non-special episodes.
+    // Platform-recommended view: exclude items already watched.
+    // When groupId is provided (group-scoped): exclude only if >50% of group members
+    // have seen the item (majority-watched threshold). Uses CAST for SQLite integer
+    // division safety.
+    // When no groupId (global): exclude if ANY platform user has seen the item.
     if (orderBy === 'platformRecommended') {
-      query.whereRaw(`NOT (
-        "mediaItem"."mediaType" != 'tv'
-        AND EXISTS (
-          SELECT 1 FROM "seen"
-          WHERE "seen"."mediaItemId" = "mediaItem"."id"
-            AND "seen"."episodeId" IS NULL
-        )
-      )`);
-      query.whereRaw(`NOT (
-        "mediaItem"."mediaType" = 'tv'
-        AND EXISTS (
-          SELECT 1 FROM (
-            SELECT s."userId"
-            FROM "seen" s
-            JOIN "episode" e ON e."id" = s."episodeId"
-            WHERE s."mediaItemId" = "mediaItem"."id"
-              AND e."isSpecialEpisode" = 0
-            GROUP BY s."userId"
-            HAVING COUNT(DISTINCT s."episodeId") > 0
-              AND COUNT(DISTINCT s."episodeId") >= (
-                SELECT COUNT(*)
-                FROM "episode" e2
-                WHERE e2."tvShowId" = "mediaItem"."id"
-                  AND e2."isSpecialEpisode" = 0
-              )
-          ) AS "completed_users"
-        )
-      )`);
+      if (groupId != null) {
+        // Group-scoped majority-watched exclusion.
+        // Pre-compute group member count as a scalar subquery to avoid per-item recalculation.
+        // Non-TV: exclude if >50% of group members have a seen entry (episodeId IS NULL).
+        query.whereRaw(
+          `NOT (
+            "mediaItem"."mediaType" != 'tv'
+            AND (
+              SELECT COUNT(DISTINCT s."userId")
+              FROM "seen" s
+              JOIN "userGroupMember" ugm ON ugm."userId" = s."userId" AND ugm."groupId" = ?
+              WHERE s."mediaItemId" = "mediaItem"."id"
+                AND s."episodeId" IS NULL
+            ) > CAST((SELECT COUNT(*) FROM "userGroupMember" WHERE "groupId" = ?) AS REAL) / 2.0
+          )`,
+          [groupId, groupId]
+        );
+        // TV shows: exclude if >50% of group members have completed all non-special episodes.
+        query.whereRaw(
+          `NOT (
+            "mediaItem"."mediaType" = 'tv'
+            AND (
+              SELECT COUNT(DISTINCT cu."userId")
+              FROM (
+                SELECT s."userId"
+                FROM "seen" s
+                JOIN "episode" e ON e."id" = s."episodeId"
+                JOIN "userGroupMember" ugm ON ugm."userId" = s."userId" AND ugm."groupId" = ?
+                WHERE s."mediaItemId" = "mediaItem"."id"
+                  AND e."isSpecialEpisode" = 0
+                GROUP BY s."userId"
+                HAVING COUNT(DISTINCT s."episodeId") >= (
+                  SELECT COUNT(*)
+                  FROM "episode" e2
+                  WHERE e2."tvShowId" = "mediaItem"."id"
+                    AND e2."isSpecialEpisode" = 0
+                )
+              ) AS cu
+            ) > CAST((SELECT COUNT(*) FROM "userGroupMember" WHERE "groupId" = ?) AS REAL) / 2.0
+          )`,
+          [groupId, groupId]
+        );
+      } else {
+        // Global platform exclusion: exclude if ANY user has seen the item.
+        // Non-TV: exclude if any user has a seen entry (episodeId IS NULL).
+        query.whereRaw(`NOT (
+          "mediaItem"."mediaType" != 'tv'
+          AND EXISTS (
+            SELECT 1 FROM "seen"
+            WHERE "seen"."mediaItemId" = "mediaItem"."id"
+              AND "seen"."episodeId" IS NULL
+          )
+        )`);
+        // TV shows: exclude if any user has completed all non-special episodes.
+        query.whereRaw(`NOT (
+          "mediaItem"."mediaType" = 'tv'
+          AND EXISTS (
+            SELECT 1 FROM (
+              SELECT s."userId"
+              FROM "seen" s
+              JOIN "episode" e ON e."id" = s."episodeId"
+              WHERE s."mediaItemId" = "mediaItem"."id"
+                AND e."isSpecialEpisode" = 0
+              GROUP BY s."userId"
+              HAVING COUNT(DISTINCT s."episodeId") > 0
+                AND COUNT(DISTINCT s."episodeId") >= (
+                  SELECT COUNT(*)
+                  FROM "episode" e2
+                  WHERE e2."tvShowId" = "mediaItem"."id"
+                    AND e2."isSpecialEpisode" = 0
+                )
+            ) AS "completed_users"
+          )
+        )`);
+      }
     }
 
     // Media type
