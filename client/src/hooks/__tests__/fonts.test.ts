@@ -49,7 +49,7 @@ describe('useFonts', () => {
     // Make document.fonts.ready never resolve during this test
     const originalFonts = document.fonts;
     Object.defineProperty(document, 'fonts', {
-      value: { ready: new Promise(() => {}) }, // never resolves
+      value: { ready: new Promise(() => { /* never resolves */ }) },
       configurable: true,
     });
 
