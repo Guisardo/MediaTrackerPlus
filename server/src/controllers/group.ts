@@ -2,6 +2,8 @@ import { Database } from 'src/dbconfig';
 import { User } from 'src/entity/user';
 import { UserGroup, UserGroupMember, UserGroupRole } from 'src/entity/userGroup';
 import { createExpressRoute } from 'typescript-routes-to-openapi-server';
+import { logger } from 'src/logger';
+import { recalculateAllGroupPlatformRatings } from 'src/repository/groupPlatformRatingCache';
 
 interface GroupResponse {
   id: number;
@@ -377,6 +379,19 @@ export class GroupController {
     });
 
     res.sendStatus(200);
+
+    // Fire-and-forget post-response work using setImmediate.
+    // Executes AFTER the response is sent, so HTTP latency is unaffected.
+    // Triggered whenever a member is added to a group.
+    setImmediate(() => {
+      recalculateAllGroupPlatformRatings(groupId).catch((err) => {
+        logger.error('Failed to recalculate group platform ratings after member add', {
+          err,
+          groupId,
+          targetUserId,
+        });
+      });
+    });
   });
 
   /**
@@ -459,6 +474,19 @@ export class GroupController {
       .delete();
 
     res.sendStatus(200);
+
+    // Fire-and-forget post-response work using setImmediate.
+    // Executes AFTER the response is sent, so HTTP latency is unaffected.
+    // Triggered whenever a member is removed from a group.
+    setImmediate(() => {
+      recalculateAllGroupPlatformRatings(groupId).catch((err) => {
+        logger.error('Failed to recalculate group platform ratings after member remove', {
+          err,
+          groupId,
+          targetUserId,
+        });
+      });
+    });
   });
 
   /**

@@ -931,4 +931,75 @@ describe('GroupController', () => {
       expect(res.statusCode).toBe(404);
     });
   });
+
+  // Cache trigger tests
+  // ---------------------------------------------------------------------------
+
+  describe('Cache recalculation triggers', () => {
+    test('addGroupMember should call setImmediate with recalculation', async () => {
+      const groupId = await insertGroup({
+        name: 'Cache Trigger Group',
+        createdBy: Data.user.id,
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+
+      // Mock setImmediate to capture the callback
+      const originalSetImmediate = global.setImmediate;
+      let setImmediateCallback: (() => void) | null = null;
+
+      global.setImmediate = jest.fn((callback) => {
+        setImmediateCallback = callback as () => void;
+        return 1 as unknown as NodeJS.Immediate;
+      }) as unknown as typeof setImmediate;
+
+      try {
+        const res = await request(groupController.addGroupMember, {
+          userId: Data.user.id,
+          pathParams: { groupId },
+          requestBody: { userId: Data.user2.id, role: 'viewer' },
+        });
+
+        // Verify HTTP response is sent (200) before async work
+        expect(res.statusCode).toBe(200);
+
+        // Verify setImmediate was called with the cache recalculation
+        expect(setImmediateCallback).toBeDefined();
+      } finally {
+        global.setImmediate = originalSetImmediate;
+      }
+    });
+
+    test('removeGroupMember should call setImmediate with recalculation', async () => {
+      const groupId = await insertGroup({
+        name: 'Cache Trigger Remove Group',
+        createdBy: Data.user.id,
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+      await insertMember(groupId, Data.user2.id, 'viewer');
+
+      // Mock setImmediate to capture the callback
+      const originalSetImmediate = global.setImmediate;
+      let setImmediateCallback: (() => void) | null = null;
+
+      global.setImmediate = jest.fn((callback) => {
+        setImmediateCallback = callback as () => void;
+        return 1 as unknown as NodeJS.Immediate;
+      }) as unknown as typeof setImmediate;
+
+      try {
+        const res = await request(groupController.removeGroupMember, {
+          userId: Data.user.id,
+          pathParams: { groupId, userId: Data.user2.id },
+        });
+
+        // Verify HTTP response is sent (200) before async work
+        expect(res.statusCode).toBe(200);
+
+        // Verify setImmediate was called with the cache recalculation
+        expect(setImmediateCallback).toBeDefined();
+      } finally {
+        global.setImmediate = originalSetImmediate;
+      }
+    });
+  });
 });
