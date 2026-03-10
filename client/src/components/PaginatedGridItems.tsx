@@ -170,6 +170,7 @@ export const PaginatedGridItems: FunctionComponent<{
     ...args,
     ...facets.facetParams,
     mediaType: args.mediaType,
+    orderBy: orderBy,
   };
 
   const { facetsData } = useFacetsData(facetsQueryArgs, Boolean(showFacets));

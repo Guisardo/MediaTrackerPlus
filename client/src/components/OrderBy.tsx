@@ -21,6 +21,7 @@ export const useMediaTypeOrderByNames = (): Record<
     mediaType: t`Media type`,
     progress: t`Progress`,
     recommended: t`Recommended`,
+    platformRecommended: t`Platform Recommended`,
   };
 };
 

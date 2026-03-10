@@ -71,9 +71,9 @@ import {
 // ---------------------------------------------------------------------------
 
 describe('useListSortByKeys – keys', () => {
-  it('returns exactly 9 keys', () => {
+  it('returns exactly 10 keys', () => {
     const { result } = renderHook(() => useListSortByKeys());
-    expect(result.current.keys).toHaveLength(9);
+    expect(result.current.keys).toHaveLength(10);
   });
 
   it('contains "my-rating"', () => {
@@ -120,12 +120,17 @@ describe('useListSortByKeys – keys', () => {
     const { result } = renderHook(() => useListSortByKeys());
     expect(result.current.keys).toContain('recommended');
   });
+
+  it('contains "platform-recommended"', () => {
+    const { result } = renderHook(() => useListSortByKeys());
+    expect(result.current.keys).toContain('platform-recommended');
+  });
 });
 
 describe('useListSortByKeys – translations', () => {
-  it('returns exactly 9 translation labels', () => {
+  it('returns exactly 10 translation labels', () => {
     const { result } = renderHook(() => useListSortByKeys());
-    expect(result.current.translations).toHaveLength(9);
+    expect(result.current.translations).toHaveLength(10);
   });
 
   it('includes "My rating"', () => {
@@ -171,6 +176,11 @@ describe('useListSortByKeys – translations', () => {
   it('includes "Recommended"', () => {
     const { result } = renderHook(() => useListSortByKeys());
     expect(result.current.translations).toContain('Recommended');
+  });
+
+  it('includes "Platform Recommended"', () => {
+    const { result } = renderHook(() => useListSortByKeys());
+    expect(result.current.translations).toContain('Platform Recommended');
   });
 });
 
@@ -227,6 +237,13 @@ describe('useListSortByKeys – keyToTranslation', () => {
     const { result } = renderHook(() => useListSortByKeys());
     expect(result.current.keyToTranslation('recommended')).toBe('Recommended');
   });
+
+  it('maps "platform-recommended" → "Platform Recommended"', () => {
+    const { result } = renderHook(() => useListSortByKeys());
+    expect(result.current.keyToTranslation('platform-recommended')).toBe(
+      'Platform Recommended'
+    );
+  });
 });
 
 describe('useListSortByKeys – translationToKey (round-trip)', () => {
@@ -244,12 +261,19 @@ describe('useListSortByKeys – translationToKey (round-trip)', () => {
     const { result } = renderHook(() => useListSortByKeys());
     expect(result.current.translationToKey('Recommended')).toBe('recommended');
   });
+
+  it('maps "Platform Recommended" back to "platform-recommended"', () => {
+    const { result } = renderHook(() => useListSortByKeys());
+    expect(result.current.translationToKey('Platform Recommended')).toBe(
+      'platform-recommended'
+    );
+  });
 });
 
 describe('useListSortByKeys – entries', () => {
-  it('returns 9 [key, translation] tuple entries', () => {
+  it('returns 10 [key, translation] tuple entries', () => {
     const { result } = renderHook(() => useListSortByKeys());
-    expect(result.current.entries).toHaveLength(9);
+    expect(result.current.entries).toHaveLength(10);
   });
 
   it('contains the ["title", "Title"] entry', () => {
@@ -265,14 +289,21 @@ describe('useListSortByKeys – entries', () => {
       expect.arrayContaining([['recommended', 'Recommended']])
     );
   });
+
+  it('contains the ["platform-recommended", "Platform Recommended"] entry', () => {
+    const { result } = renderHook(() => useListSortByKeys());
+    expect(result.current.entries).toEqual(
+      expect.arrayContaining([['platform-recommended', 'Platform Recommended']])
+    );
+  });
 });
 
 describe('useListSortByKeys – map callback', () => {
-  it('invokes the callback exactly 9 times', () => {
+  it('invokes the callback exactly 10 times', () => {
     const { result } = renderHook(() => useListSortByKeys());
     const cb = jest.fn(() => null);
     result.current.map(cb);
-    expect(cb).toHaveBeenCalledTimes(9);
+    expect(cb).toHaveBeenCalledTimes(10);
   });
 
   it('passes key as first argument and translation as second', () => {

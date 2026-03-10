@@ -129,6 +129,7 @@ export class ItemsController {
       onlyWithUserRating,
       onlyWithoutUserRating,
       onlyWithProgress,
+      orderBy,
     } = req.query;
 
     const result = await mediaItemRepository.facets({
@@ -152,6 +153,7 @@ export class ItemsController {
       onlyWithUserRating,
       onlyWithoutUserRating,
       onlyWithProgress,
+      orderBy,
     });
 
     res.json(result);

@@ -193,6 +193,19 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
         .andOnNull('listItem.episodeId')
         .andOnVal('listItem.listId', watchlistId);
     })
+    // Cross-user list membership — used for platform-recommended base filter
+    .leftJoin(
+      (qb) =>
+        qb
+          .select('mediaItemId')
+          .from('listItem')
+          .whereNull('listItem.seasonId')
+          .whereNull('listItem.episodeId')
+          .groupBy('mediaItemId')
+          .as('anyListItem'),
+      'anyListItem.mediaItemId',
+      'mediaItem.id'
+    )
     // Upcoming episode
     .leftJoin<TvEpisode>(
       (qb) =>
@@ -333,14 +346,21 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
   if (Array.isArray(mediaItemIds)) {
     query.whereIn('mediaItem.id', mediaItemIds);
   } else {
-    query.where((qb) =>
-      qb
-        .whereNotNull('listItem.mediaItemId')
-        .orWhereNotNull('lastSeen.mediaItemId')
-    );
+    if (orderBy === 'platformRecommended') {
+      // For platform-recommended, surface items from ALL users' lists so
+      // cross-content-type recommendations appear regardless of what the
+      // current user personally added to their watchlist.
+      query.whereNotNull('anyListItem.mediaItemId');
+    } else {
+      query.where((qb) =>
+        qb
+          .whereNotNull('listItem.mediaItemId')
+          .orWhereNotNull('lastSeen.mediaItemId')
+      );
 
-    if (onlyOnWatchlist) {
-      query.whereNotNull('listItem.mediaItemId');
+      if (onlyOnWatchlist) {
+        query.whereNotNull('listItem.mediaItemId');
+      }
     }
 
     if (onlySeenItems === true) {
@@ -359,6 +379,40 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
             .where('mediaItem.mediaType', 'tv')
             .orWhere('mediaItem.releaseDate', '<=', currentDateString)
         );
+    }
+
+    // Platform-recommended view: exclude items already watched by any platform member.
+    // Non-TV: exclude if any user has a seen entry (episodeId IS NULL).
+    // TV shows: exclude if any user has completed all non-special episodes.
+    if (orderBy === 'platformRecommended') {
+      query.whereRaw(`NOT (
+        "mediaItem"."mediaType" != 'tv'
+        AND EXISTS (
+          SELECT 1 FROM "seen"
+          WHERE "seen"."mediaItemId" = "mediaItem"."id"
+            AND "seen"."episodeId" IS NULL
+        )
+      )`);
+      query.whereRaw(`NOT (
+        "mediaItem"."mediaType" = 'tv'
+        AND EXISTS (
+          SELECT 1 FROM (
+            SELECT s."userId"
+            FROM "seen" s
+            JOIN "episode" e ON e."id" = s."episodeId"
+            WHERE s."mediaItemId" = "mediaItem"."id"
+              AND e."isSpecialEpisode" = 0
+            GROUP BY s."userId"
+            HAVING COUNT(DISTINCT s."episodeId") > 0
+              AND COUNT(DISTINCT s."episodeId") >= (
+                SELECT COUNT(*)
+                FROM "episode" e2
+                WHERE e2."tvShowId" = "mediaItem"."id"
+                  AND e2."isSpecialEpisode" = 0
+              )
+          ) AS "completed_users"
+        )
+      )`);
     }
 
     // Media type
@@ -649,6 +703,35 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
         query.orderBy('mediaItem.title', 'asc');
         break;
 
+      // platform-recommended: community consensus (70%) weighted higher than external aggregators (30%).
+      // Uses platformRating (cached average of all user ratings on this platform) instead of estimatedRating
+      // (personal AI estimate for the current user). The 70/30 weighting reflects stronger trust in
+      // aggregated community data vs. external sources, contrasting with 'recommended' which uses
+      // 60/40 for personal estimates (single-user signal is weaker than community signal).
+      //
+      // Two-tier ordering:
+      //   Tier 1 (platformRating IS NOT NULL): items with real community ratings — sorted by the
+      //           70/30 blend (or platformRating alone when tmdbRating is absent).
+      //   Tier 2 (platformRating IS NULL): items not yet rated on this platform — sorted by
+      //           tmdbRating as a proxy, or last (NULLS LAST) when tmdbRating is also absent.
+      case 'platformRecommended':
+        // Step 1: tier separation — platform-rated items always precede unrated items.
+        query.orderByRaw(
+          `CASE WHEN "mediaItem"."platformRating" IS NULL THEN 1 ELSE 0 END ASC`
+        );
+        // Step 2: within each tier, rank by score descending.
+        //   Tier 1 — (1) both ratings: 70/30 blend, (2) platformRating only: platformRating.
+        //   Tier 2 — tmdbRating fallback; items with neither rating sort last (NULLS LAST).
+        query.orderByRaw(`CASE
+                            WHEN "mediaItem"."platformRating" IS NOT NULL AND "mediaItem"."tmdbRating" IS NOT NULL
+                              THEN ("mediaItem"."platformRating" * 0.7 + "mediaItem"."tmdbRating" * 0.3)
+                            WHEN "mediaItem"."platformRating" IS NOT NULL
+                              THEN "mediaItem"."platformRating"
+                            ELSE "mediaItem"."tmdbRating"
+                          END DESC NULLS LAST`);
+        query.orderBy('mediaItem.title', 'asc');
+        break;
+
       default:
         throw new Error(`Unsupported orderBy value: ${orderBy}`);
     }
@@ -747,6 +830,7 @@ const mapRawResult = (row: any): MediaItemItemsResponse => {
 
     onWatchlist: Boolean(row['listItem.id']),
     estimatedRating: row['listItem.estimatedRating'] ?? undefined,
+    platformRating: row['mediaItem.platformRating'] ?? undefined,
     unseenEpisodesCount: row.unseenEpisodesCount || 0,
     seenEpisodesCount: row['seenEpisodesCount'],
     numberOfEpisodes: row.numberOfEpisodes,
@@ -884,6 +968,7 @@ export const getFacetsKnex = async (
     onlyWithUserRating,
     onlyWithoutUserRating,
     onlyWithProgress,
+    orderBy,
   } = args;
 
   const currentDateString = new Date().toISOString();
@@ -899,6 +984,7 @@ export const getFacetsKnex = async (
   }
 
   const watchlistId = watchlist.id;
+  const isPlatformRecommended = args.orderBy === 'platformRecommended';
 
   // Build query selecting only the columns needed for faceting
   const query = Database.knex
@@ -928,13 +1014,26 @@ export const getFacetsKnex = async (
       'lastSeen.mediaItemId',
       'mediaItem.id'
     )
-    // On watchlist join
+    // On watchlist join (current user's watchlist — used for status filters)
     .leftJoin<List>('listItem', (qb) => {
       qb.on('listItem.mediaItemId', 'mediaItem.id')
         .andOnNull('listItem.seasonId')
         .andOnNull('listItem.episodeId')
         .andOnVal('listItem.listId', watchlistId);
     })
+    // Cross-user list membership — used for platform-recommended base filter
+    .leftJoin(
+      (qb) =>
+        qb
+          .select('mediaItemId')
+          .from('listItem')
+          .whereNull('listItem.seasonId')
+          .whereNull('listItem.episodeId')
+          .groupBy('mediaItemId')
+          .as('anyListItem'),
+      'anyListItem.mediaItemId',
+      'mediaItem.id'
+    )
     // User rating join (needed for status filters)
     .leftJoin<UserRating>(
       (qb) =>
@@ -951,12 +1050,18 @@ export const getFacetsKnex = async (
           .andOnNull('userRating.seasonId')
     );
 
-  // User-scoping: only items in user's library (on watchlist OR seen)
-  query.where((qb) =>
-    qb
-      .whereNotNull('listItem.mediaItemId')
-      .orWhereNotNull('lastSeen.mediaItemId')
-  );
+  if (isPlatformRecommended) {
+    // For platform-recommended, compute facets across ALL users' lists so the
+    // Media Type facet reflects the full cross-content-type recommendation set.
+    query.whereNotNull('anyListItem.mediaItemId');
+  } else {
+    // User-scoping: only items in user's library (on watchlist OR seen)
+    query.where((qb) =>
+      qb
+        .whereNotNull('listItem.mediaItemId')
+        .orWhereNotNull('lastSeen.mediaItemId')
+    );
+  }
 
   // Apply filters (same logic as getItemsKnexSql)
   if (mediaType) {
@@ -1079,7 +1184,7 @@ export const getFacetsKnex = async (
     }
   }
 
-  if (onlyOnWatchlist) {
+  if (onlyOnWatchlist && !isPlatformRecommended) {
     query.whereNotNull('listItem.mediaItemId');
   }
 

@@ -126,7 +126,7 @@ class ListRepository extends repository<List>({
         name: name,
         privacy: privacy || 'private',
         description: description,
-        sortBy: sortBy || 'recently-watched',
+        sortBy: sortBy || 'platform-recommended',
         sortOrder: sortOrder || 'desc',
         createdAt: createdAt,
         updatedAt: createdAt,
@@ -267,14 +267,21 @@ class ListRepository extends repository<List>({
   public async items(args: {
     listId: number;
     userId: number;
+    sortBy?: ListSortBy;
   }): Promise<ListItemsResponse> {
-    const { listId, userId } = args;
+    const { listId, userId, sortBy: sortByArg } = args;
 
     const { id: watchlistId } = await Database.knex('list')
       .select('id')
       .where('userId', userId)
       .where('isWatchlist', true)
       .first();
+
+    // Use the caller-provided sortBy when available (reflects current UI selection
+    // which may differ from the persisted list.sortBy), falling back to the stored value.
+    const list = await Database.knex<List>('list').where('id', listId).first();
+    const effectiveSortBy = sortByArg ?? list?.sortBy;
+    const isPlatformRecommended = effectiveSortBy === 'platform-recommended';
 
     const currentDateString = new Date().toISOString();
 
@@ -394,6 +401,8 @@ class ListRepository extends repository<List>({
         'mediaItem.title': 'mediaItem.title',
         'mediaItem.tmdbId': 'mediaItem.tmdbId',
         'mediaItem.tmdbRating': 'mediaItem.tmdbRating',
+        'mediaItem.platformRating': 'mediaItem.platformRating',
+        'mediaItem.platformSeen': 'platformSeenItems.platformSeen',
         'mediaItem.totalRuntime': 'mediaItemTotalRuntime.totalRuntime',
         'mediaItem.traktId': 'mediaItem.traktId',
         'mediaItem.tvdbId': 'mediaItem.tvdbId',
@@ -461,7 +470,25 @@ class ListRepository extends repository<List>({
         'season.totalRuntime': 'seasonTotalRuntime.totalRuntime',
         'season.watchlist.id': 'seasonWatchlist.id',
       })
-      .where('listItem.listId', listId)
+      .modify((qb) => {
+        if (isPlatformRecommended) {
+          // For platform-recommended sort, surface items from ALL users' lists so that
+          // every platform member sees a mixed-content view regardless of what they
+          // personally have added.  We deduplicate by mediaItemId (keeping the lowest
+          // id representative row) and restrict to top-level media items only (no
+          // season or episode entries).
+          qb.whereNull('listItem.seasonId')
+            .whereNull('listItem.episodeId')
+            .whereRaw(`"listItem"."id" = (
+              SELECT MIN("li2"."id") FROM "listItem" "li2"
+              WHERE "li2"."mediaItemId" = "listItem"."mediaItemId"
+                AND "li2"."seasonId" IS NULL
+                AND "li2"."episodeId" IS NULL
+            )`);
+        } else {
+          qb.where('listItem.listId', listId);
+        }
+      })
       .leftJoin('mediaItem', 'mediaItem.id', 'listItem.mediaItemId')
       .leftJoin('season', 'season.id', 'listItem.seasonId')
       .leftJoin('episode', 'episode.id', 'listItem.episodeId')
@@ -540,6 +567,29 @@ class ListRepository extends repository<List>({
         'mediaItemLastSeen.mediaItemId',
         'listItem.mediaItemId'
       )
+      // MediaItem: platform-seen flag — true if any platform user has fully watched this item.
+      // Non-TV: any seen entry with episodeId IS NULL.
+      // TV: any user has seen all non-special episodes (seenCount >= totalCount, count > 0).
+      .joinRaw(`LEFT JOIN (
+        SELECT "mediaItemId", 1 AS "platformSeen"
+        FROM "seen"
+        WHERE "episodeId" IS NULL
+        UNION
+        SELECT "mediaItemId", 1 AS "platformSeen"
+        FROM (
+          SELECT s."mediaItemId", s."userId", COUNT(DISTINCT s."episodeId") AS "seenCount"
+          FROM "seen" s
+          JOIN "episode" e ON e."id" = s."episodeId"
+          WHERE e."isSpecialEpisode" = 0
+          GROUP BY s."mediaItemId", s."userId"
+          HAVING COUNT(DISTINCT s."episodeId") > 0
+            AND COUNT(DISTINCT s."episodeId") >= (
+              SELECT COUNT(*) FROM "episode" e2
+              WHERE e2."tvShowId" = s."mediaItemId"
+                AND e2."isSpecialEpisode" = 0
+            )
+        ) AS "completedShows"
+      ) AS "platformSeenItems" ON "platformSeenItems"."mediaItemId" = "listItem"."mediaItemId"`)
       // MediaItem: total runtime
       .leftJoin(
         (qb) =>
@@ -870,7 +920,7 @@ class ListRepository extends repository<List>({
       )
       .orderBy('listItem.id', 'asc');
 
-    return res.map((listItem) => ({
+    return res.map((listItem: Record<string, any>) => ({
       id: Number(listItem['listItem.id']),
       listedAt: new Date(listItem['listItem.addedAt']).toISOString(),
       estimatedRating: listItem['listItem.estimatedRating'] ?? undefined,
@@ -905,6 +955,8 @@ class ListRepository extends repository<List>({
         title: listItem['mediaItem.title'],
         tmdbId: listItem['mediaItem.tmdbId'],
         tmdbRating: listItem['mediaItem.tmdbRating'] ?? undefined,
+        platformRating: listItem['mediaItem.platformRating'] ?? undefined,
+        platformSeen: Boolean(listItem['mediaItem.platformSeen']),
         traktId: listItem['mediaItem.traktId'],
         tvdbId: listItem['mediaItem.tvdbId'],
         url: listItem['mediaItem.url'],

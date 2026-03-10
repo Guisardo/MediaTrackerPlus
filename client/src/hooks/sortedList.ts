@@ -169,6 +169,58 @@ export const useSortedList = (args: {
         (listItem) => listItem.mediaItem.title,
         stringComparator
       ),
+      'platform-recommended': (a: ListItem, b: ListItem): number => {
+        // Two-tier ordering that mirrors the SQL sort in server/src/knex/queries/items.ts:
+        //   Tier 1 — items with a real platformRating (community average from estimatedRating data):
+        //            sorted by the 70/30 blend descending (or platformRating alone when
+        //            tmdbRating is absent).
+        //   Tier 2 — items with no platformRating (not yet rated on this platform):
+        //            sorted by tmdbRating descending as a proxy; absent tmdbRating sorts last.
+        //
+        // Cross-tier: all tier-1 items rank above all tier-2 items regardless of raw score.
+        // This prevents seeded/external-only ratings from displacing genuine community consensus.
+        const tierOf = (item: ListItem): 0 | 1 =>
+          item.mediaItem.platformRating != null ? 0 : 1;
+
+        const tierA = tierOf(a);
+        const tierB = tierOf(b);
+
+        if (tierA !== tierB) {
+          return tierA - tierB;
+        }
+
+        // Within the same tier, rank by score descending.
+        const scoreOf = (listItem: ListItem): number | undefined => {
+          const platformRating = listItem.mediaItem.platformRating;
+          const tmdbRating = listItem.mediaItem.tmdbRating;
+          if (platformRating != null && tmdbRating != null) {
+            return platformRating * 0.7 + tmdbRating * 0.3;
+          }
+          if (platformRating != null) {
+            return platformRating;
+          }
+          // Tier 2: rank by tmdbRating; items with neither sort last.
+          return tmdbRating ?? undefined;
+        };
+
+        const scoreA = scoreOf(a);
+        const scoreB = scoreOf(b);
+
+        if (scoreA == null && scoreB == null) {
+          return a.mediaItem.title.localeCompare(b.mediaItem.title);
+        }
+        if (scoreA == null) {
+          return 1;
+        }
+        if (scoreB == null) {
+          return -1;
+        }
+        // Higher score = more recommended → descending regardless of sortOrder
+        if (scoreB !== scoreA) {
+          return scoreB - scoreA;
+        }
+        return a.mediaItem.title.localeCompare(b.mediaItem.title);
+      },
       recommended: (a: ListItem, b: ListItem): number => {
         const scoreOf = (listItem: ListItem): number | undefined => {
           const estimatedRating = listItem.estimatedRating;
@@ -202,7 +254,14 @@ export const useSortedList = (args: {
       },
     };
 
-    return listItems.sort(sortFunctions[sortBy]);
+    // For platform-recommended sort, filter out items that have already been
+    // watched by any platform member so the view only surfaces unseen content.
+    const itemsToSort =
+      sortBy === 'platform-recommended'
+        ? listItems.filter((item) => !item.mediaItem.platformSeen)
+        : listItems;
+
+    return itemsToSort.sort(sortFunctions[sortBy]);
   }, [sortOrder, listItems, sortBy]);
 };
 

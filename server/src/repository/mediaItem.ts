@@ -41,7 +41,8 @@ export type MediaItemOrderBy =
   | 'status'
   | 'progress'
   | 'mediaType'
-  | 'recommended';
+  | 'recommended'
+  | 'platformRecommended';
 export type SortOrder = 'asc' | 'desc';
 
 export type LastSeenAt = 'now' | 'release_date' | 'unknown' | 'custom_date';
@@ -231,6 +232,11 @@ export type FacetQueryArgs = {
    */
   onlyWithoutUserRating?: boolean;
   onlyWithProgress?: boolean;
+  /**
+   * @description Sort order key — when 'platformRecommended', facets are computed
+   * across all users' lists rather than only the current user's watchlist.
+   */
+  orderBy?: MediaItemOrderBy;
 };
 
 class MediaItemRepository extends repository<MediaItemBase>({
@@ -849,6 +855,49 @@ class MediaItemRepository extends repository<MediaItemBase>({
           });
         })
     );
+  }
+
+  /**
+   * Recalculates the platformRating cache for a single mediaItem.
+   *
+   * Computes the average across ALL applicable rating signals for the item:
+   *   1. Explicit user ratings from the userRating table (item-level only — episode
+   *      and season ratings are excluded because platformRating represents the item
+   *      as a whole, not individual episode quality).
+   *   2. AI-estimated ratings stored in listItem.estimatedRating (set by the
+   *      recommendation pipeline for items that have not yet been explicitly rated).
+   *
+   * Combining both sources allows the cache to reflect community consensus when
+   * users have rated the item directly, while also capturing AI-derived estimates
+   * for items that are on lists but have not yet accumulated explicit ratings.
+   *
+   * When neither source provides any non-null values, AVG() returns NULL, which
+   * clears any stale cached value — correctly representing "no data."
+   *
+   * This must be called via setImmediate() so it executes after the HTTP
+   * response is sent and does not affect endpoint latency.
+   *
+   * @param mediaItemId - The ID of the mediaItem whose cache should be refreshed.
+   */
+  public async recalculatePlatformRating(mediaItemId: number): Promise<void> {
+    await Database.knex<MediaItemBase>(this.tableName)
+      .update({
+        platformRating: Database.knex.raw(
+          `(SELECT AVG(r) FROM (
+            SELECT "rating" AS r FROM "userRating"
+            WHERE "mediaItemId" = ?
+              AND "rating" IS NOT NULL
+              AND "episodeId" IS NULL
+              AND "seasonId" IS NULL
+            UNION ALL
+            SELECT "estimatedRating" AS r FROM "listItem"
+            WHERE "mediaItemId" = ?
+              AND "estimatedRating" IS NOT NULL
+          ) AS combined_ratings)`,
+          [mediaItemId, mediaItemId]
+        ),
+      })
+      .where('id', mediaItemId);
   }
 
   public async unlockLockedMediaItems() {

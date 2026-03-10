@@ -7,6 +7,19 @@ import {
 } from 'src/repository/list';
 import { createExpressRoute } from 'typescript-routes-to-openapi-server';
 
+const VALID_LIST_SORT_BY_VALUES: ReadonlyArray<ListSortBy> = [
+  'my-rating',
+  'recently-added',
+  'recently-watched',
+  'recently-aired',
+  'next-airing',
+  'release-date',
+  'runtime',
+  'title',
+  'recommended',
+  'platform-recommended',
+];
+
 /**
  * @openapi_tags List
  */
@@ -39,7 +52,7 @@ export class ListController {
     });
 
     if (list) {
-      res.send(list);
+      res.json(list);
     } else {
       res.sendStatus(400);
     }
@@ -75,7 +88,7 @@ export class ListController {
     });
 
     if (list) {
-      res.send(list);
+      res.json(list);
     } else {
       res.sendStatus(400);
     }
@@ -101,7 +114,7 @@ export class ListController {
     });
 
     if (list) {
-      res.send(list);
+      res.json(list);
     } else {
       res.sendStatus(400);
     }
@@ -141,11 +154,15 @@ export class ListController {
     path: '/api/list/items';
     requestQuery: {
       listId: number;
+      sortBy?: ListSortBy;
     };
     responseBody: ListItemsResponse;
   }>(async (req, res) => {
     const currentUser = Number(req.user);
-    const { listId } = req.query;
+    const { listId, sortBy: sortByRaw } = req.query;
+    const sortBy = VALID_LIST_SORT_BY_VALUES.includes(sortByRaw as ListSortBy)
+      ? (sortByRaw as ListSortBy)
+      : undefined;
 
     const list = await Database.knex<List>('list').where('id', listId).first();
 
@@ -162,8 +179,9 @@ export class ListController {
     const items = await listRepository.items({
       listId: list.id,
       userId: currentUser,
+      sortBy: sortBy,
     });
 
-    res.send(items);
+    res.json(items);
   });
 }

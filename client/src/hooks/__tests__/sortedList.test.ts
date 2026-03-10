@@ -745,6 +745,120 @@ describe('useSortedList — recommended', () => {
 });
 
 // ---------------------------------------------------------------------------
+// platform-recommended sort — platformSeen filtering
+// ---------------------------------------------------------------------------
+
+describe('useSortedList — platform-recommended platformSeen filtering', () => {
+  it('filters out items where mediaItem.platformSeen is true', () => {
+    const items = [
+      makeListItem(1, 'Unseen A', {
+        mediaItem: makeMediaItem('Unseen A', {
+          platformRating: 8,
+          tmdbRating: 7,
+          platformSeen: false,
+        }),
+      }),
+      makeListItem(2, 'Seen B', {
+        mediaItem: makeMediaItem('Seen B', {
+          platformRating: 9,
+          tmdbRating: 9,
+          platformSeen: true,
+        }),
+      }),
+      makeListItem(3, 'Unseen C', {
+        mediaItem: makeMediaItem('Unseen C', {
+          platformRating: 7,
+          tmdbRating: 6,
+          platformSeen: false,
+        }),
+      }),
+    ];
+
+    const result = renderSorted('platform-recommended', 'desc', items);
+    // Only unseen items should remain; seen item 'Seen B' is filtered out
+    expect(result).toHaveLength(2);
+    expect(result.map((i) => i.mediaItem.title)).toEqual([
+      'Unseen A',
+      'Unseen C',
+    ]);
+  });
+
+  it('includes items where platformSeen is null or undefined', () => {
+    const items = [
+      makeListItem(1, 'Null Seen', {
+        mediaItem: makeMediaItem('Null Seen', {
+          platformRating: 6,
+          tmdbRating: 5,
+          platformSeen: null,
+        }),
+      }),
+      makeListItem(2, 'Undefined Seen', {
+        mediaItem: makeMediaItem('Undefined Seen', {
+          platformRating: 7,
+          tmdbRating: 6,
+        }),
+      }),
+      makeListItem(3, 'Explicitly Unseen', {
+        mediaItem: makeMediaItem('Explicitly Unseen', {
+          platformRating: 8,
+          tmdbRating: 7,
+          platformSeen: false,
+        }),
+      }),
+    ];
+
+    const result = renderSorted('platform-recommended', 'desc', items);
+    // All three should be present since none have platformSeen === true
+    expect(result).toHaveLength(3);
+  });
+
+  it('does not filter platformSeen items for other sort strategies', () => {
+    const items = [
+      makeListItem(1, 'Seen Movie', {
+        mediaItem: makeMediaItem('Seen Movie', {
+          platformSeen: true,
+          releaseDate: '2023-01-01',
+        }),
+      }),
+      makeListItem(2, 'Unseen Movie', {
+        mediaItem: makeMediaItem('Unseen Movie', {
+          platformSeen: false,
+          releaseDate: '2022-01-01',
+        }),
+      }),
+    ];
+
+    // Using 'title' sort — platformSeen filtering should NOT apply
+    const result = renderSorted('title', 'asc', items);
+    expect(result).toHaveLength(2);
+    expect(result.map((i) => i.mediaItem.title)).toEqual([
+      'Seen Movie',
+      'Unseen Movie',
+    ]);
+  });
+
+  it('returns empty array when all items have platformSeen true', () => {
+    const items = [
+      makeListItem(1, 'Seen A', {
+        mediaItem: makeMediaItem('Seen A', {
+          platformRating: 8,
+          platformSeen: true,
+        }),
+      }),
+      makeListItem(2, 'Seen B', {
+        mediaItem: makeMediaItem('Seen B', {
+          platformRating: 9,
+          platformSeen: true,
+        }),
+      }),
+    ];
+
+    const result = renderSorted('platform-recommended', 'desc', items);
+    expect(result).toHaveLength(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Both null values — alphabetical tie-break
 // ---------------------------------------------------------------------------
 

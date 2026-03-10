@@ -10,6 +10,7 @@ import { Seen } from 'src/entity/seen';
 import { UserRating } from 'src/entity/userRating';
 import { ExternalIds, MediaType } from 'src/entity/mediaItem';
 import { logger } from 'src/logger';
+import { mediaItemRepository } from 'src/repository/mediaItem';
 import { SimilarItem } from 'src/metadata/types';
 
 const toExternalIds = (item: SimilarItem): ExternalIds => {
@@ -78,7 +79,7 @@ export class WatchlistWriter {
 
     const mediaItemId = mediaItem.id;
 
-    return await this.getKnex().transaction(async (trx) => {
+    const outcome = await this.getKnex().transaction(async (trx) => {
       const watchlist = await trx<List>('list').where({ userId, isWatchlist: true }).first();
 
       if (!watchlist) {
@@ -129,5 +130,20 @@ export class WatchlistWriter {
       logger.debug(`WatchlistWriter: Keeping mediaItemId=${mediaItemId} estimatedRating=${currentEstimatedRating} (incoming=${estimatedRating} is not lower) for userId=${userId}`);
       return 'skipped';
     });
+
+    if (outcome === 'added' || outcome === 'updated') {
+      setImmediate(() => {
+        mediaItemRepository
+          .recalculatePlatformRating(mediaItemId)
+          .catch((err) => {
+            logger.error(
+              'WatchlistWriter: Unhandled error in platformRating recalculation',
+              { err, mediaItemId }
+            );
+          });
+      });
+    }
+
+    return outcome;
   }
 }
