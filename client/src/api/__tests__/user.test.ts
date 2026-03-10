@@ -59,7 +59,7 @@ const UserHarness: React.FC<{
     loginPayload &&
       React.createElement(
         'button',
-        { onClick: () => result.login(loginPayload) },
+        { onClick: () => (result.login as (v: unknown) => void)(loginPayload) },
         'Login'
       ),
     doLogout &&

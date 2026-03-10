@@ -61,7 +61,7 @@ jest.mock('react-query', () => {
   return {
     ...actual,
     useQuery: (key: any, fn: any) => {
-      const [queryData, setQueryData] = React.useState<any>(undefined);
+      const [queryData, setQueryData] = React.useState(undefined);
       React.useEffect(() => {
         if (fn) {
           Promise.resolve(fn()).then(setQueryData).catch(() => {});
