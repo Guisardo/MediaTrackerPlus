@@ -33,6 +33,15 @@ type SimplifiedItem = {
 
 function sortByPlatformRecommended(items: SimplifiedItem[]): SimplifiedItem[] {
   return [...items].sort((a, b) => {
+    // Tier 1: items with platformRating sort before tier 2 (no platformRating).
+    const tierA = a.platformRating != null ? 0 : 1;
+    const tierB = b.platformRating != null ? 0 : 1;
+
+    if (tierA !== tierB) {
+      return tierA - tierB;
+    }
+
+    // Within the same tier, rank by score descending.
     const scoreA = computeScore(a.platformRating, a.tmdbRating);
     const scoreB = computeScore(b.platformRating, b.tmdbRating);
 
@@ -140,16 +149,19 @@ describe('platform-recommended sort — ordering (pure unit tests)', () => {
     expect(sorted[1].title).toBe('Low');
   });
 
-  test('item with only tmdbRating ranks by that score against platform-rated items', () => {
+  test('platform-rated items always rank before tmdbRating-only items regardless of score', () => {
+    // Tier 1 (has platformRating): High score (8.0) > Low score (3.0)
+    // Tier 2 (no platformRating): No score (tmdbRating=9.0)
+    // Even though No score has a higher raw value, it is in tier 2 and sorts last.
     const items: SimplifiedItem[] = [
       { platformRating: null, title: 'No score', tmdbRating: 9.0 },
       { platformRating: 3.0, title: 'Low score', tmdbRating: null },
       { platformRating: 8.0, title: 'High score', tmdbRating: null },
     ];
     const sorted = sortByPlatformRecommended(items);
-    expect(sorted[0].title).toBe('No score');
-    expect(sorted[1].title).toBe('High score');
-    expect(sorted[2].title).toBe('Low score');
+    expect(sorted[0].title).toBe('High score');
+    expect(sorted[1].title).toBe('Low score');
+    expect(sorted[2].title).toBe('No score');
   });
 
   test('null tmdbRating falls back to platformRating only (no formula)', () => {
@@ -165,16 +177,18 @@ describe('platform-recommended sort — ordering (pure unit tests)', () => {
     expect(sorted[1].title).toBe('Item B');
   });
 
-  test('items with only tmdbRating rank by that score; ties broken alphabetically', () => {
+  test('tier-1 item ranks before tier-2 items; within tier 2, higher tmdbRating sorts first', () => {
+    // Middle is in tier 1 (has platformRating=5.0); Zebra and Alpha are tier 2.
+    // Within tier 2: Zebra (tmdbRating=8.0) > Alpha (tmdbRating=5.0).
     const items: SimplifiedItem[] = [
       { platformRating: null, title: 'Zebra', tmdbRating: 8.0 },
       { platformRating: null, title: 'Alpha', tmdbRating: 5.0 },
       { platformRating: 5.0, title: 'Middle', tmdbRating: null },
     ];
     const sorted = sortByPlatformRecommended(items);
-    expect(sorted[0].title).toBe('Zebra');
-    expect(sorted[1].title).toBe('Alpha');
-    expect(sorted[2].title).toBe('Middle');
+    expect(sorted[0].title).toBe('Middle');
+    expect(sorted[1].title).toBe('Zebra');
+    expect(sorted[2].title).toBe('Alpha');
   });
 
   test('equal scores sort alphabetically by title', () => {
@@ -199,16 +213,18 @@ describe('platform-recommended sort — ordering (pure unit tests)', () => {
     expect(sorted[2].title).toBe('Middle');
   });
 
-  test('item with only tmdbRating outranks items with low platformRating when score is higher', () => {
+  test('tier-1 items (even with low platformRating) always rank before tier-2 tmdbRating-only items', () => {
+    // Good rating and Zero rating are tier 1; No rating is tier 2 despite tmdbRating=9.0.
+    // Within tier 1: Good rating (5.0) > Zero rating (0).
     const items: SimplifiedItem[] = [
       { platformRating: null, title: 'No rating', tmdbRating: 9.0 },
       { platformRating: 0, title: 'Zero rating', tmdbRating: null },
       { platformRating: 5.0, title: 'Good rating', tmdbRating: null },
     ];
     const sorted = sortByPlatformRecommended(items);
-    expect(sorted[0].title).toBe('No rating');
-    expect(sorted[1].title).toBe('Good rating');
-    expect(sorted[2].title).toBe('Zero rating');
+    expect(sorted[0].title).toBe('Good rating');
+    expect(sorted[1].title).toBe('Zero rating');
+    expect(sorted[2].title).toBe('No rating');
   });
 });
 
@@ -369,7 +385,7 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — SQL 
 
   afterAll(clearDatabase);
 
-  test('score tiers: Gamma (tmdb-only 9.0) > Alpha (blended 8.7) > Beta (platform-only 7.0)', async () => {
+  test('tier ordering: Alpha (tier-1 blend 8.7) > Beta (tier-1 platform 7.0) > Gamma (tier-2 tmdb 9.0)', async () => {
     const items = await mediaItemRepository.items({
       userId: user.id,
       orderBy: 'platformRecommended',
@@ -377,12 +393,12 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — SQL 
     });
 
     expect(items.length).toBe(3);
-    // Gamma: tmdbRating fallback = 9.0 (highest score)
-    // Alpha: 9.0*0.7 + 8.0*0.3 = 8.7
-    // Beta:  7.0 (no tmdbRating, formula falls back to platformRating only)
-    expect(items[0].title).toBe('Gamma');
-    expect(items[1].title).toBe('Alpha');
-    expect(items[2].title).toBe('Beta');
+    // Alpha: tier 1 — 9.0*0.7 + 8.0*0.3 = 8.7
+    // Beta:  tier 1 — platformRating only = 7.0
+    // Gamma: tier 2 — no platformRating; tmdbRating=9.0 ranks within tier 2 only
+    expect(items[0].title).toBe('Alpha');
+    expect(items[1].title).toBe('Beta');
+    expect(items[2].title).toBe('Gamma');
   });
 
   test('platformRating is exposed on all items returned by platform-recommended sort', async () => {
@@ -401,10 +417,10 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — SQL 
     expect(gamma?.platformRating).toBeUndefined();
   });
 
-  test('tmdbRating-only item outranks platformRating-only item when its score is higher', async () => {
-    // itemBeta has platformRating=7.0 and no tmdbRating → score 7.0
-    // itemGamma has no platformRating but tmdbRating=9.0 → score 9.0 (fallback)
-    // Gamma ranks above Beta
+  test('platform-rated item (Beta, tier 1) always ranks before tmdbRating-only item (Gamma, tier 2)', async () => {
+    // Beta has platformRating=7.0 → tier 1
+    // Gamma has no platformRating but tmdbRating=9.0 → tier 2
+    // Beta sorts before Gamma despite Gamma's higher raw tmdbRating score.
     const items = await mediaItemRepository.items({
       userId: user.id,
       orderBy: 'platformRecommended',
@@ -414,7 +430,7 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — SQL 
     const betaIndex = items.findIndex((i) => i.title === 'Beta');
     const gammaIndex = items.findIndex((i) => i.title === 'Gamma');
 
-    expect(gammaIndex).toBeLessThan(betaIndex);
+    expect(betaIndex).toBeLessThan(gammaIndex);
   });
 
   test('items with BOTH platformRating and tmdbRating null sort last', async () => {
@@ -449,18 +465,18 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — SQL 
     }
   });
 
-  test('sortOrder asc still produces descending score order — score-based sort ignores direction', async () => {
+  test('sortOrder asc still produces tier-then-score descending order — score-based sort ignores direction', async () => {
     const items = await mediaItemRepository.items({
       userId: user.id,
       orderBy: 'platformRecommended',
       sortOrder: 'asc',
     });
 
-    // Score-based sorts must always order by score descending regardless of sortOrder
+    // Score-based sorts must always order by tier then score descending regardless of sortOrder
     expect(items.length).toBe(3);
-    expect(items[0].title).toBe('Gamma');
-    expect(items[1].title).toBe('Alpha');
-    expect(items[2].title).toBe('Beta');
+    expect(items[0].title).toBe('Alpha');
+    expect(items[1].title).toBe('Beta');
+    expect(items[2].title).toBe('Gamma');
   });
 
   test('equal-score items ordered alphabetically by title ascending', async () => {
@@ -583,7 +599,7 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — SQL 
     expect(result.data.length).toBeGreaterThanOrEqual(1);
   });
 
-  test('tmdbRating-only items rank by their score among all items', async () => {
+  test('tier-2 (tmdbRating-only) items sort among themselves by tmdbRating, after all tier-1 items', async () => {
     const itemAaaa = {
       id: 7,
       lastTimeUpdated: Date.now(),
@@ -591,7 +607,7 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — SQL 
       source: 'tmdb',
       title: 'Aaaa',
       tmdbRating: 9.5,
-      // platformRating intentionally null — falls back to tmdbRating score
+      // platformRating intentionally null → tier 2
     };
 
     await Database.knex('mediaItem').insert(itemAaaa);
@@ -609,13 +625,12 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — SQL 
       });
 
       expect(items.length).toBe(4);
-      // All items now have a score (Aaaa and Gamma via tmdbRating fallback)
-      // Aaaa: tmdbRating=9.5 → 9.5, Gamma: tmdbRating=9.0 → 9.0
-      // Alpha: 9.0*0.7+8.0*0.3 = 8.7, Beta: platformRating=7.0 → 7.0
-      expect(items[0].title).toBe('Aaaa');
-      expect(items[1].title).toBe('Gamma');
-      expect(items[2].title).toBe('Alpha');
-      expect(items[3].title).toBe('Beta');
+      // Tier 1: Alpha (9.0*0.7+8.0*0.3=8.7), Beta (platformRating=7.0)
+      // Tier 2: Aaaa (tmdbRating=9.5), Gamma (tmdbRating=9.0) — ranked within tier 2
+      expect(items[0].title).toBe('Alpha');
+      expect(items[1].title).toBe('Beta');
+      expect(items[2].title).toBe('Aaaa');
+      expect(items[3].title).toBe('Gamma');
     } finally {
       await Database.knex('listItem').where('mediaItemId', itemAaaa.id).delete();
       await Database.knex('mediaItem').where('id', itemAaaa.id).delete();
@@ -739,5 +754,137 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — excl
     // Both items present — filter only applies to platformRecommended sort
     expect(titles).toContain('Watched Movie');
     expect(titles).toContain('Unwatched Movie');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Integration tests: listRepository.items() — platform-recommended broadens scope
+// When a list's sortBy is 'platform-recommended', items from ALL platform users'
+// lists are surfaced, not just items in the specific list being viewed.
+// This ensures every user sees a mixed-content view regardless of which content
+// types they personally have added.
+// ---------------------------------------------------------------------------
+
+describe("listRepository.items() — platform-recommended scope covers all platform lists", () => {
+  const userLucas = { id: 50, name: 'lucas', password: 'password' };
+  const userVioleta = { id: 51, name: 'violeta', password: 'password' };
+
+  const movie = {
+    id: 50,
+    lastTimeUpdated: Date.now(),
+    mediaType: 'movie',
+    source: 'tmdb',
+    title: 'Great Movie',
+    tmdbRating: 7.5,
+  };
+
+  const tvSeries = {
+    id: 51,
+    lastTimeUpdated: Date.now(),
+    mediaType: 'tv',
+    source: 'tmdb',
+    title: 'Amazing Series',
+    tmdbRating: 8.5,
+  };
+
+  // Lucas's watchlist (required by items() for watchlist-indicator joins)
+  const lucasWatchlist = {
+    id: 50,
+    userId: userLucas.id,
+    name: 'Watchlist',
+    privacy: 'private',
+    sortBy: 'recently-added',
+    sortOrder: 'desc',
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+    isWatchlist: true,
+  };
+
+  // Lucas's custom list — platform-recommended sort, contains only the movie
+  const lucasPlatformList = {
+    id: 51,
+    userId: userLucas.id,
+    name: 'Lucas Platform List',
+    privacy: 'private',
+    sortBy: 'platform-recommended',
+    sortOrder: 'desc',
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+    isWatchlist: false,
+  };
+
+  // Violeta's watchlist — contains only a TV series
+  const violetaWatchlist = {
+    id: 52,
+    userId: userVioleta.id,
+    name: 'Watchlist',
+    privacy: 'private',
+    sortBy: 'recently-added',
+    sortOrder: 'desc',
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+    isWatchlist: true,
+  };
+
+  beforeAll(async () => {
+    await runMigrations();
+    await Database.knex('user').insert(userLucas);
+    await Database.knex('user').insert(userVioleta);
+    await Database.knex('mediaItem').insert(movie);
+    await Database.knex('mediaItem').insert(tvSeries);
+    await Database.knex('list').insert(lucasWatchlist);
+    await Database.knex('list').insert(lucasPlatformList);
+    await Database.knex('list').insert(violetaWatchlist);
+    // Lucas's platform list has only the movie
+    await Database.knex('listItem').insert({
+      listId: lucasPlatformList.id,
+      mediaItemId: movie.id,
+      addedAt: Date.now(),
+    });
+    // Violeta's watchlist has only the TV series
+    await Database.knex('listItem').insert({
+      listId: violetaWatchlist.id,
+      mediaItemId: tvSeries.id,
+      addedAt: Date.now(),
+    });
+  });
+
+  afterAll(clearDatabase);
+
+  test('platform-recommended list returns items from all platform lists, mixing content types', async () => {
+    // Lucas's list only explicitly contains a movie, but because the sort is
+    // 'platform-recommended' the query expands to the full platform item pool,
+    // which includes Violeta's TV series.
+    const items = await listRepository.items({
+      listId: lucasPlatformList.id,
+      userId: userLucas.id,
+    });
+
+    const titles = items.map((i) => i.mediaItem.title);
+    expect(titles).toContain('Great Movie');
+    expect(titles).toContain('Amazing Series');
+  });
+
+  test('non-platform-recommended list only returns items explicitly in that list', async () => {
+    // Temporarily switch Lucas's list to a non-platform-recommended sort.
+    await Database.knex('list')
+      .where('id', lucasPlatformList.id)
+      .update({ sortBy: 'recently-added' });
+
+    try {
+      const items = await listRepository.items({
+        listId: lucasPlatformList.id,
+        userId: userLucas.id,
+      });
+
+      const titles = items.map((i) => i.mediaItem.title);
+      // Only the movie that Lucas explicitly added should appear.
+      expect(titles).toContain('Great Movie');
+      expect(titles).not.toContain('Amazing Series');
+    } finally {
+      await Database.knex('list')
+        .where('id', lucasPlatformList.id)
+        .update({ sortBy: 'platform-recommended' });
+    }
   });
 });

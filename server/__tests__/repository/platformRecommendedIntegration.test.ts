@@ -79,21 +79,31 @@ type ClientItem = {
 
 function clientSortByPlatformRecommended(items: ClientItem[]): ClientItem[] {
   return [...items].sort((a, b) => {
-    const scoreA = clientComputeScore(a.platformRating, a.tmdbRating);
-    const scoreB = clientComputeScore(b.platformRating, b.tmdbRating);
+    // Tier 1: items with platformRating (real community ratings) sort before
+    // Tier 2: items without platformRating (unrated on this platform).
+    const tierA = a.platformRating != null ? 0 : 1;
+    const tierB = b.platformRating != null ? 0 : 1;
 
-    if (scoreA == null && scoreB == null) {
+    if (tierA !== tierB) {
+      return tierA - tierB;
+    }
+
+    // Tier 1: rank by 70/30 blend (clientComputeScore returns a number).
+    // Tier 2: rank by tmdbRating descending; null tmdbRating sorts last.
+    if (tierA === 0) {
+      const scoreA = clientComputeScore(a.platformRating, a.tmdbRating)!;
+      const scoreB = clientComputeScore(b.platformRating, b.tmdbRating)!;
+      if (scoreB !== scoreA) return scoreB - scoreA;
       return a.title.localeCompare(b.title);
     }
-    if (scoreA == null) {
-      return 1;
-    }
-    if (scoreB == null) {
-      return -1;
-    }
-    if (scoreB !== scoreA) {
-      return scoreB - scoreA;
-    }
+
+    // Tier 2 — clientComputeScore returns undefined; sort by tmdbRating directly.
+    const tmdbA = a.tmdbRating ?? undefined;
+    const tmdbB = b.tmdbRating ?? undefined;
+    if (tmdbA == null && tmdbB == null) return a.title.localeCompare(b.title);
+    if (tmdbA == null) return 1;
+    if (tmdbB == null) return -1;
+    if (tmdbB !== tmdbA) return tmdbB - tmdbA;
     return a.title.localeCompare(b.title);
   });
 }
@@ -144,9 +154,36 @@ describe('Platform Recommended Sort — end-to-end integration', () => {
 
   afterEach(async () => {
     await Database.knex('userRating').delete();
+    await Database.knex('seen').delete();
     await Database.knex('mediaItem')
       .whereIn('id', [Data.movie.id, Data.tvShow.id, Data.videoGame.id])
       .update({ platformRating: null });
+    await Database.knex('listItem')
+      .whereIn('mediaItemId', [Data.movie.id, Data.tvShow.id, Data.videoGame.id])
+      .update({ estimatedRating: null });
+
+    // autoMarkAsSeen removes non-TV items from the watchlist when they are rated.
+    // Re-insert any listItems that were deleted so each test starts with a full set.
+    const existingListItems = await Database.knex('listItem')
+      .whereIn('mediaItemId', [Data.movie.id, Data.tvShow.id, Data.videoGame.id])
+      .whereNull('seasonId')
+      .whereNull('episodeId')
+      .where('listId', Data.watchlist.id)
+      .select('mediaItemId');
+    const existingMediaItemIds = new Set(
+      existingListItems.map((row) => row.mediaItemId)
+    );
+    const allMediaItemIds = [Data.movie.id, Data.tvShow.id, Data.videoGame.id];
+    const toRestore = allMediaItemIds
+      .filter((id) => !existingMediaItemIds.has(id))
+      .map((id) => ({
+        listId: Data.watchlist.id,
+        mediaItemId: id,
+        addedAt: Date.now(),
+      }));
+    if (toRestore.length > 0) {
+      await Database.knex('listItem').insert(toRestore);
+    }
   });
 
   // ─── Test 1: user rates item → cache updates → sort reflects the new score ──
@@ -179,6 +216,23 @@ describe('Platform Recommended Sort — end-to-end integration', () => {
         .first();
       expect(movieRow.platformRating).toBeCloseTo(8, 5);
 
+      // autoMarkAsSeen marks the movie as seen and removes it from the watchlist.
+      // Clear those side effects before querying platform-recommended results so the
+      // test focuses on sort order (not the seen/watchlist removal behaviour).
+      await Database.knex('seen').delete();
+      const movieListItem = await Database.knex('listItem')
+        .where({ listId: Data.watchlist.id, mediaItemId: Data.movie.id })
+        .whereNull('seasonId')
+        .whereNull('episodeId')
+        .first();
+      if (!movieListItem) {
+        await Database.knex('listItem').insert({
+          listId: Data.watchlist.id,
+          mediaItemId: Data.movie.id,
+          addedAt: Date.now(),
+        });
+      }
+
       // Now query items with platform-recommended sort
       const items = await mediaItemRepository.items({
         userId: Data.user.id,
@@ -191,7 +245,7 @@ describe('Platform Recommended Sort — end-to-end integration', () => {
       expect(items[0].title).toBe('movie');
       expect(items[0].platformRating).toBeCloseTo(8, 5);
 
-      // The null-platformRating items should come after, sorted alphabetically
+      // The null-platformRating items (tier 2) should come after, sorted by tmdbRating descending
       const nullItems = items.slice(1);
       expect(nullItems.every((i) => !i.platformRating)).toBe(true);
     } finally {
@@ -265,6 +319,23 @@ describe('Platform Recommended Sort — end-to-end integration', () => {
       );
     } finally {
       global.setImmediate = mock3.originalSetImmediate;
+    }
+
+    // autoMarkAsSeen marks rated items as seen and removes non-TV items from the
+    // watchlist. Clear those side effects before querying platform-recommended results
+    // so the test focuses on sort order driven by platformRating, not seen-state filtering.
+    await Database.knex('seen').delete();
+    const movieListItemAfterRating = await Database.knex('listItem')
+      .where({ listId: Data.watchlist.id, mediaItemId: Data.movie.id })
+      .whereNull('seasonId')
+      .whereNull('episodeId')
+      .first();
+    if (!movieListItemAfterRating) {
+      await Database.knex('listItem').insert({
+        listId: Data.watchlist.id,
+        mediaItemId: Data.movie.id,
+        addedAt: Date.now(),
+      });
     }
 
     // Query items sorted by platform-recommended
@@ -354,36 +425,36 @@ describe('Platform Recommended Sort — end-to-end integration', () => {
   // ─── Test 4: items with no platform ratings sort below rated items ───────────
 
   test('items with no platform ratings sort below all rated items regardless of external tmdbRating', async () => {
-    // Rate only the video game (which has no tmdbRating)
-    await Database.knex('userRating').insert({
-      mediaItemId: Data.videoGame.id,
-      userId: Data.user.id,
-      rating: 3,
-      date: Date.now(),
-      seasonId: null,
-      episodeId: null,
-    });
+    // Ensure no seen entries exist — previous tests may have triggered autoMarkAsSeen
+    // via ratingController.add, which would exclude items from the platformSeen filter.
+    await Database.knex('seen').delete();
+
+    // Set estimatedRating on the video game's listItem — this is the correct mechanism
+    // for populating platformRating (recalculatePlatformRating reads listItem.estimatedRating,
+    // not userRating.rating, which belongs to the user-explicit rating pipeline).
+    await Database.knex('listItem')
+      .where({ mediaItemId: Data.videoGame.id, listId: Data.watchlist.id })
+      .update({ estimatedRating: 3 });
     await mediaItemRepository.recalculatePlatformRating(Data.videoGame.id);
 
-    // Video game now has platformRating=3, no tmdbRating
-    // Movie has no platformRating but tmdbRating=7
-    // TvShow has no platformRating but tmdbRating=8
+    // Video game now has platformRating=3, no tmdbRating → tier 1
+    // Movie has no platformRating but tmdbRating=7 → tier 2
+    // TvShow has no platformRating but tmdbRating=8 → tier 2
     const items = await mediaItemRepository.items({
       userId: Data.user.id,
       orderBy: 'platformRecommended',
       sortOrder: 'desc',
     });
 
-    // Video game (platformRating=3) must sort ABOVE movie and tvShow despite
-    // their high tmdbRating — because platformRating NULL sorts last
+    // Video game (tier 1, platformRating=3) must sort ABOVE movie and tvShow despite
+    // their higher tmdbRatings — tier-1 items always precede tier-2 items.
     expect(items[0].title).toBe('video_game');
 
-    // Remaining items have null platformRating and sort alphabetically by title
-    const nullItems = items.slice(1);
-    expect(nullItems.every((i) => !i.platformRating)).toBe(true);
-    // Alphabetical: 'movie' < 'title' (tvShow)
-    expect(nullItems[0].title).toBe('movie');
-    expect(nullItems[1].title).toBe('title');
+    // Tier-2 items sort by tmdbRating descending: TvShow (8.0) > Movie (7.0)
+    const tier2Items = items.slice(1);
+    expect(tier2Items.every((i) => !i.platformRating)).toBe(true);
+    expect(tier2Items[0].title).toBe('title'); // tvShow: tmdbRating=8.0
+    expect(tier2Items[1].title).toBe('movie'); // movie: tmdbRating=7.0
   });
 });
 
@@ -712,31 +783,24 @@ describe('Platform Recommended Sort — listRepository.items() integration', () 
 
   afterEach(async () => {
     await Database.knex('userRating').delete();
+    await Database.knex('seen').delete();
     await Database.knex('mediaItem')
       .whereIn('id', [Data.movie.id, Data.tvShow.id, Data.videoGame.id])
       .update({ platformRating: null });
+    await Database.knex('listItem')
+      .whereIn('mediaItemId', [Data.movie.id, Data.tvShow.id, Data.videoGame.id])
+      .update({ estimatedRating: null });
   });
 
   test('listRepository.items() returns platformRating and sorts correctly after rating writes', async () => {
-    // Rate movie with 9, tvShow with 5 — both via recalculatePlatformRating
-    await Database.knex('userRating').insert([
-      {
-        mediaItemId: Data.movie.id,
-        userId: Data.user.id,
-        rating: 9,
-        date: Date.now(),
-        seasonId: null,
-        episodeId: null,
-      },
-      {
-        mediaItemId: Data.tvShow.id,
-        userId: Data.user.id,
-        rating: 5,
-        date: Date.now(),
-        seasonId: null,
-        episodeId: null,
-      },
-    ]);
+    // Set estimatedRating on listItems — recalculatePlatformRating reads listItem.estimatedRating,
+    // not userRating.rating.
+    await Database.knex('listItem')
+      .where({ mediaItemId: Data.movie.id, listId: Data.list.id })
+      .update({ estimatedRating: 9 });
+    await Database.knex('listItem')
+      .where({ mediaItemId: Data.tvShow.id, listId: Data.list.id })
+      .update({ estimatedRating: 5 });
 
     await Promise.all([
       mediaItemRepository.recalculatePlatformRating(Data.movie.id),
