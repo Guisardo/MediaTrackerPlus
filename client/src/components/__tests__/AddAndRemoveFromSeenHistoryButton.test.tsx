@@ -223,7 +223,7 @@ describe('AddToSeenHistoryButton', () => {
 
     it('renders "Add season to seen history" when season provided and useSeasonAndEpisodeNumber=false', () => {
       mockIsTvShow.mockReturnValue(true);
-      const season = { id: 10, seasonNumber: 1 };
+      const season = { id: 10, seasonNumber: 1 } as any;
       render(
         React.createElement(AddToSeenHistoryButton, {
           mediaItem: makeTvItem(),
@@ -235,7 +235,7 @@ describe('AddToSeenHistoryButton', () => {
 
     it('renders "Add episode to seen history" when episode provided and useSeasonAndEpisodeNumber=false', () => {
       mockIsTvShow.mockReturnValue(true);
-      const episode = { id: 100, episodeNumber: 1, seasonNumber: 1 };
+      const episode = { id: 100, episodeNumber: 1, seasonNumber: 1 } as any;
       render(
         React.createElement(AddToSeenHistoryButton, {
           mediaItem: makeTvItem(),
@@ -247,7 +247,7 @@ describe('AddToSeenHistoryButton', () => {
 
     it('renders a button element when useSeasonAndEpisodeNumber=true and season provided', () => {
       mockIsTvShow.mockReturnValue(true);
-      const season = { id: 10, seasonNumber: 2 };
+      const season = { id: 10, seasonNumber: 2 } as any;
       const { container } = render(
         React.createElement(AddToSeenHistoryButton, {
           mediaItem: makeTvItem(),
@@ -261,7 +261,7 @@ describe('AddToSeenHistoryButton', () => {
 
     it('renders a button element when useSeasonAndEpisodeNumber=true and episode provided', () => {
       mockIsTvShow.mockReturnValue(true);
-      const episode = { id: 100, episodeNumber: 5, seasonNumber: 1 };
+      const episode = { id: 100, episodeNumber: 5, seasonNumber: 1 } as any;
       const { container } = render(
         React.createElement(AddToSeenHistoryButton, {
           mediaItem: makeTvItem(),
@@ -356,7 +356,7 @@ describe('RemoveFromSeenHistoryButton', () => {
         id: 10,
         seasonNumber: 1,
         episodes: [{ id: 100 }, { id: 101 }],
-      };
+      } as any;
       render(
         React.createElement(RemoveFromSeenHistoryButton, {
           mediaItem: makeTvItem(),
@@ -368,7 +368,7 @@ describe('RemoveFromSeenHistoryButton', () => {
 
     it('renders "Remove episode from seen history" when episode provided', () => {
       mockIsTvShow.mockReturnValue(true);
-      const episode = { id: 100, episodeNumber: 1, seasonNumber: 1 };
+      const episode = { id: 100, episodeNumber: 1, seasonNumber: 1 } as any;
       render(
         React.createElement(RemoveFromSeenHistoryButton, {
           mediaItem: makeTvItem(),
