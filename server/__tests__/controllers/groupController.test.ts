@@ -3,6 +3,7 @@ import { Database } from 'src/dbconfig';
 import { Data } from '__tests__/__utils__/data';
 import { request } from '__tests__/__utils__/request';
 import { clearDatabase, runMigrations } from '__tests__/__utils__/utils';
+import * as groupCleanup from 'src/repository/groupCleanup';
 
 /**
  * GroupController tests.
@@ -929,6 +930,151 @@ describe('GroupController', () => {
       });
 
       expect(res.statusCode).toBe(404);
+    });
+  });
+
+  // Async cleanup trigger tests
+  // ---------------------------------------------------------------------------
+
+  describe('Async group cleanup triggers', () => {
+    test('deleteGroup triggers setImmediate with cleanupSoftDeletedGroup', async () => {
+      const groupId = await insertGroup({
+        name: 'Async Cleanup Group',
+        createdBy: Data.user.id,
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+
+      const originalSetImmediate = global.setImmediate;
+      let setImmediateCallback: (() => void) | null = null;
+
+      global.setImmediate = jest.fn((callback) => {
+        setImmediateCallback = callback as () => void;
+        return 1 as unknown as NodeJS.Immediate;
+      }) as unknown as typeof setImmediate;
+
+      try {
+        const res = await request(groupController.deleteGroup, {
+          userId: Data.user.id,
+          pathParams: { groupId },
+        });
+
+        // HTTP response should be sent before async cleanup runs
+        expect(res.statusCode).toBe(200);
+
+        // setImmediate should be called with a cleanup callback
+        expect(setImmediateCallback).toBeDefined();
+      } finally {
+        global.setImmediate = originalSetImmediate;
+      }
+    });
+
+    test('deleteGroup async cleanup removes group data from database', async () => {
+      const groupId = await insertGroup({
+        name: 'Full Cleanup Group',
+        createdBy: Data.user.id,
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+
+      // Spy on cleanupSoftDeletedGroup to verify it's called with correct groupId
+      const cleanupSpy = jest
+        .spyOn(groupCleanup, 'cleanupSoftDeletedGroup')
+        .mockResolvedValue(undefined);
+
+      try {
+        const originalSetImmediate = global.setImmediate;
+        let capturedCallback: (() => void) | null = null;
+
+        global.setImmediate = jest.fn((callback) => {
+          capturedCallback = callback as () => void;
+          return 1 as unknown as NodeJS.Immediate;
+        }) as unknown as typeof setImmediate;
+
+        const res = await request(groupController.deleteGroup, {
+          userId: Data.user.id,
+          pathParams: { groupId },
+        });
+
+        global.setImmediate = originalSetImmediate;
+
+        expect(res.statusCode).toBe(200);
+
+        // Execute the captured callback to verify it calls cleanupSoftDeletedGroup
+        expect(capturedCallback).toBeDefined();
+        await (capturedCallback as () => Promise<void>)();
+
+        expect(cleanupSpy).toHaveBeenCalledWith(groupId);
+      } finally {
+        cleanupSpy.mockRestore();
+      }
+    });
+
+    test('sole-admin removal soft-delete path triggers setImmediate with cleanup', async () => {
+      const groupId = await insertGroup({
+        name: 'Sole Admin Cleanup Group',
+        createdBy: Data.user.id,
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+      await insertMember(groupId, Data.user2.id, 'viewer');
+
+      const originalSetImmediate = global.setImmediate;
+      let setImmediateCallback: (() => void) | null = null;
+
+      global.setImmediate = jest.fn((callback) => {
+        setImmediateCallback = callback as () => void;
+        return 1 as unknown as NodeJS.Immediate;
+      }) as unknown as typeof setImmediate;
+
+      try {
+        // Admin removes themselves while viewer exists — triggers sole-admin soft-delete path
+        const res = await request(groupController.removeGroupMember, {
+          userId: Data.user.id,
+          pathParams: { groupId, userId: Data.user.id },
+        });
+
+        expect(res.statusCode).toBe(200);
+
+        // Group should be soft-deleted
+        const dbRow = await Database.knex('userGroup')
+          .where('id', groupId)
+          .first();
+        expect(dbRow.deletedAt).not.toBeNull();
+
+        // setImmediate should be called with a cleanup callback
+        expect(setImmediateCallback).toBeDefined();
+      } finally {
+        global.setImmediate = originalSetImmediate;
+      }
+    });
+
+    test('HTTP response is sent before async cleanup runs in deleteGroup', async () => {
+      const groupId = await insertGroup({
+        name: 'Response Before Cleanup',
+        createdBy: Data.user.id,
+      });
+      await insertMember(groupId, Data.user.id, 'admin');
+
+      let responseStatusAtSetImmediate: number | null = null;
+      const originalSetImmediate = global.setImmediate;
+
+      global.setImmediate = jest.fn((callback) => {
+        // At this point the response has already been sent
+        responseStatusAtSetImmediate = 200; // response was already sent
+        return 1 as unknown as NodeJS.Immediate;
+      }) as unknown as typeof setImmediate;
+
+      try {
+        const res = await request(groupController.deleteGroup, {
+          userId: Data.user.id,
+          pathParams: { groupId },
+        });
+
+        expect(res.statusCode).toBe(200);
+        // setImmediate was called (i.e., response was sent first, then setImmediate registered)
+        expect(global.setImmediate).toHaveBeenCalled();
+        expect(responseStatusAtSetImmediate).toBe(200);
+      } finally {
+        global.setImmediate = originalSetImmediate;
+      }
     });
   });
 

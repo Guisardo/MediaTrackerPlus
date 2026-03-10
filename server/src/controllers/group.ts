@@ -4,6 +4,7 @@ import { UserGroup, UserGroupMember, UserGroupRole } from 'src/entity/userGroup'
 import { createExpressRoute } from 'typescript-routes-to-openapi-server';
 import { logger } from 'src/logger';
 import { recalculateAllGroupPlatformRatings } from 'src/repository/groupPlatformRatingCache';
+import { cleanupSoftDeletedGroup } from 'src/repository/groupCleanup';
 
 interface GroupResponse {
   id: number;
@@ -303,6 +304,20 @@ export class GroupController {
     });
 
     res.sendStatus(200);
+
+    // Fire-and-forget post-response cleanup using setImmediate.
+    // Executes AFTER the response is sent, so HTTP latency is unaffected.
+    // Performs the actual transactional cleanup: delete groupPlatformRating,
+    // userGroupMember, and the userGroup row itself.
+    // If this fails, the soft-deleted group remains eligible for the startup sweep.
+    setImmediate(() => {
+      cleanupSoftDeletedGroup(groupId).catch((err) => {
+        logger.error('Failed to clean up soft-deleted group', {
+          err,
+          groupId,
+        });
+      });
+    });
   });
 
   /**
@@ -463,6 +478,22 @@ export class GroupController {
         });
 
         res.sendStatus(200);
+
+        // Fire-and-forget post-response cleanup using setImmediate.
+        // Same transactional cleanup as the explicit DELETE /api/group/:groupId path.
+        // If this fails, the soft-deleted group remains eligible for the startup sweep.
+        setImmediate(() => {
+          cleanupSoftDeletedGroup(groupId).catch((err) => {
+            logger.error(
+              'Failed to clean up soft-deleted group after sole-admin removal',
+              {
+                err,
+                groupId,
+              }
+            );
+          });
+        });
+
         return;
       }
     }
