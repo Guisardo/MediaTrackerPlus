@@ -158,6 +158,13 @@ export type GetItemsArgs = {
 
   page?: number;
   mediaItemIds?: number[];
+
+  /**
+   * @description When provided with orderBy === 'platformRecommended', scopes the sort
+   * to use the group's cached platform rating (groupPlatformRating) instead of the
+   * global mediaItem.platformRating. Ignored for all other sort modes.
+   */
+  groupId?: number;
 };
 
 export type FacetQueryArgs = {
