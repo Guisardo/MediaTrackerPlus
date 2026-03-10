@@ -261,3 +261,99 @@ describe('Poster – image load state', () => {
     expect(() => fireEvent.error(img)).not.toThrow();
   });
 });
+
+// ---------------------------------------------------------------------------
+// PosterCss component (the non-spring variant, indirectly tested)
+// ---------------------------------------------------------------------------
+
+/**
+ * PosterCss is not exported directly but we can test the tailwindcssAspectRatioForMediaType
+ * function coverage through all mediaType paths not yet covered, and also the
+ * aspectRatioForMediaType utility (lines 223-233) which is NOT exported but still
+ * counted in coverage. We cover its branches indirectly by ensuring the outer
+ * component renders correctly for all media types including itemMediaType.
+ */
+
+describe('Poster – additional itemMediaType aspect ratio', () => {
+  it('applies aspect-[2/3] to inner wrapper for movie itemMediaType', () => {
+    const { container } = renderPoster({ itemMediaType: 'movie' });
+    const innerDivs = container.querySelectorAll('div');
+    const hasAspect = Array.from(innerDivs).some((div) =>
+      div.className.includes('aspect-[2/3]')
+    );
+    expect(hasAspect).toBe(true);
+  });
+
+  it('applies aspect-[2/3] to inner wrapper for undefined itemMediaType (default)', () => {
+    const { container } = renderPoster({});
+    const innerDivs = container.querySelectorAll('div');
+    const hasAspect = Array.from(innerDivs).some((div) =>
+      div.className.includes('aspect-[2/3]')
+    );
+    expect(hasAspect).toBe(true);
+  });
+
+  it('applies aspect-[2/3] to inner wrapper for book itemMediaType', () => {
+    const { container } = renderPoster({ itemMediaType: 'book' });
+    const innerDivs = container.querySelectorAll('div');
+    const hasAspect = Array.from(innerDivs).some((div) =>
+      div.className.includes('aspect-[2/3]')
+    );
+    expect(hasAspect).toBe(true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Combined mediaType + itemMediaType
+// ---------------------------------------------------------------------------
+
+describe('Poster – combined mediaType and itemMediaType', () => {
+  it('applies different aspect ratios to outer vs inner wrappers', () => {
+    const { container } = renderPoster({
+      mediaType: 'audiobook',
+      itemMediaType: 'video_game',
+    });
+
+    const outerDiv = container.firstChild as HTMLElement;
+    expect(outerDiv.className).toContain('aspect-[1/1]');
+
+    const innerDivs = container.querySelectorAll('div');
+    const hasVideoGameAspect = Array.from(innerDivs).some((div) =>
+      div.className.includes('aspect-[3/4]')
+    );
+    expect(hasVideoGameAspect).toBe(true);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Poster with href + no src
+// ---------------------------------------------------------------------------
+
+describe('Poster – edge cases', () => {
+  it('renders link without image when href is set but src is absent', () => {
+    renderPoster({ href: '/media/42' });
+    const link = screen.getByRole('link');
+    expect(link).toHaveAttribute('href', '/media/42');
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
+    // Placeholder should be visible
+    expect(screen.getByText('?')).toBeInTheDocument();
+  });
+
+  it('renders children even when no src or href are provided', () => {
+    renderPoster({
+      children: <span data-testid="overlay">overlay text</span>,
+    });
+    expect(screen.getByTestId('overlay')).toBeInTheDocument();
+  });
+
+  it('renders with href and children together', () => {
+    renderPoster({
+      src: 'https://example.com/poster.jpg',
+      href: '/media/42',
+      children: <span data-testid="badge-child">HD</span>,
+    });
+    expect(screen.getByRole('link')).toBeInTheDocument();
+    expect(screen.getByRole('img')).toBeInTheDocument();
+    expect(screen.getByTestId('badge-child')).toBeInTheDocument();
+  });
+});

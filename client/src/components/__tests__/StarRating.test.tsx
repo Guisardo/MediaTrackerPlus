@@ -319,3 +319,250 @@ describe('StarRating – hover state', () => {
     expect(highlightedStars).toHaveLength(4);
   });
 });
+
+// ---------------------------------------------------------------------------
+// BadgeRating component
+// ---------------------------------------------------------------------------
+
+import { BadgeRating } from '../StarRating';
+
+describe('BadgeRating – rendering', () => {
+  beforeEach(() => {
+    mockSetRating.mockClear();
+  });
+
+  it('renders a star icon and the rating number when rated', () => {
+    render(<BadgeRating mediaItem={makeMediaItem(4)} />);
+
+    // The badge always shows a "star" icon
+    expect(screen.getByText('star')).toBeInTheDocument();
+    // It should show the numeric rating value
+    expect(screen.getByText('4')).toBeInTheDocument();
+  });
+
+  it('renders a star icon without numeric rating when unrated', () => {
+    const { container } = render(<BadgeRating mediaItem={makeMediaItem()} />);
+
+    expect(screen.getByText('star')).toBeInTheDocument();
+    // No numeric rating should be displayed for unrated items
+    const spans = container.querySelectorAll('span');
+    const numericSpans = Array.from(spans).filter((s) => /^\d+$/.test(s.textContent || ''));
+    expect(numericSpans).toHaveLength(0);
+  });
+
+  it('reads season userRating when season prop is provided', () => {
+    const mediaItem = makeMediaItem();
+    const season = { id: 5, userRating: { rating: 3 }, seen: false } as any;
+
+    render(<BadgeRating mediaItem={mediaItem} season={season} />);
+
+    expect(screen.getByText('3')).toBeInTheDocument();
+  });
+
+  it('reads episode userRating when episode prop is provided', () => {
+    const mediaItem = makeMediaItem();
+    const episode = { id: 10, userRating: { rating: 5 }, seen: true } as any;
+
+    render(<BadgeRating mediaItem={mediaItem} episode={episode} />);
+
+    expect(screen.getByText('5')).toBeInTheDocument();
+  });
+
+  it('opens the modal on click, revealing the StarRatingModal', async () => {
+    const user = userEvent.setup();
+    render(<BadgeRating mediaItem={makeMediaItem(3)} />);
+
+    // Click the badge to open modal
+    const badge = screen.getByText('star').closest('span[class*="cursor-pointer"]');
+    await user.click(badge!);
+
+    // StarRatingModal shows the title and a textarea for review
+    expect(screen.getByText('Test Movie')).toBeInTheDocument();
+    expect(screen.getByRole('textbox')).toBeInTheDocument();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// StarRatingModal (via BadgeRating) – interactions
+// ---------------------------------------------------------------------------
+
+describe('StarRatingModal – interactions via BadgeRating', () => {
+  beforeEach(() => {
+    mockSetRating.mockClear();
+  });
+
+  it('displays season number in the modal title when season prop is provided', async () => {
+    const user = userEvent.setup();
+    const mediaItem = makeMediaItem(2);
+    const season = { id: 5, seasonNumber: 1, userRating: { rating: 2 }, seen: false } as any;
+
+    render(<BadgeRating mediaItem={mediaItem} season={season} />);
+
+    const badge = screen.getByText('star').closest('span[class*="cursor-pointer"]');
+    await user.click(badge!);
+
+    // Title div contains "Test Movie" + formatted season; use a substring matcher
+    const titleDiv = screen.getByText((content, element) =>
+      element?.tagName === 'DIV' &&
+      (element?.className ?? '').includes('text-4xl') &&
+      (content.includes('Test Movie') || element?.textContent?.includes('Season 1')) || false
+    );
+    expect(titleDiv.textContent).toContain('Season 1');
+  });
+
+  it('displays episode number in the modal title when episode prop is provided', async () => {
+    const user = userEvent.setup();
+    const mediaItem = makeMediaItem(2);
+    const episode = {
+      id: 10,
+      seasonNumber: 1,
+      episodeNumber: 1,
+      userRating: { rating: 2 },
+      seen: true,
+    } as any;
+
+    render(<BadgeRating mediaItem={mediaItem} episode={episode} />);
+
+    const badge = screen.getByText('star').closest('span[class*="cursor-pointer"]');
+    await user.click(badge!);
+
+    // Title div contains "Test Movie" + formatted episode; use a substring matcher
+    const titleDiv = screen.getByText((content, element) =>
+      element?.tagName === 'DIV' &&
+      (element?.className ?? '').includes('text-4xl') &&
+      (content.includes('Test Movie') || element?.textContent?.includes('S01E01')) || false
+    );
+    expect(titleDiv.textContent).toContain('S01E01');
+  });
+
+  it('calls setRating when a star is clicked inside the modal', async () => {
+    const user = userEvent.setup();
+    render(<BadgeRating mediaItem={makeMediaItem(0)} />);
+
+    // Open the modal
+    const badge = screen.getByText('star').closest('span[class*="cursor-pointer"]');
+    await user.click(badge!);
+
+    // The modal shows its own set of 5 stars; click the 3rd one
+    const modalStars = screen.getAllByText(/^star(_border)?$/);
+    // First star is the badge star, remaining 5 are the modal stars
+    const modalStarSet = modalStars.slice(1);
+    await user.click(modalStarSet[2]);
+
+    expect(mockSetRating).toHaveBeenCalledWith(
+      expect.objectContaining({ rating: 3 })
+    );
+  });
+
+  it('clears rating when clicking on the currently rated star in the modal', async () => {
+    const user = userEvent.setup();
+    render(<BadgeRating mediaItem={makeMediaItem(3)} />);
+
+    // Open the modal
+    const badge = screen.getByText('star').closest('span[class*="cursor-pointer"]');
+    await user.click(badge!);
+
+    // Click the 3rd star (index 2) which matches current rating=3
+    const modalStars = screen.getAllByText(/^star(_border)?$/);
+    const modalStarSet = modalStars.slice(1);
+    await user.click(modalStarSet[2]);
+
+    // When clicking the star matching the current rating, it should pass null
+    expect(mockSetRating).toHaveBeenCalledWith(
+      expect.objectContaining({ rating: null })
+    );
+  });
+
+  it('updates the review text via the textarea', async () => {
+    const user = userEvent.setup();
+    render(<BadgeRating mediaItem={makeMediaItem(3)} />);
+
+    const badge = screen.getByText('star').closest('span[class*="cursor-pointer"]');
+    await user.click(badge!);
+
+    const textarea = screen.getByRole('textbox');
+    await user.clear(textarea);
+    await user.type(textarea, 'Great movie!');
+
+    expect(textarea).toHaveValue('Great movie!');
+  });
+
+  it('submits the review form and calls setRating with review text', async () => {
+    const user = userEvent.setup();
+    render(<BadgeRating mediaItem={makeMediaItem(3)} />);
+
+    const badge = screen.getByText('star').closest('span[class*="cursor-pointer"]');
+    await user.click(badge!);
+
+    const textarea = screen.getByRole('textbox');
+    await user.clear(textarea);
+    await user.type(textarea, 'Excellent');
+
+    // Submit the form by clicking the save button
+    const saveBtn = screen.getByText('Save review');
+    await user.click(saveBtn);
+
+    expect(mockSetRating).toHaveBeenCalledWith(
+      expect.objectContaining({ review: 'Excellent' })
+    );
+  });
+
+  it('closes the modal when cancel is clicked', async () => {
+    const user = userEvent.setup();
+    render(<BadgeRating mediaItem={makeMediaItem(3)} />);
+
+    const badge = screen.getByText('star').closest('span[class*="cursor-pointer"]');
+    await user.click(badge!);
+
+    // The modal should be open showing the title
+    expect(screen.getByText('Test Movie')).toBeInTheDocument();
+
+    const cancelBtn = screen.getByText('Cancel');
+    await user.click(cancelBtn);
+
+    // After canceling, the modal content (textarea) should be gone
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+  });
+
+  it('initializes textarea with existing review text', async () => {
+    const user = userEvent.setup();
+    const mediaItem = {
+      id: 1,
+      title: 'Test Movie',
+      mediaType: 'movie',
+      userRating: { rating: 4, review: 'Already reviewed' },
+      seen: true,
+    } as unknown as MediaItemItemsResponse;
+
+    render(<BadgeRating mediaItem={mediaItem} />);
+
+    const badge = screen.getByText('star').closest('span[class*="cursor-pointer"]');
+    await user.click(badge!);
+
+    expect(screen.getByRole('textbox')).toHaveValue('Already reviewed');
+  });
+
+  it('highlights stars on hover inside the modal', async () => {
+    render(<BadgeRating mediaItem={makeMediaItem(0)} />);
+
+    const badge = screen.getByText('star').closest('span[class*="cursor-pointer"]');
+    fireEvent.click(badge!);
+
+    const modalStars = screen.getAllByText(/^star(_border)?$/);
+    const modalStarSet = modalStars.slice(1);
+
+    fireEvent.pointerEnter(modalStarSet[3]);
+
+    const highlighted = modalStarSet.filter((el) =>
+      el.classList.contains('text-yellow-400')
+    );
+    expect(highlighted).toHaveLength(4);
+
+    fireEvent.pointerLeave(modalStarSet[3]);
+
+    const highlightedAfter = modalStarSet.filter((el) =>
+      el.classList.contains('text-yellow-400')
+    );
+    expect(highlightedAfter).toHaveLength(0);
+  });
+});
