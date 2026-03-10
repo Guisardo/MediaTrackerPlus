@@ -274,24 +274,41 @@ export class RatingController {
 
     res.send();
 
-    // Fire-and-forget recommendation pipeline using setImmediate.
-    // Only triggered when a numeric rating is provided.
-    // This executes AFTER the response is sent, so HTTP latency is unaffected.
+    // Fire-and-forget post-response work using setImmediate.
+    // Executes AFTER the response is sent, so HTTP latency is unaffected.
+    // Triggered whenever a rating value is present (including null to clear a rating).
     if (rating !== undefined) {
       setImmediate(() => {
-        userRepository
-          .findOne({ id: userId })
-          .then((user) => {
-            if (user.addRecommendedToWatchlist === false) {
-              return;
-            }
-            return getRecommendationService().then((service) =>
-              service.processRating(userId, mediaItemId, rating)
-            );
-          })
+        // Always recalculate the platformRating cache so that the community-consensus
+        // score stays current regardless of whether the rating was set or cleared.
+        // A null rating causes AVG to drop that user's contribution, correctly
+        // reflecting the updated community average.
+        mediaItemRepository
+          .recalculatePlatformRating(mediaItemId)
           .catch((err) => {
-            logger.error('Unhandled error in recommendation pipeline', { err });
+            logger.error('Failed to recalculate platformRating after rating write', {
+              err,
+              mediaItemId,
+              userId,
+            });
           });
+
+        // Recommendation pipeline: only run when a numeric (non-null) rating is provided.
+        if (rating !== null) {
+          userRepository
+            .findOne({ id: userId })
+            .then((user) => {
+              if (user.addRecommendedToWatchlist === false) {
+                return;
+              }
+              return getRecommendationService().then((service) =>
+                service.processRating(userId, mediaItemId, rating)
+              );
+            })
+            .catch((err) => {
+              logger.error('Unhandled error in recommendation pipeline', { err });
+            });
+        }
       });
     }
   });

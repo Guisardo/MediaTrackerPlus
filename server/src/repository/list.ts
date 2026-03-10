@@ -920,7 +920,7 @@ class ListRepository extends repository<List>({
       )
       .orderBy('listItem.id', 'asc');
 
-    return res.map((listItem) => ({
+    return res.map((listItem: Record<string, any>) => ({
       id: Number(listItem['listItem.id']),
       listedAt: new Date(listItem['listItem.addedAt']).toISOString(),
       estimatedRating: listItem['listItem.estimatedRating'] ?? undefined,

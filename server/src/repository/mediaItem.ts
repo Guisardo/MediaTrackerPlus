@@ -858,12 +858,21 @@ class MediaItemRepository extends repository<MediaItemBase>({
   }
 
   /**
-   * Recalculates the platformRating cache for one or more mediaItems.
+   * Recalculates the platformRating cache for a single mediaItem.
    *
-   * Computes the average of all estimated ratings from the listItem table
-   * and writes the result to the platformRating column.
-   * When no estimated ratings exist for an item, AVG() returns NULL, which sets
-   * platformRating to NULL — clearing any stale cached value.
+   * Computes the average across ALL applicable rating signals for the item:
+   *   1. Explicit user ratings from the userRating table (item-level only — episode
+   *      and season ratings are excluded because platformRating represents the item
+   *      as a whole, not individual episode quality).
+   *   2. AI-estimated ratings stored in listItem.estimatedRating (set by the
+   *      recommendation pipeline for items that have not yet been explicitly rated).
+   *
+   * Combining both sources allows the cache to reflect community consensus when
+   * users have rated the item directly, while also capturing AI-derived estimates
+   * for items that are on lists but have not yet accumulated explicit ratings.
+   *
+   * When neither source provides any non-null values, AVG() returns NULL, which
+   * clears any stale cached value — correctly representing "no data."
    *
    * This must be called via setImmediate() so it executes after the HTTP
    * response is sent and does not affect endpoint latency.
@@ -874,8 +883,18 @@ class MediaItemRepository extends repository<MediaItemBase>({
     await Database.knex<MediaItemBase>(this.tableName)
       .update({
         platformRating: Database.knex.raw(
-          `(SELECT AVG("estimatedRating") FROM "listItem" WHERE "mediaItemId" = ? AND "estimatedRating" IS NOT NULL)`,
-          [mediaItemId]
+          `(SELECT AVG(r) FROM (
+            SELECT "rating" AS r FROM "userRating"
+            WHERE "mediaItemId" = ?
+              AND "rating" IS NOT NULL
+              AND "episodeId" IS NULL
+              AND "seasonId" IS NULL
+            UNION ALL
+            SELECT "estimatedRating" AS r FROM "listItem"
+            WHERE "mediaItemId" = ?
+              AND "estimatedRating" IS NOT NULL
+          ) AS combined_ratings)`,
+          [mediaItemId, mediaItemId]
         ),
       })
       .where('id', mediaItemId);
