@@ -170,19 +170,21 @@ export const useSortedList = (args: {
         stringComparator
       ),
       'platform-recommended': (a: ListItem, b: ListItem): number => {
-        // Score = platformRating * 0.7 + externalRating * 0.3
+        // Score = platformRating * 0.7 + externalRating * 0.3 when both are present.
+        // Falls back to platformRating alone, then tmdbRating alone for unrated items.
         // Community consensus (platform average) weighted higher than external aggregators.
         // Contrast with 'recommended' which uses 60/40 for personal rating estimates vs external.
         const scoreOf = (listItem: ListItem): number | undefined => {
           const platformRating = listItem.mediaItem.platformRating;
-          if (platformRating == null) {
-            return undefined;
-          }
           const tmdbRating = listItem.mediaItem.tmdbRating;
-          if (tmdbRating != null) {
+          if (platformRating != null && tmdbRating != null) {
             return platformRating * 0.7 + tmdbRating * 0.3;
           }
-          return platformRating;
+          if (platformRating != null) {
+            return platformRating;
+          }
+          // Fall back to external rating for items without any platform rating yet.
+          return tmdbRating ?? undefined;
         };
 
         const scoreA = scoreOf(a);
@@ -236,7 +238,14 @@ export const useSortedList = (args: {
       },
     };
 
-    return listItems.sort(sortFunctions[sortBy]);
+    // For platform-recommended sort, filter out items that have already been
+    // watched by any platform member so the view only surfaces unseen content.
+    const itemsToSort =
+      sortBy === 'platform-recommended'
+        ? listItems.filter((item) => !item.mediaItem.platformSeen)
+        : listItems;
+
+    return itemsToSort.sort(sortFunctions[sortBy]);
   }, [sortOrder, listItems, sortBy]);
 };
 

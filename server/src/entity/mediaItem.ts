@@ -126,6 +126,7 @@ export type MediaItemItemsResponse = Omit<MediaItemBase, 'lockedAt'> & {
   progress?: number;
   totalRuntime?: number;
   estimatedRating?: number | null;
+  platformSeen?: boolean;
 };
 
 export const mediaItemColumns = <const>[

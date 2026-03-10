@@ -361,6 +361,40 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
         );
     }
 
+    // Platform-recommended view: exclude items already watched by any platform member.
+    // Non-TV: exclude if any user has a seen entry (episodeId IS NULL).
+    // TV shows: exclude if any user has completed all non-special episodes.
+    if (orderBy === 'platformRecommended') {
+      query.whereRaw(`NOT (
+        "mediaItem"."mediaType" != 'tv'
+        AND EXISTS (
+          SELECT 1 FROM "seen"
+          WHERE "seen"."mediaItemId" = "mediaItem"."id"
+            AND "seen"."episodeId" IS NULL
+        )
+      )`);
+      query.whereRaw(`NOT (
+        "mediaItem"."mediaType" = 'tv'
+        AND EXISTS (
+          SELECT 1 FROM (
+            SELECT s."userId"
+            FROM "seen" s
+            JOIN "episode" e ON e."id" = s."episodeId"
+            WHERE s."mediaItemId" = "mediaItem"."id"
+              AND e."isSpecialEpisode" = 0
+            GROUP BY s."userId"
+            HAVING COUNT(DISTINCT s."episodeId") > 0
+              AND COUNT(DISTINCT s."episodeId") >= (
+                SELECT COUNT(*)
+                FROM "episode" e2
+                WHERE e2."tvShowId" = "mediaItem"."id"
+                  AND e2."isSpecialEpisode" = 0
+              )
+          ) AS "completed_users"
+        )
+      )`);
+    }
+
     // Media type
     if (mediaType) {
       query.andWhere('mediaItem.mediaType', mediaType);
@@ -654,12 +688,17 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
       // (personal AI estimate for the current user). The 70/30 weighting reflects stronger trust in
       // aggregated community data vs. external sources, contrasting with 'recommended' which uses
       // 60/40 for personal estimates (single-user signal is weaker than community signal).
+      // Items with no platformRating fall back to tmdbRating as a proxy ordering signal.
       case 'platformRecommended':
-        query.orderByRaw(`CASE WHEN "mediaItem"."platformRating" IS NULL THEN 1 ELSE 0 END ASC`);
+        // Score tiers (descending): (1) both present -> 70/30 weighted blend,
+        // (2) platformRating only -> platformRating, (3) tmdbRating only -> tmdbRating fallback,
+        // (4) neither -> NULL LAST -> alphabetical tiebreaker.
         query.orderByRaw(`CASE
                             WHEN "mediaItem"."platformRating" IS NOT NULL AND "mediaItem"."tmdbRating" IS NOT NULL
                               THEN ("mediaItem"."platformRating" * 0.7 + "mediaItem"."tmdbRating" * 0.3)
-                            ELSE "mediaItem"."platformRating"
+                            WHEN "mediaItem"."platformRating" IS NOT NULL
+                              THEN "mediaItem"."platformRating"
+                            ELSE "mediaItem"."tmdbRating"
                           END DESC NULLS LAST`);
         query.orderBy('mediaItem.title', 'asc');
         break;

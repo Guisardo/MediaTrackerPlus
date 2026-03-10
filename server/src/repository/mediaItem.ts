@@ -855,9 +855,9 @@ class MediaItemRepository extends repository<MediaItemBase>({
   /**
    * Recalculates the platformRating cache for one or more mediaItems.
    *
-   * Computes the average of all media-level user ratings (episodeId IS NULL
-   * AND seasonId IS NULL) and writes the result to the platformRating column.
-   * When no ratings exist for an item, AVG() returns NULL, which sets
+   * Computes the average of all estimated ratings from the listItem table
+   * and writes the result to the platformRating column.
+   * When no estimated ratings exist for an item, AVG() returns NULL, which sets
    * platformRating to NULL — clearing any stale cached value.
    *
    * This must be called via setImmediate() so it executes after the HTTP
@@ -869,7 +869,7 @@ class MediaItemRepository extends repository<MediaItemBase>({
     await Database.knex<MediaItemBase>(this.tableName)
       .update({
         platformRating: Database.knex.raw(
-          `(SELECT AVG("rating") FROM "userRating" WHERE "mediaItemId" = ? AND "episodeId" IS NULL AND "seasonId" IS NULL)`,
+          `(SELECT AVG("estimatedRating") FROM "listItem" WHERE "mediaItemId" = ? AND "estimatedRating" IS NOT NULL)`,
           [mediaItemId]
         ),
       })

@@ -395,6 +395,7 @@ class ListRepository extends repository<List>({
         'mediaItem.tmdbId': 'mediaItem.tmdbId',
         'mediaItem.tmdbRating': 'mediaItem.tmdbRating',
         'mediaItem.platformRating': 'mediaItem.platformRating',
+        'mediaItem.platformSeen': 'platformSeenItems.platformSeen',
         'mediaItem.totalRuntime': 'mediaItemTotalRuntime.totalRuntime',
         'mediaItem.traktId': 'mediaItem.traktId',
         'mediaItem.tvdbId': 'mediaItem.tvdbId',
@@ -541,6 +542,29 @@ class ListRepository extends repository<List>({
         'mediaItemLastSeen.mediaItemId',
         'listItem.mediaItemId'
       )
+      // MediaItem: platform-seen flag — true if any platform user has fully watched this item.
+      // Non-TV: any seen entry with episodeId IS NULL.
+      // TV: any user has seen all non-special episodes (seenCount >= totalCount, count > 0).
+      .joinRaw(`LEFT JOIN (
+        SELECT "mediaItemId", 1 AS "platformSeen"
+        FROM "seen"
+        WHERE "episodeId" IS NULL
+        UNION
+        SELECT "mediaItemId", 1 AS "platformSeen"
+        FROM (
+          SELECT s."mediaItemId", s."userId", COUNT(DISTINCT s."episodeId") AS "seenCount"
+          FROM "seen" s
+          JOIN "episode" e ON e."id" = s."episodeId"
+          WHERE e."isSpecialEpisode" = 0
+          GROUP BY s."mediaItemId", s."userId"
+          HAVING COUNT(DISTINCT s."episodeId") > 0
+            AND COUNT(DISTINCT s."episodeId") >= (
+              SELECT COUNT(*) FROM "episode" e2
+              WHERE e2."tvShowId" = s."mediaItemId"
+                AND e2."isSpecialEpisode" = 0
+            )
+        ) AS "completedShows"
+      ) AS "platformSeenItems" ON "platformSeenItems"."mediaItemId" = "listItem"."mediaItemId"`)
       // MediaItem: total runtime
       .leftJoin(
         (qb) =>
@@ -907,6 +931,7 @@ class ListRepository extends repository<List>({
         tmdbId: listItem['mediaItem.tmdbId'],
         tmdbRating: listItem['mediaItem.tmdbRating'] ?? undefined,
         platformRating: listItem['mediaItem.platformRating'] ?? undefined,
+        platformSeen: Boolean(listItem['mediaItem.platformSeen']),
         traktId: listItem['mediaItem.traktId'],
         tvdbId: listItem['mediaItem.tvdbId'],
         url: listItem['mediaItem.url'],
