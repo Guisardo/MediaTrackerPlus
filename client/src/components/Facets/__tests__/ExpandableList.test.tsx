@@ -37,7 +37,7 @@ describe('ExpandableList', () => {
   it('renders all items when count is below maxVisible', () => {
     const items = makeItems(3);
     render(
-      React.createElement(ExpandableList, { items, maxVisible: 5, children: renderList })
+      React.createElement(ExpandableList as any, { items, maxVisible: 5 }, renderList)
     );
 
     expect(screen.getByText('Item 1')).toBeInTheDocument();
@@ -48,7 +48,7 @@ describe('ExpandableList', () => {
   it('truncates list to maxVisible items and shows "Show more" button', () => {
     const items = makeItems(20);
     render(
-      React.createElement(ExpandableList, { items, maxVisible: 5, children: renderList })
+      React.createElement(ExpandableList as any, { items, maxVisible: 5 }, renderList)
     );
 
     expect(screen.getByText('Item 5')).toBeInTheDocument();
@@ -60,7 +60,7 @@ describe('ExpandableList', () => {
     const user = userEvent.setup();
     const items = makeItems(10);
     render(
-      React.createElement(ExpandableList, { items, maxVisible: 3, children: renderList })
+      React.createElement(ExpandableList as any, { items, maxVisible: 3 }, renderList)
     );
 
     await user.click(screen.getByRole('button'));
@@ -72,7 +72,7 @@ describe('ExpandableList', () => {
     const user = userEvent.setup();
     const items = makeItems(10);
     render(
-      React.createElement(ExpandableList, { items, maxVisible: 3, children: renderList })
+      React.createElement(ExpandableList as any, { items, maxVisible: 3 }, renderList)
     );
 
     // Expand
@@ -87,7 +87,7 @@ describe('ExpandableList', () => {
   it('uses default maxVisible of 15 when not specified', () => {
     const items = makeItems(20);
     render(
-      React.createElement(ExpandableList, { items, children: renderList })
+      React.createElement(ExpandableList as any, { items }, renderList)
     );
 
     expect(screen.getByText('Item 15')).toBeInTheDocument();

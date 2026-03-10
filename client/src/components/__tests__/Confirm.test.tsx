@@ -53,7 +53,7 @@ jest.mock('src/components/Modal', () => {
   const React = require('react');
   return {
     Modal: ({ children }: { children: (closeModal: () => void) => React.ReactElement }) =>
-      React.createElement('div', { 'data-testid': 'modal-wrapper' }, children(() => {})),
+      React.createElement('div', { 'data-testid': 'modal-wrapper' }, children(() => { /* noop */ })),
   };
 });
 
