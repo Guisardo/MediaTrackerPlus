@@ -782,9 +782,10 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
       case 'platformRecommended':
         if (groupId != null) {
           // Group-scoped: use gpr.rating (from the LEFT JOIN added above) instead of mediaItem.platformRating.
-          // Step 1: tier separation — group-rated items always precede unrated items.
+          // Step 1: tier separation — items with any rating signal (gpr.rating OR tmdbRating) precede
+          // items with neither, mirroring the global path where platformRating is seeded from tmdbRating.
           query.orderByRaw(
-            `CASE WHEN "gpr"."rating" IS NULL THEN 1 ELSE 0 END ASC`
+            `CASE WHEN "gpr"."rating" IS NULL AND "mediaItem"."tmdbRating" IS NULL THEN 1 ELSE 0 END ASC`
           );
           // Step 2: within each tier, rank by score descending.
           query.orderByRaw(`CASE

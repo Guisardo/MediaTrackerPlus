@@ -26,12 +26,15 @@ import { logger } from 'src/logger';
 /**
  * Recalculates the group platform rating cache for a single (groupId, mediaItemId) pair.
  *
- * Computes AVG(listItem.estimatedRating) across all group members who have a
- * non-null estimatedRating for the given media item, using the join path:
- *   listItem -> list (via listId) -> userGroupMember (via list.userId = ugm.userId AND ugm.groupId)
+ * Computes AVG across all group-member rating signals, mirroring the global
+ * recalculatePlatformRating logic but scoped to group members:
+ *   1. userRating.rating — explicit item-level ratings (episodeId IS NULL AND seasonId IS NULL),
+ *      matching the same filter used by the global platformRating computation.
+ *   2. listItem.estimatedRating — AI-estimated ratings from the recommendation pipeline,
+ *      accessed via the 3-table join: listItem -> list -> userGroupMember.
  *
- * If no group members have an estimatedRating for the media item, the cached
- * rating is set to NULL (clearing any stale value).
+ * Both sources contribute equally to the AVG. If no group members have any rating
+ * signal for the media item, the cached rating is deleted (clearing any stale value).
  *
  * @param groupId - The ID of the user group.
  * @param mediaItemId - The ID of the media item whose group cache should be refreshed.
@@ -42,23 +45,34 @@ export async function recalculateGroupPlatformRating(
 ): Promise<void> {
   const knex = Database.knex;
 
-  // Compute the average estimatedRating for this group + media item
-  const result = await knex('listItem')
-    .join('list', 'listItem.listId', 'list.id')
-    .join('userGroupMember', function () {
-      this.on('list.userId', '=', 'userGroupMember.userId').andOn(
-        'userGroupMember.groupId',
-        '=',
-        knex.raw('?', [groupId])
-      );
-    })
-    .where('listItem.mediaItemId', mediaItemId)
-    .whereNotNull('listItem.estimatedRating')
-    .avg('listItem.estimatedRating as avgRating')
-    .first();
+  // Compute the average of all group-member rating signals using a UNION ALL subquery.
+  // The UNION ALL combines two independent sources for the same media item:
+  //   - Explicit user ratings (userRating table, item-level only)
+  //   - AI-estimated ratings (listItem table, via the list ownership join)
+  // Using knex.raw for the UNION ALL subquery because knex's query builder does not
+  // cleanly express AVG over a UNION ALL without a raw subquery wrapper.
+  const rows: Array<{ avgRating: string | number | null }> = await knex.raw(
+    `SELECT AVG(r) AS "avgRating" FROM (
+      SELECT ur."rating" AS r
+      FROM "userRating" ur
+      JOIN "userGroupMember" ugm ON ugm."userId" = ur."userId" AND ugm."groupId" = ?
+      WHERE ur."mediaItemId" = ?
+        AND ur."rating" IS NOT NULL
+        AND ur."episodeId" IS NULL
+        AND ur."seasonId" IS NULL
+      UNION ALL
+      SELECT li."estimatedRating" AS r
+      FROM "listItem" li
+      JOIN "list" l ON li."listId" = l."id"
+      JOIN "userGroupMember" ugm ON ugm."userId" = l."userId" AND ugm."groupId" = ?
+      WHERE li."mediaItemId" = ?
+        AND li."estimatedRating" IS NOT NULL
+    ) AS combined_ratings`,
+    [groupId, mediaItemId, groupId, mediaItemId]
+  );
 
   const avgRating =
-    result?.avgRating != null ? Number(result.avgRating) : null;
+    rows[0]?.avgRating != null ? Number(rows[0].avgRating) : null;
 
   if (avgRating != null) {
     // Upsert: insert or update the cached rating
@@ -82,12 +96,13 @@ export async function recalculateGroupPlatformRating(
 /**
  * Recalculates the group platform rating cache for ALL media items in a group.
  *
- * Uses a single bulk query to compute AVG(estimatedRating) per mediaItemId
- * for all media items where at least one group member has an estimatedRating.
- * Then performs a bulk upsert into groupPlatformRating.
+ * Uses a single bulk query to compute AVG across both rating signals per mediaItemId:
+ *   1. userRating.rating — explicit item-level ratings from group members
+ *   2. listItem.estimatedRating — AI-estimated ratings from group members
+ * Both sources are combined via UNION ALL before computing the per-item AVG.
  *
  * Also cleans up groupPlatformRating rows for this group where no members
- * have ratings anymore (stale cache entries).
+ * have any rating signal anymore (stale cache entries).
  *
  * @param groupId - The ID of the user group whose cache should be fully refreshed.
  */
@@ -96,24 +111,28 @@ export async function recalculateAllGroupPlatformRatings(
 ): Promise<void> {
   const knex = Database.knex;
 
-  // Step 1: Compute AVG(estimatedRating) per mediaItemId for all media items
-  // where at least one group member has an estimatedRating
-  const avgRatings: Array<{ mediaItemId: number; avgRating: number }> =
-    await knex('listItem')
-      .join('list', 'listItem.listId', 'list.id')
-      .join('userGroupMember', function () {
-        this.on('list.userId', '=', 'userGroupMember.userId').andOn(
-          'userGroupMember.groupId',
-          '=',
-          knex.raw('?', [groupId])
-        );
-      })
-      .whereNotNull('listItem.estimatedRating')
-      .groupBy('listItem.mediaItemId')
-      .select(
-        'listItem.mediaItemId',
-        knex.raw('AVG("listItem"."estimatedRating") as "avgRating"')
-      );
+  // Step 1: Compute AVG of all rating signals per mediaItemId for group members.
+  // UNION ALL combines userRating (explicit) + listItem.estimatedRating (AI-estimated).
+  const avgRatings: Array<{ mediaItemId: number; avgRating: string | number }> =
+    await knex.raw(
+      `SELECT "mediaItemId", AVG(r) AS "avgRating"
+       FROM (
+         SELECT ur."mediaItemId", ur."rating" AS r
+         FROM "userRating" ur
+         JOIN "userGroupMember" ugm ON ugm."userId" = ur."userId" AND ugm."groupId" = ?
+         WHERE ur."rating" IS NOT NULL
+           AND ur."episodeId" IS NULL
+           AND ur."seasonId" IS NULL
+         UNION ALL
+         SELECT li."mediaItemId", li."estimatedRating" AS r
+         FROM "listItem" li
+         JOIN "list" l ON li."listId" = l."id"
+         JOIN "userGroupMember" ugm ON ugm."userId" = l."userId" AND ugm."groupId" = ?
+         WHERE li."estimatedRating" IS NOT NULL
+       ) AS combined
+       GROUP BY "mediaItemId"`,
+      [groupId, groupId]
+    );
 
   // Step 2: Clean up all existing cache rows for this group that are no longer valid
   // (media items where no group member has an estimatedRating anymore)
