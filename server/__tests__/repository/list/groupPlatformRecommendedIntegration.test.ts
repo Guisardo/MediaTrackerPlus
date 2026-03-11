@@ -302,21 +302,24 @@ describe('US-017: Group-based platform recommended sort — integration tests', 
 
       const titles = items.map((i) => i.title);
 
-      // Verify correct scoring with manually computed expected scores:
-      // Alpha: gpr=9.0, tmdb=7.0 → 9.0*0.7 + 7.0*0.3 = 8.4 (tier 1)
-      // Epsilon: gpr=7.0, tmdb=6.0 → 7.0*0.7 + 6.0*0.3 = 6.7 (tier 1) [1/3 watched ≤50% → NOT excluded]
-      // Zeta: gpr=6.0, tmdb=5.5 → 6.0*0.7 + 5.5*0.3 = 5.85 (tier 1) [outsideUser only → NOT excluded in group]
-      // Gamma: no gpr → tier 2, tmdb=6.5
-
+      // Verify correct scoring with manually computed expected scores.
+      // Tier separator: items with BOTH gpr.rating IS NULL AND tmdbRating IS NULL go to tier 2.
+      // Items with only a tmdbRating (no group rating) are now in tier 1, sorted by
+      // the ELSE branch of the CASE expression (tmdbRating directly).
+      //
+      // Alpha:   gpr=9.0, tmdb=7.0 → 9.0*0.7 + 7.0*0.3 = 8.4  (tier 1, gpr present)
+      // Epsilon: gpr=7.0, tmdb=6.0 → 7.0*0.7 + 6.0*0.3 = 6.7  (tier 1, gpr present) [1/3 watched ≤50% → NOT excluded]
+      // Gamma:   no gpr,  tmdb=6.5 → ELSE = 6.5               (tier 1, tmdbRating present)
+      // Zeta:    gpr=6.0, tmdb=5.5 → 6.0*0.7 + 5.5*0.3 = 5.85 (tier 1, gpr present) [outsideUser only → NOT excluded in group]
+      // Beta:    gpr=2.0, tmdb=8.0 → 2.0*0.7 + 8.0*0.3 = 3.8  (tier 1, gpr present) — NOT excluded (no group member seen it)
+      //
       // Delta is excluded (>50% watched in group)
       // Eta is excluded (>50% completed in group)
-      // Beta has gpr=2.0, tmdb=8.0 → 2.0*0.7 + 8.0*0.3 = 3.8 (tier 1) — NOT excluded (no group member seen it)
 
       expect(titles).not.toContain('IntDelta');
       expect(titles).not.toContain('IntTvEta');
 
-      // Alpha (8.4) > Epsilon (6.7) > Zeta (5.85) > Beta (3.8) — all tier 1
-      // Gamma (tier 2, tmdb=6.5)
+      // Full tier-1 order: Alpha (8.4) > Epsilon (6.7) > Gamma (6.5) > Zeta (5.85) > Beta (3.8)
       expect(titles).toContain('IntAlpha');
       expect(titles).toContain('IntEpsilon');
       expect(titles).toContain('IntZeta');
@@ -324,10 +327,9 @@ describe('US-017: Group-based platform recommended sort — integration tests', 
       expect(titles).toContain('IntGamma');
 
       expect(titles.indexOf('IntAlpha')).toBeLessThan(titles.indexOf('IntEpsilon'));
-      expect(titles.indexOf('IntEpsilon')).toBeLessThan(titles.indexOf('IntZeta'));
+      expect(titles.indexOf('IntEpsilon')).toBeLessThan(titles.indexOf('IntGamma'));
+      expect(titles.indexOf('IntGamma')).toBeLessThan(titles.indexOf('IntZeta'));
       expect(titles.indexOf('IntZeta')).toBeLessThan(titles.indexOf('IntBeta'));
-      // All tier-1 items before tier-2 Gamma
-      expect(titles.indexOf('IntBeta')).toBeLessThan(titles.indexOf('IntGamma'));
     });
   });
 

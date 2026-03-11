@@ -105,8 +105,9 @@ describe('group platform rating cache', () => {
   afterAll(clearDatabase);
 
   afterEach(async () => {
-    // Clean up listItems and cached ratings between tests
+    // Clean up listItems, userRatings, and cached ratings between tests
     await Database.knex('listItem').delete();
+    await Database.knex('userRating').delete();
     await Database.knex('groupPlatformRating').delete();
   });
 
@@ -595,6 +596,167 @@ describe('group platform rating cache', () => {
       expect(cached).toBeDefined();
       // Only user1's rating of 4 (nonMemberUser's 10 is excluded)
       expect(cached.rating).toBeCloseTo(4, 5);
+    });
+  });
+
+  // ─── userRating.rating signal inclusion ─────────────────────────────────────
+
+  describe('userRating.rating included in group cache computation', () => {
+    test('userRating alone (no estimatedRating) produces correct average', async () => {
+      // user1 has an explicit item-level rating of 8 for movieA in groupAlpha
+      await Database.knex('userRating').insert([
+        {
+          mediaItemId: movieA.id, userId: user1.id, rating: 8,
+          date: Date.now(), episodeId: null, seasonId: null,
+        },
+      ]);
+
+      await recalculateGroupPlatformRating(groupAlpha.id, movieA.id);
+
+      const cached = await Database.knex('groupPlatformRating')
+        .where({ groupId: groupAlpha.id, mediaItemId: movieA.id })
+        .first();
+
+      expect(cached).toBeDefined();
+      expect(cached.rating).toBeCloseTo(8, 5);
+    });
+
+    test('userRating and estimatedRating are averaged together', async () => {
+      // user1 has explicit rating 9; user2 has estimatedRating 5
+      await Database.knex('userRating').insert([
+        {
+          mediaItemId: movieA.id, userId: user1.id, rating: 9,
+          date: Date.now(), episodeId: null, seasonId: null,
+        },
+      ]);
+      await Database.knex('listItem').insert([
+        { listId: watchlist2.id, mediaItemId: movieA.id, addedAt: Date.now(), estimatedRating: 5 },
+      ]);
+
+      await recalculateGroupPlatformRating(groupAlpha.id, movieA.id);
+
+      const cached = await Database.knex('groupPlatformRating')
+        .where({ groupId: groupAlpha.id, mediaItemId: movieA.id })
+        .first();
+
+      expect(cached).toBeDefined();
+      // AVG(9, 5) = 7
+      expect(cached.rating).toBeCloseTo(7, 5);
+    });
+
+    test('multiple group members with userRatings are averaged correctly', async () => {
+      // user1=6, user2=8, user3=4 — all explicit ratings
+      await Database.knex('userRating').insert([
+        { mediaItemId: movieA.id, userId: user1.id, rating: 6, date: Date.now(), episodeId: null, seasonId: null },
+        { mediaItemId: movieA.id, userId: user2.id, rating: 8, date: Date.now(), episodeId: null, seasonId: null },
+        { mediaItemId: movieA.id, userId: user3.id, rating: 4, date: Date.now(), episodeId: null, seasonId: null },
+      ]);
+
+      await recalculateGroupPlatformRating(groupAlpha.id, movieA.id);
+
+      const cached = await Database.knex('groupPlatformRating')
+        .where({ groupId: groupAlpha.id, mediaItemId: movieA.id })
+        .first();
+
+      expect(cached).toBeDefined();
+      // AVG(6, 8, 4) = 6
+      expect(cached.rating).toBeCloseTo(6, 5);
+    });
+
+    test('episode and season userRatings are excluded — only item-level ratings count', async () => {
+      // Create a minimal tvShow + season + episode to satisfy FK constraints.
+      // user1 will have an episode-level rating; user2 a season-level rating.
+      // Only user3's item-level rating (episodeId IS NULL AND seasonId IS NULL) should count.
+      const tvShowId = 50;
+      const seasonId = 50;
+      const episodeId = 50;
+      await Database.knex('mediaItem').insert({
+        id: tvShowId, lastTimeUpdated: Date.now(), mediaType: 'tv',
+        source: 'tmdb', title: 'Test TV Show', tmdbId: 50001,
+      });
+      await Database.knex('season').insert({
+        id: seasonId, seasonNumber: 1, tvShowId, numberOfEpisodes: 1,
+        title: 'Season 1', isSpecialSeason: false,
+      });
+      await Database.knex('episode').insert({
+        id: episodeId, episodeNumber: 1, seasonId, tvShowId,
+        seasonNumber: 1, isSpecialEpisode: false,
+        seasonAndEpisodeNumber: 1001, title: 'Episode 1',
+      });
+
+      try {
+        await Database.knex('userRating').insert([
+          // Episode-level rating — must be excluded
+          { mediaItemId: tvShowId, userId: user1.id, rating: 10, date: Date.now(), episodeId, seasonId: null },
+          // Season-level rating — must be excluded
+          { mediaItemId: tvShowId, userId: user2.id, rating: 10, date: Date.now(), episodeId: null, seasonId },
+          // Item-level rating — must be included
+          { mediaItemId: tvShowId, userId: user3.id, rating: 4,  date: Date.now(), episodeId: null, seasonId: null },
+        ]);
+
+        await recalculateGroupPlatformRating(groupAlpha.id, tvShowId);
+
+        const cached = await Database.knex('groupPlatformRating')
+          .where({ groupId: groupAlpha.id, mediaItemId: tvShowId })
+          .first();
+
+        expect(cached).toBeDefined();
+        // Only user3's item-level rating of 4 should be included; episode + season ratings excluded
+        expect(cached.rating).toBeCloseTo(4, 5);
+      } finally {
+        // Delete in FK-safe order: userRating → episode → season → mediaItem
+        await Database.knex('userRating').where('mediaItemId', tvShowId).delete();
+        await Database.knex('groupPlatformRating').where('mediaItemId', tvShowId).delete();
+        await Database.knex('episode').where('id', episodeId).delete();
+        await Database.knex('season').where('id', seasonId).delete();
+        await Database.knex('mediaItem').where('id', tvShowId).delete();
+      }
+    });
+
+    test('userRating from a non-group member is excluded', async () => {
+      // nonMemberUser has a high rating but is NOT in groupAlpha
+      await Database.knex('userRating').insert([
+        { mediaItemId: movieA.id, userId: user1.id,       rating: 4,  date: Date.now(), episodeId: null, seasonId: null },
+        { mediaItemId: movieA.id, userId: nonMemberUser.id, rating: 10, date: Date.now(), episodeId: null, seasonId: null },
+      ]);
+
+      await recalculateGroupPlatformRating(groupAlpha.id, movieA.id);
+
+      const cached = await Database.knex('groupPlatformRating')
+        .where({ groupId: groupAlpha.id, mediaItemId: movieA.id })
+        .first();
+
+      expect(cached).toBeDefined();
+      // Only user1's rating; nonMemberUser excluded
+      expect(cached.rating).toBeCloseTo(4, 5);
+    });
+
+    test('recalculateAllGroupPlatformRatings includes userRating in bulk computation', async () => {
+      // user1 has explicit ratings for movieA and movieB; user2 has estimatedRating for movieA
+      await Database.knex('userRating').insert([
+        { mediaItemId: movieA.id, userId: user1.id, rating: 8, date: Date.now(), episodeId: null, seasonId: null },
+        { mediaItemId: movieB.id, userId: user1.id, rating: 6, date: Date.now(), episodeId: null, seasonId: null },
+      ]);
+      await Database.knex('listItem').insert([
+        { listId: watchlist2.id, mediaItemId: movieA.id, addedAt: Date.now(), estimatedRating: 4 },
+      ]);
+
+      await recalculateAllGroupPlatformRatings(groupAlpha.id);
+
+      const cachedA = await Database.knex('groupPlatformRating')
+        .where({ groupId: groupAlpha.id, mediaItemId: movieA.id })
+        .first();
+      const cachedB = await Database.knex('groupPlatformRating')
+        .where({ groupId: groupAlpha.id, mediaItemId: movieB.id })
+        .first();
+
+      // movieA: AVG(8 from userRating, 4 from estimatedRating) = 6
+      expect(cachedA).toBeDefined();
+      expect(cachedA.rating).toBeCloseTo(6, 5);
+
+      // movieB: AVG(6 from userRating only) = 6
+      expect(cachedB).toBeDefined();
+      expect(cachedB.rating).toBeCloseTo(6, 5);
     });
   });
 
