@@ -10,6 +10,7 @@ import { logger } from 'src/logger';
 import { listRepository } from 'src/repository/list';
 import { listItemRepository } from 'src/repository/listItemRepository';
 import { mediaItemRepository } from 'src/repository/mediaItem';
+import { recalculateGroupPlatformRatingsForUser } from 'src/repository/groupPlatformRatingCache';
 import { seenRepository } from 'src/repository/seen';
 import { userRatingRepository } from 'src/repository/userRating';
 import { updateMediaItem } from 'src/updateMetadata';
@@ -619,6 +620,18 @@ export class TraktTvImportController {
                 logger.error(
                   'Unhandled error in platformRating recalculation after Trakt.tv import',
                   { err }
+                );
+              });
+            });
+            setImmediate(() => {
+              Promise.all(
+                affectedMediaItemIds.map((mediaItemId) =>
+                  recalculateGroupPlatformRatingsForUser(userId, mediaItemId)
+                )
+              ).catch((err) => {
+                logger.error(
+                  'Unhandled error in groupPlatformRating recalculation after Trakt.tv import',
+                  { err, userId }
                 );
               });
             });

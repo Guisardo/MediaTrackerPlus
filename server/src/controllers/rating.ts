@@ -12,6 +12,7 @@ import { mediaItemRepository } from 'src/repository/mediaItem';
 import { listItemRepository } from 'src/repository/listItemRepository';
 import { userRepository } from 'src/repository/user';
 import { Database } from 'src/dbconfig';
+import { recalculateGroupPlatformRatingsForUser } from 'src/repository/groupPlatformRatingCache';
 
 /**
  * Lazy-initialized singleton for RecommendationService.
@@ -292,6 +293,18 @@ export class RatingController {
               userId,
             });
           });
+
+        // Recalculate group platform rating caches for all groups the user belongs to.
+        // userRating.rating is now included in the group cache signal alongside
+        // listItem.estimatedRating, so a rating change must invalidate those caches.
+        recalculateGroupPlatformRatingsForUser(userId, mediaItemId).catch(
+          (err) => {
+            logger.error(
+              'Failed to recalculate groupPlatformRating after rating write',
+              { err, mediaItemId, userId }
+            );
+          }
+        );
 
         // Recommendation pipeline: only run when a numeric (non-null) rating is provided.
         if (rating !== null) {

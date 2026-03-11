@@ -417,6 +417,158 @@ describe('UsersController', () => {
   });
 
   // -------------------------------------------------------------------------
+  // search
+  // -------------------------------------------------------------------------
+
+  describe('search', () => {
+    test('returns HTTP 200 with an empty array when query is empty', async () => {
+      const usersController = new UsersController();
+
+      const res = await request(usersController.search, {
+        userId: Data.user.id,
+        requestQuery: { query: '' },
+      });
+
+      expect(res.statusCode).toBe(400);
+      expect(res.data).toEqual([]);
+    });
+
+    test('returns HTTP 200 with an empty array when query contains only whitespace', async () => {
+      const usersController = new UsersController();
+
+      const res = await request(usersController.search, {
+        userId: Data.user.id,
+        requestQuery: { query: '   ' },
+      });
+
+      expect(res.statusCode).toBe(400);
+      expect(res.data).toEqual([]);
+    });
+
+    test('returns matching users with case-insensitive search', async () => {
+      const usersController = new UsersController();
+
+      const res = await request(usersController.search, {
+        userId: Data.user.id,
+        requestQuery: { query: 'user' },
+      });
+
+      expect(res.statusCode).toBe(200);
+      expect(Array.isArray(res.data)).toBe(true);
+      const results = res.data as any[];
+      expect(results.length).toBeGreaterThan(0);
+      expect(results.some(u => u.id === Data.user2.id)).toBe(true);
+    });
+
+    test('returns matching users with uppercase query', async () => {
+      const usersController = new UsersController();
+
+      const res = await request(usersController.search, {
+        userId: Data.user.id,
+        requestQuery: { query: 'USER' },
+      });
+
+      expect(res.statusCode).toBe(200);
+      const results = res.data as any[];
+      expect(results.length).toBeGreaterThan(0);
+      expect(results.some(u => u.id === Data.user2.id)).toBe(true);
+    });
+
+    test('excludes the authenticated user from search results', async () => {
+      const usersController = new UsersController();
+
+      // Search for the authenticated user's own name
+      const res = await request(usersController.search, {
+        userId: Data.user.id,
+        requestQuery: { query: Data.user.name },
+      });
+
+      expect(res.statusCode).toBe(200);
+      const results = res.data as any[];
+      expect(results.every(u => u.id !== Data.user.id)).toBe(true);
+    });
+
+    test('returns only id and name fields — no password or admin fields', async () => {
+      const usersController = new UsersController();
+
+      const res = await request(usersController.search, {
+        userId: Data.user.id,
+        requestQuery: { query: 'user' },
+      });
+
+      expect(res.statusCode).toBe(200);
+      const results = res.data as any[];
+      results.forEach(user => {
+        expect(user).toHaveProperty('id');
+        expect(user).toHaveProperty('name');
+        expect(user).not.toHaveProperty('password');
+        expect(user).not.toHaveProperty('admin');
+      });
+    });
+
+    test('enforces max 20 results limit', async () => {
+      const usersController = new UsersController();
+
+      // Create 25 additional users for this test
+      const newUsers = [];
+      for (let i = 0; i < 25; i++) {
+        newUsers.push({
+          id: 100 + i,
+          name: `testuser${i}`,
+          admin: false,
+          password: 'testpass',
+          publicReviews: false,
+        });
+      }
+      await Database.knex('user').insert(newUsers);
+
+      try {
+        const res = await request(usersController.search, {
+          userId: Data.user.id,
+          requestQuery: { query: 'testuser' },
+        });
+
+        expect(res.statusCode).toBe(200);
+        const results = res.data as any[];
+        expect(results.length).toBeLessThanOrEqual(20);
+      } finally {
+        // Clean up the test users
+        await Database.knex('user')
+          .where('id', '>=', 100)
+          .where('id', '<', 125)
+          .delete();
+      }
+    });
+
+    test('returns empty array when no users match the query', async () => {
+      const usersController = new UsersController();
+
+      const res = await request(usersController.search, {
+        userId: Data.user.id,
+        requestQuery: { query: 'xyznonexistent' },
+      });
+
+      expect(res.statusCode).toBe(200);
+      expect(res.data).toEqual([]);
+    });
+
+    test('matches partial usernames', async () => {
+      const usersController = new UsersController();
+
+      // Search for partial name 'user' should match 'user2'
+      const res = await request(usersController.search, {
+        userId: Data.user.id,
+        requestQuery: { query: 'user' },
+      });
+
+      expect(res.statusCode).toBe(200);
+      const results = res.data as any[];
+      expect(results.length).toBeGreaterThan(0);
+      expect(results.some(u => u.name.includes('user'))).toBe(true);
+    });
+  });
+
+  // -------------------------------------------------------------------------
   // register
   // -------------------------------------------------------------------------
 

@@ -2,6 +2,7 @@ import _ from 'lodash';
 
 import { User, userNonSensitiveColumns } from 'src/entity/user';
 import { userRepository } from 'src/repository/user';
+import { Database } from 'src/dbconfig';
 import {
   Notifications,
   NotificationPlatformsCredentialsType,
@@ -276,5 +277,37 @@ export class UsersController {
     } else {
       res.send(null);
     }
+  });
+
+  /**
+   * @openapi_operationId search
+   */
+  search = createExpressRoute<{
+    path: '/api/users/search';
+    method: 'get';
+    requestQuery: {
+      query: string;
+    };
+    responseBody: Array<Pick<UserResponse, 'id' | 'name'>>;
+  }>(async (req, res) => {
+    const userId = Number(req.user);
+    const { query } = req.query;
+
+    // Validate input
+    if (typeof query !== 'string' || query.trim().length === 0) {
+      res.status(400);
+      res.send([]);
+      return;
+    }
+
+    // Query database for users matching the search string (case-insensitive)
+    const users = await Database.knex<User>('user')
+      .where('name', 'like', `%${query}%`)
+      .whereNot('id', userId)
+      .select('id', 'name')
+      .limit(20);
+
+    // Return only id and name fields
+    res.send(users.map(user => ({ id: user.id, name: user.name })));
   });
 }

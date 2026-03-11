@@ -86,6 +86,7 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
     ratingMin,
     ratingMax,
     status,
+    groupId,
   } = args;
 
   const currentDateString = new Date().toISOString();
@@ -343,6 +344,18 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
       'mediaItem.id'
     );
 
+  // When platformRecommended sort with a specific group, join the group's cached ratings.
+  // The LEFT JOIN is ONLY added when groupId is provided to avoid any performance impact
+  // on the non-group path. gpr.rating replaces mediaItem.platformRating in the scoring formula.
+  if (orderBy === 'platformRecommended' && groupId != null) {
+    query.leftJoin('groupPlatformRating as gpr', function () {
+      this.on('gpr.mediaItemId', '=', 'mediaItem.id').andOnVal(
+        'gpr.groupId',
+        groupId
+      );
+    });
+  }
+
   if (Array.isArray(mediaItemIds)) {
     query.whereIn('mediaItem.id', mediaItemIds);
   } else {
@@ -381,38 +394,87 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
         );
     }
 
-    // Platform-recommended view: exclude items already watched by any platform member.
-    // Non-TV: exclude if any user has a seen entry (episodeId IS NULL).
-    // TV shows: exclude if any user has completed all non-special episodes.
+    // Platform-recommended view: exclude items already watched.
+    // When groupId is provided (group-scoped): exclude only if >50% of group members
+    // have seen the item (majority-watched threshold). Uses CAST for SQLite integer
+    // division safety.
+    // When no groupId (global): exclude if ANY platform user has seen the item.
     if (orderBy === 'platformRecommended') {
-      query.whereRaw(`NOT (
-        "mediaItem"."mediaType" != 'tv'
-        AND EXISTS (
-          SELECT 1 FROM "seen"
-          WHERE "seen"."mediaItemId" = "mediaItem"."id"
-            AND "seen"."episodeId" IS NULL
-        )
-      )`);
-      query.whereRaw(`NOT (
-        "mediaItem"."mediaType" = 'tv'
-        AND EXISTS (
-          SELECT 1 FROM (
-            SELECT s."userId"
-            FROM "seen" s
-            JOIN "episode" e ON e."id" = s."episodeId"
-            WHERE s."mediaItemId" = "mediaItem"."id"
-              AND e."isSpecialEpisode" = 0
-            GROUP BY s."userId"
-            HAVING COUNT(DISTINCT s."episodeId") > 0
-              AND COUNT(DISTINCT s."episodeId") >= (
-                SELECT COUNT(*)
-                FROM "episode" e2
-                WHERE e2."tvShowId" = "mediaItem"."id"
-                  AND e2."isSpecialEpisode" = 0
-              )
-          ) AS "completed_users"
-        )
-      )`);
+      if (groupId != null) {
+        // Group-scoped majority-watched exclusion.
+        // Pre-compute group member count as a scalar subquery to avoid per-item recalculation.
+        // Non-TV: exclude if >50% of group members have a seen entry (episodeId IS NULL).
+        query.whereRaw(
+          `NOT (
+            "mediaItem"."mediaType" != 'tv'
+            AND (
+              SELECT COUNT(DISTINCT s."userId")
+              FROM "seen" s
+              JOIN "userGroupMember" ugm ON ugm."userId" = s."userId" AND ugm."groupId" = ?
+              WHERE s."mediaItemId" = "mediaItem"."id"
+                AND s."episodeId" IS NULL
+            ) > CAST((SELECT COUNT(*) FROM "userGroupMember" WHERE "groupId" = ?) AS REAL) / 2.0
+          )`,
+          [groupId, groupId]
+        );
+        // TV shows: exclude if >50% of group members have completed all non-special episodes.
+        query.whereRaw(
+          `NOT (
+            "mediaItem"."mediaType" = 'tv'
+            AND (
+              SELECT COUNT(DISTINCT cu."userId")
+              FROM (
+                SELECT s."userId"
+                FROM "seen" s
+                JOIN "episode" e ON e."id" = s."episodeId"
+                JOIN "userGroupMember" ugm ON ugm."userId" = s."userId" AND ugm."groupId" = ?
+                WHERE s."mediaItemId" = "mediaItem"."id"
+                  AND e."isSpecialEpisode" = 0
+                GROUP BY s."userId"
+                HAVING COUNT(DISTINCT s."episodeId") >= (
+                  SELECT COUNT(*)
+                  FROM "episode" e2
+                  WHERE e2."tvShowId" = "mediaItem"."id"
+                    AND e2."isSpecialEpisode" = 0
+                )
+              ) AS cu
+            ) > CAST((SELECT COUNT(*) FROM "userGroupMember" WHERE "groupId" = ?) AS REAL) / 2.0
+          )`,
+          [groupId, groupId]
+        );
+      } else {
+        // Global platform exclusion: exclude if ANY user has seen the item.
+        // Non-TV: exclude if any user has a seen entry (episodeId IS NULL).
+        query.whereRaw(`NOT (
+          "mediaItem"."mediaType" != 'tv'
+          AND EXISTS (
+            SELECT 1 FROM "seen"
+            WHERE "seen"."mediaItemId" = "mediaItem"."id"
+              AND "seen"."episodeId" IS NULL
+          )
+        )`);
+        // TV shows: exclude if any user has completed all non-special episodes.
+        query.whereRaw(`NOT (
+          "mediaItem"."mediaType" = 'tv'
+          AND EXISTS (
+            SELECT 1 FROM (
+              SELECT s."userId"
+              FROM "seen" s
+              JOIN "episode" e ON e."id" = s."episodeId"
+              WHERE s."mediaItemId" = "mediaItem"."id"
+                AND e."isSpecialEpisode" = 0
+              GROUP BY s."userId"
+              HAVING COUNT(DISTINCT s."episodeId") > 0
+                AND COUNT(DISTINCT s."episodeId") >= (
+                  SELECT COUNT(*)
+                  FROM "episode" e2
+                  WHERE e2."tvShowId" = "mediaItem"."id"
+                    AND e2."isSpecialEpisode" = 0
+                )
+            ) AS "completed_users"
+          )
+        )`);
+      }
     }
 
     // Media type
@@ -709,26 +771,48 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
       // aggregated community data vs. external sources, contrasting with 'recommended' which uses
       // 60/40 for personal estimates (single-user signal is weaker than community signal).
       //
+      // When groupId is provided, uses gpr.rating (group-scoped cached rating from groupPlatformRating)
+      // instead of mediaItem.platformRating. The same 70/30 formula is applied.
+      //
       // Two-tier ordering:
-      //   Tier 1 (platformRating IS NOT NULL): items with real community ratings — sorted by the
-      //           70/30 blend (or platformRating alone when tmdbRating is absent).
-      //   Tier 2 (platformRating IS NULL): items not yet rated on this platform — sorted by
+      //   Tier 1 (rating IS NOT NULL): items with real community ratings — sorted by the
+      //           70/30 blend (or rating alone when tmdbRating is absent).
+      //   Tier 2 (rating IS NULL): items not yet rated — sorted by
       //           tmdbRating as a proxy, or last (NULLS LAST) when tmdbRating is also absent.
       case 'platformRecommended':
-        // Step 1: tier separation — platform-rated items always precede unrated items.
-        query.orderByRaw(
-          `CASE WHEN "mediaItem"."platformRating" IS NULL THEN 1 ELSE 0 END ASC`
-        );
-        // Step 2: within each tier, rank by score descending.
-        //   Tier 1 — (1) both ratings: 70/30 blend, (2) platformRating only: platformRating.
-        //   Tier 2 — tmdbRating fallback; items with neither rating sort last (NULLS LAST).
-        query.orderByRaw(`CASE
-                            WHEN "mediaItem"."platformRating" IS NOT NULL AND "mediaItem"."tmdbRating" IS NOT NULL
-                              THEN ("mediaItem"."platformRating" * 0.7 + "mediaItem"."tmdbRating" * 0.3)
-                            WHEN "mediaItem"."platformRating" IS NOT NULL
-                              THEN "mediaItem"."platformRating"
-                            ELSE "mediaItem"."tmdbRating"
-                          END DESC NULLS LAST`);
+        if (groupId != null) {
+          // Group-scoped: use gpr.rating (from the LEFT JOIN added above) instead of mediaItem.platformRating.
+          // Step 1: tier separation — items with a group rating signal (gpr.rating IS NOT NULL) precede
+          // items without one, mirroring the global path where platformRating IS NULL sends items to tier 2.
+          // tmdbRating is only a fallback sort within tier 2, not a tier-qualification criterion.
+          query.orderByRaw(
+            `CASE WHEN "gpr"."rating" IS NULL THEN 1 ELSE 0 END ASC`
+          );
+          // Step 2: within each tier, rank by score descending.
+          query.orderByRaw(`CASE
+                              WHEN "gpr"."rating" IS NOT NULL AND "mediaItem"."tmdbRating" IS NOT NULL
+                                THEN ("gpr"."rating" * 0.7 + "mediaItem"."tmdbRating" * 0.3)
+                              WHEN "gpr"."rating" IS NOT NULL
+                                THEN "gpr"."rating"
+                              ELSE "mediaItem"."tmdbRating"
+                            END DESC NULLS LAST`);
+        } else {
+          // Global platform path (no groupId): uses mediaItem.platformRating.
+          // Step 1: tier separation — platform-rated items always precede unrated items.
+          query.orderByRaw(
+            `CASE WHEN "mediaItem"."platformRating" IS NULL THEN 1 ELSE 0 END ASC`
+          );
+          // Step 2: within each tier, rank by score descending.
+          //   Tier 1 — (1) both ratings: 70/30 blend, (2) platformRating only: platformRating.
+          //   Tier 2 — tmdbRating fallback; items with neither rating sort last (NULLS LAST).
+          query.orderByRaw(`CASE
+                              WHEN "mediaItem"."platformRating" IS NOT NULL AND "mediaItem"."tmdbRating" IS NOT NULL
+                                THEN ("mediaItem"."platformRating" * 0.7 + "mediaItem"."tmdbRating" * 0.3)
+                              WHEN "mediaItem"."platformRating" IS NOT NULL
+                                THEN "mediaItem"."platformRating"
+                              ELSE "mediaItem"."tmdbRating"
+                            END DESC NULLS LAST`);
+        }
         query.orderBy('mediaItem.title', 'asc');
         break;
 

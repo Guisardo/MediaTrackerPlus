@@ -141,14 +141,14 @@ const renderNav = (initialEntry = '/') => {
 // ---------------------------------------------------------------------------
 
 describe('useRouteNames', () => {
-  it('returns all 14 expected routes', () => {
+  it('returns all 15 expected routes', () => {
     const { result } = renderHook(() => useRouteNames(), {
       wrapper: ({ children }) => (
         <MemoryRouter>{children}</MemoryRouter>
       ),
     });
 
-    expect(result.current).toHaveLength(14);
+    expect(result.current).toHaveLength(15);
   });
 
   it('includes Home at path /', () => {
@@ -180,6 +180,7 @@ describe('useRouteNames', () => {
     expect(paths).toContain('/calendar');
     expect(paths).toContain('/import');
     expect(paths).toContain('/lists');
+    expect(paths).toContain('/groups');
   });
 
   it('every route entry has a non-empty name', () => {
@@ -210,10 +211,10 @@ describe('NavComponent – logged-in user', () => {
 
   it('renders navigation links for all routes', () => {
     renderNav('/');
-    // There are 14 route links in the desktop nav
+    // There are 15 route links in the desktop nav
     const links = screen.getAllByRole('link', { name: /^(?!Alice|Logout|Settings).+/ });
-    // At minimum the 14 NavLinks should be present (some may be in sidebar too)
-    expect(links.length).toBeGreaterThanOrEqual(14);
+    // At minimum the 15 NavLinks should be present (some may be in sidebar too)
+    expect(links.length).toBeGreaterThanOrEqual(15);
   });
 
   it('renders a link to /tv', () => {

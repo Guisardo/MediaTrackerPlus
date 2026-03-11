@@ -1949,5 +1949,247 @@ describe('migrations', () => {
     expect(resultWithoutPublisher.publisher).toBeNull();
   });
 
+  test('20990101000002_userGroups', async () => {
+    // Test that migration creates all three tables
+    await Database.knex.migrate.up({
+      name: `20990101000002_userGroups.${Config.MIGRATIONS_EXTENSION}`,
+      directory: Config.MIGRATIONS_DIRECTORY,
+    });
+
+    // Verify tables exist
+    const hasUserGroupTable = await Database.knex.schema.hasTable('userGroup');
+    const hasUserGroupMemberTable = await Database.knex.schema.hasTable(
+      'userGroupMember'
+    );
+    const hasGroupPlatformRatingTable = await Database.knex.schema.hasTable(
+      'groupPlatformRating'
+    );
+
+    expect(hasUserGroupTable).toBe(true);
+    expect(hasUserGroupMemberTable).toBe(true);
+    expect(hasGroupPlatformRatingTable).toBe(true);
+
+    // Verify userGroup columns
+    expect(
+      await Database.knex.schema.hasColumn('userGroup', 'id')
+    ).toBe(true);
+    expect(
+      await Database.knex.schema.hasColumn('userGroup', 'name')
+    ).toBe(true);
+    expect(
+      await Database.knex.schema.hasColumn('userGroup', 'createdBy')
+    ).toBe(true);
+    expect(
+      await Database.knex.schema.hasColumn('userGroup', 'createdAt')
+    ).toBe(true);
+    expect(
+      await Database.knex.schema.hasColumn('userGroup', 'updatedAt')
+    ).toBe(true);
+    expect(
+      await Database.knex.schema.hasColumn('userGroup', 'deletedAt')
+    ).toBe(true);
+
+    // Verify userGroupMember columns
+    expect(
+      await Database.knex.schema.hasColumn('userGroupMember', 'id')
+    ).toBe(true);
+    expect(
+      await Database.knex.schema.hasColumn('userGroupMember', 'groupId')
+    ).toBe(true);
+    expect(
+      await Database.knex.schema.hasColumn('userGroupMember', 'userId')
+    ).toBe(true);
+    expect(
+      await Database.knex.schema.hasColumn('userGroupMember', 'role')
+    ).toBe(true);
+    expect(
+      await Database.knex.schema.hasColumn('userGroupMember', 'addedAt')
+    ).toBe(true);
+
+    // Verify groupPlatformRating columns
+    expect(
+      await Database.knex.schema.hasColumn('groupPlatformRating', 'id')
+    ).toBe(true);
+    expect(
+      await Database.knex.schema.hasColumn('groupPlatformRating', 'groupId')
+    ).toBe(true);
+    expect(
+      await Database.knex.schema.hasColumn('groupPlatformRating', 'mediaItemId')
+    ).toBe(true);
+    expect(
+      await Database.knex.schema.hasColumn('groupPlatformRating', 'rating')
+    ).toBe(true);
+
+    // Test creating a group
+    const groupCreatedAt = new Date().getTime();
+    const groupId = await Database.knex('userGroup')
+      .insert({
+        name: 'Test Group',
+        createdBy: InitialData.user.id,
+        createdAt: groupCreatedAt,
+      })
+      .then((res) => res[0]);
+
+    const group = await Database.knex('userGroup').where('id', groupId).first();
+    expect(group).toMatchObject({
+      id: groupId,
+      name: 'Test Group',
+      createdBy: InitialData.user.id,
+      createdAt: groupCreatedAt,
+      updatedAt: null,
+      deletedAt: null,
+    });
+
+    // Test creating a group member
+    const memberAddedAt = new Date().getTime();
+    const memberId = await Database.knex('userGroupMember')
+      .insert({
+        groupId: groupId,
+        userId: InitialData.user.id,
+        role: 'admin',
+        addedAt: memberAddedAt,
+      })
+      .then((res) => res[0]);
+
+    const member = await Database.knex('userGroupMember')
+      .where('id', memberId)
+      .first();
+    expect(member).toMatchObject({
+      groupId: groupId,
+      userId: InitialData.user.id,
+      role: 'admin',
+      addedAt: memberAddedAt,
+    });
+
+    // Test unique constraint on (groupId, userId)
+    await expect(
+      Database.knex('userGroupMember').insert({
+        groupId: groupId,
+        userId: InitialData.user.id,
+        role: 'viewer',
+        addedAt: memberAddedAt,
+      })
+    ).rejects.toMatchObject({ code: 'SQLITE_CONSTRAINT_UNIQUE' });
+
+    // Test creating a group platform rating
+    const ratingId = await Database.knex('groupPlatformRating')
+      .insert({
+        groupId: groupId,
+        mediaItemId: InitialData.mediaItem.id,
+        rating: 7.5,
+      })
+      .then((res) => res[0]);
+
+    const rating = await Database.knex('groupPlatformRating')
+      .where('id', ratingId)
+      .first();
+    expect(rating).toMatchObject({
+      groupId: groupId,
+      mediaItemId: InitialData.mediaItem.id,
+      rating: 7.5,
+    });
+
+    // Test unique constraint on (groupId, mediaItemId)
+    await expect(
+      Database.knex('groupPlatformRating').insert({
+        groupId: groupId,
+        mediaItemId: InitialData.mediaItem.id,
+        rating: 8.0,
+      })
+    ).rejects.toMatchObject({ code: 'SQLITE_CONSTRAINT_UNIQUE' });
+
+    // Test CASCADE delete: deleting a user cascades to userGroupMember
+    // Create a second user and add them to the group
+    const user2 = {
+      id: randomNumericId(),
+      name: 'testuser2',
+      password: 'password',
+    };
+    await Database.knex('user').insert(user2);
+
+    const member2Id = await Database.knex('userGroupMember')
+      .insert({
+        groupId: groupId,
+        userId: user2.id,
+        role: 'viewer',
+        addedAt: new Date().getTime(),
+      })
+      .then((res) => res[0]);
+
+    // Delete user2
+    await Database.knex('user').where('id', user2.id).delete();
+
+    // Verify the member row was deleted (CASCADE)
+    const deletedMember = await Database.knex('userGroupMember')
+      .where('id', member2Id)
+      .first();
+    expect(deletedMember).toBeUndefined();
+
+    // Test CASCADE delete: deleting a group cascades to userGroupMember and groupPlatformRating
+    // First check that the rows exist
+    let existingMember = await Database.knex('userGroupMember')
+      .where('id', memberId)
+      .first();
+    let existingRating = await Database.knex('groupPlatformRating')
+      .where('id', ratingId)
+      .first();
+    expect(existingMember).toBeDefined();
+    expect(existingRating).toBeDefined();
+
+    // Delete the group
+    await Database.knex('userGroup').where('id', groupId).delete();
+
+    // Verify the userGroupMember row was deleted (CASCADE)
+    existingMember = await Database.knex('userGroupMember')
+      .where('id', memberId)
+      .first();
+    expect(existingMember).toBeUndefined();
+
+    // Verify the groupPlatformRating row was deleted (CASCADE)
+    existingRating = await Database.knex('groupPlatformRating')
+      .where('id', ratingId)
+      .first();
+    expect(existingRating).toBeUndefined();
+
+    // Test rollback
+    await Database.knex.migrate.down({
+      directory: Config.MIGRATIONS_DIRECTORY,
+    });
+
+    const hasUserGroupTableAfterDown = await Database.knex.schema.hasTable(
+      'userGroup'
+    );
+    const hasUserGroupMemberTableAfterDown = await Database.knex.schema.hasTable(
+      'userGroupMember'
+    );
+    const hasGroupPlatformRatingTableAfterDown = await Database.knex.schema.hasTable(
+      'groupPlatformRating'
+    );
+
+    expect(hasUserGroupTableAfterDown).toBe(false);
+    expect(hasUserGroupMemberTableAfterDown).toBe(false);
+    expect(hasGroupPlatformRatingTableAfterDown).toBe(false);
+
+    // Test that migration can be applied again after rollback (tests idempotency)
+    await Database.knex.migrate.up({
+      name: `20990101000002_userGroups.${Config.MIGRATIONS_EXTENSION}`,
+      directory: Config.MIGRATIONS_DIRECTORY,
+    });
+
+    const hasUserGroupTableAfterSecondUp = await Database.knex.schema.hasTable(
+      'userGroup'
+    );
+    const hasUserGroupMemberTableAfterSecondUp = await Database.knex.schema.hasTable(
+      'userGroupMember'
+    );
+    const hasGroupPlatformRatingTableAfterSecondUp = await Database.knex.schema.hasTable(
+      'groupPlatformRating'
+    );
+
+    expect(hasUserGroupTableAfterSecondUp).toBe(true);
+    expect(hasUserGroupMemberTableAfterSecondUp).toBe(true);
+    expect(hasGroupPlatformRatingTableAfterSecondUp).toBe(true);
+  });
+
   afterAll(clearDatabase);
 });

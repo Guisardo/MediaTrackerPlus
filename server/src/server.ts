@@ -24,6 +24,7 @@ import { Database } from 'src/dbconfig';
 import { catchAndLogError, durationToMilliseconds } from 'src/utils';
 import { updateMetadata } from 'src/updateMetadata';
 import { sendNotifications } from 'src/sendNotifications';
+import { cleanupSoftDeletedGroups } from 'src/repository/groupCleanup';
 import {
   AudibleCountryCode,
   ServerLang,
@@ -224,6 +225,7 @@ export class Application {
     logger.init();
     Database.init();
     await Database.runMigrations();
+    await catchAndLogError(cleanupSoftDeletedGroups);
 
     const configuration = await configurationRepository.findOne();
 
@@ -305,6 +307,7 @@ export const initialize = async (args: {
   logger.init();
   Database.init();
   await Database.runMigrations();
+  await catchAndLogError(cleanupSoftDeletedGroups);
 
   logger.info(
     `Server timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}`

@@ -32,6 +32,16 @@ export const stackErrorFormatter = format((info: LogEntry) => {
     info.message = info.stack;
   }
 
+  // When an Error is passed as metadata (e.g. logger.error('msg', { err })),
+  // format.cli cannot serialize it because Error properties are non-enumerable.
+  // Extract the stack (or message) into the log entry so it appears in console output.
+  const meta = info as Record<string, unknown>;
+  if (meta['err'] instanceof Error) {
+    const err = meta['err'] as Error;
+    info.message = `${info.message}\n${err.stack ?? err.message}`;
+    delete meta['err'];
+  }
+
   return info;
 });
 
@@ -98,20 +108,20 @@ export class logger {
     this.httpLogger?.http('', msg);
   }
 
-  static error: LeveledLogMethod = (msg) => {
-    return this.debugLogger?.error(msg);
+  static error: LeveledLogMethod = (msg, ...splat) => {
+    return this.debugLogger?.error(msg, ...splat);
   };
 
-  static warn: LeveledLogMethod = (msg) => {
-    return this.debugLogger?.warn(msg);
+  static warn: LeveledLogMethod = (msg, ...splat) => {
+    return this.debugLogger?.warn(msg, ...splat);
   };
 
-  static info: LeveledLogMethod = (msg) => {
-    return this.debugLogger?.info(msg);
+  static info: LeveledLogMethod = (msg, ...splat) => {
+    return this.debugLogger?.info(msg, ...splat);
   };
 
-  static debug: LeveledLogMethod = (msg) => {
-    return this.debugLogger?.debug(msg);
+  static debug: LeveledLogMethod = (msg, ...splat) => {
+    return this.debugLogger?.debug(msg, ...splat);
   };
 }
 

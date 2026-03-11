@@ -4,6 +4,9 @@ import { List, ListItem } from 'src/entity/list';
 import { TvEpisode } from 'src/entity/tvepisode';
 import { TvSeason } from 'src/entity/tvseason';
 import { repository } from 'src/repository/repository';
+import { logger } from 'src/logger';
+import { mediaItemRepository } from 'src/repository/mediaItem';
+import { recalculateGroupPlatformRatingsForUser } from 'src/repository/groupPlatformRatingCache';
 
 class ListItemRepository extends repository<ListItem>({
   tableName: 'listItem',
@@ -112,7 +115,7 @@ class ListItemRepository extends repository<ListItem>({
   });
 
   removeItem = this.#addOrRemoveListItemFactory(async (trx, args) => {
-    const { mediaItemId, seasonId, episodeId, listId } = args;
+    const { userId, mediaItemId, seasonId, episodeId, listId } = args;
 
     const listItem = await trx('listItem')
       .where({
@@ -125,6 +128,33 @@ class ListItemRepository extends repository<ListItem>({
 
     if (listItem) {
       await trx('listItem').delete().where('id', listItem.id);
+
+      // Fire-and-forget cache recalculation for both global platformRating and
+      // group-scoped caches. Only triggered when the removed item had an
+      // estimatedRating, since only those affect the caches.
+      // setImmediate runs after the transaction commits (next event loop tick).
+      if (listItem.estimatedRating != null) {
+        setImmediate(() => {
+          mediaItemRepository
+            .recalculatePlatformRating(mediaItemId)
+            .catch((err) => {
+              logger.error(
+                'listItemRepository.removeItem: Unhandled error in platformRating recalculation',
+                { err, mediaItemId }
+              );
+            });
+        });
+        setImmediate(() => {
+          recalculateGroupPlatformRatingsForUser(userId, mediaItemId).catch(
+            (err) => {
+              logger.error(
+                'listItemRepository.removeItem: Unhandled error in groupPlatformRating recalculation',
+                { err, userId, mediaItemId }
+              );
+            }
+          );
+        });
+      }
     }
 
     return true;

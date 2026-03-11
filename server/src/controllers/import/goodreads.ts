@@ -8,6 +8,7 @@ import { MediaItemBase } from 'src/entity/mediaItem';
 import { Seen } from 'src/entity/seen';
 import { UserRating } from 'src/entity/userRating';
 import { mediaItemRepository } from 'src/repository/mediaItem';
+import { recalculateGroupPlatformRatingsForUser } from 'src/repository/groupPlatformRatingCache';
 import { seenRepository } from 'src/repository/seen';
 import { userRatingRepository } from 'src/repository/userRating';
 import { listItemRepository } from 'src/repository/listItemRepository';
@@ -189,6 +190,18 @@ export const importFromGoodreadsRss = async (
         logger.error(
           'Unhandled error in platformRating recalculation after Goodreads import',
           { err }
+        );
+      });
+    });
+    setImmediate(() => {
+      Promise.all(
+        affectedMediaItemIds.map((mediaItemId) =>
+          recalculateGroupPlatformRatingsForUser(userId, mediaItemId)
+        )
+      ).catch((err) => {
+        logger.error(
+          'Unhandled error in groupPlatformRating recalculation after Goodreads import',
+          { err, userId }
         );
       });
     });

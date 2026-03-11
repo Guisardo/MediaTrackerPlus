@@ -5,6 +5,9 @@ export const randomNumericId = () => Number(customAlphabet('123456789', 7)());
 
 export const clearDatabase = async () => {
   await Database.knex.schema
+    .dropTableIfExists('groupPlatformRating')
+    .dropTableIfExists('userGroupMember')
+    .dropTableIfExists('userGroup')
     .dropTableIfExists('listItem')
     .dropTableIfExists('list')
     .dropTableIfExists('image')

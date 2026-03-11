@@ -23,6 +23,8 @@ import { GoodreadsImportPage } from 'src/pages/import/Goodreads';
 import { ListPage } from 'src/pages/ListPage';
 import { EpisodePage } from 'src/pages/EpisodePage';
 import { ListsPage } from 'src/pages/ListsPage';
+import { GroupsPage } from 'src/pages/GroupsPage';
+import { GroupDetailPage } from 'src/pages/GroupDetailPage';
 import { Random } from './pages/Random';
 import Statistics from './pages/Statistics';
 import { ItemsPageStatistic } from './pages/ItemsPageStatistic';
@@ -157,6 +159,13 @@ export const MyRouter: FunctionComponent = () => {
               <Route path="/lists" element={<ListsPage key="/lists" />} />
 
               <Route path="/list/:listId" element={<ListPage key="/list" />} />
+
+              <Route path="/groups" element={<GroupsPage key="/groups" />} />
+
+              <Route
+                path="/groups/:groupId"
+                element={<GroupDetailPage key="/groups/:groupId" />}
+              />
 
               <Route path="/import" element={<ImportPage key="/import" />} />
               <Route
