@@ -806,5 +806,55 @@ describe('group platform rating cache', () => {
       const allCached = await Database.knex('groupPlatformRating');
       expect(allCached).toHaveLength(0);
     });
+
+    test('recalculateAll handles >500 rated items without hitting SQLite compound SELECT limit', async () => {
+      // SQLite limits compound SELECT to 500 terms; Knex bulk insert generates one term per row.
+      // Use 501 items to verify the chunked upsert path is exercised.
+      const ITEM_COUNT = 501;
+      const BASE_ID = 5000;
+
+      const manyItems = Array.from({ length: ITEM_COUNT }, (_, i) => ({
+        id: BASE_ID + i,
+        lastTimeUpdated: Date.now(),
+        mediaType: 'movie',
+        source: 'tmdb',
+        title: `BulkMovie${i}`,
+        tmdbId: BASE_ID + i,
+      }));
+
+      // Insert in chunks of 200 to stay well under SQLite's compound SELECT limit
+      const CHUNK = 200;
+      for (let i = 0; i < manyItems.length; i += CHUNK) {
+        await Database.knex('mediaItem').insert(manyItems.slice(i, i + CHUNK));
+      }
+
+      // Seed one list item per media item on user1's watchlist (a group member)
+      const listItems = manyItems.map((item) => ({
+        listId: watchlist1.id,
+        mediaItemId: item.id,
+        addedAt: Date.now(),
+        estimatedRating: 3,
+      }));
+      for (let i = 0; i < listItems.length; i += CHUNK) {
+        await Database.knex('listItem').insert(listItems.slice(i, i + CHUNK));
+      }
+
+      // Should not throw even though 501 > 500 SQLite compound SELECT limit
+      await expect(
+        recalculateAllGroupPlatformRatings(groupAlpha.id)
+      ).resolves.toBeUndefined();
+
+      // All 501 items should have a cache entry
+      const cached = await Database.knex('groupPlatformRating').where({ groupId: groupAlpha.id });
+      expect(cached).toHaveLength(ITEM_COUNT);
+      expect(cached.every((r: { rating: number }) => r.rating === 3)).toBe(true);
+
+      // Clean up: delete in FK-safe order (listItem references mediaItem).
+      // afterEach also cleans listItem/groupPlatformRating but runs after the test body,
+      // so we must remove listItems before we can delete the extra mediaItems here.
+      const ids = manyItems.map((m) => m.id);
+      await Database.knex('listItem').whereIn('mediaItemId', ids).delete();
+      await Database.knex('mediaItem').whereIn('id', ids).delete();
+    });
   });
 });
