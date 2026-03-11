@@ -243,6 +243,10 @@ jest.mock('src/components/FilterBy', () => ({
   useFilterBy: jest.fn(),
 }));
 
+jest.mock('src/components/GroupSelector', () => ({
+  useGroupSelectorComponent: jest.fn(),
+}));
+
 jest.mock('src/hooks/updateSearchParamsHook', () => ({
   useUpdateSearchParams: jest.fn(),
 }));
@@ -315,6 +319,7 @@ import { useSearch } from 'src/api/search';
 import { useFacetsData } from 'src/api/facets';
 import { useOrderByComponent } from 'src/components/OrderBy';
 import { useFilterBy } from 'src/components/FilterBy';
+import { useGroupSelectorComponent } from 'src/components/GroupSelector';
 import { useUpdateSearchParams } from 'src/hooks/updateSearchParamsHook';
 import { useFacets } from 'src/hooks/facets';
 import { PaginatedGridItems, Pagination } from 'src/components/PaginatedGridItems';
@@ -405,6 +410,12 @@ beforeEach(() => {
     filter: {},
     FilterByComponent: () =>
       React.createElement('div', { 'data-testid': 'filter-by' }),
+  });
+
+  (useGroupSelectorComponent as jest.Mock).mockReturnValue({
+    selectedGroupId: undefined,
+    GroupSelectorComponent: () =>
+      React.createElement('div', { 'data-testid': 'group-selector' }),
   });
 
   (useUpdateSearchParams as jest.Mock).mockReturnValue({
