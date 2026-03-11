@@ -149,7 +149,10 @@ export async function recalculateAllGroupPlatformRatings(
     await knex('groupPlatformRating').where('groupId', groupId).delete();
   }
 
-  // Step 3: Bulk upsert the computed averages
+  // Step 3: Bulk upsert the computed averages.
+  // Chunked to respect SQLite's SQLITE_LIMIT_COMPOUND_SELECT limit of 500 terms:
+  // Knex's bulk insert generates one UNION ALL SELECT term per row, so batches
+  // larger than 500 rows throw "too many terms in compound SELECT".
   if (avgRatings.length > 0) {
     const rows = avgRatings.map((r) => ({
       groupId,
@@ -157,10 +160,14 @@ export async function recalculateAllGroupPlatformRatings(
       rating: Number(r.avgRating),
     }));
 
-    await knex('groupPlatformRating')
-      .insert(rows)
-      .onConflict(['groupId', 'mediaItemId'])
-      .merge(['rating']);
+    const SQLITE_COMPOUND_SELECT_LIMIT = 500;
+    for (let i = 0; i < rows.length; i += SQLITE_COMPOUND_SELECT_LIMIT) {
+      const chunk = rows.slice(i, i + SQLITE_COMPOUND_SELECT_LIMIT);
+      await knex('groupPlatformRating')
+        .insert(chunk)
+        .onConflict(['groupId', 'mediaItemId'])
+        .merge(['rating']);
+    }
   }
 }
 
