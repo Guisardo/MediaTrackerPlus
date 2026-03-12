@@ -20,6 +20,7 @@
     "baseUrl": ".",
     "paths": {
       "src/*": ["./src/*"],
+      "@/*": ["./src/*"],
       "@lingui/macro": ["./src/types/lingui-macro"]
     }
   },
