@@ -8,12 +8,17 @@ Started: Thu Mar 12 13:27:30 -03 2026
 - `use-sync-external-store` shim required for React 17 compat (remove after US-008 React 18+ upgrade)
 - `--legacy-peer-deps` required for npm install (React 17 vs v5's React 18+ peer dep)
 - FullCalendar v6 moves type exports to `@fullcalendar/core` instead of `@fullcalendar/react`
-- Vite 6 build: use `@vitejs/plugin-react` with `babel: { plugins: ['macros'] }` for Lingui v3 macro support
+- Vite 6 build: use `@vitejs/plugin-react` with `babel: { plugins: ['@lingui/babel-plugin-lingui-macro'] }` for Lingui v5
 - `mediatracker-api` is a local CJS package (`file:../rest-api`) — needs `build.commonjsOptions.include` and `optimizeDeps.include` in vite.config.ts
 - tsconfig.json uses `"moduleResolution": "node"` (TS 4.7.3 doesn't support `"bundler"`)
 - Vite `resolve.alias`: `{ src: path.resolve(__dirname, './src') }` maps `src/` imports
 - Font woff2 files are served as hashed assets (not inlined) under Vite — this is fine and better for caching
 - `sass` package must be v1.70+ for Vite 6 `sass.initAsyncCompiler` API
+- Tailwind v4 CSS-first config: `@import "tailwindcss"` in `tailwind.css`, no `tailwind.config.js`
+- Global base/reset styles MUST be in `@layer base` inside `tailwind.css` — unlayered CSS beats layered Tailwind utilities
+- Standalone CSS files using `@apply` with Tailwind classes need `@reference "tailwindcss"` at the top
+- `@tailwindcss/vite` needs a manual `.d.ts` type declaration (TS 4.7.3 + `moduleResolution: "node"` can't resolve `.d.mts`)
+- `dark.css` content is now in `tailwind.css @layer base` — do NOT re-import dark.css
 
 ---
 
@@ -126,3 +131,106 @@ Replaced the custom Webpack 5 build configuration with Vite 6. Created vite.conf
 - TypeScript 4.7.3 doesn't support `"moduleResolution": "bundler"` — use `"node"` instead
 - Vite's default behavior copies the `public/` directory contents to the output root — font files end up both in `assets/` (hashed, referenced by CSS) and `fonts/` (raw copy from public/)
 - `npm run build` in package.json no longer needs `cross-env NODE_ENV=production` — Vite sets it automatically for `vite build`
+
+---
+
+## US-005 — Upgrade Lingui v3 → v5 + migrate to @lingui/vite-plugin
+
+### Summary
+Upgraded Lingui from v3.13.3 to v5.9.2 across all packages. Migrated from `babel-plugin-macros` to `@lingui/babel-plugin-lingui-macro` and `@lingui/vite-plugin`. Converted translation catalog format from JSON ("minimal") to PO (gettext). Removed `make-plural` dependency — Lingui v5 uses `Intl.PluralRules` natively. Fixed module-scope `t` macro usage in TraktTv.tsx. Created TypeScript type override for React 17 compatibility with Lingui v5's `ReactNode` return type.
+
+### Changes Made
+- **Package changes**:
+  - Upgraded: `@lingui/cli@^5.9.2`, `@lingui/macro@^5.9.2`, `@lingui/react@^5.9.2`, `@lingui/detect-locale@^5.9.2`
+  - Added: `@lingui/vite-plugin@^5.9.2` (devDep)
+  - Removed: `make-plural`, `babel-plugin-macros`, `@lingui/loader`
+- **`client/src/i18n/i18n.ts`**:
+  - Removed `make-plural` import and `loadLocaleData()` call (Lingui v5 handles plurals natively via `Intl.PluralRules`)
+  - `i18n.load(allMessages)` and `i18n.activate(locale)` retained
+- **`client/vite.config.ts`**:
+  - Added `import { lingui } from '@lingui/vite-plugin'` and `lingui()` plugin
+  - Changed babel plugin from `['macros']` to `['@lingui/babel-plugin-lingui-macro']`
+- **`client/lingui.config.ts`** — NEW: TypeScript config replacing `.linguirc`
+  - `format: 'po'`, `compileNamespace: 'ts'`, 28 locales, `sourceLocale: 'en'`
+- **`client/.linguirc`** — DELETED (replaced by `lingui.config.ts`)
+- **`client/babel.config.json`** — Changed `"macros"` to `"@lingui/babel-plugin-lingui-macro"` in plugins
+- **`client/src/pages/import/TraktTv.tsx`** — Converted module-scope `stateMap` (used `t` macro outside render) to `useStateMap()` hook
+- **`client/src/types/lingui-macro.d.ts`** — NEW: Type override that fixes `Trans`/`Plural`/`Select`/`SelectOrdinal` return type from `ReactNode` to `ReactElement | null` (React 17 JSX compatibility)
+- **`client/tsconfig.json`** — Added `"@lingui/macro": ["./src/types/lingui-macro"]` to `paths` for type resolution
+- **`client/src/setupTests.ts`** — Added `setupI18n()` call (Lingui v5 validates locale activation before translation calls)
+- **Translation catalogs**: Migrated from JSON ("minimal") to PO format across 28 locales
+  - Created `client/scripts/migrate-json-to-po.mjs` migration script (one-time use)
+  - 309/338 translations populated per locale, 29 genuinely missing
+  - Lingui v5 compiled catalogs use hashed message IDs (e.g. `"nOhz3x"` for "Logout")
+- **7 test files updated** — Updated `@lingui/react` mock `Trans` component to use `message` prop instead of `id` (Lingui v5 babel plugin sets `id=hash, message=readableText`):
+  - `Nav.test.tsx`, `GroupsPage.test.tsx`, `AddOrEditGroupButton.test.tsx`, `AddOrEditListButton.test.tsx`, `GroupDetailPage.test.tsx`, `StarRating.test.tsx`, `PaginatedGridItems.test.tsx`
+  - Also updated `useLingui().i18n._` mock to handle `{ id, message }` object shape
+- **New test file**: `client/src/i18n/__tests__/i18n.test.ts` — 8 tests covering:
+  - `setupI18n()` activates a supported locale
+  - All 28 locale catalogs loaded
+  - Hashed message ID resolution
+  - `t`` macro output shape (object with id + message)
+  - Plural forms (singular and plural)
+  - English locale fallback
+
+### Verification
+- Typecheck: 0 errors
+- Tests: 71 suites, 1134 tests, all passing
+- Build: `npm run build` completes (lingui extract → compile → vite build)
+- Lingui extract: 338 messages extracted, 309/338 translated per non-English locale
+- Lingui compile: All 28 compiled .ts catalogs generated
+
+### Learnings for Future Iterations
+- Lingui v5 babel plugin (`@lingui/babel-plugin-lingui-macro`) transforms `<Trans>Text</Trans>` into `<Trans id="hash" message="Text" />` from `@lingui/react` — test mocks must render `message` prop, not `id`
+- Lingui v5 transforms `t`Text`` into `i18n._({ id: "hash", message: "Text" })` — the argument is an object, not a string
+- `jest.mock('@lingui/macro')` is ineffective for babel-transformed code — the babel plugin rewrites imports at compile time before jest.mock runs
+- Lingui v5 requires `i18n.activate()` before any `_()` call — must call `setupI18n()` in `setupTests.ts`
+- React 17's JSX type system requires `ReactElement | null` return type, but Lingui v5 declares `ReactNode` — use tsconfig `paths` to redirect type resolution
+- Module augmentation (`declare module`) cannot override `const` declarations — full type definition files with `paths` redirect are needed instead
+- `format: 'po'` is the recommended catalog format for Lingui v5 (better tooling support than JSON "minimal")
+
+---
+
+## 2026-03-12 - US-006 — Migrate Tailwind v3 → v4
+
+### Summary
+Migrated Tailwind CSS from v3.0.24 to v4.2.1. Replaced JS-based configuration with CSS-first approach using `@import "tailwindcss"`, `@theme`, `@custom-variant`, and `@utility` directives. Installed `@tailwindcss/vite` plugin, removed PostCSS packages. Migrated global base styles from `main.scss` and `dark.css` into `tailwind.css` `@layer base` to replace the old `important: true` configuration. Added `@reference "tailwindcss"` to `fullcalendar.css` for `@apply` compatibility.
+
+### Changes Made
+- **`client/src/styles/tailwind.css`**:
+  - `@import "tailwindcss"` replaces `@tailwind base; @tailwind components; @tailwind utilities;`
+  - `@source "../../src/**/*.{js,jsx,ts,tsx}"` — content scanning directive
+  - `@custom-variant dark (&:where(.dark, .dark *))` — preserves `darkMode: 'class'` behavior
+  - `@theme { --font-sans: 'Roboto Condensed', sans-serif }` — replaces `theme.extend.fontFamily`
+  - `@layer base { ... }` — all global resets from `main.scss` and dark mode overrides from `dark.css` migrated here so Tailwind utilities always win (replaces `important: true`)
+  - `@utility` blocks for: `writing-mode-vertical`, `writing-mode-initial`, `link`, `btn`, `btn-red`, `btn-blue`
+- **`client/src/styles/main.scss`**:
+  - Removed all base styles (*, body, a, form elements, .material-icons) — moved to `tailwind.css @layer base`
+  - Removed `@import './dark.css'`
+  - Only SCSS grid mixin code remains (uses SCSS `$variables`, `@mixin`, `@for`)
+- **`client/src/styles/dark.css`**: Added `@reference "tailwindcss"` for `@apply` directive compatibility
+- **`client/src/styles/fullcalendar.css`**: Added `@reference "tailwindcss"` for `@apply` directive compatibility
+- **`client/tailwind.config.js`**: DELETED (replaced by CSS-first config in tailwind.css)
+- **`client/src/types/tailwindcss-vite.d.ts`**: NEW — Type declaration for `@tailwindcss/vite` (TS 4.7.3 can't resolve `.d.mts` files with `moduleResolution: "node"`)
+- **Package changes** (in US-005 commit alongside lingui changes):
+  - Upgraded: `tailwindcss@^4.2.1`
+  - Added: `@tailwindcss/vite@^4.2.1`
+  - Removed: `autoprefixer`, `postcss`, `postcss-cli`, `postcss-import`, `@types/tailwindcss`
+
+### Verification
+- Typecheck: 0 errors
+- Tests: 71 suites, 1134 tests, all passing
+- Build: `npm run build` completes in ~3.8s
+  - JS: 1,701.64 KB raw / 437.39 KB gzip / 335.14 KB brotli
+  - CSS: 44.93 KB raw / 8.20 KB gzip / 6.79 KB brotli (larger than US-004 because base styles now in CSS bundle)
+- Dev server: Starts correctly at http://localhost:7000/
+- Browser: Pre-existing `useSyncExternalStore` error (React 17 + TanStack v5 — unrelated to Tailwind, fixed in US-008)
+
+### Learnings for Future Iterations
+- Tailwind v4 uses CSS cascade `@layer` internally — unlayered CSS from SCSS/CSS files ALWAYS beats layered Tailwind utilities. Move global base/reset styles into `@layer base` in tailwind.css to restore proper cascade ordering (replaces `important: true`)
+- Tailwind v4 `@apply` in standalone CSS files requires `@reference "tailwindcss"` at the top — without it, the build fails with "Cannot apply unknown utility class"
+- `@tailwindcss/vite` only ships `.d.mts` types — TS 4.7.3 with `moduleResolution: "node"` needs a manual `.d.ts` type declaration file
+- `@custom-variant dark (&:where(.dark, .dark *))` exactly replaces `darkMode: 'class'` from v3
+- CSS `@source` directive replaces the `content` array from tailwind.config.js — path is relative to the CSS file location
+- Tailwind v4 `@utility` blocks replace `plugin(({ addUtilities }) => { ... })` from v3 config
+- `@theme { --font-sans: ... }` replaces `theme.extend.fontFamily` from v3 config

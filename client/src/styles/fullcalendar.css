@@ -1,3 +1,5 @@
+@reference "tailwindcss";
+
 .fc .fc-scrollgrid-section-sticky > *,
 .fc-theme-standard .fc-list-day-cushion {
   @apply dark:bg-neutral-800 bg-neutral-200;

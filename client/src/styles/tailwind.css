@@ -1,3 +1,131 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* Scan source files for Tailwind class usage */
+@source "../../src/**/*.{js,jsx,ts,tsx}";
+
+/* Preserve class-based dark mode (was darkMode: 'class' in v3) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Roboto Condensed', sans-serif;
+}
+
+/*
+ * Base layer rules migrated from main.scss and dark.css.
+ * Using @layer base ensures Tailwind utilities (@layer utilities) always
+ * take precedence, which replaces the old `important: true` config.
+ */
+@layer base {
+  * {
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto Condensed', sans-serif;
+  }
+
+  body {
+    overflow-y: scroll;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 16px;
+    color: #333;
+    @apply dark:bg-neutral-700 dark:text-white;
+  }
+
+  main {
+    width: 100%;
+  }
+
+  a {
+    text-decoration: none;
+    color: #333;
+    transition: 0.1s;
+  }
+
+  a:visited {
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .material-icons {
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  input,
+  button,
+  select,
+  textarea {
+    font-family: inherit;
+    font-size: inherit;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    padding: 4px;
+  }
+
+  /* Dark mode global overrides (from dark.css) */
+  div {
+    @apply dark:text-white;
+  }
+
+  input,
+  textarea,
+  select {
+    @apply dark:bg-[#11191f] dark:text-white;
+  }
+}
+
+/* Custom utilities migrated from tailwind.config.js plugins */
+
+@utility writing-mode-vertical {
+  writing-mode: vertical-lr;
+}
+
+@utility writing-mode-initial {
+  writing-mode: initial;
+}
+
+@utility link {
+  @apply text-blue-800 underline dark:text-blue-400;
+}
+
+@utility btn {
+  display: inline-block;
+  padding: 2px 16px;
+  border-radius: 4px;
+  border-width: 1px;
+  cursor: pointer;
+  transition: all 150ms;
+  user-select: none;
+  text-align: center;
+  @apply border-current hover:shadow shadow-current hover:shadow-current disabled:shadow-none disabled:cursor-auto dark:disabled:bg-gray-500 disabled:bg-gray-300;
+}
+
+@utility btn-red {
+  display: inline-block;
+  padding: 2px 16px;
+  border-radius: 4px;
+  border-width: 1px;
+  cursor: pointer;
+  transition: all 150ms;
+  user-select: none;
+  text-align: center;
+  @apply border-current hover:shadow shadow-current hover:shadow-current disabled:shadow-none disabled:cursor-auto dark:disabled:bg-gray-500 disabled:bg-gray-300;
+  @apply text-red-700 dark:text-red-500;
+}
+
+@utility btn-blue {
+  display: inline-block;
+  padding: 2px 16px;
+  border-radius: 4px;
+  border-width: 1px;
+  cursor: pointer;
+  transition: all 150ms;
+  user-select: none;
+  text-align: center;
+  @apply border-current hover:shadow shadow-current hover:shadow-current disabled:shadow-none disabled:cursor-auto dark:disabled:bg-gray-500 disabled:bg-gray-300;
+  @apply text-blue-800 dark:text-blue-300;
+}
