@@ -1,6 +1,7 @@
 import React, { FunctionComponent, useMemo, useState } from 'react';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
-import FullCalendar, { DatesSetArg } from '@fullcalendar/react';
+import FullCalendar from '@fullcalendar/react';
+import { DatesSetArg } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import listPlugin from '@fullcalendar/list';
 import allLocales from '@fullcalendar/core/locales-all';

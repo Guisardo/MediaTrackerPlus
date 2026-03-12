@@ -85,10 +85,10 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "@fullcalendar/core": "^5.11.0",
-    "@fullcalendar/daygrid": "^5.11.0",
-    "@fullcalendar/list": "^5.11.0",
-    "@fullcalendar/react": "^5.11.1",
+    "@fullcalendar/core": "^6.1.20",
+    "@fullcalendar/daygrid": "^6.1.20",
+    "@fullcalendar/list": "^6.1.20",
+    "@fullcalendar/react": "^6.1.20",
     "@lingui/detect-locale": "^3.13.3",
     "@lingui/react": "^3.13.3",
     "@radix-ui/react-collapsible": "^1.1.12",
