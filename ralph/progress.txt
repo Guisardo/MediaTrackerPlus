@@ -1,5 +1,20 @@
 # Ralph Progress Log
 Started: Thu Mar 12 13:27:30 -03 2026
+
+## Codebase Patterns
+- TanStack React Query v5 object-form API throughout
+- `Parameters<typeof apiFn>[0]` used for typed mutationFn wrappers
+- Global `select` function on QueryClient for error envelope detection
+- `use-sync-external-store` shim required for React 17 compat (remove after US-008 React 18+ upgrade)
+- `--legacy-peer-deps` required for npm install (React 17 vs v5's React 18+ peer dep)
+- FullCalendar v6 moves type exports to `@fullcalendar/core` instead of `@fullcalendar/react`
+- Vite 6 build: use `@vitejs/plugin-react` with `babel: { plugins: ['macros'] }` for Lingui v3 macro support
+- `mediatracker-api` is a local CJS package (`file:../rest-api`) — needs `build.commonjsOptions.include` and `optimizeDeps.include` in vite.config.ts
+- tsconfig.json uses `"moduleResolution": "node"` (TS 4.7.3 doesn't support `"bundler"`)
+- Vite `resolve.alias`: `{ src: path.resolve(__dirname, './src') }` maps `src/` imports
+- Font woff2 files are served as hashed assets (not inlined) under Vite — this is fine and better for caching
+- `sass` package must be v1.70+ for Vite 6 `sass.initAsyncCompiler` API
+
 ---
 
 ## US-002 — Upgrade react-query v3 → @tanstack/react-query v5
@@ -47,3 +62,67 @@ Installed `@tanstack/react-query@^5.90.21`, removed `react-query`, added
 - Global `select` function on QueryClient for error envelope detection
 - `use-sync-external-store` shim required for React 17 compat (remove after US-008 React 18+ upgrade)
 - `--legacy-peer-deps` required for npm install (React 17 vs v5's React 18+ peer dep)
+
+---
+
+## US-003 — Upgrade @fullcalendar v5 → v6
+
+### Summary
+Upgraded all FullCalendar packages from v5 to v6. Calendar.tsx was already using the v6 plugin registration pattern at component level, requiring only import path updates.
+
+### Changes Made
+- **Package upgrades**: `@fullcalendar/core`, `@fullcalendar/daygrid`, `@fullcalendar/list`, `@fullcalendar/react` all updated to `^6.1.20`
+- **Calendar.tsx import fix**: `DatesSetArg` moved from `@fullcalendar/react` to `@fullcalendar/core` (v6 breaking change in type exports)
+- **Plugin registration**: Already using v6 pattern: `plugins={[dayGridPlugin, listPlugin]}` at component level (no changes needed)
+
+### Verification
+- Typecheck: 0 errors
+- Tests: 1126 tests passing (all calendar-related tests included)
+- Import paths: All v6 breaking changes addressed
+- Calendar component architecture: Compatible with React 19 via FullCalendar v6
+
+### Learnings for Future Iterations
+- FullCalendar v6 moves type exports (`DatesSetArg`) to `@fullcalendar/core` instead of `@fullcalendar/react`
+- Plugin registration at component level is the v6 pattern (good for React 19)
+- FullCalendar v6 is compatible with React 19 (no additional workarounds needed)
+- The `allLocales` import from `@fullcalendar/core/locales-all` continues to work as before
+
+---
+
+## US-004 — Replace Webpack 5 with Vite 6
+
+### Summary
+Replaced the custom Webpack 5 build configuration with Vite 6. Created vite.config.ts with all required plugins, moved index.html to client root, deleted all Webpack config files, and removed 21 webpack-related packages from devDependencies.
+
+### Changes Made
+- **New files**:
+  - `client/vite.config.ts` — Vite 6 config with `@vitejs/plugin-react` (babel macros for Lingui v3), `vite-plugin-static-copy` (logo/image assets), `vite-plugin-compression` (gzip + brotli), dev server proxy for `/api` and `/img` to `http://127.0.0.1:7481`, output to `../server/public`
+  - `client/index.html` — moved from `public/index.html`, added `<script type="module" src="/src/index.tsx">`, retained dark mode detection script, `#root`, `#portal`, `#modals` divs
+- **Deleted files**:
+  - `client/webpack.common.ts`, `client/webpack.dev.ts`, `client/webpack.prod.ts`
+- **Package changes**:
+  - Added: `vite@^6.4.1`, `@vitejs/plugin-react@^4.7.0`, `vite-plugin-compression@^0.5.1`, `vite-plugin-static-copy@^2.3.2`
+  - Upgraded: `sass@^1.87.0` (Vite 6 requires modern sass API)
+  - Removed 21 packages: webpack, webpack-cli, webpack-dev-server, webpack-merge, webpack-bundle-analyzer, @types/webpack, @types/webpack-bundle-analyzer, babel-loader, css-loader, sass-loader, style-loader, postcss-loader, ts-loader, html-webpack-plugin, mini-css-extract-plugin, compression-webpack-plugin, copy-webpack-plugin, eslint-webpack-plugin, tsconfig-paths-webpack-plugin, @pmmmwh/react-refresh-webpack-plugin, react-refresh, react-refresh-typescript
+- **package.json scripts**: `dev` → `vite`, `build` → `vite build`
+- **tsconfig.json**: `target` → `esnext`, `module` → `esnext`, added `paths` for `src/*` alias, included `vite.config.ts` in `include`
+
+### Verification
+- Typecheck: 0 errors
+- Tests: 70 suites, 1126 tests, all passing
+- Build: Completes successfully in ~2.5s (vs 36s with Webpack)
+- Compressed variants: `.gz` and `.br` files generated for all JS/CSS assets
+- Static assets: logo/ and image/ directories copied to `server/public/`
+- Font files: All 7 woff2 files served as hashed assets (no 404s)
+- Bundle size within baseline:
+  - JS: 1,863 KB raw / 446 KB gzip / 342 KB brotli (baseline: 1,824 KB / 399 KB / 316 KB — 2.2% raw increase)
+  - CSS: 4.2 KB raw (baseline: 762 KB — 99.4% decrease due to better Tailwind tree-shaking)
+  - Total: ~1.87 MiB (baseline: 2.48 MiB — 24% smaller overall)
+
+### Learnings for Future Iterations
+- Vite 6 requires `sass` v1.70+ for the `sass.initAsyncCompiler` API — older sass versions fail silently or with cryptic errors
+- The `mediatracker-api` local CJS package needs `build.commonjsOptions.include` and `optimizeDeps.include` in vite.config.ts for Rollup to resolve named exports
+- Do NOT use `configFile: './babel.config.json'` in `@vitejs/plugin-react` — babel presets like `@babel/preset-env` convert ESM to CJS require() calls which break Vite's module resolution; only pass the specific plugins needed (e.g. `['macros']`)
+- TypeScript 4.7.3 doesn't support `"moduleResolution": "bundler"` — use `"node"` instead
+- Vite's default behavior copies the `public/` directory contents to the output root — font files end up both in `assets/` (hashed, referenced by CSS) and `fonts/` (raw copy from public/)
+- `npm run build` in package.json no longer needs `cross-env NODE_ENV=production` — Vite sets it automatically for `vite build`
