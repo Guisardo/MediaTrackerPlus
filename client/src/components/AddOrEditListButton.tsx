@@ -78,7 +78,7 @@ const AddOrEditListModal: FunctionComponent<{
   const location = useLocation();
   const navigate = useNavigate();
 
-  const nameRef = useRef<HTMLInputElement>();
+  const nameRef = useRef<HTMLInputElement>(null);
 
   const edit = Boolean(list);
 

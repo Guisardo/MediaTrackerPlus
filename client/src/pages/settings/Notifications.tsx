@@ -177,9 +177,10 @@ const NotificationPlatform: FunctionComponent = () => {
 const NotificationPlatformsCredentials: FunctionComponent<{
   platformName: string;
   href: string;
+  children?: React.ReactNode;
 }> = (props) => {
   const { platformName, href } = props;
-  const formRef = useRef<HTMLFormElement>();
+  const formRef = useRef<HTMLFormElement>(null);
 
   const {
     notificationPlatformsCredentials,

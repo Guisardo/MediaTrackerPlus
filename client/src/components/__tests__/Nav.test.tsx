@@ -21,29 +21,9 @@
  */
 
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { act } from 'react-dom/test-utils';
-import { render, screen } from '@testing-library/react';
+import { render, screen, renderHook } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
-
-// renderHook polyfill — @testing-library/react v12 does not export renderHook.
-function renderHook<T>(callback: () => T, options?: { wrapper: React.FC<{ children: React.ReactNode }> }): { result: { current: T } } {
-  const result = { current: undefined as unknown as T };
-  const container = document.createElement('div');
-  document.body.appendChild(container);
-  function TestComponent() {
-    result.current = callback();
-    return null;
-  }
-  const element = options?.wrapper
-    ? React.createElement(options.wrapper, null, React.createElement(TestComponent))
-    : React.createElement(TestComponent);
-  act(() => {
-    ReactDOM.render(element, container);
-  });
-  return { result };
-}
 
 // ---------------------------------------------------------------------------
 // Mocks

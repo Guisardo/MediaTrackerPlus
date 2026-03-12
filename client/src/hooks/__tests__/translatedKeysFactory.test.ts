@@ -9,40 +9,8 @@
  *   - map callback invocation with correct arguments
  */
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { act } from 'react-dom/test-utils';
+import { renderHook } from '@testing-library/react';
 import { useTranslatedKeysFactory } from 'src/hooks/translatedKeysFactory';
-
-// ---------------------------------------------------------------------------
-// renderHook polyfill — @testing-library/react v12 does not export renderHook.
-// Uses ReactDOM.render + act directly to avoid registering afterEach hooks
-// inside test bodies (which Jest forbids).
-// ---------------------------------------------------------------------------
-function renderHook<T>(callback: () => T): {
-  result: { current: T };
-  rerender: () => void;
-} {
-  const result = { current: undefined as unknown as T };
-  const container = document.createElement('div');
-  document.body.appendChild(container);
-  const latestCallback = callback;
-  function TestComponent() {
-    result.current = latestCallback();
-    return null;
-  }
-  act(() => {
-    ReactDOM.render(React.createElement(TestComponent), container);
-  });
-  return {
-    result,
-    rerender: () => {
-      act(() => {
-        ReactDOM.render(React.createElement(TestComponent), container);
-      });
-    },
-  };
-}
 
 // ---------------------------------------------------------------------------
 // Fixture data

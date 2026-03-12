@@ -115,6 +115,7 @@ export const GridItem: FunctionComponent<{
               {topBar.showOnWatchlistIcon && (
                 <div className="absolute top-0 left-0 inline-flex mt-1 pointer-events-auto hover:cursor-pointer">
                   {isOnWatchlist && (
+                    // @ts-expect-error styled-components types incompatible with @types/react v19
                     <Item
                       onClick={async (e) => {
                         e.preventDefault();
@@ -147,15 +148,18 @@ export const GridItem: FunctionComponent<{
                 >
                   {topBar.showFirstUnwatchedEpisodeBadge &&
                     mediaItem.firstUnwatchedEpisode && (
+                      // @ts-expect-error styled-components types incompatible with @types/react v19
                       <Item>
                         {formatEpisodeNumber(mediaItem.firstUnwatchedEpisode)}
                       </Item>
                     )}
                   {topBar.showUnwatchedEpisodesCount &&
                     mediaItem.unseenEpisodesCount > 0 && (
+                      // @ts-expect-error styled-components types incompatible with @types/react v19
                       <Item>{mediaItem.unseenEpisodesCount}</Item>
                     )}
                   {topBar.showUnwatchedEpisodesCount && mediaItem.seen == true && (
+                    // @ts-expect-error styled-components types incompatible with @types/react v19
                     <Item>
                       <i className="flex text-white material-icons hover:text-yellow-600">
                         check_circle_outline
@@ -167,11 +171,14 @@ export const GridItem: FunctionComponent<{
                 <>
                   {topBar.showUnwatchedEpisodesCount && mediaItem.seen == true && (
                     <div className="absolute inline-flex pointer-events-auto foo right-1 top-1">
-                      <Item>
-                        <i className="flex text-white select-none material-icons">
-                          check_circle_outline
-                        </i>
-                      </Item>
+                      {
+                        // @ts-expect-error styled-components types incompatible with @types/react v19
+                        <Item>
+                          <i className="flex text-white select-none material-icons">
+                            check_circle_outline
+                          </i>
+                        </Item>
+                      }
                     </div>
                   )}
                 </>

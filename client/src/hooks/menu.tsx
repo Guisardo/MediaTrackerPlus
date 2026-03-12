@@ -28,7 +28,7 @@ export const useMenuComponent = <T extends string>(args: {
     }
   }, [selectedValue, initialSelection]);
 
-  const Menu: FunctionComponent = (params) => {
+  const Menu: FunctionComponent<{ children: React.ReactNode }> = (params) => {
     const { children } = params;
     const [showMenu, setShowMenu] = useState(false);
     const ref = useRef(null);

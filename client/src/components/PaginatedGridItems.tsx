@@ -151,7 +151,7 @@ export const PaginatedGridItems: FunctionComponent<{
   // When showFacets=false, the facets state is not used.
   const facets = useFacets(handleArgumentChange);
 
-  const mainContainerRef = useRef<HTMLDivElement>();
+  const mainContainerRef = useRef<HTMLDivElement>(null);
 
   // Build the items query args: merge static page args, filter (when not using
   // facets), and facet params (when showFacets=true).

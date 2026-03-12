@@ -3,6 +3,7 @@ import React, { FunctionComponent } from 'react';
 export const SettingsSegment: FunctionComponent<{
   title: string;
   href?: string;
+  children?: React.ReactNode;
 }> = (props) => {
   const { title, href, children } = props;
 

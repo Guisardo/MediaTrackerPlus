@@ -16,12 +16,13 @@ const PosterCss: FunctionComponent<{
   href?: string;
   mediaType?: MediaType;
   itemMediaType?: MediaType;
+  children?: React.ReactNode;
 }> = (props) => {
   const { src, href, mediaType, itemMediaType, children } = props;
 
   const [imageLoaded, setImageLoaded] = useState(false);
 
-  const imgRef = useRef<HTMLImageElement>();
+  const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     if (!src) {
@@ -96,11 +97,12 @@ const PosterSpring: FunctionComponent<{
   href?: string;
   mediaType?: MediaType;
   itemMediaType?: MediaType;
+  children?: React.ReactNode;
 }> = (props) => {
   const { src, href, mediaType, itemMediaType, children } = props;
 
   const [imageLoaded, setImageLoaded] = useState(false);
-  const imgRef = useRef<HTMLImageElement>();
+  const imgRef = useRef<HTMLImageElement>(null);
 
   const imageStyles = useSpring({
     from: {
@@ -155,6 +157,7 @@ const PosterSpring: FunctionComponent<{
   const content = (
     <>
       {src && (
+        // @ts-expect-error react-spring types incompatible with @types/react v19
         <animated.div style={imageStyles} className="w-full h-full">
           <img
             ref={imgRef}
@@ -166,12 +169,15 @@ const PosterSpring: FunctionComponent<{
           />
         </animated.div>
       )}
-      <animated.div
-        style={placeholderStyles}
-        className="absolute top-0 left-0 flex items-center w-full h-full text-gray-900 rounded overflow-clip text-9xl bg-amber-800"
-      >
-        <div className="w-full text-center select-none">?</div>
-      </animated.div>
+      {
+        // @ts-expect-error react-spring types incompatible with @types/react v19
+        <animated.div
+          style={placeholderStyles}
+          className="absolute top-0 left-0 flex items-center w-full h-full text-gray-900 rounded overflow-clip text-9xl bg-amber-800"
+        >
+          <div className="w-full text-center select-none">?</div>
+        </animated.div>
+      }
     </>
   );
 

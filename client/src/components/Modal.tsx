@@ -37,9 +37,9 @@ export const useOpenModalRef = () => {
 };
 
 export const Modal = <ReturnType,>(props: {
-  openModal?: (openModal: () => void) => JSX.Element;
+  openModal?: (openModal: () => void) => React.JSX.Element;
   openModalRef?: React.MutableRefObject<OpenModalRef>;
-  children: (closeModal: () => void) => JSX.Element;
+  children: (closeModal: () => void) => React.JSX.Element;
   onClosed?: (arg?: ReturnType) => void;
   onBeforeClosed?: (arg?: ReturnType) => void;
   closeOnEscape?: boolean;
@@ -82,7 +82,7 @@ export const Modal = <ReturnType,>(props: {
     }
   }, [openModalRef]);
 
-  const mainContainerRef = useRef<HTMLDivElement>();
+  const mainContainerRef = useRef<HTMLDivElement>(null);
 
   const onClick: MouseEventHandler = (e) => {
     if (!closeOnBackgroundClick) {
@@ -120,6 +120,7 @@ export const Modal = <ReturnType,>(props: {
                     reverse={isOpen}
                   >
                     {(springStyles) => (
+                      // @ts-expect-error react-spring types incompatible with @types/react v19
                       <animated.div
                         style={springStyles}
                         className={
@@ -128,11 +129,14 @@ export const Modal = <ReturnType,>(props: {
                         ref={mainContainerRef}
                         onPointerDown={onClick}
                       >
-                        <animated.div style={transitionStyles}>
-                          <div className="m-2 rounded bg-zinc-100 dark:bg-gray-900">
-                            {props.children(closeModal)}
-                          </div>
-                        </animated.div>
+                        {
+                          // @ts-expect-error react-spring types incompatible with @types/react v19
+                          <animated.div style={transitionStyles}>
+                            <div className="m-2 rounded bg-zinc-100 dark:bg-gray-900">
+                              {props.children(closeModal)}
+                            </div>
+                          </animated.div>
+                        }
                       </animated.div>
                     )}
                   </Spring>

@@ -225,6 +225,7 @@ const SideBar: FunctionComponent<{
                 {(styles) => (
                   <animated.div
                     style={styles}
+                    // @ts-expect-error react-spring types incompatible with @types/react v19
                     className={clsx(
                       'fixed top-0 bottom-0 left-0 right-0 z-10 w-full h-full bg-gray-500',
                       !showSidebar && 'pointer-events-none'
@@ -234,26 +235,29 @@ const SideBar: FunctionComponent<{
                 )}
               </Spring>
 
-              <animated.div
-                style={transitionStyles}
-                className="fixed top-0 right-0 z-50 p-4 pr-10 overflow-hidden bg-red-100 dark:bg-gray-700 -bottom-full"
-              >
-                <div className="flex flex-col md:flex-row">
-                  {routes.map((route) => (
-                    <span key={route.path} className="my-2 ml-1 mr-3 text-xl">
-                      <NavLink
-                        onClick={() => hideSidebar()}
-                        to={getCrossTypeNavTarget(route.path)}
-                        className={({ isActive }) =>
-                          clsx(isActive && 'selected')
-                        }
-                      >
-                        {route.name}
-                      </NavLink>
-                    </span>
-                  ))}
-                </div>
-              </animated.div>
+              {
+                // @ts-expect-error react-spring types incompatible with @types/react v19
+                <animated.div
+                  style={transitionStyles}
+                  className="fixed top-0 right-0 z-50 p-4 pr-10 overflow-hidden bg-red-100 dark:bg-gray-700 -bottom-full"
+                >
+                  <div className="flex flex-col md:flex-row">
+                    {routes.map((route) => (
+                      <span key={route.path} className="my-2 ml-1 mr-3 text-xl">
+                        <NavLink
+                          onClick={() => hideSidebar()}
+                          to={getCrossTypeNavTarget(route.path)}
+                          className={({ isActive }) =>
+                            clsx(isActive && 'selected')
+                          }
+                        >
+                          {route.name}
+                        </NavLink>
+                      </span>
+                    ))}
+                  </div>
+                </animated.div>
+              }
             </>
           )}
         </>

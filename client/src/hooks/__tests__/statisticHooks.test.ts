@@ -18,24 +18,7 @@
  *  - The query function calls the correct API method
  */
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { act } from 'react-dom/test-utils';
-
-// renderHook polyfill — @testing-library/react v12 does not export renderHook.
-function renderHook<T>(callback: () => T): { result: { current: T } } {
-  const result = { current: undefined as unknown as T };
-  const container = document.createElement('div');
-  document.body.appendChild(container);
-  function TestComponent() {
-    result.current = callback();
-    return null;
-  }
-  act(() => {
-    ReactDOM.render(React.createElement(TestComponent), container);
-  });
-  return { result };
-}
+import { renderHook } from '@testing-library/react';
 import type { Statistics } from 'mediatracker-api';
 
 // ---------------------------------------------------------------------------

@@ -6,39 +6,9 @@
  *   - loaded becomes true after document.fonts.ready resolves
  */
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { act } from 'react-dom/test-utils';
+import { renderHook, act } from '@testing-library/react';
 
 import { useFonts } from 'src/hooks/fonts';
-
-// ---------------------------------------------------------------------------
-// renderHook polyfill (same as mediaItem.test.ts)
-// ---------------------------------------------------------------------------
-
-function renderHook<T>(callback: () => T): {
-  result: { current: T };
-  rerender: () => void;
-} {
-  const result = { current: undefined as unknown as T };
-  const container = document.createElement('div');
-  document.body.appendChild(container);
-  function TestComponent() {
-    result.current = callback();
-    return null;
-  }
-  act(() => {
-    ReactDOM.render(React.createElement(TestComponent), container);
-  });
-  return {
-    result,
-    rerender: () => {
-      act(() => {
-        ReactDOM.render(React.createElement(TestComponent), container);
-      });
-    },
-  };
-}
 
 // ---------------------------------------------------------------------------
 // Tests
@@ -74,18 +44,7 @@ describe('useFonts', () => {
       configurable: true,
     });
 
-    const result = { current: { loaded: false } };
-    const container = document.createElement('div');
-    document.body.appendChild(container);
-
-    function TestComponent() {
-      result.current = useFonts();
-      return null;
-    }
-
-    act(() => {
-      ReactDOM.render(React.createElement(TestComponent), container);
-    });
+    const { result } = renderHook(() => useFonts());
 
     expect(result.current.loaded).toBe(false);
 

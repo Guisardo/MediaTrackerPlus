@@ -4,8 +4,8 @@ import React, { FunctionComponent, useCallback, useRef, useState, useEffect } fr
  * FacetSection wraps an individual facet dimension in a collapsible accordion
  * section with keyboard navigation and correct ARIA roles.
  *
- * Uses native HTML elements and React state instead of @radix-ui/react-collapsible
- * to avoid React 17 compatibility issues with Radix's jsx-runtime usage.
+ * Uses native HTML elements and React state. Will be replaced with shadcn/ui
+ * Collapsible in US-018.
  *
  * The section starts collapsed by default but auto-expands when hasActiveSelection
  * is true so users can see which filters are currently active.

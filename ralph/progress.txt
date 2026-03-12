@@ -5,8 +5,14 @@ Started: Thu Mar 12 13:27:30 -03 2026
 - TanStack React Query v5 object-form API throughout
 - `Parameters<typeof apiFn>[0]` used for typed mutationFn wrappers
 - Global `select` function on QueryClient for error envelope detection
-- `use-sync-external-store` shim required for React 17 compat (remove after US-008 React 18+ upgrade)
-- `--legacy-peer-deps` required for npm install (React 17 vs v5's React 18+ peer dep)
+- React 19 uses `createRoot` from `react-dom/client` — no more `ReactDOM.render`
+- React 19 `FunctionComponent<P>` no longer implicitly includes `children` — must declare `children: React.ReactNode` explicitly
+- React 19 `useRef<T>()` requires exactly 1 argument — use `useRef<T>(null)`
+- React 19 `JSX` namespace must be qualified: `React.JSX.Element` (not bare `JSX.Element`)
+- `@testing-library/react` v16 exports `renderHook` and `act` — no more custom polyfills
+- `@lingui/react/macro` declares `Trans` returning `ReactNode` but TS 4.7.3 needs `ReactElement | null` for JSX — keep lingui-macro.d.ts type override until TS 5.1+ upgrade
+- `@react-spring/web` v9.4.4 and `styled-components` v5.3.5 types are incompatible with `@types/react` v19 — use `@ts-expect-error` suppressions
+- `--legacy-peer-deps` still needed for npm install due to some transitive deps not listing React 19 in peerDependencies
 - FullCalendar v6 moves type exports to `@fullcalendar/core` instead of `@fullcalendar/react`
 - Vite 6 build: use `@vitejs/plugin-react` with `babel: { plugins: ['@lingui/babel-plugin-lingui-macro'] }` for Lingui v5
 - `mediatracker-api` is a local CJS package (`file:../rest-api`) — needs `build.commonjsOptions.include` and `optimizeDeps.include` in vite.config.ts
@@ -19,6 +25,11 @@ Started: Thu Mar 12 13:27:30 -03 2026
 - Standalone CSS files using `@apply` with Tailwind classes need `@reference "tailwindcss"` at the top
 - `@tailwindcss/vite` needs a manual `.d.ts` type declaration (TS 4.7.3 + `moduleResolution: "node"` can't resolve `.d.mts`)
 - `dark.css` content is now in `tailwind.css @layer base` — do NOT re-import dark.css
+- shadcn/ui CSS variables (`--primary`, `--background`, etc.) must go in `:root` inside `@layer base`, NOT in `@theme` — `@theme` is for Tailwind design tokens
+- Tailwind v4 `@theme` registers `--color-*` tokens that generate `bg-*`/`text-*`/`border-*` utilities — use `--color-primary: var(--primary)` in `@theme` to bridge shadcn CSS vars → Tailwind utilities
+- Jest `moduleNameMapper` needs `'^@/(.*)$': '<rootDir>/src/$1'` entry to resolve `@/` alias in test files
+- shadcn/ui Button uses `@radix-ui/react-slot` for the `asChild` prop — install it alongside cva and tailwind-merge
+- clsx v2+ uses a default export: `import clsx from 'clsx'` not `import { clsx } from 'clsx'`
 
 ---
 
@@ -234,3 +245,115 @@ Migrated Tailwind CSS from v3.0.24 to v4.2.1. Replaced JS-based configuration wi
 - CSS `@source` directive replaces the `content` array from tailwind.config.js — path is relative to the CSS file location
 - Tailwind v4 `@utility` blocks replace `plugin(({ addUtilities }) => { ... })` from v3 config
 - `@theme { --font-sans: ... }` replaces `theme.extend.fontFamily` from v3 config
+
+---
+
+## 2026-03-12 - US-007 — Install and configure shadcn/ui v4
+
+### What Was Implemented
+- Installed npm packages: `tailwind-merge`, `class-variance-authority`, `lucide-react`, `@radix-ui/react-slot`
+- Created `client/src/lib/utils.ts` with `cn()` helper (clsx + tailwind-merge)
+- Created `client/components.json`: style=new-york, baseColor=zinc, cssVariables=true, rsc=false, tsx=true
+- Updated `client/src/styles/tailwind.css`:
+  - Added shadcn/ui CSS variables to `:root` block in `@layer base` (light mode tokens)
+  - Added `.dark` block with dark mode token overrides
+  - Added `--color-*` entries in `@theme` to bridge CSS vars → Tailwind utility generation
+- Created `client/src/components/ui/button.tsx`: shadcn/ui new-york Button with 6 variants and 4 sizes
+- Added `@/` path alias to `tsconfig.json` paths, `vite.config.ts` resolve.alias, `jest.config.js` moduleNameMapper
+- Created `client/src/components/__tests__/Button.test.tsx`: 19 tests covering variants, sizes, a11y, disabled state
+
+### Files Changed
+- `client/package.json` + `package-lock.json` — 4 new dependencies
+- `client/components.json` — NEW: shadcn/ui configuration
+- `client/src/lib/utils.ts` — NEW: cn() helper
+- `client/src/components/ui/button.tsx` — NEW: shadcn/ui Button component
+- `client/src/components/__tests__/Button.test.tsx` — NEW: 19 unit tests
+- `client/src/styles/tailwind.css` — CSS variable definitions + @theme color tokens
+- `client/tsconfig.json` — added `@/*` path alias
+- `client/vite.config.ts` — added `@` resolve alias
+- `client/jest.config.js` — added `^@/(.*)$` moduleNameMapper
+
+### Verification
+- Typecheck: 0 errors
+- Tests: 72 suites, 1153 tests, all passing (19 new Button tests)
+- Browser: Light mode (blue primary, red destructive, white outline, gray secondary) ✓
+- Browser: Dark mode (lighter blue, coral red, dark outline/secondary) ✓
+- CSS variable `--primary: oklch(0.546 0.245 262.881)` confirmed resolving in browser
+
+### Learnings for Future Iterations
+- shadcn/ui CSS variables (`--primary`, `--background`, etc.) go in `:root` in `@layer base`, NOT in `@theme`
+- In Tailwind v4, put `--color-primary: var(--primary)` in `@theme` to generate `bg-primary`, `text-primary` etc. from shadcn CSS vars
+- Jest needs `'^@/(.*)$': '<rootDir>/src/$1'` in moduleNameMapper to resolve `@/` imports
+- clsx v2 uses default export: `import clsx from 'clsx'` (not named export `{ clsx }`)
+- `@radix-ui/react-slot` required for shadcn Button `asChild` prop
+- The `useSyncExternalStore` error in browser is pre-existing React 17 + TanStack v5 compat — fixed in US-008
+---
+
+## 2026-03-12 - US-008 — Upgrade React 17 → 19
+
+### What Was Implemented
+- Upgraded `react` and `react-dom` from v17.0.2 to v19.2.4
+- Upgraded `@types/react` from v17.0.43 to v19.2.14 and `@types/react-dom` from v17.0.14 to v19.2.3
+- Upgraded `@testing-library/react` from v12.1.5 to v16.3.2
+- Upgraded `react-reconciler` from v0.26.2 to v0.31.0
+- Removed `@types/react-router-dom` (react-router-dom v6 ships built-in types)
+- Removed `use-sync-external-store` dependency and `setupReactPolyfills.js` shim (built-in to React 19)
+- Migrated `src/index.tsx` from `ReactDOM.render()` to `createRoot()` (React 19 concurrent root)
+- Migrated `src/components/Confirm.tsx` from `ReactDOM.render()` to `createRoot()` with proper `root.unmount()` cleanup
+- Migrated 7 test files from custom `renderHook` polyfill (ReactDOM.render + act) to `@testing-library/react` v16 native `renderHook`:
+  - `translations.test.ts`, `fonts.test.ts`, `statisticHooks.test.ts`, `sortedList.test.ts`, `translatedKeysFactory.test.ts`, `mediaItem.test.ts`, `Nav.test.tsx`
+- Removed `jest.config.js` `setupFiles` entry for deleted polyfill
+- Updated `lingui-macro.d.ts` type override comment (now needed for TS 4.7.3 + @types/react v19 compat, not React 17)
+- Added explicit `children: React.ReactNode` prop to components:
+  - `Portal.tsx`, `SettingsSegment.tsx`, `Poster.tsx` (2 components), `darkMode.tsx`, `menu.tsx`, `Notifications.tsx`
+- Fixed `useRef<T>()` calls to `useRef<T>(null)` in:
+  - `Modal.tsx`, `Poster.tsx`, `PaginatedGridItems.tsx`, `AddOrEditListButton.tsx`, `Notifications.tsx`
+- Changed `JSX.Element` to `React.JSX.Element` in `Modal.tsx`, `Statistics.tsx`
+- Fixed `updateSearchParamsHook.ts` callback parameter destructuring
+- Fixed `ExpandableList.test.tsx` React.createElement calls for React 19 compat
+- Added `@ts-expect-error` suppressions for `@react-spring/web` and `styled-components` type incompatibilities with @types/react v19 (5 files, 12 suppressions)
+- Updated `FacetSection.tsx` comment to remove React 17 workaround reference
+- Updated `Confirm.test.tsx` comment to reflect `createRoot` usage
+
+### Files Changed
+- `package.json` + `package-lock.json` — dependency upgrades/removals
+- `jest.config.js` — removed setupReactPolyfills entry
+- `tsconfig.json` — lingui-macro path retained for TS 4.7.3 compat
+- `src/index.tsx` — createRoot migration
+- `src/components/Confirm.tsx` — createRoot migration
+- `src/setupReactPolyfills.js` — DELETED
+- `src/types/lingui-macro.d.ts` — updated comment (retained for TS 4.7.3)
+- `src/components/Portal.tsx` — explicit children prop
+- `src/components/SettingsSegment.tsx` — explicit children prop
+- `src/components/Poster.tsx` — explicit children prop + useRef(null)
+- `src/hooks/darkMode.tsx` — explicit children prop
+- `src/hooks/menu.tsx` — explicit children prop
+- `src/components/Modal.tsx` — useRef(null) + React.JSX.Element
+- `src/components/PaginatedGridItems.tsx` — useRef(null)
+- `src/components/AddOrEditListButton.tsx` — useRef(null)
+- `src/pages/Statistics.tsx` — React.JSX.Element
+- `src/pages/settings/Notifications.tsx` — useRef(null) + children prop
+- `src/hooks/updateSearchParamsHook.ts` — callback parameter typing
+- `src/components/Facets/FacetSection.tsx` — comment update
+- `src/components/GridItem.tsx` — @ts-expect-error suppressions
+- `src/components/Nav.tsx` — @ts-expect-error suppressions
+- `src/pages/import/TraktTv.tsx` — @ts-expect-error suppression
+- `src/components/__tests__/Confirm.test.tsx` — comment update
+- `src/components/Facets/__tests__/ExpandableList.test.tsx` — React 19 compat
+- 7 test files — renderHook polyfill → @testing-library/react v16
+- `src/__tests__/react19Upgrade.test.ts` — NEW: 10 verification tests
+
+### Verification
+- Typecheck: 0 errors
+- Tests: 73 suites, 1163 tests, all passing (10 new React 19 verification tests)
+
+### Learnings for Future Iterations
+- React 19 `FunctionComponent<P>` removes implicit `children` — every component accepting children must declare `children: React.ReactNode` in its props
+- `useRef<T>()` signature changed in @types/react v19 — requires exactly 1 argument (`useRef<T>(null)`)
+- The global `JSX` namespace is no longer auto-exported — use `React.JSX.Element` instead
+- `@testing-library/react` v16 natively exports `renderHook` and `act` — replace all custom polyfills
+- TypeScript 4.7.3 doesn't support the new JSX element type narrowing in @types/react v19 — components returning `ReactNode` (like Lingui's `Trans`) need type overrides via tsconfig paths until TS 5.1+
+- `@react-spring/web` v9.4.4 and `styled-components` v5.3.5 types are incompatible with @types/react v19 — requires `@ts-expect-error` suppressions (12 total across 5 files)
+- `createRoot` returns a root object with `.render()` and `.unmount()` — for imperative rendering (like Confirm.tsx), call `root.unmount()` before removing the DOM node
+
+---

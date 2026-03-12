@@ -3,9 +3,9 @@
  *
  * Confirm is an async imperative function that:
  *   1. Appends a div to document#portal
- *   2. Uses ReactDOM.render to show a Modal with Yes/No buttons
+ *   2. Uses createRoot to show a Modal with Yes/No buttons
  *   3. Resolves to true (Yes) or false (No)
- *   4. Removes the appended div from the portal after resolving
+ *   4. Unmounts the root and removes the appended div from the portal after resolving
  *
  * All heavy dependencies (Modal, @react-spring/web, @lingui/macro,
  * @lingui/react) are mocked so tests run synchronously without animation

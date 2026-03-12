@@ -28,7 +28,7 @@ export const allYear = () => {
   };
 };
 
-const StatisticsPage = (): JSX.Element => {
+const StatisticsPage = (): React.JSX.Element => {
   const [years, setYears] = useState<(number | string)[]>([]);
   const [currentYear, setCurrentYear] =
     useState<Statistics.StatisticsSeeninyearList.RequestQuery>({

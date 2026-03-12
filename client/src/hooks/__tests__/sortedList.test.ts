@@ -11,29 +11,8 @@
  *   - recommended score formula (estimatedRating × 0.6 + tmdbRating × 0.4)
  */
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { act } from 'react-dom/test-utils';
+import { renderHook } from '@testing-library/react';
 import { useSortedList } from 'src/hooks/sortedList';
-
-// ---------------------------------------------------------------------------
-// renderHook polyfill — @testing-library/react v12 does not export renderHook.
-// Uses ReactDOM.render + act directly to avoid registering afterEach hooks
-// inside test bodies (which Jest forbids).
-// ---------------------------------------------------------------------------
-function renderHook<T>(callback: () => T): { result: { current: T } } {
-  const result = { current: undefined as unknown as T };
-  const container = document.createElement('div');
-  document.body.appendChild(container);
-  function TestComponent() {
-    result.current = callback();
-    return null;
-  }
-  act(() => {
-    ReactDOM.render(React.createElement(TestComponent), container);
-  });
-  return { result };
-}
 
 import type {
   MediaItemItemsResponse,

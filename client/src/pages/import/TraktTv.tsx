@@ -153,6 +153,7 @@ const ProgressBarComponent: FunctionComponent<{ progress: number }> = (
 
   return (
     <animated.div
+      // @ts-expect-error react-spring types incompatible with @types/react v19
       className="block h-4 border rounded w-80 bg-grad"
       style={style}
     ></animated.div>
