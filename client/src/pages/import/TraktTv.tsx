@@ -53,6 +53,7 @@ const useTraktTvImport = () => {
 
 export const TraktTvImportPage: FunctionComponent = () => {
   const { deviceCode, state, startOver } = useTraktTvImport();
+  const stateMap = useStateMap();
 
   return (
     <div className="flex flex-col justify-center w-full mt-4">
@@ -130,7 +131,7 @@ export const TraktTvImportPage: FunctionComponent = () => {
   );
 };
 
-const stateMap: Record<ImportState, string> = {
+const useStateMap = (): Record<ImportState, string> => ({
   exporting: t`Exporting`,
   uninitialized: t`Uninitialized`,
   'updating-metadata': t`Updating metadata`,
@@ -138,7 +139,7 @@ const stateMap: Record<ImportState, string> = {
   imported: t`Imported`,
   importing: t`Importing`,
   error: t`Error`,
-};
+});
 
 const ProgressBarComponent: FunctionComponent<{ progress: number }> = (
   props

@@ -1,0 +1,1571 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2026-03-12 15:41-0300\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: nl\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/pages/settings/Notifications.tsx:71
+msgid " User key"
+msgstr ""
+
+#. placeholder {0}: 1
+#. placeholder {0}: 5
+#. placeholder {0}: list.itemsCount
+#: src/i18n/__tests__/i18n.test.ts:86
+#: src/i18n/__tests__/i18n.test.ts:98
+#: src/pages/ListsPage.tsx:55
+msgid "{0, plural, one {# item} other {# items}}"
+msgstr "{0, plural, one {# item} other {# items}}"
+
+#. placeholder {0}: group.memberCount
+#: src/pages/GroupsPage.tsx:56
+msgid "{0, plural, one {# member} other {# members}}"
+msgstr ""
+
+#. placeholder {0}: filteredItems.length
+#. placeholder {0}: items.length
+#: src/pages/import/TraktTv.tsx:343
+#: src/pages/ListPage.tsx:131
+msgid "{0, plural, one {1 item} other {# items}}"
+msgstr "{0, plural, one {1 item} other {# items}}"
+
+#. placeholder {0}: mediaItem.authors.length
+#: src/pages/Details.tsx:338
+msgid "{0, plural, one {Author} other {Authors}}"
+msgstr "{0, plural, one {Auteur} other {Auteurs}}"
+
+#. placeholder {0}: searchResult?.length
+#: src/components/PaginatedGridItems.tsx:317
+msgid "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {Found # items for query \"<1>{searchQuery}</1>\"}}"
+msgstr ""
+
+#. placeholder {0}: mediaItem.genres.length
+#: src/pages/Details.tsx:298
+msgid "{0, plural, one {Genre} other {Genres}}"
+msgstr "{0, plural, one {Genre} other {Genres}}"
+
+#. placeholder {0}: listsWithItem?.length
+#: src/components/AddToListModal.tsx:150
+msgid "{0, plural, one {Listed on 1 list} other {Listed on # lists}}"
+msgstr "{0, plural, one {Vermeld op 1 lijst} other {Vermeld op # lijsten}}"
+
+#. placeholder {0}: mediaItem.seenHistory.length
+#: src/pages/Details.tsx:561
+#: src/pages/SeenHistory.tsx:43
+msgid "{0, plural, one {Listened 1 time} other {Listened # times}}"
+msgstr "{0, plural, one {Vermeld 1 keer} other {Vermeld # keren}}"
+
+#. placeholder {0}: mediaItem.narrators.length
+#: src/pages/Details.tsx:352
+msgid "{0, plural, one {Narrator} other {Narrators}}"
+msgstr "{0, plural, one {Verteller} other {Vertellers}}"
+
+#. placeholder {0}: mediaItem.platform.length
+#: src/pages/Details.tsx:266
+msgid "{0, plural, one {Platform} other {platforms}}"
+msgstr "{0, plural, one {Platform} other {platforms}}"
+
+#. placeholder {0}: mediaItem.seenHistory.length
+#: src/pages/Details.tsx:585
+#: src/pages/SeenHistory.tsx:67
+msgid "{0, plural, one {Played 1 time} other {Played # times}}"
+msgstr "{0, plural, one {1 keer afgespeeld} other {# keren afgespeeld}}"
+
+#. placeholder {0}: mediaItem.seenHistory.length
+#: src/pages/Details.tsx:569
+#: src/pages/SeenHistory.tsx:51
+msgid "{0, plural, one {Read 1 time} other {Read # times}}"
+msgstr "{0, plural, one {1 keer geluisterd} other {# keren geluisterd}}"
+
+#. placeholder {0}: episode.seenHistory.length
+#. placeholder {0}: mediaItem.seenHistory.length
+#: src/pages/Details.tsx:577
+#: src/pages/SeasonsPage.tsx:87
+#: src/pages/SeenHistory.tsx:59
+msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
+msgstr "{0, plural, one {1 keer bekeken} other {# keren bekeken}}"
+
+#. placeholder {0}: route.name
+#: src/components/Statistics/StatisticsGenreSegment.tsx:37
+msgid "{0}"
+msgstr "{0}"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:110
+msgid "{count, plural, one {Do you want to remove # seen history entry?} other {Do you want to remove all # seen history entries?}}"
+msgstr "{count, plural, one {Wil je # van je gezien geschiedenis verwijderen?} other {Wil je alle # van je gezien geschiedenis verwijderen?}}"
+
+#: src/components/SetProgress.tsx:118
+msgid "{duration, plural, one {minute} other {minutes}}"
+msgstr "{duration, plural, one {minuut} other {minuten}}"
+
+#. placeholder {0}: args.year ? 'in ' + args.year : ''
+#. placeholder {1}: args.genre ? 'with genre ' + args.genre : ''
+#. placeholder {2}: args.year ? 'in ' + args.year : ''
+#. placeholder {3}: args.genre ? 'with genre ' + args.genre : ''
+#: src/components/PaginatedGridItems.tsx:333
+msgid "{numberOfItemsTotal, plural, one {1 item {0} {1}} other {# item {2} {3}}}"
+msgstr "{numberOfItemsTotal, plural, one {1 item {0} {1}} other {# items {2} {3}}}"
+
+#: src/components/SetProgress.tsx:42
+msgid "{value, plural, one {minute} other {minutes}}"
+msgstr "{value, plural, one {minuut} other {minuten}}"
+
+#: src/components/SetProgress.tsx:40
+msgid "{value, plural, one {page} other {pages}}"
+msgstr "{value, plural, one {pagina} other {pagina's}}"
+
+#. placeholder {0}: item.genre
+#. placeholder {1}: item.count
+#: src/components/Statistics/StatisticsGenreSegment.tsx:56
+msgid "<0>{0}</0> (<1>{1}</1>)"
+msgstr "<0>{0}</0> (<1>{1}</1>)"
+
+#. placeholder {0}: data.audiobook.items
+#. placeholder {1}: data.audiobook.plays
+#: src/components/Statistics/StatisticsSegment.tsx:205
+msgid "<0>{0}</0> audiobooks (<1>{1}</1> plays)"
+msgstr "<0>{0}</0> audioboek (<1>{1}</1> spelen)"
+
+#. placeholder {0}: data.book.items
+#. placeholder {1}: data.book.plays
+#: src/components/Statistics/StatisticsSegment.tsx:166
+msgid "<0>{0}</0> books (<1>{1}</1> reads)"
+msgstr "<0>{0}</0> boek (<1>{1}</1> lezen)"
+
+#. placeholder {0}: data.tv.episodes
+#. placeholder {1}: data.tv.plays
+#. placeholder {2}: data.tv.items
+#: src/components/Statistics/StatisticsSegment.tsx:49
+msgid "<0>{0}</0> episodes (<1>{1}</1> plays of <2>{2}</2> shows)"
+msgstr "<0>{0}</0> afleveringen (<1>{1}</1> afspelen van <2>{2}</2> shows)"
+
+#. placeholder {0}: data.movie.items
+#. placeholder {1}: data.movie.plays
+#: src/components/Statistics/StatisticsSegment.tsx:88
+msgid "<0>{0}</0> movies (<1>{1}</1> plays)"
+msgstr "<0>{0}</0> films (<1>{1}</1> afgespeeld)"
+
+#. placeholder {0}: data.video_game.items
+#. placeholder {1}: data.video_game.plays
+#: src/components/Statistics/StatisticsSegment.tsx:127
+msgid "<0>{0}</0> video games (<1>{1}</1> plays)"
+msgstr "<0>{0}</0> videospellen (<1>{1}</1> afgespeeld)"
+
+#: src/components/Statistics/StatisticsSegment.tsx:194
+msgid "<0><1/> </0>listening"
+msgstr "<0><1/></0>luisteren"
+
+#: src/components/Statistics/StatisticsSegment.tsx:116
+msgid "<0><1/> </0>playing"
+msgstr "<0><1/></0>afspelen"
+
+#: src/components/Statistics/StatisticsSegment.tsx:155
+msgid "<0><1/> </0>reading"
+msgstr "<0><1/></0>lezen"
+
+#: src/components/Statistics/StatisticsSegment.tsx:38
+#: src/components/Statistics/StatisticsSegment.tsx:77
+msgid "<0><1/> </0>watching"
+msgstr "<0><1/></0>kijken"
+
+#: src/pages/Settings.tsx:113
+msgid "About"
+msgstr "Over"
+
+#: src/pages/settings/Notifications.tsx:96
+msgid "Access Token"
+msgstr "Toegangstoken"
+
+#: src/components/Facets/ActiveFacetChips.tsx:219
+msgid "Active filters"
+msgstr "Actieve filters"
+
+#. placeholder {0}: episode ? `${mediaItem.title} ${formatEpisodeNumber(episode)}` : season ? `${mediaItem.title} ${formatSeasonNumber(season)}` : mediaItem.title
+#: src/components/AddToListModal.tsx:54
+msgid "Add \"{0}\" to list"
+msgstr "\"{0}\" toevoegen aan lijst"
+
+#. placeholder {0}: formatEpisodeNumber(episode)
+#. placeholder {0}: formatSeasonNumber(season)
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:47
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:51
+msgid "Add {0} to seen history"
+msgstr "Toevoegen {0} aan bekeken geschiedenis"
+
+#: src/components/AddToListModal.tsx:142
+msgid "Add episode to list"
+msgstr "Voeg aflevering toe aan lijst"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:58
+msgid "Add episode to seen history"
+msgstr "Aflevering aan bekeken geschiedenis toevoegen"
+
+#: src/components/AddOrEditListButton.tsx:35
+#: src/components/AddOrEditListButton.tsx:196
+msgid "Add list"
+msgstr "Lijst toevoegen"
+
+#: src/pages/GroupDetailPage.tsx:96
+msgid "Add member"
+msgstr ""
+
+#: src/pages/settings/Preferences.tsx:41
+msgid "Add recommendations to watchlist"
+msgstr "Aanbevelingen toevoegen aan kijklijst"
+
+#: src/components/AddToListModal.tsx:144
+msgid "Add season to list"
+msgstr "Seizoen aan lijst toevoegen"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:60
+msgid "Add season to seen history"
+msgstr "Seizoen toevoegen aan geschiedenis"
+
+#: src/components/AddToListModal.tsx:146
+msgid "Add to list"
+msgstr "Aan lijst toevoegen"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:40
+msgid "Add to listened history"
+msgstr "Toevoegen aan luistergeschiedenis"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:42
+msgid "Add to played history"
+msgstr "Toevoegen aan gespeeld geschiedenis"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:41
+msgid "Add to read history"
+msgstr "Toevoegen aan leesgeschiedenis"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:43
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:55
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:62
+msgid "Add to seen history"
+msgstr "Toevoegen aan bekeken geschiedenis"
+
+#: src/pages/Details.tsx:641
+msgid "Add to watchlist"
+msgstr "Voeg aan wenslijst toe"
+
+#: src/pages/settings/ApplicationTokens.tsx:30
+msgid "Add token"
+msgstr "Token toevoegen"
+
+#: src/pages/GroupDetailPage.tsx:192
+#: src/pages/GroupDetailPage.tsx:206
+#: src/pages/GroupDetailPage.tsx:319
+#: src/pages/GroupsPage.tsx:48
+msgid "Admin"
+msgstr ""
+
+#: src/components/FilterBy.tsx:11
+msgid "All"
+msgstr "Alles"
+
+#: src/components/GroupSelector.tsx:150
+msgid "All Users"
+msgstr ""
+
+#: src/pages/Statistics.tsx:26
+msgid "All Years"
+msgstr "Alle jaren"
+
+#: src/pages/settings/Configuration.tsx:122
+msgid "API keys can be acquired here"
+msgstr "API sleutels kunnen hier verkregen worden"
+
+#: src/pages/settings/Notifications.tsx:59
+msgid "App token"
+msgstr "App token"
+
+#: src/pages/Settings.tsx:125
+msgid "Application tokens"
+msgstr "Applicatie token"
+
+#: src/hooks/translations.ts:28
+msgid "Ascending"
+msgstr "Oplopend"
+
+#: src/components/SelectSeenDate.tsx:114
+msgid "At release date"
+msgstr "Uitgiftedatum"
+
+#: src/pages/settings/Configuration.tsx:46
+msgid "Audible language"
+msgstr "Audible taal"
+
+#: src/components/Facets/ActiveFacetChips.tsx:76
+#: src/components/Facets/MediaTypeSection.tsx:24
+#: src/components/GridItem.tsx:79
+msgid "Audiobook"
+msgstr "Audioboek"
+
+#: src/components/Nav.tsx:42
+#: src/components/Statistics/StatisticsSegment.tsx:189
+msgid "Audiobooks"
+msgstr "Audioboeken"
+
+#: src/components/Facets/ActiveFacetChips.tsx:54
+#: src/components/Facets/CreatorSection.tsx:27
+msgid "Author"
+msgstr "Auteur"
+
+#: src/pages/settings/Preferences.tsx:42
+msgid "Automatically add similar items to your watchlist when you rate content"
+msgstr "Automatisch vergelijkbare items aan uw kijklijst toevoegen wanneer u inhoud beoordeelt"
+
+#: src/pages/settings/Preferences.tsx:19
+msgid "Avoid episode spoilers"
+msgstr "Vermijd aflevering spoilers"
+
+#: src/pages/settings/Preferences.tsx:30
+msgid "Avoid season spoilers"
+msgstr "Vermijd seizoen spoilers"
+
+#: src/components/Facets/ActiveFacetChips.tsx:74
+#: src/components/Facets/MediaTypeSection.tsx:22
+#: src/components/GridItem.tsx:80
+msgid "Book"
+msgstr "Boek"
+
+#: src/components/Nav.tsx:41
+#: src/components/Statistics/StatisticsSegment.tsx:150
+#: src/pages/import/Goodreads.tsx:64
+msgid "Books"
+msgstr "Boeken"
+
+#: src/components/Nav.tsx:48
+msgid "Calendar"
+msgstr "Kalender"
+
+#: src/components/SelectLastSeenEpisode.tsx:141
+#: src/components/SelectSeenDate.tsx:160
+#: src/components/SetProgress.tsx:128
+#: src/components/StarRating.tsx:170
+msgid "Cancel"
+msgstr "Annuleren"
+
+#: src/pages/settings/Password.tsx:74
+msgid "Change password"
+msgstr "Wachtwoord veranderen"
+
+#: src/components/Facets/ActiveFacetChips.tsx:331
+#: src/components/Facets/FacetDrawer.tsx:93
+msgid "Clear all"
+msgstr "Alles wissen"
+
+#: src/components/Facets/FacetPanel.tsx:38
+msgid "Clear all filters"
+msgstr "Alle filters wissen"
+
+#: src/pages/settings/Configuration.tsx:125
+msgid "Client ID"
+msgstr "Klant ID"
+
+#: src/pages/settings/Configuration.tsx:133
+msgid "Client Secret"
+msgstr "Klant geheim"
+
+#: src/components/AddOrEditGroupButton.tsx:69
+#: src/components/AddToListModal.tsx:104
+msgid "Close"
+msgstr "Sluiten"
+
+#: src/pages/Settings.tsx:139
+msgid "Configuration"
+msgstr "Configuratie"
+
+#: src/pages/settings/Password.tsx:40
+msgid "Confirm new password"
+msgstr "Nieuw wachtwoord bevestigen"
+
+#: src/pages/Register.tsx:63
+msgid "Confirm password"
+msgstr "Bevestig wachtwoord"
+
+#: src/pages/import/TraktTv.tsx:91
+msgid "Copy to clipboard"
+msgstr "Kopieer naar klembord"
+
+#: src/pages/GroupsPage.tsx:32
+msgid "Create a group to share Platform Recommended results with other users."
+msgstr ""
+
+#: src/components/AddOrEditGroupButton.tsx:65
+#: src/components/AddOrEditGroupButton.tsx:86
+msgid "Create group"
+msgstr ""
+
+#: src/components/Facets/ActiveFacetChips.tsx:51
+#: src/components/Facets/ActiveFacetChips.tsx:58
+#: src/components/Facets/CreatorSection.tsx:24
+#: src/components/Facets/CreatorSection.tsx:32
+msgid "Creator"
+msgstr "Maker"
+
+#: src/pages/settings/Password.tsx:21
+msgid "Current password"
+msgstr "Huidig wachtwoord"
+
+#: src/pages/settings/Password.tsx:69
+msgid "Current password is incorrect"
+msgstr "Huidige wachtwoord is onjuist"
+
+#: src/pages/import/Goodreads.tsx:77
+msgid "Currently reading"
+msgstr "Aan het lezen"
+
+#: src/pages/LogsPage.tsx:121
+msgid "Debug"
+msgstr "Debuggen"
+
+#: src/pages/GroupDetailPage.tsx:357
+msgid "Delete group"
+msgstr ""
+
+#. placeholder {0}: group?.name
+#: src/pages/GroupDetailPage.tsx:274
+msgid "Delete group \"{0}\"? This action cannot be undone."
+msgstr ""
+
+#: src/components/AddOrEditListButton.tsx:222
+msgid "Delete list"
+msgstr "Verwijder lijst"
+
+#: src/hooks/translations.ts:29
+msgid "Descending"
+msgstr "Aflopend"
+
+#: src/components/AddOrEditListButton.tsx:143
+#: src/pages/EpisodePage.tsx:53
+#: src/pages/SeasonsPage.tsx:213
+msgid "Description"
+msgstr "Beschrijving"
+
+#: src/components/Facets/ActiveFacetChips.tsx:56
+#: src/components/Facets/CreatorSection.tsx:29
+msgid "Developer"
+msgstr "Ontwikkelaar"
+
+#: src/components/Facets/ActiveFacetChips.tsx:49
+#: src/components/Facets/CreatorSection.tsx:22
+msgid "Director"
+msgstr "Regisseur"
+
+#: src/components/Nav.tsx:159
+msgid "Do you really want to logout?"
+msgstr "Weet u zeker dat u wilt uitloggen?"
+
+#. placeholder {0}: list.name
+#: src/components/AddOrEditListButton.tsx:205
+msgid "Do you really want to remove list \"{0}\""
+msgstr "Wil je de lijst \"{0}\" echt verwijderen?"
+
+#: src/components/SetProgress.tsx:109
+msgid "Duration"
+msgstr "Duurtijd"
+
+#: src/components/AddOrEditListButton.tsx:35
+#: src/components/AddOrEditListButton.tsx:125
+msgid "Edit list"
+msgstr "Lijst bewerken"
+
+#: src/pages/settings/Configuration.tsx:19
+msgid "Enable registration"
+msgstr "Registratie inschakelen"
+
+#: src/components/SelectLastSeenEpisode.tsx:93
+msgid "Episode"
+msgstr "Aflevering"
+
+#. placeholder {0}: formatEpisodeNumber( episodesMap[seenEntry.episodeId] )
+#. placeholder {1}: episodesMap[seenEntry.episodeId].title
+#: src/pages/SeenHistory.tsx:111
+msgid "Episode {0} {1}"
+msgstr "Aflevering {0} {1}"
+
+#: src/components/ImportSummaryTable.tsx:93
+#: src/pages/Details.tsx:382
+msgid "Episodes"
+msgstr "Afleveringen"
+
+#: src/pages/Details.tsx:450
+msgid "Episodes page"
+msgstr "Afleveringen pagina"
+
+#: src/pages/import/TraktTv.tsx:141
+#: src/pages/LogsPage.tsx:101
+msgid "Error"
+msgstr "Foutmelding"
+
+#: src/pages/import/TraktTv.tsx:135
+msgid "Exporting"
+msgstr "Exporteren"
+
+#: src/pages/GroupDetailPage.tsx:89
+msgid "Failed to add member. They may already be in the group."
+msgstr ""
+
+#: src/pages/GroupDetailPage.tsx:289
+msgid "Failed to load group. It may have been deleted."
+msgstr ""
+
+#: src/components/Facets/FacetDrawer.tsx:82
+#: src/components/Facets/FacetMobileButton.tsx:36
+#: src/components/Facets/FacetPanel.tsx:31
+msgid "Filters"
+msgstr "Filters"
+
+#: src/pages/Details.tsx:524
+msgid "First unwatched episode"
+msgstr "Eerste onbekeken aflevering"
+
+#: src/components/Nav.tsx:40
+#: src/components/Statistics/StatisticsGenreSegment.tsx:19
+#: src/components/Statistics/StatisticsSegment.tsx:111
+msgid "Games"
+msgstr "Spellen"
+
+#: src/pages/settings/Configuration.tsx:17
+msgid "General"
+msgstr "Algemeen"
+
+#: src/components/Facets/ActiveFacetChips.tsx:225
+#: src/components/Facets/GenreSection.tsx:37
+msgid "Genre"
+msgstr "Genre"
+
+#: src/pages/Statistics.tsx:143
+msgid "Genres"
+msgstr "Genres"
+
+#. placeholder {0}: deviceCode.verificationUrl
+#. placeholder {1}: deviceCode.userCode
+#: src/pages/import/TraktTv.tsx:66
+msgid "Go to <0>{0}</0> and enter following code: <1>{1}</1>"
+msgstr "Ga naar <0>{0}</0> en voer de volgende code in: <1>{1}</1>"
+
+#: src/pages/import/Goodreads.tsx:33
+msgid "Go to <0>https://www.goodreads.com/review/list</0> and copy RSS url from the bottom of the page"
+msgstr "Ga naar <0>https://www.goodreads.com/review/list</0> en kopieer de RSS url van de onderkant van de pagina"
+
+#: src/pages/settings/Notifications.tsx:92
+msgid "Gotify server url"
+msgstr "Gotify server url"
+
+#: src/pages/GroupDetailPage.tsx:308
+msgid "Group name"
+msgstr ""
+
+#: src/components/Nav.tsx:51
+msgid "Groups"
+msgstr ""
+
+#: src/pages/settings/Preferences.tsx:31
+msgid "Hide overview of unseen seasons"
+msgstr "Overzicht van ongeziene seizoenen verbergen"
+
+#: src/pages/settings/Preferences.tsx:20
+msgid "Hide title of unseen episodes"
+msgstr "Titel van onbekeken afleveringen verbergen"
+
+#: src/components/Nav.tsx:37
+#: src/i18n/__tests__/i18n.test.ts:65
+msgid "Home"
+msgstr "Startscherm"
+
+#: src/pages/LogsPage.tsx:116
+msgid "Http"
+msgstr "Http"
+
+#: src/pages/Details.tsx:469
+msgid "I am listening it"
+msgstr "Ik luister ernaar"
+
+#: src/pages/Details.tsx:470
+msgid "I am playing it"
+msgstr "Ik ben het aan het spelen"
+
+#: src/pages/Details.tsx:468
+msgid "I am reading it"
+msgstr "Ik ben het aan het lezen"
+
+#: src/pages/Details.tsx:467
+msgid "I am watching it"
+msgstr "Ik kijk ernaar"
+
+#: src/components/SelectSeenDate.tsx:120
+#: src/pages/Statistics.tsx:19
+msgid "I do not remember"
+msgstr "Ik weet het niet meer"
+
+#: src/pages/Details.tsx:488
+msgid "I finished listening it"
+msgstr "Ik ben klaar met luisteren"
+
+#: src/pages/Details.tsx:491
+msgid "I finished playing it"
+msgstr "Ik heb het afgespeeld"
+
+#: src/pages/Details.tsx:486
+msgid "I finished reading it"
+msgstr "Klaar met lezen"
+
+#: src/pages/Details.tsx:485
+msgid "I finished watching it"
+msgstr "Ik ben klaar met het bekijken"
+
+#: src/pages/settings/Configuration.tsx:106
+msgid "IGDB credentials"
+msgstr "IGDB gegevens"
+
+#: src/pages/import/Goodreads.tsx:56
+msgid "import"
+msgstr "importeren"
+
+#: src/components/Nav.tsx:49
+msgid "Import"
+msgstr "Importeren"
+
+#: src/pages/Import.tsx:16
+msgid "Import from"
+msgstr "Importeren van"
+
+#: src/pages/import/TraktTv.tsx:139
+msgid "Imported"
+msgstr "Geïmporteerd"
+
+#: src/pages/import/Goodreads.tsx:61
+#: src/pages/import/TraktTv.tsx:140
+msgid "Importing"
+msgstr "Aan het importeren"
+
+#: src/components/Nav.tsx:44
+msgid "In progress"
+msgstr "In behandeling"
+
+#: src/pages/Login.tsx:82
+msgid "Incorrect password or username"
+msgstr "Onjuist wachtwoord of gebruikersnaam"
+
+#: src/pages/LogsPage.tsx:111
+msgid "Info"
+msgstr "Info"
+
+#: src/components/Facets/StatusSection.tsx:143
+msgid "Item must match all selected statuses"
+msgstr "Item moet overeenkomen met alle geselecteerde statussen"
+
+#: src/pages/settings/Notifications.tsx:82
+msgid "Key"
+msgstr "Sleutel"
+
+#: src/components/Facets/ActiveFacetChips.tsx:235
+#: src/components/Facets/LanguageSection.tsx:95
+#: src/pages/Details.tsx:329
+msgid "Language"
+msgstr "Taal"
+
+#: src/components/OrderBy.tsx:19
+msgid "Last airing"
+msgstr "Laatste uitzending"
+
+#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
+#: src/pages/Details.tsx:533
+msgid "Last listened at {0}"
+msgstr "Laatst geluisterd op {0}"
+
+#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
+#: src/pages/Details.tsx:551
+msgid "Last played at {0}"
+msgstr "Laatst gespeeld op {0}"
+
+#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
+#: src/pages/Details.tsx:539
+msgid "Last read at {0}"
+msgstr "Laatst gelezen op {0}"
+
+#: src/components/OrderBy.tsx:14
+msgid "Last seen"
+msgstr "Laatst gezien"
+
+#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
+#: src/pages/Details.tsx:545
+msgid "Last seen at {0}"
+msgstr "Laatst gezien op {0}"
+
+#. placeholder {0}: item.listName
+#: src/pages/import/TraktTv.tsx:321
+msgid "List {0} - episodes"
+msgstr "Lijst {0} - afleveringen"
+
+#. placeholder {0}: item.listName
+#: src/pages/import/TraktTv.tsx:303
+msgid "List {0} - movies"
+msgstr "Lijst {0} - films"
+
+#. placeholder {0}: item.listName
+#: src/pages/import/TraktTv.tsx:315
+msgid "List {0} - seasons"
+msgstr "Lijst {0} - seizoen"
+
+#. placeholder {0}: item.listName
+#: src/pages/import/TraktTv.tsx:309
+msgid "List {0} - shows"
+msgstr "Lijst {0} - shows"
+
+#. placeholder {0}: list.listName
+#: src/pages/import/TraktTv.tsx:219
+msgid "List: {0}"
+msgstr "Lijst: {0}"
+
+#: src/components/Facets/ActiveFacetChips.tsx:26
+#: src/components/Facets/StatusSection.tsx:33
+#: src/components/FilterBy.tsx:18
+msgid "Listened"
+msgstr "Beluisterd"
+
+#. placeholder {0}: seenEntry.dateStr
+#: src/pages/SeenHistory.tsx:89
+msgid "Listened at {0}"
+msgstr "Beluisterd op {0}"
+
+#: src/pages/Details.tsx:593
+msgid "Listened history"
+msgstr "Beluisterd geschiedenis"
+
+#: src/components/Nav.tsx:50
+msgid "Lists"
+msgstr "Lijsten"
+
+#: src/components/AddToListModal.tsx:48
+#: src/components/PaginatedGridItems.tsx:384
+#: src/components/SelectLastSeenEpisode.tsx:59
+#: src/pages/Calendar.tsx:61
+#: src/pages/Details.tsx:204
+#: src/pages/EpisodePage.tsx:42
+#: src/pages/GroupDetailPage.tsx:283
+#: src/pages/GroupsPage.tsx:17
+#: src/pages/import/TraktTv.tsx:114
+#: src/pages/ListPage.tsx:86
+#: src/pages/ListsPage.tsx:29
+#: src/pages/Login.tsx:17
+#: src/pages/LogsPage.tsx:26
+#: src/pages/SeasonsPage.tsx:144
+#: src/pages/SeenHistory.tsx:30
+msgid "Loading"
+msgstr "Aan het laden"
+
+#: src/pages/Login.tsx:33
+#: src/pages/Login.tsx:67
+#: src/pages/Register.tsx:85
+msgid "Login"
+msgstr "Inloggen"
+
+#: src/components/Nav.tsx:164
+#: src/i18n/__tests__/i18n.test.ts:56
+msgid "Logout"
+msgstr "Uitloggen"
+
+#: src/pages/Settings.tsx:143
+msgid "Logs"
+msgstr "Logs"
+
+#: src/components/Facets/RatingSection.tsx:68
+msgid "Maximum rating"
+msgstr "Maximale beoordeling"
+
+#: src/components/Facets/YearSection.tsx:92
+msgid "Maximum year"
+msgstr "Maximaal jaar"
+
+#: src/components/OrderBy.tsx:21
+msgid "Media type"
+msgstr "Media type"
+
+#: src/components/Facets/ActiveFacetChips.tsx:281
+#: src/components/Facets/MediaTypeSection.tsx:117
+msgid "Media Type"
+msgstr "Mediatype"
+
+#: src/pages/GroupDetailPage.tsx:326
+msgid "Members"
+msgstr ""
+
+#: src/components/Facets/RatingSection.tsx:67
+msgid "Minimum rating"
+msgstr "Minimale beoordeling"
+
+#: src/components/Facets/YearSection.tsx:91
+msgid "Minimum year"
+msgstr "Minimaal jaar"
+
+#: src/components/Facets/ActiveFacetChips.tsx:70
+#: src/components/Facets/MediaTypeSection.tsx:18
+#: src/components/GridItem.tsx:81
+msgid "Movie"
+msgstr "Film"
+
+#: src/components/ImportSummaryTable.tsx:90
+#: src/components/Nav.tsx:39
+#: src/components/Statistics/StatisticsGenreSegment.tsx:16
+#: src/components/Statistics/StatisticsSegment.tsx:72
+msgid "Movies"
+msgstr "Films"
+
+#: src/utils.ts:152
+msgid "Movies, shows, seasons, episodes, books, audiobooks and video games I plan to watch/read/listen/play"
+msgstr "Films, series, seizoenen, afleveringen, boeken, audioboeken en videospellen die ik van plan ben te bekijken/lezen/beluisteren/spelen"
+
+#: src/hooks/translations.ts:8
+msgid "My rating"
+msgstr "Mijn beoordeling"
+
+#: src/components/AddOrEditGroupButton.tsx:50
+#: src/components/AddOrEditListButton.tsx:129
+msgid "Name"
+msgstr "Naam"
+
+#: src/pages/Details.tsx:280
+msgid "Network"
+msgstr "Netwerk"
+
+#: src/components/AddOrEditGroupButton.tsx:46
+msgid "New group"
+msgstr ""
+
+#: src/components/AddOrEditListButton.tsx:125
+msgid "New list"
+msgstr "Nieuwe lijst"
+
+#: src/pages/settings/Password.tsx:31
+msgid "New password"
+msgstr "Nieuwe wachtwoord"
+
+#: src/components/OrderBy.tsx:18
+#: src/hooks/translations.ts:15
+msgid "Next airing"
+msgstr "Volgende uitzending"
+
+#: src/pages/Details.tsx:511
+msgid "Next episode"
+msgstr "Volgende aflevering"
+
+#: src/pages/Home.tsx:89
+msgid "Next episode to watch"
+msgstr "Volgende aflevering om te bekijken"
+
+#: src/components/Confirm.tsx:53
+msgid "No"
+msgstr "Nee"
+
+#: src/pages/SeenHistory.tsx:105
+msgid "No date"
+msgstr "Geen datum"
+
+#: src/pages/GroupsPage.tsx:29
+msgid "No groups yet"
+msgstr ""
+
+#: src/pages/GroupDetailPage.tsx:331
+msgid "No members yet"
+msgstr ""
+
+#: src/pages/LogsPage.tsx:67
+msgid "No more logs"
+msgstr "Geen logs meer"
+
+#: src/pages/GroupDetailPage.tsx:133
+msgid "No users found"
+msgstr ""
+
+#: src/pages/import/TraktTv.tsx:246
+msgid "Not imported items"
+msgstr "Niet geïmporteerde items"
+
+#: src/pages/Settings.tsx:129
+msgid "Notifications"
+msgstr "Meldingen"
+
+#: src/components/SelectSeenDate.tsx:108
+msgid "Now"
+msgstr "Nu"
+
+#: src/pages/SeasonsPage.tsx:230
+msgid "Number of episodes"
+msgstr "Aantal afleveringen"
+
+#: src/pages/Details.tsx:365
+msgid "Number of pages"
+msgstr "Aantal pagina's"
+
+#: src/components/Facets/ActiveFacetChips.tsx:23
+#: src/components/Facets/StatusSection.tsx:57
+#: src/components/FilterBy.tsx:14
+msgid "On watchlist"
+msgstr "Op kijklijst"
+
+#: src/pages/Details.tsx:320
+msgid "Overview"
+msgstr "Overzicht"
+
+#: src/pages/Login.tsx:53
+#: src/pages/Register.tsx:49
+#: src/pages/Settings.tsx:119
+msgid "Password"
+msgstr "Wachtwoord"
+
+#: src/pages/settings/Password.tsx:65
+msgid "Password has been changed"
+msgstr "Wachtwoord is gewijzigd"
+
+#: src/pages/settings/Password.tsx:54
+msgid "Passwords do not match"
+msgstr "Wachtwoorden komen niet overeen"
+
+#: src/pages/settings/Notifications.tsx:170
+msgid "Platform"
+msgstr "Platform"
+
+#: src/components/OrderBy.tsx:24
+#: src/hooks/translations.ts:17
+msgid "Platform Recommended"
+msgstr ""
+
+#: src/components/Facets/ActiveFacetChips.tsx:32
+#: src/components/Facets/StatusSection.tsx:39
+#: src/components/FilterBy.tsx:22
+msgid "Played"
+msgstr "Afgespeeld"
+
+#. placeholder {0}: seenEntry.dateStr
+#: src/pages/SeenHistory.tsx:101
+msgid "Played at {0}"
+msgstr "Gespeeld op {0}"
+
+#: src/pages/Details.tsx:601
+msgid "Played history"
+msgstr "Afgespeelde geschiedenis"
+
+#: src/pages/Settings.tsx:133
+msgid "Preferences"
+msgstr "Voorkeuren"
+
+#: src/pages/settings/Notifications.tsx:100
+#: src/pages/settings/Notifications.tsx:129
+msgid "Priority"
+msgstr "Prioriteit"
+
+#: src/components/AddOrEditListButton.tsx:153
+msgid "Privacy"
+msgstr "Vertrouwelijkheid"
+
+#: src/hooks/translations.ts:22
+msgid "Private"
+msgstr "Privé"
+
+#: src/components/OrderBy.tsx:22
+#: src/pages/Details.tsx:496
+msgid "Progress"
+msgstr "Voortgang"
+
+#: src/hooks/translations.ts:23
+msgid "Public"
+msgstr "Openbaar"
+
+#: src/pages/settings/Preferences.tsx:12
+msgid "Public reviews"
+msgstr "Openbare beoordelingen"
+
+#: src/components/Facets/ActiveFacetChips.tsx:269
+#: src/components/Facets/PublisherSection.tsx:53
+msgid "Publisher"
+msgstr "Uitgever"
+
+#: src/components/Nav.tsx:46
+msgid "Random"
+msgstr "Willekeurig"
+
+#: src/pages/Random.tsx:107
+msgid "Random Audiobook"
+msgstr "Willekeurig audioboek"
+
+#: src/pages/Random.tsx:94
+msgid "Random Book"
+msgstr "Willekeurig boek"
+
+#: src/pages/Random.tsx:55
+msgid "Random Movie"
+msgstr "Willekeurige film"
+
+#: src/pages/Random.tsx:68
+msgid "Random Tv Show"
+msgstr "Willekeurige serie"
+
+#: src/pages/Random.tsx:81
+msgid "Random Video Game"
+msgstr "Willekeurig videospel"
+
+#: src/components/Facets/ActiveFacetChips.tsx:19
+#: src/components/Facets/StatusSection.tsx:53
+#: src/components/FilterBy.tsx:12
+msgid "Rated"
+msgstr "Beoordeeld"
+
+#: src/components/Facets/ActiveFacetChips.tsx:316
+#: src/components/Facets/RatingSection.tsx:57
+#: src/pages/import/Goodreads.tsx:82
+msgid "Rating"
+msgstr "Beoordeling"
+
+#: src/pages/import/TraktTv.tsx:203
+msgid "Ratings"
+msgstr "Waarderingen"
+
+#: src/pages/import/TraktTv.tsx:295
+msgid "Ratings - episodes"
+msgstr "Beoordelingen - afleveringen"
+
+#: src/pages/import/TraktTv.tsx:280
+msgid "Ratings - movies"
+msgstr "Beoordelingen - films"
+
+#: src/pages/import/TraktTv.tsx:290
+msgid "Ratings - seasons"
+msgstr "Beoordelingen - seizoenen"
+
+#: src/pages/import/TraktTv.tsx:285
+msgid "Ratings - shows"
+msgstr "Beoordelingen - series"
+
+#: src/components/Facets/ActiveFacetChips.tsx:29
+#: src/components/Facets/StatusSection.tsx:36
+#: src/components/FilterBy.tsx:20
+#: src/pages/import/Goodreads.tsx:67
+msgid "Read"
+msgstr "Lezen"
+
+#. placeholder {0}: seenEntry.dateStr
+#: src/pages/SeenHistory.tsx:93
+msgid "Read at {0}"
+msgstr "Gelezen op {0}"
+
+#: src/pages/Details.tsx:595
+msgid "Read history"
+msgstr "Lees Geschiedenis"
+
+#: src/pages/settings/Notifications.tsx:38
+msgid "Receive notification for all media items on your watchlist, when its release date changes"
+msgstr "Ontvang een notificatie voor alle media items op je kijklijst, wanneer de vrijgavedatum verandert"
+
+#: src/pages/settings/Notifications.tsx:30
+msgid "Receive notification for all media items on your watchlist, when its status changes"
+msgstr "Ontvang een notificatie voor alle media items op je kijklijst, wanneer de status verandert"
+
+#: src/pages/settings/Notifications.tsx:16
+msgid "Receive notification for all media items on your watchlist, when they are released, including new seasons for tv shows"
+msgstr "Ontvang een notificatie voor alle media items op je kijklijst, wanneer deze worden vrijgegeven, inclusief nieuwe seizoenen voor tv-series"
+
+#: src/pages/settings/Notifications.tsx:46
+msgid "Receive notification for all tv shows on your watchlist, when its number of seasons changes"
+msgstr "Ontvang een notificatie voor alle tv-series op je kijklijst, wanneer het aantal seizoenen verandert"
+
+#: src/pages/settings/Notifications.tsx:22
+msgid "Receive notification for every episode for all tv shows on your watchlist, when it's released"
+msgstr "Ontvang een notificatie voor elke aflevering voor alle tv-series op je kijklijst, wanneer deze is uitgebracht"
+
+#: src/hooks/translations.ts:9
+msgid "Recently added"
+msgstr "Onlangs toegevoegd"
+
+#: src/hooks/translations.ts:11
+msgid "Recently aired"
+msgstr "Onlangs uitgezonden"
+
+#: src/pages/Home.tsx:104
+msgid "Recently released"
+msgstr "Onlangs uitgebracht"
+
+#: src/hooks/translations.ts:10
+msgid "Recently watched"
+msgstr "Recent bekeken"
+
+#: src/components/OrderBy.tsx:23
+#: src/hooks/translations.ts:16
+msgid "Recommended"
+msgstr "Aanbevolen"
+
+#: src/pages/Login.tsx:75
+#: src/pages/Register.tsx:29
+#: src/pages/Register.tsx:77
+msgid "Register"
+msgstr "Registreren"
+
+#: src/components/GridItem.tsx:233
+msgid "Release <0/>"
+msgstr "Uitgave <0/>"
+
+#: src/components/OrderBy.tsx:15
+#: src/hooks/translations.ts:12
+#: src/pages/Details.tsx:231
+#: src/pages/EpisodePage.tsx:80
+msgid "Release date"
+msgstr "Publicatiedatum"
+
+#: src/components/GridItem.tsx:251
+msgid "Released <0/>"
+msgstr "Uitgebracht <0/>"
+
+#: src/pages/GroupDetailPage.tsx:201
+msgid "Remove"
+msgstr ""
+
+#. placeholder {0}: mediaItem.title
+#. placeholder {1}: season ? ' ' + formatSeasonNumber(season) : episode ? ' ' + formatEpisodeNumber(episode) : ''
+#: src/components/GridItem.tsx:124
+msgid "Remove \"{0}{1}\" from watchlist?"
+msgstr "\"{0}{1}\" van de volglijst verwijderen?"
+
+#. placeholder {0}: member.name
+#: src/pages/GroupDetailPage.tsx:199
+msgid "Remove {0}"
+msgstr ""
+
+#. placeholder {0}: member.name
+#: src/pages/GroupDetailPage.tsx:167
+msgid "Remove {0} from this group?"
+msgstr ""
+
+#: src/components/Facets/ActiveFacetChips.tsx:107
+msgid "Remove {dimensionLabel}: {value} filter"
+msgstr "Verwijder {dimensionLabel}: {value} filter"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:129
+msgid "Remove episode from seen history"
+msgstr "Verwijder aflevering uit bekeken geschiedenis"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:123
+msgid "Remove from listened history"
+msgstr "Verwijder uit beluisterd geschiedenis"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:125
+msgid "Remove from played history"
+msgstr "Verwijder uit gespeeld geschiedenis"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:124
+msgid "Remove from read history"
+msgstr "Verwijder uit gelezen geschiedenis"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:126
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:133
+msgid "Remove from seen history"
+msgstr "Verwijder uit bekeken geschiedenis"
+
+#: src/pages/Details.tsx:664
+msgid "Remove from watchlist"
+msgstr "Verwijder uit kijklijst"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:131
+msgid "Remove season from seen history"
+msgstr "Verwijder seizoen van gezien geschiedenis"
+
+#: src/pages/settings/ApplicationTokens.tsx:48
+msgid "Remove token"
+msgstr "Token verwijderen"
+
+#: src/pages/Details.tsx:64
+msgid "Review by <0><1>{author}</1></0> at {date}"
+msgstr "Beoordeling door <0><1>{author}</1></0> op {date}"
+
+#. placeholder {0}: member.name
+#: src/pages/GroupDetailPage.tsx:190
+msgid "Role for {0}"
+msgstr ""
+
+#: src/pages/import/Goodreads.tsx:47
+msgid "RSS link"
+msgstr "RSS link"
+
+#: src/hooks/translations.ts:13
+#: src/pages/Details.tsx:242
+#: src/pages/EpisodePage.tsx:71
+msgid "Runtime"
+msgstr "Looptijd"
+
+#. placeholder {0}: season.seasonNumber.toString().padStart(2, '0')
+#: src/utils.ts:19
+msgid "S{0}"
+msgstr "S{0}"
+
+#. placeholder {0}: tvEpisode.seasonNumber .toString() .padStart(2, '0')
+#. placeholder {1}: tvEpisode.episodeNumber.toString().padStart(2, '0')
+#: src/utils.ts:13
+msgid "S{0}E{1}"
+msgstr "S{0}A{1}"
+
+#: src/pages/settings/Configuration.tsx:142
+#: src/pages/settings/Notifications.tsx:227
+msgid "Save"
+msgstr "Opslaan"
+
+#: src/components/AddOrEditListButton.tsx:196
+msgid "Save list"
+msgstr "Lijst opslaan"
+
+#: src/components/StarRating.tsx:167
+msgid "Save review"
+msgstr "Review opslaan"
+
+#: src/components/PaginatedGridItems.tsx:63
+msgid "Search"
+msgstr "Zoeken"
+
+#: src/pages/GroupDetailPage.tsx:102
+msgid "Search by username…"
+msgstr ""
+
+#: src/components/PaginatedGridItems.tsx:304
+msgid "Search for items or <0>import</0>"
+msgstr "Zoek naar items of <0>importeer</0>"
+
+#: src/pages/ListPage.tsx:124
+msgid "Search list"
+msgstr "Zoek in lijst"
+
+#: src/pages/GroupDetailPage.tsx:106
+msgid "Search users to add"
+msgstr ""
+
+#: src/pages/GroupDetailPage.tsx:111
+msgid "Searching…"
+msgstr ""
+
+#: src/components/SelectLastSeenEpisode.tsx:75
+msgid "Season"
+msgstr "Seizoen"
+
+#. placeholder {0}: season.seasonNumber
+#: src/pages/SeasonsPage.tsx:177
+msgid "Season {0}"
+msgstr "Seizoen {0}"
+
+#: src/components/ImportSummaryTable.tsx:92
+#: src/pages/Details.tsx:375
+msgid "Seasons"
+msgstr "Seizoenen"
+
+#: src/pages/Statistics.tsx:138
+msgid "Seen"
+msgstr "Gezien"
+
+#. placeholder {0}: seenEntry.dateStr
+#: src/pages/SeenHistory.tsx:97
+msgid "Seen at {0}"
+msgstr "Gezien op {0}"
+
+#: src/pages/Details.tsx:598
+#: src/pages/import/TraktTv.tsx:192
+msgid "Seen history"
+msgstr "Gezien geschiedenis"
+
+#: src/pages/import/TraktTv.tsx:275
+msgid "Seen history - episodes"
+msgstr "Gezien geschiedenis - afleveringen"
+
+#: src/pages/import/TraktTv.tsx:270
+msgid "Seen history - movies"
+msgstr "Gezien geschiedenis - films"
+
+#: src/components/SelectLastSeenEpisode.tsx:117
+msgid "Select"
+msgstr "Selecteer"
+
+#: src/components/SelectSeenDate.tsx:156
+msgid "Select date"
+msgstr "Datum selecteren"
+
+#: src/pages/Statistics.tsx:190
+msgid "Select Year"
+msgstr "Selecteer jaar"
+
+#: src/pages/settings/Notifications.tsx:21
+msgid "Send notification for episodes releases"
+msgstr "Notificatie verzenden voor aflevering releases"
+
+#: src/pages/settings/Notifications.tsx:15
+msgid "Send notification for releases"
+msgstr "Notificatie verzenden voor releases"
+
+#: src/pages/settings/Notifications.tsx:45
+msgid "Send notification when number of seasons changes"
+msgstr "Stuur een notificatie wanneer het aantal seizoenen verandert"
+
+#: src/pages/settings/Notifications.tsx:37
+msgid "Send notification when release date changes"
+msgstr "Stuur een notificatie wanneer de releasedatum verandert"
+
+#: src/pages/settings/Notifications.tsx:29
+msgid "Send notification when status changes"
+msgstr "Stuur een notificatie wanneer de status verandert"
+
+#: src/App.tsx:102
+msgid "Server error: {errorMessage}"
+msgstr "Serverfout: {errorMessage}"
+
+#: src/pages/settings/Configuration.tsx:27
+msgid "Server language"
+msgstr "Server taal"
+
+#: src/pages/settings/Notifications.tsx:138
+msgid "Server url (only for self hosting)"
+msgstr "Server url (alleen voor eigen hosting)"
+
+#: src/components/SetProgress.tsx:124
+msgid "Set"
+msgstr "Instellen"
+
+#: src/components/SetProgress.tsx:60
+#: src/pages/Details.tsx:698
+msgid "Set progress"
+msgstr "Voortgang instellen"
+
+#: src/pages/Settings.tsx:76
+msgid "Settings"
+msgstr "Instellingen"
+
+#: src/components/Facets/ExpandableList.tsx:33
+msgid "Show less"
+msgstr "Minder tonen"
+
+#: src/components/Facets/ExpandableList.tsx:33
+msgid "Show more"
+msgstr "Meer tonen"
+
+#: src/pages/settings/Preferences.tsx:13
+msgid "Show your reviews to other users"
+msgstr "Toon uw beoordeling aan andere gebruikers"
+
+#: src/components/ImportSummaryTable.tsx:91
+msgid "Shows"
+msgstr "Series"
+
+#: src/components/AddOrEditListButton.tsx:167
+msgid "Sort by"
+msgstr "Sorteren op"
+
+#: src/components/AddOrEditListButton.tsx:181
+msgid "Sort order"
+msgstr "Sorteervolgorde"
+
+#: src/pages/Details.tsx:400
+msgid "Source"
+msgstr "Bron"
+
+#: src/pages/import/TraktTv.tsx:108
+msgid "Start over"
+msgstr "Opnieuw beginnen"
+
+#: src/components/Nav.tsx:47
+#: src/pages/Statistics.tsx:104
+msgid "Statistics"
+msgstr "Statistieken"
+
+#: src/components/Facets/ActiveFacetChips.tsx:293
+#: src/components/Facets/StatusSection.tsx:116
+#: src/components/OrderBy.tsx:16
+#: src/pages/Details.tsx:289
+msgid "Status"
+msgstr "Status"
+
+#: src/components/ImportSummaryTable.tsx:84
+#: src/components/ImportSummaryTable.tsx:135
+msgid "Summary"
+msgstr "Samenvatting"
+
+#: src/components/AddOrEditListButton.tsx:97
+msgid "There already exists a list with name \"{name}\""
+msgstr "Er bestaat al een lijst met de naam \"{name}\""
+
+#: src/pages/SeasonsPage.tsx:152
+msgid "This component can only be used with tv shows"
+msgstr "Dit component kan alleen gebruikt worden met tv-series"
+
+#: src/components/OrderBy.tsx:17
+#: src/hooks/translations.ts:14
+msgid "Title"
+msgstr "Titel"
+
+#: src/pages/settings/Configuration.tsx:70
+msgid "TMDB language"
+msgstr "TMDB taal"
+
+#: src/pages/import/Goodreads.tsx:72
+msgid "To read"
+msgstr "Te lezen"
+
+#: src/pages/settings/Notifications.tsx:125
+msgid "Topic"
+msgstr "Onderwerp"
+
+#: src/pages/Details.tsx:253
+msgid "Total runtime"
+msgstr "Totale speeltijd"
+
+#: src/components/GridItem.tsx:82
+#: src/components/Nav.tsx:38
+#: src/components/Statistics/StatisticsGenreSegment.tsx:15
+#: src/components/Statistics/StatisticsSegment.tsx:33
+msgid "Tv"
+msgstr "Tv"
+
+#: src/components/Facets/ActiveFacetChips.tsx:72
+#: src/components/Facets/MediaTypeSection.tsx:20
+msgid "TV Show"
+msgstr "TV-serie"
+
+#: src/pages/import/TraktTv.tsx:136
+msgid "Uninitialized"
+msgstr "Niet geïnitialiseerd"
+
+#: src/components/Facets/ActiveFacetChips.tsx:21
+#: src/components/Facets/StatusSection.tsx:55
+#: src/components/FilterBy.tsx:13
+#: src/pages/Home.tsx:122
+msgid "Unrated"
+msgstr "Onbeoordeeld"
+
+#: src/pages/Details.tsx:390
+msgid "Unseen episodes"
+msgstr "Ongezien afleveringen"
+
+#: src/components/OrderBy.tsx:20
+msgid "Unseen episodes count"
+msgstr "Aantal ongezien afleveringen"
+
+#: src/components/Nav.tsx:43
+#: src/pages/Home.tsx:75
+msgid "Upcoming"
+msgstr "Aankomend"
+
+#: src/pages/Details.tsx:684
+msgid "Update metadata"
+msgstr "Metadata bewerken"
+
+#: src/pages/import/TraktTv.tsx:137
+msgid "Updating metadata"
+msgstr "Metadata bewerken"
+
+#: src/pages/Login.tsx:38
+#: src/pages/Register.tsx:34
+msgid "Username"
+msgstr "Gebruikersnaam"
+
+#: src/pages/settings/About.tsx:11
+msgid "Version"
+msgstr "Versie"
+
+#: src/components/Facets/ActiveFacetChips.tsx:78
+#: src/components/Facets/MediaTypeSection.tsx:26
+#: src/components/GridItem.tsx:83
+msgid "Video game"
+msgstr "Videospel"
+
+#: src/pages/GroupDetailPage.tsx:193
+#: src/pages/GroupDetailPage.tsx:206
+#: src/pages/GroupDetailPage.tsx:319
+#: src/pages/GroupsPage.tsx:50
+msgid "Viewer"
+msgstr ""
+
+#: src/pages/import/TraktTv.tsx:138
+msgid "Waiting for authentication"
+msgstr "Wachten op authenticatie"
+
+#: src/pages/LogsPage.tsx:106
+msgid "Warning"
+msgstr "Waarschuwing"
+
+#: src/components/Facets/ActiveFacetChips.tsx:34
+#: src/components/Facets/StatusSection.tsx:41
+#: src/components/FilterBy.tsx:23
+msgid "Watched"
+msgstr "Bekeken"
+
+#: src/components/Nav.tsx:45
+#: src/pages/import/TraktTv.tsx:177
+#: src/utils.ts:157
+msgid "Watchlist"
+msgstr "Kijklijst"
+
+#: src/pages/import/TraktTv.tsx:265
+msgid "Watchlist - episodes"
+msgstr "Kijklijst - Afleveringen"
+
+#: src/pages/import/TraktTv.tsx:250
+msgid "Watchlist - movies"
+msgstr "Kijklijst - films"
+
+#: src/pages/import/TraktTv.tsx:260
+msgid "Watchlist - season"
+msgstr "Kijklijst - Seizoen"
+
+#: src/pages/import/TraktTv.tsx:255
+msgid "Watchlist - shows"
+msgstr "Kijklijst - series"
+
+#: src/pages/settings/Notifications.tsx:115
+msgid "Webhook URL"
+msgstr "Webhook URL"
+
+#. placeholder {0}: season ? `${tvShow.title} ${formatSeasonNumber(season)}` : tvShow.title
+#: src/components/SelectLastSeenEpisode.tsx:63
+msgid "What is the last episode of \"{0}\" you see?"
+msgstr "Wat is de laatste aflevering van \"{0}\" die je hebt gezien?"
+
+#. placeholder {0}: mediaItem.title
+#: src/components/SelectSeenDate.tsx:77
+msgid "When did you listen to \"{0}\"?"
+msgstr "Wanneer heb je naar \"{0}\" geluisterd?"
+
+#. placeholder {0}: mediaItem.title
+#: src/components/SelectSeenDate.tsx:99
+msgid "When did you play \"{0}\"?"
+msgstr "Wanneer heb je \"{0}\" gespeeld?"
+
+#. placeholder {0}: mediaItem.title
+#: src/components/SelectSeenDate.tsx:81
+msgid "When did you read \"{0}\"?"
+msgstr "Wanneer heb je \"{0}\" gelezen?"
+
+#. placeholder {0}: episode ? `${mediaItem.title} ${formatEpisodeNumber(episode)}` : mediaItem.title
+#. placeholder {0}: mediaItem.title
+#: src/components/SelectSeenDate.tsx:85
+#: src/components/SelectSeenDate.tsx:89
+msgid "When did you see \"{0}\"?"
+msgstr "Wanneer heb je \"{0}\" gezien?"
+
+#: src/pages/Details.tsx:124
+msgid "Where to watch"
+msgstr "Waar te bekijken"
+
+#: src/components/Facets/ActiveFacetChips.tsx:304
+#: src/components/Facets/YearSection.tsx:81
+msgid "Year"
+msgstr "Jaar"
+
+#: src/components/Confirm.tsx:50
+msgid "Yes"
+msgstr "Ja"
+
+#: src/pages/GroupDetailPage.tsx:317
+msgid "Your role:"
+msgstr ""

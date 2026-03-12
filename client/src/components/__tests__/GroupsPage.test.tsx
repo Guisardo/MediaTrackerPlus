@@ -55,9 +55,15 @@ jest.mock('@lingui/macro', () => {
 jest.mock('@lingui/react', () => {
   const React = require('react');
   return {
-    useLingui: () => ({ i18n: { _: (msg: string) => msg, locale: 'en' } }),
-    Trans: ({ id, children }: { id?: string; children?: React.ReactNode }) => (
-      <>{id || children}</>
+    useLingui: () => ({
+      i18n: {
+        _: (msg: any) =>
+          typeof msg === 'string' ? msg : msg?.message || msg?.id || '',
+        locale: 'en',
+      },
+    }),
+    Trans: ({ message, children }: { message?: string; children?: React.ReactNode }) => (
+      <>{message || children}</>
     ),
     I18nProvider: ({ children }: { children: React.ReactNode }) => (
       <>{children}</>

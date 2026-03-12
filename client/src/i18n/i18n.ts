@@ -1,5 +1,4 @@
 import { i18n } from '@lingui/core';
-import * as plurals from 'make-plural/plurals';
 import { detect, fromNavigator } from '@lingui/detect-locale';
 
 import { messages as af } from 'src/i18n/locales/af/translation';
@@ -71,7 +70,6 @@ export const setupI18n = () => {
     ? detectedLocale
     : 'en';
 
-  i18n.loadLocaleData({ [locale]: { plurals: plurals[locale] } });
   i18n.load(allMessages);
   i18n.activate(locale);
 };

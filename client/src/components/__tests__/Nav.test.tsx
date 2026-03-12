@@ -60,8 +60,14 @@ jest.mock('@lingui/macro', () => ({
 }));
 
 jest.mock('@lingui/react', () => ({
-  useLingui: () => ({ i18n: { _: (s: any) => s, locale: 'en' } }),
-  Trans: ({ id, children }: any) => <>{id || children}</>,
+  useLingui: () => ({
+    i18n: {
+      _: (s: any) =>
+        typeof s === 'string' ? s : s?.message || s?.id || '',
+      locale: 'en',
+    },
+  }),
+  Trans: ({ message, children }: any) => <>{message || children}</>,
   I18nProvider: ({ children }: any) => <>{children}</>,
 }));
 
