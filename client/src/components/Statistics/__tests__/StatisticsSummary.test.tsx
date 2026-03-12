@@ -55,16 +55,16 @@ jest.mock('src/api/api', () => ({
   },
 }));
 
-jest.mock('react-query', () => {
-  const actual = jest.requireActual('react-query');
+jest.mock('@tanstack/react-query', () => {
+  const actual = jest.requireActual('@tanstack/react-query');
   const React = require('react');
   return {
     ...actual,
-    useQuery: (key: any, fn: any) => {
+    useQuery: ({ queryKey, queryFn }: { queryKey: any; queryFn: any }) => {
       const [queryData, setQueryData] = React.useState(undefined);
       React.useEffect(() => {
-        if (fn) {
-          Promise.resolve(fn()).then(setQueryData).catch((_e) => { /* ignore */ });
+        if (queryFn) {
+          Promise.resolve(queryFn()).then(setQueryData).catch((_e) => { /* ignore */ });
         }
       }, []);
       return { data: queryData, isLoading: queryData === undefined, error: null };

@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useCallback, useState } from 'react';
-import { useInfiniteQuery } from 'react-query';
+import { useInfiniteQuery, InfiniteData } from '@tanstack/react-query';
 import { t, Trans } from '@lingui/macro';
 
 import { mediaTrackerApi } from 'src/api/api';
@@ -14,14 +14,13 @@ export const LogsPage: FunctionComponent = () => {
   const { levels, SelectLogLevelsComponent } = useSelectLogLevels();
 
   const { data, fetchNextPage, isFetchingNextPage, isLoading } =
-    useInfiniteQuery(
-      ['logs', levels],
-      ({ pageParam }) =>
+    useInfiniteQuery<LogEntry[], Error, InfiniteData<LogEntry[]>, (string | typeof levels)[], string | undefined>({
+      queryKey: ['logs', levels],
+      queryFn: ({ pageParam }) =>
         mediaTrackerApi.logs.get({ ...levels, from: pageParam, count: 100 }),
-      {
-        getNextPageParam: (lastPage) => lastPage.at(-1)?.id,
-      }
-    );
+      getNextPageParam: (lastPage) => lastPage.at(-1)?.id,
+      initialPageParam: undefined,
+    });
 
   if (isLoading) {
     return <Trans>Loading</Trans>;

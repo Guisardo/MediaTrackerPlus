@@ -1,5 +1,10 @@
 import React, { FunctionComponent } from 'react';
-import { QueryCache, QueryClient, QueryClientProvider } from 'react-query';
+import {
+  QueryCache,
+  QueryClient,
+  QueryClientProvider,
+  keepPreviousData,
+} from '@tanstack/react-query';
 import { HashRouter as Router } from 'react-router-dom';
 import { FetchError } from 'src/api/api';
 import { DarkModeProvider } from 'src/hooks/darkMode';
@@ -19,6 +24,26 @@ import './styles/tailwind.css';
 
 setupI18n();
 
+/**
+ * Global select function that checks for the MediaTracker error envelope.
+ * In react-query v3 this was handled via a global onSuccess callback on
+ * defaultOptions.queries.  TanStack Query v5 removed per-query lifecycle
+ * callbacks from global defaults, so we use `select` instead — it runs
+ * synchronously after every successful fetch and throws when the server
+ * returns an error envelope, which is then caught by QueryCache.onError.
+ */
+export const throwOnErrorEnvelope = (data: unknown) => {
+  if (
+    data &&
+    typeof data === 'object' &&
+    (data as Record<string, unknown>)['MediaTrackerError'] === true &&
+    typeof (data as Record<string, unknown>)['errorMessage'] === 'string'
+  ) {
+    throw new Error((data as Record<string, unknown>)['errorMessage'] as string);
+  }
+  return data;
+};
+
 export const queryClient = new QueryClient({
   defaultOptions: {
     mutations: {
@@ -32,17 +57,8 @@ export const queryClient = new QueryClient({
         console.log(x);
         return null;
       },
-      keepPreviousData: true,
-      onSuccess: (data) => {
-        if (
-          data &&
-          typeof data === 'object' &&
-          data['MediaTrackerError'] === true &&
-          typeof data['errorMessage'] === 'string'
-        ) {
-          throw new Error(data['errorMessage']);
-        }
-      },
+      placeholderData: keepPreviousData,
+      select: throwOnErrorEnvelope,
     },
   },
   queryCache: new QueryCache({
@@ -51,9 +67,6 @@ export const queryClient = new QueryClient({
         console.log(error.status);
         globalSetErrorMessage(error.message);
       }
-    },
-    onSuccess: () => {
-      globalSetErrorMessage(null);
     },
   }),
 });

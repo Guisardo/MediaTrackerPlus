@@ -1,5 +1,4 @@
 import React from 'react';
-import { useQuery } from 'react-query';
 import { mediaTrackerApi } from 'src/api/api';
 import StatisticsSegmant from './StatisticsSegment';
 import { Statistics } from 'mediatracker-api';

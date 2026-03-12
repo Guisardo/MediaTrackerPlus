@@ -1,12 +1,13 @@
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { queryClient } from 'src/App';
 import { errorHandler, mediaTrackerApi } from 'src/api/api';
 import React from 'react';
 
 export const useOtherUser = (userId: number) => {
-  const { isLoading, error, data } = useQuery(['user', userId], () =>
-    mediaTrackerApi.user.getById(userId)
-  );
+  const { isLoading, error, data } = useQuery({
+    queryKey: ['user', userId],
+    queryFn: () => mediaTrackerApi.user.getById(userId),
+  });
 
   return {
     isLoading: isLoading,
@@ -16,45 +17,52 @@ export const useOtherUser = (userId: number) => {
 };
 
 export const useUser = () => {
-  const { isLoading, error, data } = useQuery('user', mediaTrackerApi.user.get);
+  const { isLoading, error, data } = useQuery({
+    queryKey: ['user'],
+    queryFn: mediaTrackerApi.user.get,
+  });
 
-  const logoutMutation = useMutation(() => mediaTrackerApi.user.logout(), {
+  const logoutMutation = useMutation({
+    mutationFn: () => mediaTrackerApi.user.logout(),
     onSuccess: () => {
-      queryClient.setQueryData('user', null);
+      queryClient.setQueryData(['user'], null);
       queryClient.removeQueries();
     },
   });
 
-  const loginMutation = useMutation(mediaTrackerApi.user.login, {
+  const loginMutation = useMutation({
+    mutationFn: (data: Parameters<typeof mediaTrackerApi.user.login>[0]) =>
+      mediaTrackerApi.user.login(data),
     onSuccess: () => {
-      queryClient.invalidateQueries('user');
+      queryClient.invalidateQueries({ queryKey: ['user'] });
 
-      queryClient.removeQueries('metadataProviderCredentials');
-      queryClient.removeQueries('notificationPlatformsCredentials');
-      queryClient.removeQueries('tokens');
-      queryClient.removeQueries(['calendar']);
-      queryClient.removeQueries(['calendar']);
-      queryClient.removeQueries(['details']);
-      queryClient.removeQueries(['import']);
-      queryClient.removeQueries(['items']);
-      queryClient.removeQueries(['search']);
+      queryClient.removeQueries({ queryKey: ['metadataProviderCredentials'] });
+      queryClient.removeQueries({ queryKey: ['notificationPlatformsCredentials'] });
+      queryClient.removeQueries({ queryKey: ['tokens'] });
+      queryClient.removeQueries({ queryKey: ['calendar'] });
+      queryClient.removeQueries({ queryKey: ['calendar'] });
+      queryClient.removeQueries({ queryKey: ['details'] });
+      queryClient.removeQueries({ queryKey: ['import'] });
+      queryClient.removeQueries({ queryKey: ['items'] });
+      queryClient.removeQueries({ queryKey: ['search'] });
     },
   });
 
-  const updateUserMutation = useMutation(mediaTrackerApi.user.update, {
+  const updateUserMutation = useMutation({
+    mutationFn: (data: Parameters<typeof mediaTrackerApi.user.update>[0]) =>
+      mediaTrackerApi.user.update(data),
     onSuccess: () => {
-      queryClient.invalidateQueries('user');
+      queryClient.invalidateQueries({ queryKey: ['user'] });
     },
   });
 
-  const updatePasswordMutation = useMutation(
-    mediaTrackerApi.user.updatePassword,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('user');
-      },
-    }
-  );
+  const updatePasswordMutation = useMutation({
+    mutationFn: (data: Parameters<typeof mediaTrackerApi.user.updatePassword>[0]) =>
+      mediaTrackerApi.user.updatePassword(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user'] });
+    },
+  });
 
   return {
     isLoading: isLoading,
@@ -63,7 +71,7 @@ export const useUser = () => {
     updateUser: updateUserMutation.mutateAsync,
     updatePassword: updatePasswordMutation.mutateAsync,
     loginIsError: loginMutation.isError,
-    loginIsLoading: loginMutation.isLoading,
+    loginIsLoading: loginMutation.isPending,
     login: loginMutation.mutate,
     loginError: loginMutation.error,
     logout: logoutMutation.mutate,
@@ -73,14 +81,16 @@ export const useUser = () => {
 export const useRegisterUser = () => {
   const [error, setError] = React.useState<string>();
 
-  const mutation = useMutation(errorHandler(mediaTrackerApi.user.register), {
-    onSuccess: (data) => {
+  const mutation = useMutation({
+    mutationFn: (data: Parameters<typeof mediaTrackerApi.user.register>[0]) =>
+      errorHandler(mediaTrackerApi.user.register)(data),
+    onSuccess: (data: { data?: any; error?: string }) => {
       if (data.data) {
-        queryClient.invalidateQueries('configuration');
-        queryClient.invalidateQueries('user');
+        queryClient.invalidateQueries({ queryKey: ['configuration'] });
+        queryClient.invalidateQueries({ queryKey: ['user'] });
       }
     },
-    onSettled: (data) => {
+    onSettled: (data: { data?: any; error?: string } | undefined) => {
       if (data.error) {
         setError(data.error);
       } else {

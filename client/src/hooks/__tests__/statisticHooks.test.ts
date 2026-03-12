@@ -59,10 +59,10 @@ let mockUseQueryReturn: UseQueryReturn = {
   isFetched: false,
 };
 
-jest.mock('react-query', () => ({
-  useQuery: (key: unknown, fn: () => Promise<unknown>) => {
-    capturedQueryKey = key;
-    capturedQueryFn = fn;
+jest.mock('@tanstack/react-query', () => ({
+  useQuery: ({ queryKey, queryFn }: { queryKey: unknown; queryFn: () => Promise<unknown> }) => {
+    capturedQueryKey = queryKey;
+    capturedQueryFn = queryFn;
     return mockUseQueryReturn;
   },
 }));

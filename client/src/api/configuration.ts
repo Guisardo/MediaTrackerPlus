@@ -1,16 +1,19 @@
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { queryClient } from 'src/App';
 
 import { mediaTrackerApi } from 'src/api/api';
 
 export const useConfiguration = () => {
-  const { isLoading, error, data } = useQuery('configuration', () =>
-    mediaTrackerApi.configuration.get()
-  );
+  const { isLoading, error, data } = useQuery({
+    queryKey: ['configuration'],
+    queryFn: () => mediaTrackerApi.configuration.get(),
+  });
 
-  const updateMutation = useMutation(mediaTrackerApi.configuration.update, {
+  const updateMutation = useMutation({
+    mutationFn: (data: Parameters<typeof mediaTrackerApi.configuration.update>[0]) =>
+      mediaTrackerApi.configuration.update(data),
     onSuccess: () => {
-      queryClient.invalidateQueries('configuration');
+      queryClient.invalidateQueries({ queryKey: ['configuration'] });
     },
   });
 

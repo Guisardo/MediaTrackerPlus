@@ -103,8 +103,8 @@ const StarRatingModal: FunctionComponent<
 
   const _closeModal = () => {
     closeModal();
-    queryClient.invalidateQueries(['items']);
-    queryClient.invalidateQueries(['list']);
+    queryClient.invalidateQueries({ queryKey: ['items'] });
+    queryClient.invalidateQueries({ queryKey: ['list'] });
   };
 
   return (

@@ -1,0 +1,49 @@
+# Ralph Progress Log
+Started: Thu Mar 12 13:27:30 -03 2026
+---
+
+## US-002 — Upgrade react-query v3 → @tanstack/react-query v5
+
+### Summary
+Migrated 31+ source files from `react-query` (v3) to `@tanstack/react-query` (v5).
+Installed `@tanstack/react-query@^5.90.21`, removed `react-query`, added
+`use-sync-external-store` shim for React 17 test compatibility.
+
+### Changes Made
+- **Package changes**: Replaced `react-query` with `@tanstack/react-query@^5.90.21`.
+  Added `use-sync-external-store` (React 17 polyfill for `useSyncExternalStore`) and
+  `@testing-library/dom` (missing peer dependency for `@testing-library/user-event`).
+- **App.tsx** (QueryClient config):
+  - `keepPreviousData: true` → `placeholderData: keepPreviousData` (imported sentinel)
+  - `onSuccess` removed from defaultOptions.queries; replaced with global `select: throwOnErrorEnvelope`
+  - `QueryCache({ onSuccess })` removed; `QueryCache({ onError })` retained
+- **12 API modules** (`client/src/api/*.ts`):
+  - Import paths: `'react-query'` → `'@tanstack/react-query'`
+  - `useQuery(key, fn)` → `useQuery({ queryKey: key, queryFn: fn })`
+  - `useMutation(fn, opts)` → `useMutation({ mutationFn: fn, ...opts })`
+  - `mutation.isLoading` → `mutation.isPending`
+  - `invalidateQueries(key)` → `invalidateQueries({ queryKey: key })`
+  - `removeQueries(key)` → `removeQueries({ queryKey: key })`
+  - `setQueriesData(key, fn)` → `setQueriesData({ queryKey: key }, fn)`
+  - `setQueryData('string', val)` → `setQueryData(['string'], val)`
+  - `refetchInactive: true` → `refetchType: 'all'`
+  - `mutationFn` wrapped in typed arrow functions to satisfy v5's `MutationFunction` type
+- **4 page files**: Calendar.tsx, LogsPage.tsx, Goodreads.tsx, TraktTv.tsx migrated
+- **1 hook file**: statisticHooks.ts migrated
+- **3 Statistics components**: StatisticsSummary.tsx, StatisticSummaryYear.tsx, Genre.tsx migrated
+- **1 component**: StarRating.tsx `invalidateQueries` calls updated
+- **10 API test files**: Import paths updated, `cacheTime` → `gcTime`
+- **3 additional test files**: statisticHooks.test.ts, StatisticsSummary.test.tsx, details.test.ts — mock modules and assertions updated for v5 API
+- **Jest config**: Added `setupFiles` entry for `useSyncExternalStore` React 17 polyfill
+- **New test file**: `queryClientMigration.test.ts` — 17 tests covering QueryClient init, keepPreviousData sentinel, throwOnErrorEnvelope
+
+### Verification
+- Typecheck: 0 errors
+- Tests: 70 suites, 1126 tests, all passing
+
+### Codebase Patterns
+- TanStack React Query v5 object-form API throughout
+- `Parameters<typeof apiFn>[0]` used for typed mutationFn wrappers
+- Global `select` function on QueryClient for error envelope detection
+- `use-sync-external-store` shim required for React 17 compat (remove after US-008 React 18+ upgrade)
+- `--legacy-peer-deps` required for npm install (React 17 vs v5's React 18+ peer dep)

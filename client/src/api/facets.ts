@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 
 import { Items, FacetsResponse } from 'mediatracker-api';
 import { mediaTrackerApi } from 'src/api/api';
@@ -23,15 +23,13 @@ export const useFacetsData = (
   facetsData: FacetsResponse | undefined;
   isLoadingFacets: boolean;
 } => {
-  const { data, isFetched } = useQuery(
-    ['facets', args],
-    async () => mediaTrackerApi.items.facets(args),
-    {
-      keepPreviousData: true,
-      staleTime: 30_000,
-      enabled,
-    }
-  );
+  const { data, isFetched } = useQuery({
+    queryKey: ['facets', args],
+    queryFn: async () => mediaTrackerApi.items.facets(args),
+    placeholderData: keepPreviousData,
+    staleTime: 30_000,
+    enabled,
+  });
 
   return {
     facetsData: data as FacetsResponse | undefined,

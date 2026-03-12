@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useMemo, useState } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import FullCalendar, { DatesSetArg } from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import listPlugin from '@fullcalendar/list';
@@ -15,18 +15,16 @@ import { Trans } from '@lingui/macro';
 export const CalendarPage: FunctionComponent = () => {
   const [datesSet, setDatesSet] = useState<DatesSetArg>();
 
-  const { data, isLoading } = useQuery(
-    ['calendar', datesSet?.startStr, datesSet?.endStr],
-    () =>
+  const { data, isLoading } = useQuery({
+    queryKey: ['calendar', datesSet?.startStr, datesSet?.endStr],
+    queryFn: () =>
       mediaTrackerApi.calendar.get({
         start: datesSet.startStr,
         end: datesSet.endStr,
       }),
-    {
-      keepPreviousData: true,
-      enabled: datesSet !== undefined,
-    }
-  );
+    placeholderData: keepPreviousData,
+    enabled: datesSet !== undefined,
+  });
 
   const events = useMemo(
     () =>
