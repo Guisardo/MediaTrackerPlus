@@ -13,6 +13,13 @@ import {
 import { SettingsSegment } from 'src/components/SettingsSegment';
 import StatisticsSeen from 'src/components/Statistics/Seen';
 import StatsticsGenre from 'src/components/Statistics/Genre';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from 'src/components/ui/select';
 
 export const noyear = () => {
   return {
@@ -167,26 +174,32 @@ export const YearSelector = (props: IStatistocsProps) => {
   }
 
   return (
-    <div className="flex mb-2">
-      <select
-        className="mr-1"
-        value={currentYear}
-        onChange={(e) => {
-          let value = e.target.value;
-          if (value == noyear().text) {
-            value = noyear().id;
+    <div className="flex mb-2 items-center gap-2">
+      <Select
+        value={String(currentYear)}
+        onValueChange={(value) => {
+          let resolvedValue: string | null = value;
+          if (resolvedValue == noyear().text) {
+            resolvedValue = noyear().id;
           }
-          if (value == allYear().text) {
-            value = null;
+          if (resolvedValue == allYear().text) {
+            resolvedValue = null;
           }
-          props.onYearChange({ year: value });
+          props.onYearChange({ year: resolvedValue });
         }}
       >
-        {props.years.map((year) => {
-          return <option key={year}>{year}</option>;
-        })}
-      </select>
-      <div className="font-bold" style={{ lineHeight: 2 }}>
+        <SelectTrigger aria-label={t`Select year`} className="w-fit">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {props.years.map((year) => (
+            <SelectItem key={year} value={String(year)}>
+              {year}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <div className="font-bold">
         <Trans>Select Year</Trans>
       </div>
     </div>

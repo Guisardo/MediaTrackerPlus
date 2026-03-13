@@ -5,6 +5,13 @@ import { CheckboxWithTitleAndDescription } from 'src/components/Checkbox';
 import { SettingsSegment } from 'src/components/SettingsSegment';
 import { AudibleCountryCode, ServerLang, TmdbLang } from 'mediatracker-api';
 import { Button } from 'src/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from 'src/components/ui/select';
 
 export const SettingsConfigurationPage: FunctionComponent = () => {
   const { configuration, update, isLoading } = useConfiguration();
@@ -26,61 +33,76 @@ export const SettingsConfigurationPage: FunctionComponent = () => {
           <div className="mt-3" />
 
           <SettingsSegment title={t`Server language`}>
-            <select
+            <Select
               value={configuration.serverLang || 'en'}
-              onChange={(e) =>
-                update({ serverLang: e.currentTarget.value as ServerLang })
+              onValueChange={(value) =>
+                update({ serverLang: value as ServerLang })
               }
             >
-              <option value="da">Danish</option>
-              <option value="de">German</option>
-              <option value="en">English</option>
-              <option value="es">Spanish</option>
-              <option value="fr">French</option>
-              <option value="ko">Korean</option>
-              <option value="pt">Portuguese</option>
-            </select>
+              <SelectTrigger aria-label={t`Server language`}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="da">Danish</SelectItem>
+                <SelectItem value="de">German</SelectItem>
+                <SelectItem value="en">English</SelectItem>
+                <SelectItem value="es">Spanish</SelectItem>
+                <SelectItem value="fr">French</SelectItem>
+                <SelectItem value="ko">Korean</SelectItem>
+                <SelectItem value="pt">Portuguese</SelectItem>
+              </SelectContent>
+            </Select>
           </SettingsSegment>
 
           <div className="mt-3" />
 
           <SettingsSegment title={t`Audible language`}>
-            <select
+            <Select
               value={configuration.audibleLang?.toLowerCase() || 'us'}
-              onChange={(e) =>
+              onValueChange={(value) =>
                 update({
-                  audibleLang: e.currentTarget.value as AudibleCountryCode,
+                  audibleLang: value as AudibleCountryCode,
                 })
               }
             >
-              <option value="au">Australia (English)</option>
-              <option value="ca">Canada (English)</option>
-              <option value="de">Deutschland (Deutsch)</option>
-              <option value="es">España (Castellano)</option>
-              <option value="fr">France (Français)</option>
-              <option value="in">India (English)</option>
-              <option value="it">Italia (Italiano)</option>
-              <option value="uk">UK (English)</option>
-              <option value="us">United States (English)</option>
-              <option value="jp">日本 (日本語)</option>
-            </select>
+              <SelectTrigger aria-label={t`Audible language`}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="au">Australia (English)</SelectItem>
+                <SelectItem value="ca">Canada (English)</SelectItem>
+                <SelectItem value="de">Deutschland (Deutsch)</SelectItem>
+                <SelectItem value="es">España (Castellano)</SelectItem>
+                <SelectItem value="fr">France (Français)</SelectItem>
+                <SelectItem value="in">India (English)</SelectItem>
+                <SelectItem value="it">Italia (Italiano)</SelectItem>
+                <SelectItem value="uk">UK (English)</SelectItem>
+                <SelectItem value="us">United States (English)</SelectItem>
+                <SelectItem value="jp">日本 (日本語)</SelectItem>
+              </SelectContent>
+            </Select>
           </SettingsSegment>
 
           <div className="mt-3" />
 
           <SettingsSegment title={t`TMDB language`}>
-            <select
+            <Select
               value={configuration.tmdbLang || 'en'}
-              onChange={(e) =>
-                update({ tmdbLang: e.currentTarget.value as TmdbLang })
+              onValueChange={(value) =>
+                update({ tmdbLang: value as TmdbLang })
               }
             >
-              {Object.entries(languagesCodes).map(([code, language]) => (
-                <option key={code} value={code}>
-                  {language}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger aria-label={t`TMDB language`}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(languagesCodes).map(([code, language]) => (
+                  <SelectItem key={code} value={code}>
+                    {language}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </SettingsSegment>
 
           <div className="mt-3" />

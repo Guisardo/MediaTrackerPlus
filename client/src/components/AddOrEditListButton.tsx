@@ -15,6 +15,13 @@ import { listDescription, listName } from 'src/utils';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Confirm } from 'src/components/Confirm';
 import { Button } from 'src/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from 'src/components/ui/select';
 
 const AddOrEditListButton: FunctionComponent<{
   list?: {
@@ -150,47 +157,62 @@ const AddOrEditListModal: FunctionComponent<{
         />
       </label>
 
-      <label className="flex flex-col pt-2">
-        <Trans>Privacy</Trans>:
-        <select
+      <div className="flex flex-col pt-2">
+        <label id="privacy-label"><Trans>Privacy</Trans>:</label>
+        <Select
           value={privacy}
-          onChange={(e) => setPrivacy(e.currentTarget.value as ListPrivacy)}
+          onValueChange={(value) => setPrivacy(value as ListPrivacy)}
         >
-          {listPrivacyKeys.map((key, translation) => (
-            <option value={key} key={key}>
-              {translation}
-            </option>
-          ))}
-        </select>
-      </label>
+          <SelectTrigger aria-labelledby="privacy-label" aria-label={t`Privacy`}>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {listPrivacyKeys.map((key, translation) => (
+              <SelectItem value={key} key={key}>
+                {translation}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
-      <label className="flex flex-col pt-2">
-        <Trans>Sort by</Trans>:
-        <select
+      <div className="flex flex-col pt-2">
+        <label id="sort-by-label"><Trans>Sort by</Trans>:</label>
+        <Select
           value={sortBy}
-          onChange={(e) => setSortBy(e.currentTarget.value as ListSortBy)}
+          onValueChange={(value) => setSortBy(value as ListSortBy)}
         >
-          {listSortByKeys.map((key, translation) => (
-            <option value={key} key={key}>
-              {translation}
-            </option>
-          ))}
-        </select>
-      </label>
+          <SelectTrigger aria-labelledby="sort-by-label" aria-label={t`Sort by`}>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {listSortByKeys.map((key, translation) => (
+              <SelectItem value={key} key={key}>
+                {translation}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
-      <label className="flex flex-col pt-2">
-        <Trans>Sort order</Trans>:
-        <select
+      <div className="flex flex-col pt-2">
+        <label id="sort-order-label"><Trans>Sort order</Trans>:</label>
+        <Select
           value={sortOrder}
-          onChange={(e) => setSortOrder(e.currentTarget.value as ListSortOrder)}
+          onValueChange={(value) => setSortOrder(value as ListSortOrder)}
         >
-          {sortOrderKeys.map((key, translation) => (
-            <option value={key} key={key}>
-              {translation}
-            </option>
-          ))}
-        </select>
-      </label>
+          <SelectTrigger aria-labelledby="sort-order-label" aria-label={t`Sort order`}>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {sortOrderKeys.map((key, translation) => (
+              <SelectItem value={key} key={key}>
+                {translation}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
       <div className="flex flex-row mt-4">
         <Button variant="default">
