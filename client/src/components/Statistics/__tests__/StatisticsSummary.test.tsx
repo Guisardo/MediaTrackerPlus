@@ -8,6 +8,7 @@
  *  - @lingui/macro / @lingui/react – passthrough
  *  - react-router-dom  – MemoryRouter + mock navigate
  *  - src/components/date – FormatDuration passthrough
+ *  - src/components/ui/card – Card / CardContent passthrough
  */
 
 import React from 'react';
@@ -45,6 +46,16 @@ jest.mock('src/components/date', () => ({
     return React.createElement('span', null, String(milliseconds));
   },
 }));
+
+jest.mock('src/components/ui/card', () => {
+  const React = require('react');
+  return {
+    Card: ({ children, className }: any) =>
+      React.createElement('div', { 'data-testid': 'card', className }, children),
+    CardContent: ({ children, className }: any) =>
+      React.createElement('div', { 'data-testid': 'card-content', className }, children),
+  };
+});
 
 const mockSummary = jest.fn();
 jest.mock('src/api/api', () => ({

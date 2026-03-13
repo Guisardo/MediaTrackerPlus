@@ -106,18 +106,22 @@ const StatisticsPageLayout = () => {
   return (
     <>
       {route ? (
-        <>
-          <div className="text-4xl">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="text-2xl font-bold tracking-tight mb-4">
             <Trans>Statistics</Trans>
           </div>
           <div className="flex flex-col mt-2 sm:flex-row">
-            <div className="flex flex-col px-3 border rounded sm:shrink-0 max-w-fit h-fit">
+            <div className="flex flex-col px-3 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm sm:shrink-0 max-w-fit h-fit">
               {routeTitles.map(({ path, name }) => (
                 <NavLink
                   key={path}
                   to={path}
                   className={({ isActive }) =>
-                    clsx('my-2 cursor-pointer text', isActive && 'underline ')
+                    clsx(
+                      'my-2 cursor-pointer text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100',
+                      isActive &&
+                        'font-semibold text-zinc-900 dark:text-zinc-50 underline'
+                    )
                   }
                 >
                   {name}
@@ -130,7 +134,7 @@ const StatisticsPageLayout = () => {
               </SettingsSegment>
             </div>
           </div>
-        </>
+        </div>
       ) : (
         <Outlet />
       )}
@@ -199,7 +203,7 @@ export const YearSelector = (props: IStatistocsProps) => {
           ))}
         </SelectContent>
       </Select>
-      <div className="font-bold">
+      <div className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
         <Trans>Select Year</Trans>
       </div>
     </div>

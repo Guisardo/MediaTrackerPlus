@@ -6,6 +6,7 @@
  *  - @lingui/macro      – Trans / t passthrough
  *  - @lingui/react      – Trans / useLingui passthrough
  *  - react-router-dom   – MemoryRouter + mock navigate
+ *  - src/components/ui/card – Card / CardContent passthrough
  */
 
 import React from 'react';
@@ -61,6 +62,16 @@ jest.mock('react-router-dom', () => {
   };
 });
 
+jest.mock('src/components/ui/card', () => {
+  const React = require('react');
+  return {
+    Card: ({ children, className, ...rest }: any) =>
+      React.createElement('div', { 'data-testid': 'card', className, ...rest }, children),
+    CardContent: ({ children, className }: any) =>
+      React.createElement('div', { 'data-testid': 'card-content', className }, children),
+  };
+});
+
 import StatisticsGenreSegment from 'src/components/Statistics/StatisticsGenreSegment';
 
 const renderComponent = (data: any, year?: string) =>
@@ -91,28 +102,28 @@ describe('StatisticsGenreSegment', () => {
     expect(screen.queryByText('Games')).not.toBeInTheDocument();
   });
 
-  it('renders one section block when data.tv is present', () => {
+  it('renders one card when data.tv is present', () => {
     const { container } = renderComponent(
       { tv: [{ genre: 'Action', count: 5 }] },
       '2023'
     );
-    expect(container.querySelectorAll('.mb-6').length).toBe(1);
+    expect(container.querySelectorAll('[data-testid="card"]').length).toBe(1);
   });
 
-  it('renders one section block when data.movie is present', () => {
+  it('renders one card when data.movie is present', () => {
     const { container } = renderComponent(
       { movie: [{ genre: 'Drama', count: 3 }] },
       '2023'
     );
-    expect(container.querySelectorAll('.mb-6').length).toBe(1);
+    expect(container.querySelectorAll('[data-testid="card"]').length).toBe(1);
   });
 
-  it('renders one section block when data.video_game is present', () => {
+  it('renders one card when data.video_game is present', () => {
     const { container } = renderComponent(
       { video_game: [{ genre: 'RPG', count: 7 }] },
       '2023'
     );
-    expect(container.querySelectorAll('.mb-6').length).toBe(1);
+    expect(container.querySelectorAll('[data-testid="card"]').length).toBe(1);
   });
 
   it('renders genre items as clickable rows', () => {
@@ -168,11 +179,11 @@ describe('StatisticsGenreSegment', () => {
       { movie: [{ genre: 'Drama', count: 3 }] },
       '2023'
     );
-    // Only one section for movie, no tv section
-    expect(container.querySelectorAll('.mb-6').length).toBe(1);
+    // Only one card for movie, no tv section
+    expect(container.querySelectorAll('[data-testid="card"]').length).toBe(1);
   });
 
-  it('renders three section blocks when data has tv, movie, and video_game', () => {
+  it('renders three cards when data has tv, movie, and video_game', () => {
     const { container } = renderComponent(
       {
         tv: [{ genre: 'Action', count: 5 }],
@@ -181,6 +192,24 @@ describe('StatisticsGenreSegment', () => {
       },
       '2023'
     );
-    expect(container.querySelectorAll('.mb-6').length).toBe(3);
+    expect(container.querySelectorAll('[data-testid="card"]').length).toBe(3);
+  });
+
+  it('renders section headings with font-semibold class', () => {
+    const { container } = renderComponent(
+      { tv: [{ genre: 'Action', count: 5 }] },
+      '2023'
+    );
+    const heading = container.querySelector('.text-lg.font-semibold');
+    expect(heading).toBeInTheDocument();
+  });
+
+  it('renders genre items with zinc text color classes', () => {
+    const { container } = renderComponent(
+      { tv: [{ genre: 'Action', count: 5 }] },
+      '2023'
+    );
+    const genreItem = container.querySelector('.text-sm.text-zinc-600');
+    expect(genreItem).toBeInTheDocument();
   });
 });
