@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { MediaType, SortOrder } from 'mediatracker-api';
 import { mediaTrackerApi } from 'src/api/api';
@@ -15,17 +15,15 @@ export const useSearch = () => {
   const [query, setQuery] =
     useState<{ mediaType: MediaType; query: string }>(null);
 
-  const { isLoading, error, data } = useQuery(
-    ['search', query],
-    () =>
+  const { isLoading, error, data } = useQuery({
+    queryKey: ['search', query],
+    queryFn: () =>
       mediaTrackerApi.search.search({
         mediaType: query.mediaType,
         q: query.query,
       }),
-    {
-      enabled: query !== null,
-    }
-  );
+    enabled: query !== null,
+  });
 
   return {
     items: data,

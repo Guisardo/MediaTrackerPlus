@@ -1,0 +1,1598 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2026-03-12 15:41-0300\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: vi\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#. js-lingui-explicit-id
+#: src/__tests__/ui-stack-migration.integration.test.ts:186
+msgid "i18n/i18n.ts"
+msgstr "i18n/i18n.ts"
+
+#: src/pages/settings/Notifications.tsx:82
+msgid " User key"
+msgstr " Khóa người dùng"
+
+#. placeholder {0}: 1
+#. placeholder {0}: 5
+#. placeholder {0}: list.itemsCount
+#: src/i18n/__tests__/i18n.test.ts:86
+#: src/i18n/__tests__/i18n.test.ts:98
+#: src/pages/ListsPage.tsx:55
+msgid "{0, plural, one {# item} other {# items}}"
+msgstr "{0, plural, other {# mục}}"
+
+#. placeholder {0}: group.memberCount
+#: src/pages/GroupsPage.tsx:56
+msgid "{0, plural, one {# member} other {# members}}"
+msgstr "{0, plural, one {# thành viên} other {# thành viên}}"
+
+#. placeholder {0}: filteredItems.length
+#. placeholder {0}: items.length
+#: src/pages/import/TraktTv.tsx:342
+#: src/pages/ListPage.tsx:131
+msgid "{0, plural, one {1 item} other {# items}}"
+msgstr "{0, plural, other {# mục}}"
+
+#. placeholder {0}: mediaItem.authors.length
+#: src/pages/Details.tsx:339
+msgid "{0, plural, one {Author} other {Authors}}"
+msgstr "{0, plural, other {Tác giả}}"
+
+#. placeholder {0}: searchResult?.length
+#: src/components/PaginatedGridItems.tsx:317
+msgid "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {Found # items for query \"<1>{searchQuery}</1>\"}}"
+msgstr "{0, plural, one {Tìm thấy # mục cho truy vấn \"<0>{searchQuery}</0>\"} other {Tìm thấy # mục cho truy vấn \"<1>{searchQuery}</1>\"}}"
+
+#. placeholder {0}: mediaItem.genres.length
+#: src/pages/Details.tsx:299
+msgid "{0, plural, one {Genre} other {Genres}}"
+msgstr "{0, plural, other {Thể loại}}"
+
+#. placeholder {0}: listsWithItem?.length
+#: src/components/AddToListModal.tsx:151
+msgid "{0, plural, one {Listed on 1 list} other {Listed on # lists}}"
+msgstr "{0, plural, other {Có trong # danh sách}}"
+
+#. placeholder {0}: mediaItem.seenHistory.length
+#: src/pages/Details.tsx:565
+#: src/pages/SeenHistory.tsx:43
+msgid "{0, plural, one {Listened 1 time} other {Listened # times}}"
+msgstr "{0, plural, other {Đã nghe # lần}}"
+
+#. placeholder {0}: mediaItem.narrators.length
+#: src/pages/Details.tsx:353
+msgid "{0, plural, one {Narrator} other {Narrators}}"
+msgstr "{0, plural, other {Người kể chuyện}}"
+
+#. placeholder {0}: mediaItem.platform.length
+#: src/pages/Details.tsx:267
+msgid "{0, plural, one {Platform} other {platforms}}"
+msgstr "{0, plural, other {nền tảng}}"
+
+#. placeholder {0}: mediaItem.seenHistory.length
+#: src/pages/Details.tsx:589
+#: src/pages/SeenHistory.tsx:67
+msgid "{0, plural, one {Played 1 time} other {Played # times}}"
+msgstr "{0, plural, other {Đã chơi # lần}}"
+
+#. placeholder {0}: mediaItem.seenHistory.length
+#: src/pages/Details.tsx:573
+#: src/pages/SeenHistory.tsx:51
+msgid "{0, plural, one {Read 1 time} other {Read # times}}"
+msgstr "{0, plural, other {Đã đọc # lần}}"
+
+#. placeholder {0}: episode.seenHistory.length
+#. placeholder {0}: mediaItem.seenHistory.length
+#: src/pages/Details.tsx:581
+#: src/pages/SeasonsPage.tsx:87
+#: src/pages/SeenHistory.tsx:59
+msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
+msgstr "{0, plural, other {Đã xem # lần}}"
+
+#. placeholder {0}: route.name
+#: src/components/Statistics/StatisticsGenreSegment.tsx:42
+msgid "{0}"
+msgstr "{0}"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:112
+msgid "{count, plural, one {Do you want to remove # seen history entry?} other {Do you want to remove all # seen history entries?}}"
+msgstr "{count, plural, other {Bạn có muốn xóa # mục lịch sử đã xem không?}}"
+
+#: src/components/SetProgress.tsx:119
+msgid "{duration, plural, one {minute} other {minutes}}"
+msgstr "{duration, plural, other {phút}}"
+
+#. placeholder {0}: args.year ? 'in ' + args.year : ''
+#. placeholder {1}: args.genre ? 'with genre ' + args.genre : ''
+#. placeholder {2}: args.year ? 'in ' + args.year : ''
+#. placeholder {3}: args.genre ? 'with genre ' + args.genre : ''
+#: src/components/PaginatedGridItems.tsx:333
+msgid "{numberOfItemsTotal, plural, one {1 item {0} {1}} other {# item {2} {3}}}"
+msgstr "{numberOfItemsTotal, plural, other {# mục {2} {3}}}"
+
+#: src/components/SetProgress.tsx:43
+msgid "{value, plural, one {minute} other {minutes}}"
+msgstr "{value, plural, other {phút}}"
+
+#: src/components/SetProgress.tsx:41
+msgid "{value, plural, one {page} other {pages}}"
+msgstr "{value, plural, other {trang}}"
+
+#. placeholder {0}: item.genre
+#. placeholder {1}: item.count
+#: src/components/Statistics/StatisticsGenreSegment.tsx:61
+msgid "<0>{0}</0> (<1>{1}</1>)"
+msgstr "<0>{0}</0> (<1>{1}</1>)"
+
+#. placeholder {0}: data.audiobook.items
+#. placeholder {1}: data.audiobook.plays
+#: src/components/Statistics/StatisticsSegment.tsx:215
+msgid "<0>{0}</0> audiobooks (<1>{1}</1> plays)"
+msgstr "<0>{0}</0> sách nói (<1>{1}</1> lượt phát)"
+
+#. placeholder {0}: data.book.items
+#. placeholder {1}: data.book.plays
+#: src/components/Statistics/StatisticsSegment.tsx:174
+msgid "<0>{0}</0> books (<1>{1}</1> reads)"
+msgstr "<0>{0}</0> cuốn sách (<1>{1}</1> lượt đọc)"
+
+#. placeholder {0}: data.tv.episodes
+#. placeholder {1}: data.tv.plays
+#. placeholder {2}: data.tv.items
+#: src/components/Statistics/StatisticsSegment.tsx:51
+msgid "<0>{0}</0> episodes (<1>{1}</1> plays of <2>{2}</2> shows)"
+msgstr "<0>{0}</0> tập (<1>{1}</1> lượt phát từ <2>{2}</2> chương trình)"
+
+#. placeholder {0}: data.movie.items
+#. placeholder {1}: data.movie.plays
+#: src/components/Statistics/StatisticsSegment.tsx:92
+msgid "<0>{0}</0> movies (<1>{1}</1> plays)"
+msgstr "<0>{0}</0> bộ phim (<1>{1}</1> lượt phát)"
+
+#. placeholder {0}: data.video_game.items
+#. placeholder {1}: data.video_game.plays
+#: src/components/Statistics/StatisticsSegment.tsx:133
+msgid "<0>{0}</0> video games (<1>{1}</1> plays)"
+msgstr "<0>{0}</0> trò chơi điện tử (<1>{1}</1> lượt chơi)"
+
+#: src/components/Statistics/StatisticsSegment.tsx:204
+msgid "<0><1/> </0>listening"
+msgstr "<0><1/> </0>đang nghe"
+
+#: src/components/Statistics/StatisticsSegment.tsx:122
+msgid "<0><1/> </0>playing"
+msgstr "<0><1/> </0>đang chơi"
+
+#: src/components/Statistics/StatisticsSegment.tsx:163
+msgid "<0><1/> </0>reading"
+msgstr "<0><1/> </0>đang đọc"
+
+#: src/components/Statistics/StatisticsSegment.tsx:40
+#: src/components/Statistics/StatisticsSegment.tsx:81
+msgid "<0><1/> </0>watching"
+msgstr "<0><1/> </0>đang xem"
+
+#: src/pages/Settings.tsx:113
+msgid "About"
+msgstr "Giới thiệu"
+
+#: src/pages/settings/Notifications.tsx:114
+msgid "Access Token"
+msgstr "Mã Truy Cập"
+
+#: src/components/Facets/ActiveFacetChips.tsx:219
+msgid "Active filters"
+msgstr "Bộ lọc đang dùng"
+
+#. placeholder {0}: episode ? `${mediaItem.title} ${formatEpisodeNumber(episode)}` : season ? `${mediaItem.title} ${formatSeasonNumber(season)}` : mediaItem.title
+#: src/components/AddToListModal.tsx:55
+msgid "Add \"{0}\" to list"
+msgstr "Thêm \"{0}\" vào danh sách"
+
+#. placeholder {0}: formatEpisodeNumber(episode)
+#. placeholder {0}: formatSeasonNumber(season)
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:48
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:52
+msgid "Add {0} to seen history"
+msgstr "Thêm {0} vào lịch sử đã xem"
+
+#: src/components/AddToListModal.tsx:143
+msgid "Add episode to list"
+msgstr "Thêm tập vào danh sách"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:59
+msgid "Add episode to seen history"
+msgstr "Thêm tập vào lịch sử đã xem"
+
+#: src/components/AddOrEditListButton.tsx:43
+#: src/components/AddOrEditListButton.tsx:219
+msgid "Add list"
+msgstr "Thêm danh sách"
+
+#: src/pages/GroupDetailPage.tsx:97
+msgid "Add member"
+msgstr "Thêm thành viên"
+
+#: src/pages/settings/Preferences.tsx:41
+msgid "Add recommendations to watchlist"
+msgstr "Thêm đề xuất vào danh sách xem"
+
+#: src/components/AddToListModal.tsx:145
+msgid "Add season to list"
+msgstr "Thêm mùa vào danh sách"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:61
+msgid "Add season to seen history"
+msgstr "Thêm mùa vào lịch sử đã xem"
+
+#: src/components/AddToListModal.tsx:147
+msgid "Add to list"
+msgstr "Thêm vào danh sách"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:41
+msgid "Add to listened history"
+msgstr "Thêm vào lịch sử đã nghe"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:43
+msgid "Add to played history"
+msgstr "Thêm vào lịch sử đã chơi"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:42
+msgid "Add to read history"
+msgstr "Thêm vào lịch sử đã đọc"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:44
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:56
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:63
+msgid "Add to seen history"
+msgstr "Thêm vào lịch sử đã xem"
+
+#: src/pages/Details.tsx:646
+msgid "Add to watchlist"
+msgstr "Thêm vào danh sách xem"
+
+#: src/pages/settings/ApplicationTokens.tsx:31
+msgid "Add token"
+msgstr "Thêm mã token"
+
+#: src/pages/GroupDetailPage.tsx:193
+#: src/pages/GroupDetailPage.tsx:208
+#: src/pages/GroupDetailPage.tsx:321
+#: src/pages/GroupsPage.tsx:48
+msgid "Admin"
+msgstr "Quản trị viên"
+
+#: src/components/FilterBy.tsx:11
+msgid "All"
+msgstr "Tất cả"
+
+#: src/components/GroupSelector.tsx:150
+msgid "All Users"
+msgstr "Tất cả người dùng"
+
+#: src/pages/Statistics.tsx:33
+msgid "All Years"
+msgstr "Tất cả các Năm"
+
+#: src/pages/settings/Configuration.tsx:145
+msgid "API keys can be acquired here"
+msgstr "Khóa API có thể được lấy tại đây"
+
+#: src/pages/settings/Notifications.tsx:68
+msgid "App token"
+msgstr "Mã token ứng dụng"
+
+#: src/pages/Settings.tsx:125
+msgid "Application tokens"
+msgstr "Mã token ứng dụng"
+
+#: src/hooks/translations.ts:28
+msgid "Ascending"
+msgstr "Tăng dần"
+
+#: src/components/SelectSeenDate.tsx:117
+msgid "At release date"
+msgstr "Vào ngày phát hành"
+
+#: src/pages/settings/Configuration.tsx:59
+#: src/pages/settings/Configuration.tsx:68
+msgid "Audible language"
+msgstr "Ngôn ngữ Audible"
+
+#: src/components/Facets/ActiveFacetChips.tsx:76
+#: src/components/Facets/MediaTypeSection.tsx:24
+#: src/components/GridItem.tsx:91
+msgid "Audiobook"
+msgstr "Sách nói"
+
+#: src/components/Nav.tsx:41
+#: src/components/Statistics/StatisticsSegment.tsx:199
+msgid "Audiobooks"
+msgstr "Sách nói"
+
+#: src/components/Facets/ActiveFacetChips.tsx:54
+#: src/components/Facets/CreatorSection.tsx:27
+msgid "Author"
+msgstr "Tác giả"
+
+#: src/pages/settings/Preferences.tsx:42
+msgid "Automatically add similar items to your watchlist when you rate content"
+msgstr "Tự động thêm các mục tương tự vào danh sách xem khi bạn đánh giá nội dung"
+
+#: src/pages/settings/Preferences.tsx:19
+msgid "Avoid episode spoilers"
+msgstr "Tránh tiết lộ nội dung tập"
+
+#: src/pages/settings/Preferences.tsx:30
+msgid "Avoid season spoilers"
+msgstr "Tránh tiết lộ nội dung mùa"
+
+#: src/components/Facets/ActiveFacetChips.tsx:74
+#: src/components/Facets/MediaTypeSection.tsx:22
+#: src/components/GridItem.tsx:92
+msgid "Book"
+msgstr "Sách"
+
+#: src/components/Nav.tsx:40
+#: src/components/Statistics/StatisticsSegment.tsx:158
+#: src/pages/import/Goodreads.tsx:65
+msgid "Books"
+msgstr "Sách"
+
+#: src/components/Nav.tsx:47
+msgid "Calendar"
+msgstr "Lịch"
+
+#: src/components/SelectLastSeenEpisode.tsx:159
+#: src/components/SelectSeenDate.tsx:164
+#: src/components/SetProgress.tsx:129
+#: src/components/StarRating.tsx:171
+msgid "Cancel"
+msgstr "Hủy"
+
+#: src/pages/settings/Password.tsx:76
+msgid "Change password"
+msgstr "Đổi mật khẩu"
+
+#: src/components/Facets/ActiveFacetChips.tsx:331
+#: src/components/Facets/FacetDrawer.tsx:72
+msgid "Clear all"
+msgstr "Xóa tất cả"
+
+#: src/components/Facets/FacetPanel.tsx:38
+msgid "Clear all filters"
+msgstr "Xóa tất cả bộ lọc"
+
+#: src/pages/settings/Configuration.tsx:148
+msgid "Client ID"
+msgstr "ID Khách Hàng"
+
+#: src/pages/settings/Configuration.tsx:156
+msgid "Client Secret"
+msgstr "Bí Mật Khách Hàng"
+
+#: src/components/AddOrEditGroupButton.tsx:70
+#: src/components/AddToListModal.tsx:105
+msgid "Close"
+msgstr "Đóng"
+
+#: src/pages/Settings.tsx:139
+msgid "Configuration"
+msgstr "Cấu hình"
+
+#: src/components/Confirm.tsx:73
+msgid "Confirm"
+msgstr "Xác nhận"
+
+#: src/pages/settings/Password.tsx:41
+msgid "Confirm new password"
+msgstr "Xác nhận mật khẩu mới"
+
+#: src/pages/Register.tsx:63
+msgid "Confirm password"
+msgstr "Xác nhận mật khẩu"
+
+#: src/pages/import/TraktTv.tsx:93
+msgid "Copy to clipboard"
+msgstr "Sao chép vào clipboard"
+
+#: src/pages/GroupsPage.tsx:32
+msgid "Create a group to share Platform Recommended results with other users."
+msgstr "Tạo nhóm để chia sẻ kết quả Được nền tảng đề xuất với những người dùng khác."
+
+#: src/components/AddOrEditGroupButton.tsx:66
+#: src/components/AddOrEditGroupButton.tsx:87
+msgid "Create group"
+msgstr "Tạo nhóm"
+
+#: src/components/Facets/ActiveFacetChips.tsx:51
+#: src/components/Facets/ActiveFacetChips.tsx:58
+#: src/components/Facets/CreatorSection.tsx:24
+#: src/components/Facets/CreatorSection.tsx:32
+msgid "Creator"
+msgstr "Người tạo"
+
+#: src/pages/settings/Password.tsx:22
+msgid "Current password"
+msgstr "Mật khẩu hiện tại"
+
+#: src/pages/settings/Password.tsx:71
+msgid "Current password is incorrect"
+msgstr "Mật khẩu hiện tại không đúng"
+
+#: src/pages/import/Goodreads.tsx:78
+msgid "Currently reading"
+msgstr "Đang đọc"
+
+#: src/pages/LogsPage.tsx:122
+msgid "Debug"
+msgstr "Gỡ lỗi"
+
+#: src/pages/GroupDetailPage.tsx:359
+msgid "Delete group"
+msgstr "Xóa nhóm"
+
+#. placeholder {0}: group?.name
+#: src/pages/GroupDetailPage.tsx:276
+msgid "Delete group \"{0}\"? This action cannot be undone."
+msgstr "Xóa nhóm \"{0}\"? Hành động này không thể hoàn tác."
+
+#: src/components/AddOrEditListButton.tsx:246
+msgid "Delete list"
+msgstr "Xóa danh sách"
+
+#: src/hooks/translations.ts:29
+msgid "Descending"
+msgstr "Giảm dần"
+
+#: src/components/AddOrEditListButton.tsx:151
+#: src/pages/EpisodePage.tsx:53
+#: src/pages/SeasonsPage.tsx:213
+msgid "Description"
+msgstr "Mô tả"
+
+#: src/components/Facets/ActiveFacetChips.tsx:56
+#: src/components/Facets/CreatorSection.tsx:29
+msgid "Developer"
+msgstr "Nhà phát triển"
+
+#: src/components/Facets/ActiveFacetChips.tsx:49
+#: src/components/Facets/CreatorSection.tsx:22
+msgid "Director"
+msgstr "Đạo diễn"
+
+#: src/components/Nav.tsx:161
+msgid "Do you really want to logout?"
+msgstr "Bạn có thực sự muốn đăng xuất không?"
+
+#. placeholder {0}: list.name
+#: src/components/AddOrEditListButton.tsx:229
+msgid "Do you really want to remove list \"{0}\""
+msgstr "Bạn có thực sự muốn xóa danh sách \"{0}\" không?"
+
+#: src/components/SetProgress.tsx:110
+msgid "Duration"
+msgstr "Thời lượng"
+
+#: src/components/AddOrEditListButton.tsx:43
+#: src/components/AddOrEditListButton.tsx:133
+msgid "Edit list"
+msgstr "Chỉnh sửa danh sách"
+
+#: src/pages/settings/Configuration.tsx:27
+msgid "Enable registration"
+msgstr "Bật đăng ký"
+
+#: src/components/SelectLastSeenEpisode.tsx:106
+msgid "Episode"
+msgstr "Tập"
+
+#. placeholder {0}: formatEpisodeNumber( episodesMap[seenEntry.episodeId] )
+#. placeholder {1}: episodesMap[seenEntry.episodeId].title
+#: src/pages/SeenHistory.tsx:111
+msgid "Episode {0} {1}"
+msgstr "Tập {0} {1}"
+
+#: src/components/ImportSummaryTable.tsx:93
+#: src/pages/Details.tsx:383
+msgid "Episodes"
+msgstr "Các tập"
+
+#: src/pages/Details.tsx:449
+msgid "Episodes page"
+msgstr "Trang các tập"
+
+#: src/pages/import/TraktTv.tsx:143
+#: src/pages/LogsPage.tsx:102
+msgid "Error"
+msgstr "Lỗi"
+
+#: src/pages/import/TraktTv.tsx:137
+msgid "Exporting"
+msgstr "Đang xuất"
+
+#: src/pages/GroupDetailPage.tsx:90
+msgid "Failed to add member. They may already be in the group."
+msgstr "Không thể thêm thành viên. Họ có thể đã ở trong nhóm."
+
+#: src/pages/GroupDetailPage.tsx:291
+msgid "Failed to load group. It may have been deleted."
+msgstr "Không thể tải nhóm. Nhóm có thể đã bị xóa."
+
+#: src/components/Facets/FacetDrawer.tsx:61
+#: src/components/Facets/FacetMobileButton.tsx:36
+#: src/components/Facets/FacetPanel.tsx:31
+msgid "Filters"
+msgstr "Bộ lọc"
+
+#: src/pages/Details.tsx:528
+msgid "First unwatched episode"
+msgstr "Tập chưa xem đầu tiên"
+
+#: src/components/Nav.tsx:39
+#: src/components/Statistics/StatisticsGenreSegment.tsx:20
+#: src/components/Statistics/StatisticsSegment.tsx:117
+msgid "Games"
+msgstr "Trò chơi"
+
+#: src/pages/settings/Configuration.tsx:25
+msgid "General"
+msgstr "Chung"
+
+#: src/components/Facets/ActiveFacetChips.tsx:225
+#: src/components/Facets/GenreSection.tsx:37
+msgid "Genre"
+msgstr "Genre"
+
+#: src/pages/Statistics.tsx:154
+msgid "Genres"
+msgstr "Thể loại"
+
+#. placeholder {0}: deviceCode.verificationUrl
+#. placeholder {1}: deviceCode.userCode
+#: src/pages/import/TraktTv.tsx:66
+msgid "Go to <0>{0}</0> and enter following code: <1>{1}</1>"
+msgstr "Truy cập <0>{0}</0> và nhập mã sau: <1>{1}</1>"
+
+#: src/pages/import/Goodreads.tsx:34
+msgid "Go to <0>https://www.goodreads.com/review/list</0> and copy RSS url from the bottom of the page"
+msgstr "Truy cập <0>https://www.goodreads.com/review/list</0> và sao chép URL RSS từ cuối trang"
+
+#: src/pages/settings/Notifications.tsx:110
+msgid "Gotify server url"
+msgstr "URL máy chủ Gotify"
+
+#: src/pages/GroupDetailPage.tsx:310
+msgid "Group name"
+msgstr "Tên nhóm"
+
+#: src/components/Nav.tsx:50
+msgid "Groups"
+msgstr "Nhóm"
+
+#: src/pages/settings/Preferences.tsx:31
+msgid "Hide overview of unseen seasons"
+msgstr "Ẩn tổng quan về các mùa chưa xem"
+
+#: src/pages/settings/Preferences.tsx:20
+msgid "Hide title of unseen episodes"
+msgstr "Ẩn tiêu đề các tập chưa xem"
+
+#: src/components/Nav.tsx:36
+#: src/i18n/__tests__/i18n.test.ts:65
+msgid "Home"
+msgstr "Trang chủ"
+
+#: src/pages/LogsPage.tsx:117
+msgid "Http"
+msgstr "Http"
+
+#: src/pages/Details.tsx:471
+msgid "I am listening it"
+msgstr "Tôi đang nghe"
+
+#: src/pages/Details.tsx:472
+msgid "I am playing it"
+msgstr "Tôi đang chơi"
+
+#: src/pages/Details.tsx:470
+msgid "I am reading it"
+msgstr "Tôi đang đọc"
+
+#: src/pages/Details.tsx:469
+msgid "I am watching it"
+msgstr "Tôi đang xem"
+
+#: src/components/SelectSeenDate.tsx:124
+#: src/pages/Statistics.tsx:26
+msgid "I do not remember"
+msgstr "Tôi không nhớ"
+
+#: src/pages/Details.tsx:492
+msgid "I finished listening it"
+msgstr "Tôi đã nghe xong"
+
+#: src/pages/Details.tsx:495
+msgid "I finished playing it"
+msgstr "Tôi đã chơi xong"
+
+#: src/pages/Details.tsx:490
+msgid "I finished reading it"
+msgstr "Tôi đã đọc xong"
+
+#: src/pages/Details.tsx:489
+msgid "I finished watching it"
+msgstr "Tôi đã xem xong"
+
+#: src/pages/settings/Configuration.tsx:129
+msgid "IGDB credentials"
+msgstr "Thông tin xác thực IGDB"
+
+#: src/pages/import/Goodreads.tsx:57
+msgid "import"
+msgstr "nhập"
+
+#: src/components/Nav.tsx:48
+msgid "Import"
+msgstr "Nhập"
+
+#: src/pages/Import.tsx:17
+msgid "Import from"
+msgstr "Nhập từ"
+
+#: src/pages/import/TraktTv.tsx:141
+msgid "Imported"
+msgstr "Đã nhập"
+
+#: src/pages/import/Goodreads.tsx:62
+#: src/pages/import/TraktTv.tsx:142
+msgid "Importing"
+msgstr "Đang nhập"
+
+#: src/components/Nav.tsx:43
+msgid "In progress"
+msgstr "Đang tiến hành"
+
+#: src/pages/Login.tsx:82
+msgid "Incorrect password or username"
+msgstr "Mật khẩu hoặc tên người dùng không đúng"
+
+#: src/pages/LogsPage.tsx:112
+msgid "Info"
+msgstr "Thông tin"
+
+#: src/components/Facets/StatusSection.tsx:143
+msgid "Item must match all selected statuses"
+msgstr "Mục phải khớp với tất cả trạng thái đã chọn"
+
+#: src/pages/settings/Notifications.tsx:95
+msgid "Key"
+msgstr "Khóa"
+
+#: src/components/Facets/ActiveFacetChips.tsx:235
+#: src/components/Facets/LanguageSection.tsx:95
+#: src/pages/Details.tsx:330
+msgid "Language"
+msgstr "Ngôn ngữ"
+
+#: src/components/OrderBy.tsx:19
+msgid "Last airing"
+msgstr "Phát sóng lần cuối"
+
+#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
+#: src/pages/Details.tsx:537
+msgid "Last listened at {0}"
+msgstr "Nghe lần cuối lúc {0}"
+
+#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
+#: src/pages/Details.tsx:555
+msgid "Last played at {0}"
+msgstr "Chơi lần cuối lúc {0}"
+
+#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
+#: src/pages/Details.tsx:543
+msgid "Last read at {0}"
+msgstr "Đọc lần cuối lúc {0}"
+
+#: src/components/OrderBy.tsx:14
+msgid "Last seen"
+msgstr "Xem lần cuối"
+
+#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
+#: src/pages/Details.tsx:549
+msgid "Last seen at {0}"
+msgstr "Xem lần cuối lúc {0}"
+
+#. placeholder {0}: item.listName
+#: src/pages/import/TraktTv.tsx:320
+msgid "List {0} - episodes"
+msgstr "Danh sách {0} - các tập"
+
+#. placeholder {0}: item.listName
+#: src/pages/import/TraktTv.tsx:302
+msgid "List {0} - movies"
+msgstr "Danh sách {0} - phim"
+
+#. placeholder {0}: item.listName
+#: src/pages/import/TraktTv.tsx:314
+msgid "List {0} - seasons"
+msgstr "Danh sách {0} - các mùa"
+
+#. placeholder {0}: item.listName
+#: src/pages/import/TraktTv.tsx:308
+msgid "List {0} - shows"
+msgstr "Danh sách {0} - chương trình"
+
+#. placeholder {0}: list.listName
+#: src/pages/import/TraktTv.tsx:218
+msgid "List: {0}"
+msgstr "Danh sách: {0}"
+
+#: src/components/Facets/ActiveFacetChips.tsx:26
+#: src/components/Facets/StatusSection.tsx:33
+#: src/components/FilterBy.tsx:18
+msgid "Listened"
+msgstr "Đã nghe"
+
+#. placeholder {0}: seenEntry.dateStr
+#: src/pages/SeenHistory.tsx:89
+msgid "Listened at {0}"
+msgstr "Đã nghe lúc {0}"
+
+#: src/pages/Details.tsx:597
+msgid "Listened history"
+msgstr "Lịch sử đã nghe"
+
+#: src/components/Nav.tsx:49
+msgid "Lists"
+msgstr "Danh sách"
+
+#: src/components/AddToListModal.tsx:49
+#: src/components/PaginatedGridItems.tsx:384
+#: src/components/SelectLastSeenEpisode.tsx:67
+#: src/pages/Calendar.tsx:61
+#: src/pages/Details.tsx:205
+#: src/pages/EpisodePage.tsx:42
+#: src/pages/GroupDetailPage.tsx:285
+#: src/pages/GroupsPage.tsx:17
+#: src/pages/import/TraktTv.tsx:116
+#: src/pages/ListPage.tsx:86
+#: src/pages/ListsPage.tsx:29
+#: src/pages/Login.tsx:17
+#: src/pages/LogsPage.tsx:27
+#: src/pages/SeasonsPage.tsx:144
+#: src/pages/SeenHistory.tsx:30
+msgid "Loading"
+msgstr "Đang tải"
+
+#: src/pages/Login.tsx:33
+#: src/pages/Login.tsx:67
+#: src/pages/Register.tsx:85
+msgid "Login"
+msgstr "Đăng nhập"
+
+#: src/components/Nav.tsx:166
+#: src/i18n/__tests__/i18n.test.ts:56
+msgid "Logout"
+msgstr "Đăng xuất"
+
+#: src/pages/Settings.tsx:143
+msgid "Logs"
+msgstr "Nhật ký"
+
+#: src/components/Facets/RatingSection.tsx:68
+msgid "Maximum rating"
+msgstr "Đánh giá tối đa"
+
+#: src/components/Facets/YearSection.tsx:92
+msgid "Maximum year"
+msgstr "Năm tối đa"
+
+#: src/components/OrderBy.tsx:21
+msgid "Media type"
+msgstr "Loại phương tiện"
+
+#: src/components/Facets/ActiveFacetChips.tsx:281
+#: src/components/Facets/MediaTypeSection.tsx:117
+msgid "Media Type"
+msgstr "Loại phương tiện"
+
+#: src/pages/GroupDetailPage.tsx:328
+msgid "Members"
+msgstr "Thành viên"
+
+#: src/components/Facets/RatingSection.tsx:67
+msgid "Minimum rating"
+msgstr "Đánh giá tối thiểu"
+
+#: src/components/Facets/YearSection.tsx:91
+msgid "Minimum year"
+msgstr "Năm tối thiểu"
+
+#: src/components/Facets/ActiveFacetChips.tsx:70
+#: src/components/Facets/MediaTypeSection.tsx:18
+#: src/components/GridItem.tsx:93
+msgid "Movie"
+msgstr "Phim"
+
+#: src/components/ImportSummaryTable.tsx:90
+#: src/components/Nav.tsx:38
+#: src/components/Statistics/StatisticsGenreSegment.tsx:17
+#: src/components/Statistics/StatisticsSegment.tsx:76
+msgid "Movies"
+msgstr "Phim"
+
+#: src/utils.ts:152
+msgid "Movies, shows, seasons, episodes, books, audiobooks and video games I plan to watch/read/listen/play"
+msgstr "Phim, chương trình, mùa, tập, sách, sách nói và trò chơi điện tử tôi dự định xem/đọc/nghe/chơi"
+
+#: src/hooks/translations.ts:8
+msgid "My rating"
+msgstr "Đánh giá của tôi"
+
+#: src/components/AddOrEditGroupButton.tsx:51
+#: src/components/AddOrEditListButton.tsx:137
+msgid "Name"
+msgstr "Tên"
+
+#: src/pages/Details.tsx:281
+msgid "Network"
+msgstr "Mạng lưới"
+
+#: src/components/AddOrEditGroupButton.tsx:47
+msgid "New group"
+msgstr "Nhóm mới"
+
+#: src/components/AddOrEditListButton.tsx:133
+msgid "New list"
+msgstr "Danh sách mới"
+
+#: src/pages/settings/Password.tsx:32
+msgid "New password"
+msgstr "Mật khẩu mới"
+
+#: src/components/OrderBy.tsx:18
+#: src/hooks/translations.ts:15
+msgid "Next airing"
+msgstr "Phát sóng tiếp theo"
+
+#: src/pages/Details.tsx:515
+msgid "Next episode"
+msgstr "Tập tiếp theo"
+
+#: src/pages/Home.tsx:89
+msgid "Next episode to watch"
+msgstr "Tập tiếp theo cần xem"
+
+#: src/components/Confirm.tsx:78
+msgid "No"
+msgstr "Không"
+
+#: src/pages/SeenHistory.tsx:105
+msgid "No date"
+msgstr "Không có ngày"
+
+#: src/pages/GroupsPage.tsx:29
+msgid "No groups yet"
+msgstr "Chưa có nhóm nào"
+
+#: src/pages/GroupDetailPage.tsx:333
+msgid "No members yet"
+msgstr "Chưa có thành viên nào"
+
+#: src/pages/LogsPage.tsx:68
+msgid "No more logs"
+msgstr "Không còn nhật ký"
+
+#: src/pages/GroupDetailPage.tsx:134
+msgid "No users found"
+msgstr "Không tìm thấy người dùng"
+
+#: src/pages/import/TraktTv.tsx:245
+msgid "Not imported items"
+msgstr "Các mục chưa được nhập"
+
+#: src/pages/settings/Notifications.tsx:174
+msgid "Notification platform"
+msgstr "Nền tảng thông báo"
+
+#: src/pages/Settings.tsx:129
+msgid "Notifications"
+msgstr "Thông báo"
+
+#: src/components/SelectSeenDate.tsx:110
+msgid "Now"
+msgstr "Bây giờ"
+
+#: src/pages/SeasonsPage.tsx:230
+msgid "Number of episodes"
+msgstr "Số tập"
+
+#: src/pages/Details.tsx:366
+msgid "Number of pages"
+msgstr "Số trang"
+
+#: src/components/Facets/ActiveFacetChips.tsx:23
+#: src/components/Facets/StatusSection.tsx:57
+#: src/components/FilterBy.tsx:14
+msgid "On watchlist"
+msgstr "Trong danh sách xem"
+
+#: src/pages/Details.tsx:321
+msgid "Overview"
+msgstr "Tổng quan"
+
+#: src/pages/Login.tsx:53
+#: src/pages/Register.tsx:49
+#: src/pages/Settings.tsx:119
+msgid "Password"
+msgstr "Mật khẩu"
+
+#: src/pages/settings/Password.tsx:67
+msgid "Password has been changed"
+msgstr "Mật khẩu đã được thay đổi"
+
+#: src/pages/settings/Password.tsx:56
+msgid "Passwords do not match"
+msgstr "Mật khẩu không khớp"
+
+#: src/pages/settings/Notifications.tsx:186
+msgid "Platform"
+msgstr "Nền tảng"
+
+#: src/components/OrderBy.tsx:24
+#: src/hooks/translations.ts:17
+msgid "Platform Recommended"
+msgstr "Được nền tảng đề xuất"
+
+#: src/components/Facets/ActiveFacetChips.tsx:32
+#: src/components/Facets/StatusSection.tsx:39
+#: src/components/FilterBy.tsx:22
+msgid "Played"
+msgstr "Đã chơi"
+
+#. placeholder {0}: seenEntry.dateStr
+#: src/pages/SeenHistory.tsx:101
+msgid "Played at {0}"
+msgstr "Đã chơi lúc {0}"
+
+#: src/pages/Details.tsx:605
+msgid "Played history"
+msgstr "Lịch sử đã chơi"
+
+#: src/pages/Settings.tsx:133
+msgid "Preferences"
+msgstr "Tùy chọn"
+
+#: src/pages/settings/Notifications.tsx:257
+#: src/pages/settings/Notifications.tsx:262
+msgid "Priority"
+msgstr "Ưu tiên"
+
+#: src/components/AddOrEditListButton.tsx:161
+#: src/components/AddOrEditListButton.tsx:166
+msgid "Privacy"
+msgstr "Quyền riêng tư"
+
+#: src/hooks/translations.ts:22
+msgid "Private"
+msgstr "Riêng tư"
+
+#: src/components/OrderBy.tsx:22
+#: src/pages/Details.tsx:500
+msgid "Progress"
+msgstr "Tiến trình"
+
+#: src/hooks/translations.ts:23
+msgid "Public"
+msgstr "Công khai"
+
+#: src/pages/settings/Preferences.tsx:12
+msgid "Public reviews"
+msgstr "Đánh giá công khai"
+
+#: src/components/Facets/ActiveFacetChips.tsx:269
+#: src/components/Facets/PublisherSection.tsx:53
+msgid "Publisher"
+msgstr "Nhà xuất bản"
+
+#: src/components/Nav.tsx:45
+msgid "Random"
+msgstr "Ngẫu nhiên"
+
+#: src/pages/Random.tsx:107
+msgid "Random Audiobook"
+msgstr "Sách nói ngẫu nhiên"
+
+#: src/pages/Random.tsx:94
+msgid "Random Book"
+msgstr "Sách ngẫu nhiên"
+
+#: src/pages/Random.tsx:55
+msgid "Random Movie"
+msgstr "Phim ngẫu nhiên"
+
+#: src/pages/Random.tsx:68
+msgid "Random Tv Show"
+msgstr "Chương trình truyền hình ngẫu nhiên"
+
+#: src/pages/Random.tsx:81
+msgid "Random Video Game"
+msgstr "Trò chơi điện tử ngẫu nhiên"
+
+#: src/components/Facets/ActiveFacetChips.tsx:19
+#: src/components/Facets/StatusSection.tsx:53
+#: src/components/FilterBy.tsx:12
+msgid "Rated"
+msgstr "Đã đánh giá"
+
+#: src/components/Facets/ActiveFacetChips.tsx:316
+#: src/components/Facets/RatingSection.tsx:57
+#: src/pages/import/Goodreads.tsx:83
+msgid "Rating"
+msgstr "Đánh giá"
+
+#: src/pages/import/TraktTv.tsx:202
+msgid "Ratings"
+msgstr "Đánh giá"
+
+#: src/pages/import/TraktTv.tsx:294
+msgid "Ratings - episodes"
+msgstr "Đánh giá - các tập"
+
+#: src/pages/import/TraktTv.tsx:279
+msgid "Ratings - movies"
+msgstr "Đánh giá - phim"
+
+#: src/pages/import/TraktTv.tsx:289
+msgid "Ratings - seasons"
+msgstr "Đánh giá - các mùa"
+
+#: src/pages/import/TraktTv.tsx:284
+msgid "Ratings - shows"
+msgstr "Đánh giá - chương trình"
+
+#: src/components/Facets/ActiveFacetChips.tsx:29
+#: src/components/Facets/StatusSection.tsx:36
+#: src/components/FilterBy.tsx:20
+#: src/pages/import/Goodreads.tsx:68
+msgid "Read"
+msgstr "Đã đọc"
+
+#. placeholder {0}: seenEntry.dateStr
+#: src/pages/SeenHistory.tsx:93
+msgid "Read at {0}"
+msgstr "Đã đọc lúc {0}"
+
+#: src/pages/Details.tsx:599
+msgid "Read history"
+msgstr "Lịch sử đã đọc"
+
+#: src/pages/settings/Notifications.tsx:46
+msgid "Receive notification for all media items on your watchlist, when its release date changes"
+msgstr "Nhận thông báo cho tất cả các mục phương tiện trong danh sách xem khi ngày phát hành thay đổi"
+
+#: src/pages/settings/Notifications.tsx:38
+msgid "Receive notification for all media items on your watchlist, when its status changes"
+msgstr "Nhận thông báo cho tất cả các mục phương tiện trong danh sách xem khi trạng thái thay đổi"
+
+#: src/pages/settings/Notifications.tsx:24
+msgid "Receive notification for all media items on your watchlist, when they are released, including new seasons for tv shows"
+msgstr "Nhận thông báo cho tất cả các mục phương tiện trong danh sách xem khi phát hành, bao gồm các mùa mới cho chương trình truyền hình"
+
+#: src/pages/settings/Notifications.tsx:54
+msgid "Receive notification for all tv shows on your watchlist, when its number of seasons changes"
+msgstr "Nhận thông báo cho tất cả các chương trình truyền hình trong danh sách xem khi số mùa thay đổi"
+
+#: src/pages/settings/Notifications.tsx:30
+msgid "Receive notification for every episode for all tv shows on your watchlist, when it's released"
+msgstr "Nhận thông báo cho mỗi tập của tất cả các chương trình truyền hình trong danh sách xem khi phát hành"
+
+#: src/hooks/translations.ts:9
+msgid "Recently added"
+msgstr "Mới thêm"
+
+#: src/hooks/translations.ts:11
+msgid "Recently aired"
+msgstr "Mới phát sóng"
+
+#: src/pages/Home.tsx:104
+msgid "Recently released"
+msgstr "Mới phát hành"
+
+#: src/hooks/translations.ts:10
+msgid "Recently watched"
+msgstr "Mới xem"
+
+#: src/components/OrderBy.tsx:23
+#: src/hooks/translations.ts:16
+msgid "Recommended"
+msgstr "Được đề xuất"
+
+#: src/pages/Login.tsx:75
+#: src/pages/Register.tsx:29
+#: src/pages/Register.tsx:77
+msgid "Register"
+msgstr "Đăng ký"
+
+#: src/components/GridItem.tsx:245
+msgid "Release <0/>"
+msgstr "Phát hành <0/>"
+
+#: src/components/OrderBy.tsx:15
+#: src/hooks/translations.ts:12
+#: src/pages/Details.tsx:232
+#: src/pages/EpisodePage.tsx:80
+msgid "Release date"
+msgstr "Ngày phát hành"
+
+#: src/components/GridItem.tsx:263
+msgid "Released <0/>"
+msgstr "Đã phát hành <0/>"
+
+#: src/pages/GroupDetailPage.tsx:203
+msgid "Remove"
+msgstr "Xóa"
+
+#. placeholder {0}: mediaItem.title
+#. placeholder {1}: season ? ' ' + formatSeasonNumber(season) : episode ? ' ' + formatEpisodeNumber(episode) : ''
+#: src/components/GridItem.tsx:136
+msgid "Remove \"{0}{1}\" from watchlist?"
+msgstr "Xóa \"{0}{1}\" khỏi danh sách theo dõi?"
+
+#. placeholder {0}: member.name
+#: src/pages/GroupDetailPage.tsx:201
+msgid "Remove {0}"
+msgstr "Xóa {0}"
+
+#. placeholder {0}: member.name
+#: src/pages/GroupDetailPage.tsx:168
+msgid "Remove {0} from this group?"
+msgstr "Xóa {0} khỏi nhóm này?"
+
+#: src/components/Facets/ActiveFacetChips.tsx:107
+msgid "Remove {dimensionLabel}: {value} filter"
+msgstr "Xóa bộ lọc {dimensionLabel}: {value}"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:131
+msgid "Remove episode from seen history"
+msgstr "Xóa tập khỏi lịch sử đã xem"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:125
+msgid "Remove from listened history"
+msgstr "Xóa khỏi lịch sử đã nghe"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:127
+msgid "Remove from played history"
+msgstr "Xóa khỏi lịch sử đã chơi"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:126
+msgid "Remove from read history"
+msgstr "Xóa khỏi lịch sử đã đọc"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:128
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:135
+msgid "Remove from seen history"
+msgstr "Xóa khỏi lịch sử đã xem"
+
+#: src/pages/Details.tsx:670
+msgid "Remove from watchlist"
+msgstr "Xóa khỏi danh sách xem"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:133
+msgid "Remove season from seen history"
+msgstr "Xóa mùa khỏi lịch sử đã xem"
+
+#: src/pages/settings/ApplicationTokens.tsx:50
+msgid "Remove token"
+msgstr "Xóa mã token"
+
+#: src/pages/Details.tsx:65
+msgid "Review by <0><1>{author}</1></0> at {date}"
+msgstr "Đánh giá bởi <0><1>{author}</1></0> vào {date}"
+
+#. placeholder {0}: member.name
+#: src/pages/GroupDetailPage.tsx:191
+msgid "Role for {0}"
+msgstr "Vai trò cho {0}"
+
+#: src/pages/import/Goodreads.tsx:48
+msgid "RSS link"
+msgstr "Liên kết RSS"
+
+#: src/hooks/translations.ts:13
+#: src/pages/Details.tsx:243
+#: src/pages/EpisodePage.tsx:71
+msgid "Runtime"
+msgstr "Thời gian chạy"
+
+#. placeholder {0}: season.seasonNumber.toString().padStart(2, '0')
+#: src/utils.ts:19
+msgid "S{0}"
+msgstr "S{0}"
+
+#. placeholder {0}: tvEpisode.seasonNumber .toString() .padStart(2, '0')
+#. placeholder {1}: tvEpisode.episodeNumber.toString().padStart(2, '0')
+#: src/utils.ts:13
+msgid "S{0}E{1}"
+msgstr "S{0}E{1}"
+
+#: src/pages/settings/Configuration.tsx:165
+#: src/pages/settings/Notifications.tsx:280
+msgid "Save"
+msgstr "Lưu"
+
+#: src/components/AddOrEditListButton.tsx:219
+msgid "Save list"
+msgstr "Lưu danh sách"
+
+#: src/components/StarRating.tsx:168
+msgid "Save review"
+msgstr "Lưu đánh giá"
+
+#: src/components/PaginatedGridItems.tsx:63
+msgid "Search"
+msgstr "Tìm kiếm"
+
+#: src/pages/GroupDetailPage.tsx:103
+msgid "Search by username…"
+msgstr "Tìm kiếm theo tên người dùng…"
+
+#: src/components/PaginatedGridItems.tsx:304
+msgid "Search for items or <0>import</0>"
+msgstr "Search for items or <0>import</0>"
+
+#: src/pages/ListPage.tsx:124
+msgid "Search list"
+msgstr "Tìm kiếm danh sách"
+
+#: src/pages/GroupDetailPage.tsx:107
+msgid "Search users to add"
+msgstr "Tìm kiếm người dùng để thêm"
+
+#: src/pages/GroupDetailPage.tsx:112
+msgid "Searching…"
+msgstr "Đang tìm kiếm…"
+
+#: src/components/SelectLastSeenEpisode.tsx:83
+msgid "Season"
+msgstr "Mùa"
+
+#. placeholder {0}: season.seasonNumber
+#: src/pages/SeasonsPage.tsx:177
+msgid "Season {0}"
+msgstr "Mùa {0}"
+
+#: src/components/ImportSummaryTable.tsx:92
+#: src/pages/Details.tsx:376
+msgid "Seasons"
+msgstr "Các mùa"
+
+#: src/pages/Statistics.tsx:149
+msgid "Seen"
+msgstr "Đã xem"
+
+#. placeholder {0}: seenEntry.dateStr
+#: src/pages/SeenHistory.tsx:97
+msgid "Seen at {0}"
+msgstr "Đã xem lúc {0}"
+
+#: src/pages/Details.tsx:602
+#: src/pages/import/TraktTv.tsx:191
+msgid "Seen history"
+msgstr "Lịch sử đã xem"
+
+#: src/pages/import/TraktTv.tsx:274
+msgid "Seen history - episodes"
+msgstr "Lịch sử đã xem - các tập"
+
+#: src/pages/import/TraktTv.tsx:269
+msgid "Seen history - movies"
+msgstr "Lịch sử đã xem - phim"
+
+#: src/components/SelectLastSeenEpisode.tsx:135
+msgid "Select"
+msgstr "Chọn"
+
+#: src/components/SelectSeenDate.tsx:160
+msgid "Select date"
+msgstr "Chọn ngày"
+
+#: src/pages/settings/Notifications.tsx:265
+msgid "Select priority"
+msgstr "Chọn mức độ ưu tiên"
+
+#: src/pages/Statistics.tsx:195
+msgid "Select year"
+msgstr "Chọn năm"
+
+#: src/pages/Statistics.tsx:207
+msgid "Select Year"
+msgstr "Chọn Năm"
+
+#: src/pages/settings/Notifications.tsx:29
+msgid "Send notification for episodes releases"
+msgstr "Gửi thông báo khi phát hành tập mới"
+
+#: src/pages/settings/Notifications.tsx:23
+msgid "Send notification for releases"
+msgstr "Gửi thông báo khi phát hành"
+
+#: src/pages/settings/Notifications.tsx:53
+msgid "Send notification when number of seasons changes"
+msgstr "Gửi thông báo khi số mùa thay đổi"
+
+#: src/pages/settings/Notifications.tsx:45
+msgid "Send notification when release date changes"
+msgstr "Gửi thông báo khi ngày phát hành thay đổi"
+
+#: src/pages/settings/Notifications.tsx:37
+msgid "Send notification when status changes"
+msgstr "Gửi thông báo khi trạng thái thay đổi"
+
+#: src/App.tsx:101
+msgid "Server error: {errorMessage}"
+msgstr "Lỗi máy chủ: {errorMessage}"
+
+#: src/pages/settings/Configuration.tsx:35
+#: src/pages/settings/Configuration.tsx:42
+msgid "Server language"
+msgstr "Ngôn ngữ máy chủ"
+
+#: src/pages/settings/Notifications.tsx:146
+msgid "Server url (only for self hosting)"
+msgstr "URL máy chủ (chỉ dành cho tự lưu trữ)"
+
+#: src/components/SetProgress.tsx:125
+msgid "Set"
+msgstr "Đặt"
+
+#: src/components/SetProgress.tsx:61
+#: src/pages/Details.tsx:705
+msgid "Set progress"
+msgstr "Đặt tiến trình"
+
+#: src/pages/Settings.tsx:76
+msgid "Settings"
+msgstr "Cài đặt"
+
+#: src/components/Facets/ExpandableList.tsx:33
+msgid "Show less"
+msgstr "Thu gọn"
+
+#: src/components/Facets/ExpandableList.tsx:33
+msgid "Show more"
+msgstr "Xem thêm"
+
+#: src/pages/settings/Preferences.tsx:13
+msgid "Show your reviews to other users"
+msgstr "Hiển thị đánh giá của bạn cho người dùng khác"
+
+#: src/components/ImportSummaryTable.tsx:91
+msgid "Shows"
+msgstr "Chương trình"
+
+#: src/components/AddOrEditListButton.tsx:180
+#: src/components/AddOrEditListButton.tsx:185
+msgid "Sort by"
+msgstr "Sắp xếp theo"
+
+#: src/components/AddOrEditListButton.tsx:199
+#: src/components/AddOrEditListButton.tsx:204
+msgid "Sort order"
+msgstr "Thứ tự sắp xếp"
+
+#: src/pages/Details.tsx:401
+msgid "Source"
+msgstr "Nguồn"
+
+#: src/pages/import/TraktTv.tsx:110
+msgid "Start over"
+msgstr "Bắt đầu lại"
+
+#: src/components/Nav.tsx:46
+#: src/pages/Statistics.tsx:111
+msgid "Statistics"
+msgstr "Thống kê"
+
+#: src/components/Facets/ActiveFacetChips.tsx:293
+#: src/components/Facets/StatusSection.tsx:116
+#: src/components/OrderBy.tsx:16
+#: src/pages/Details.tsx:290
+msgid "Status"
+msgstr "Trạng thái"
+
+#: src/components/ImportSummaryTable.tsx:84
+#: src/components/ImportSummaryTable.tsx:135
+msgid "Summary"
+msgstr "Tóm tắt"
+
+#: src/components/AddOrEditListButton.tsx:105
+msgid "There already exists a list with name \"{name}\""
+msgstr "Đã tồn tại danh sách với tên \"{name}\""
+
+#: src/pages/SeasonsPage.tsx:152
+msgid "This component can only be used with tv shows"
+msgstr "Thành phần này chỉ có thể được sử dụng với chương trình truyền hình"
+
+#: src/components/OrderBy.tsx:17
+#: src/hooks/translations.ts:14
+msgid "Title"
+msgstr "Tiêu đề"
+
+#: src/pages/settings/Configuration.tsx:88
+#: src/pages/settings/Configuration.tsx:95
+msgid "TMDB language"
+msgstr "Ngôn ngữ TMDB"
+
+#: src/pages/import/Goodreads.tsx:73
+msgid "To read"
+msgstr "Cần đọc"
+
+#: src/pages/settings/Notifications.tsx:142
+msgid "Topic"
+msgstr "Chủ đề"
+
+#: src/pages/Details.tsx:254
+msgid "Total runtime"
+msgstr "Tổng thời gian chạy"
+
+#: src/components/GridItem.tsx:94
+#: src/components/Nav.tsx:37
+#: src/components/Statistics/StatisticsGenreSegment.tsx:16
+#: src/components/Statistics/StatisticsSegment.tsx:35
+msgid "Tv"
+msgstr "TV"
+
+#: src/components/Facets/ActiveFacetChips.tsx:72
+#: src/components/Facets/MediaTypeSection.tsx:20
+msgid "TV Show"
+msgstr "Chương trình TV"
+
+#: src/pages/import/TraktTv.tsx:138
+msgid "Uninitialized"
+msgstr "Chưa khởi tạo"
+
+#: src/components/Facets/ActiveFacetChips.tsx:21
+#: src/components/Facets/StatusSection.tsx:55
+#: src/components/FilterBy.tsx:13
+#: src/pages/Home.tsx:122
+msgid "Unrated"
+msgstr "Chưa đánh giá"
+
+#: src/pages/Details.tsx:391
+msgid "Unseen episodes"
+msgstr "Các tập chưa xem"
+
+#: src/components/OrderBy.tsx:20
+msgid "Unseen episodes count"
+msgstr "Số tập chưa xem"
+
+#: src/components/Nav.tsx:42
+#: src/pages/Home.tsx:75
+msgid "Upcoming"
+msgstr "Sắp tới"
+
+#: src/pages/Details.tsx:691
+msgid "Update metadata"
+msgstr "Cập nhật siêu dữ liệu"
+
+#: src/pages/import/TraktTv.tsx:139
+msgid "Updating metadata"
+msgstr "Đang cập nhật siêu dữ liệu"
+
+#: src/pages/Login.tsx:38
+#: src/pages/Register.tsx:34
+msgid "Username"
+msgstr "Tên người dùng"
+
+#: src/pages/settings/About.tsx:11
+msgid "Version"
+msgstr "Phiên bản"
+
+#: src/components/Facets/ActiveFacetChips.tsx:78
+#: src/components/Facets/MediaTypeSection.tsx:26
+#: src/components/GridItem.tsx:95
+msgid "Video game"
+msgstr "Trò chơi điện tử"
+
+#: src/pages/GroupDetailPage.tsx:194
+#: src/pages/GroupDetailPage.tsx:208
+#: src/pages/GroupDetailPage.tsx:321
+#: src/pages/GroupsPage.tsx:50
+msgid "Viewer"
+msgstr "Người xem"
+
+#: src/pages/import/TraktTv.tsx:140
+msgid "Waiting for authentication"
+msgstr "Đang chờ xác thực"
+
+#: src/pages/LogsPage.tsx:107
+msgid "Warning"
+msgstr "Cảnh báo"
+
+#: src/components/Facets/ActiveFacetChips.tsx:34
+#: src/components/Facets/StatusSection.tsx:41
+#: src/components/FilterBy.tsx:23
+msgid "Watched"
+msgstr "Đã xem"
+
+#: src/components/Nav.tsx:44
+#: src/pages/import/TraktTv.tsx:176
+#: src/utils.ts:157
+msgid "Watchlist"
+msgstr "Danh sách xem"
+
+#: src/pages/import/TraktTv.tsx:264
+msgid "Watchlist - episodes"
+msgstr "Danh sách xem - các tập"
+
+#: src/pages/import/TraktTv.tsx:249
+msgid "Watchlist - movies"
+msgstr "Danh sách xem - phim"
+
+#: src/pages/import/TraktTv.tsx:259
+msgid "Watchlist - season"
+msgstr "Danh sách xem - mùa"
+
+#: src/pages/import/TraktTv.tsx:254
+msgid "Watchlist - shows"
+msgstr "Danh sách xem - chương trình"
+
+#: src/pages/settings/Notifications.tsx:127
+msgid "Webhook URL"
+msgstr "URL Webhook"
+
+#. placeholder {0}: season ? `${tvShow.title} ${formatSeasonNumber(season)}` : tvShow.title
+#: src/components/SelectLastSeenEpisode.tsx:71
+msgid "What is the last episode of \"{0}\" you see?"
+msgstr "Tập cuối cùng của \"{0}\" bạn đã xem là gì?"
+
+#. placeholder {0}: mediaItem.title
+#: src/components/SelectSeenDate.tsx:78
+msgid "When did you listen to \"{0}\"?"
+msgstr "Bạn đã nghe \"{0}\" khi nào?"
+
+#. placeholder {0}: mediaItem.title
+#: src/components/SelectSeenDate.tsx:100
+msgid "When did you play \"{0}\"?"
+msgstr "Bạn đã chơi \"{0}\" khi nào?"
+
+#. placeholder {0}: mediaItem.title
+#: src/components/SelectSeenDate.tsx:82
+msgid "When did you read \"{0}\"?"
+msgstr "Bạn đã đọc \"{0}\" khi nào?"
+
+#. placeholder {0}: episode ? `${mediaItem.title} ${formatEpisodeNumber(episode)}` : mediaItem.title
+#. placeholder {0}: mediaItem.title
+#: src/components/SelectSeenDate.tsx:86
+#: src/components/SelectSeenDate.tsx:90
+msgid "When did you see \"{0}\"?"
+msgstr "Bạn đã xem \"{0}\" khi nào?"
+
+#: src/pages/Details.tsx:125
+msgid "Where to watch"
+msgstr "Xem ở đâu"
+
+#: src/components/Facets/ActiveFacetChips.tsx:304
+#: src/components/Facets/YearSection.tsx:81
+msgid "Year"
+msgstr "Năm"
+
+#: src/components/Confirm.tsx:81
+msgid "Yes"
+msgstr "Có"
+
+#: src/pages/GroupDetailPage.tsx:319
+msgid "Your role:"
+msgstr "Vai trò của bạn:"

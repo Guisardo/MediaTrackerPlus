@@ -151,7 +151,7 @@ export const PaginatedGridItems: FunctionComponent<{
   // When showFacets=false, the facets state is not used.
   const facets = useFacets(handleArgumentChange);
 
-  const mainContainerRef = useRef<HTMLDivElement>();
+  const mainContainerRef = useRef<HTMLDivElement>(null);
 
   // Build the items query args: merge static page args, filter (when not using
   // facets), and facet params (when showFacets=true).
@@ -387,16 +387,17 @@ export const PaginatedGridItems: FunctionComponent<{
           ) : (
             <>
               {(searchQuery ? searchResult : items)?.map((mediaItem) => (
-                <GridItem
-                  key={mediaItem.id}
-                  mediaType={args.mediaType}
-                  mediaItem={mediaItem}
-                  appearance={{
-                    ...gridItemAppearance,
-                    showAddToWatchlistAndMarkAsSeenButtons:
-                      Boolean(searchQuery),
-                  }}
-                />
+                <div key={mediaItem.id} className="w-40 mr-2 mb-2">
+                  <GridItem
+                    mediaType={args.mediaType}
+                    mediaItem={mediaItem}
+                    appearance={{
+                      ...gridItemAppearance,
+                      showAddToWatchlistAndMarkAsSeenButtons:
+                        Boolean(searchQuery),
+                    }}
+                  />
+                </div>
               ))}
               <div className="footer">
                 {!searchQuery && items && !isLoadingItems && numberOfPages > 1 && (

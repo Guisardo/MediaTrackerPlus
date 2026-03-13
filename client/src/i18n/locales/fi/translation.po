@@ -1,0 +1,1598 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2026-03-12 15:41-0300\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: fi\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#. js-lingui-explicit-id
+#: src/__tests__/ui-stack-migration.integration.test.ts:186
+msgid "i18n/i18n.ts"
+msgstr "i18n/i18n.ts"
+
+#: src/pages/settings/Notifications.tsx:82
+msgid " User key"
+msgstr " Käyttäjäavain"
+
+#. placeholder {0}: 1
+#. placeholder {0}: 5
+#. placeholder {0}: list.itemsCount
+#: src/i18n/__tests__/i18n.test.ts:86
+#: src/i18n/__tests__/i18n.test.ts:98
+#: src/pages/ListsPage.tsx:55
+msgid "{0, plural, one {# item} other {# items}}"
+msgstr "{0, plural, one {# kohde} other {# kohdetta}}"
+
+#. placeholder {0}: group.memberCount
+#: src/pages/GroupsPage.tsx:56
+msgid "{0, plural, one {# member} other {# members}}"
+msgstr "{0, plural, one {# jäsen} other {# jäsentä}}"
+
+#. placeholder {0}: filteredItems.length
+#. placeholder {0}: items.length
+#: src/pages/import/TraktTv.tsx:342
+#: src/pages/ListPage.tsx:131
+msgid "{0, plural, one {1 item} other {# items}}"
+msgstr "{0, plural, one {1 kohde} other {# kohdetta}}"
+
+#. placeholder {0}: mediaItem.authors.length
+#: src/pages/Details.tsx:339
+msgid "{0, plural, one {Author} other {Authors}}"
+msgstr "{0, plural, one {Tekijä} other {Tekijät}}"
+
+#. placeholder {0}: searchResult?.length
+#: src/components/PaginatedGridItems.tsx:317
+msgid "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {Found # items for query \"<1>{searchQuery}</1>\"}}"
+msgstr "{0, plural, one {Löydettiin # kohde kyselylle \"<0>{searchQuery}</0>\"} other {Löydettiin # kohdetta kyselylle \"<1>{searchQuery}</1>\"}}"
+
+#. placeholder {0}: mediaItem.genres.length
+#: src/pages/Details.tsx:299
+msgid "{0, plural, one {Genre} other {Genres}}"
+msgstr "{0, plural, one {Genre} other {Genret}}"
+
+#. placeholder {0}: listsWithItem?.length
+#: src/components/AddToListModal.tsx:151
+msgid "{0, plural, one {Listed on 1 list} other {Listed on # lists}}"
+msgstr "{0, plural, one {1 listalla} other {# listalla}}"
+
+#. placeholder {0}: mediaItem.seenHistory.length
+#: src/pages/Details.tsx:565
+#: src/pages/SeenHistory.tsx:43
+msgid "{0, plural, one {Listened 1 time} other {Listened # times}}"
+msgstr "{0, plural, one {Kuunneltu 1 kerran} other {Kuunneltu # kertaa}}"
+
+#. placeholder {0}: mediaItem.narrators.length
+#: src/pages/Details.tsx:353
+msgid "{0, plural, one {Narrator} other {Narrators}}"
+msgstr "{0, plural, one {Kertoja} other {Kertojat}}"
+
+#. placeholder {0}: mediaItem.platform.length
+#: src/pages/Details.tsx:267
+msgid "{0, plural, one {Platform} other {platforms}}"
+msgstr "{0, plural, one {Alusta} other {Alustat}}"
+
+#. placeholder {0}: mediaItem.seenHistory.length
+#: src/pages/Details.tsx:589
+#: src/pages/SeenHistory.tsx:67
+msgid "{0, plural, one {Played 1 time} other {Played # times}}"
+msgstr "{0, plural, one {Pelattu 1 kerran} other {Pelattu # kertaa}}"
+
+#. placeholder {0}: mediaItem.seenHistory.length
+#: src/pages/Details.tsx:573
+#: src/pages/SeenHistory.tsx:51
+msgid "{0, plural, one {Read 1 time} other {Read # times}}"
+msgstr "{0, plural, one {Luettu 1 kerran} other {Luettu # kertaa}}"
+
+#. placeholder {0}: episode.seenHistory.length
+#. placeholder {0}: mediaItem.seenHistory.length
+#: src/pages/Details.tsx:581
+#: src/pages/SeasonsPage.tsx:87
+#: src/pages/SeenHistory.tsx:59
+msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
+msgstr "{0, plural, one {Katsottu 1 kerran} other {Katsottu # kertaa}}"
+
+#. placeholder {0}: route.name
+#: src/components/Statistics/StatisticsGenreSegment.tsx:42
+msgid "{0}"
+msgstr "{0}"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:112
+msgid "{count, plural, one {Do you want to remove # seen history entry?} other {Do you want to remove all # seen history entries?}}"
+msgstr "{count, plural, one {Haluatko poistaa # katseluhistoriamerkinnän?} other {Haluatko poistaa kaikki # katseluhistoriamerkintää?}}"
+
+#: src/components/SetProgress.tsx:119
+msgid "{duration, plural, one {minute} other {minutes}}"
+msgstr "{duration, plural, one {minuutti} other {minuuttia}}"
+
+#. placeholder {0}: args.year ? 'in ' + args.year : ''
+#. placeholder {1}: args.genre ? 'with genre ' + args.genre : ''
+#. placeholder {2}: args.year ? 'in ' + args.year : ''
+#. placeholder {3}: args.genre ? 'with genre ' + args.genre : ''
+#: src/components/PaginatedGridItems.tsx:333
+msgid "{numberOfItemsTotal, plural, one {1 item {0} {1}} other {# item {2} {3}}}"
+msgstr "{numberOfItemsTotal, plural, one {1 kohde {0} {1}} other {# kohdetta {2} {3}}}"
+
+#: src/components/SetProgress.tsx:43
+msgid "{value, plural, one {minute} other {minutes}}"
+msgstr "{value, plural, one {minuutti} other {minuuttia}}"
+
+#: src/components/SetProgress.tsx:41
+msgid "{value, plural, one {page} other {pages}}"
+msgstr "{value, plural, one {sivu} other {sivua}}"
+
+#. placeholder {0}: item.genre
+#. placeholder {1}: item.count
+#: src/components/Statistics/StatisticsGenreSegment.tsx:61
+msgid "<0>{0}</0> (<1>{1}</1>)"
+msgstr "<0>{0}</0> (<1>{1}</1>)"
+
+#. placeholder {0}: data.audiobook.items
+#. placeholder {1}: data.audiobook.plays
+#: src/components/Statistics/StatisticsSegment.tsx:215
+msgid "<0>{0}</0> audiobooks (<1>{1}</1> plays)"
+msgstr "<0>{0}</0> äänikirjaa (<1>{1}</1> toistoa)"
+
+#. placeholder {0}: data.book.items
+#. placeholder {1}: data.book.plays
+#: src/components/Statistics/StatisticsSegment.tsx:174
+msgid "<0>{0}</0> books (<1>{1}</1> reads)"
+msgstr "<0>{0}</0> kirjaa (<1>{1}</1> lukukertaa)"
+
+#. placeholder {0}: data.tv.episodes
+#. placeholder {1}: data.tv.plays
+#. placeholder {2}: data.tv.items
+#: src/components/Statistics/StatisticsSegment.tsx:51
+msgid "<0>{0}</0> episodes (<1>{1}</1> plays of <2>{2}</2> shows)"
+msgstr "<0>{0}</0> jaksoa (<1>{1}</1> toistoa, <2>{2}</2> sarjaa)"
+
+#. placeholder {0}: data.movie.items
+#. placeholder {1}: data.movie.plays
+#: src/components/Statistics/StatisticsSegment.tsx:92
+msgid "<0>{0}</0> movies (<1>{1}</1> plays)"
+msgstr "<0>{0}</0> elokuvaa (<1>{1}</1> toistoa)"
+
+#. placeholder {0}: data.video_game.items
+#. placeholder {1}: data.video_game.plays
+#: src/components/Statistics/StatisticsSegment.tsx:133
+msgid "<0>{0}</0> video games (<1>{1}</1> plays)"
+msgstr "<0>{0}</0> videopeliä (<1>{1}</1> pelikertaa)"
+
+#: src/components/Statistics/StatisticsSegment.tsx:204
+msgid "<0><1/> </0>listening"
+msgstr "<0><1/> </0>kuuntelee"
+
+#: src/components/Statistics/StatisticsSegment.tsx:122
+msgid "<0><1/> </0>playing"
+msgstr "<0><1/> </0>pelaa"
+
+#: src/components/Statistics/StatisticsSegment.tsx:163
+msgid "<0><1/> </0>reading"
+msgstr "<0><1/> </0>lukee"
+
+#: src/components/Statistics/StatisticsSegment.tsx:40
+#: src/components/Statistics/StatisticsSegment.tsx:81
+msgid "<0><1/> </0>watching"
+msgstr "<0><1/> </0>katsoo"
+
+#: src/pages/Settings.tsx:113
+msgid "About"
+msgstr "Tietoja"
+
+#: src/pages/settings/Notifications.tsx:114
+msgid "Access Token"
+msgstr "Käyttöoikeustunnus"
+
+#: src/components/Facets/ActiveFacetChips.tsx:219
+msgid "Active filters"
+msgstr "Aktiiviset suodattimet"
+
+#. placeholder {0}: episode ? `${mediaItem.title} ${formatEpisodeNumber(episode)}` : season ? `${mediaItem.title} ${formatSeasonNumber(season)}` : mediaItem.title
+#: src/components/AddToListModal.tsx:55
+msgid "Add \"{0}\" to list"
+msgstr "Lisää \"{0}\" listalle"
+
+#. placeholder {0}: formatEpisodeNumber(episode)
+#. placeholder {0}: formatSeasonNumber(season)
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:48
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:52
+msgid "Add {0} to seen history"
+msgstr "Lisää {0} katseluhistoriaan"
+
+#: src/components/AddToListModal.tsx:143
+msgid "Add episode to list"
+msgstr "Lisää jakso listalle"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:59
+msgid "Add episode to seen history"
+msgstr "Lisää jakso katseluhistoriaan"
+
+#: src/components/AddOrEditListButton.tsx:43
+#: src/components/AddOrEditListButton.tsx:219
+msgid "Add list"
+msgstr "Lisää lista"
+
+#: src/pages/GroupDetailPage.tsx:97
+msgid "Add member"
+msgstr "Lisää jäsen"
+
+#: src/pages/settings/Preferences.tsx:41
+msgid "Add recommendations to watchlist"
+msgstr "Lisää suositukset seurantalistalle"
+
+#: src/components/AddToListModal.tsx:145
+msgid "Add season to list"
+msgstr "Lisää kausi listalle"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:61
+msgid "Add season to seen history"
+msgstr "Lisää kausi katseluhistoriaan"
+
+#: src/components/AddToListModal.tsx:147
+msgid "Add to list"
+msgstr "Lisää listalle"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:41
+msgid "Add to listened history"
+msgstr "Lisää kuunteluhistoriaan"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:43
+msgid "Add to played history"
+msgstr "Lisää pelihistoriaan"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:42
+msgid "Add to read history"
+msgstr "Lisää lukuhistoriaan"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:44
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:56
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:63
+msgid "Add to seen history"
+msgstr "Lisää katseluhistoriaan"
+
+#: src/pages/Details.tsx:646
+msgid "Add to watchlist"
+msgstr "Lisää seurantalistalle"
+
+#: src/pages/settings/ApplicationTokens.tsx:31
+msgid "Add token"
+msgstr "Lisää tunnus"
+
+#: src/pages/GroupDetailPage.tsx:193
+#: src/pages/GroupDetailPage.tsx:208
+#: src/pages/GroupDetailPage.tsx:321
+#: src/pages/GroupsPage.tsx:48
+msgid "Admin"
+msgstr "Ylläpitäjä"
+
+#: src/components/FilterBy.tsx:11
+msgid "All"
+msgstr "Kaikki"
+
+#: src/components/GroupSelector.tsx:150
+msgid "All Users"
+msgstr "Kaikki käyttäjät"
+
+#: src/pages/Statistics.tsx:33
+msgid "All Years"
+msgstr "Kaikki vuodet"
+
+#: src/pages/settings/Configuration.tsx:145
+msgid "API keys can be acquired here"
+msgstr "API-avaimet voi hankkia täältä"
+
+#: src/pages/settings/Notifications.tsx:68
+msgid "App token"
+msgstr "Sovellustunnus"
+
+#: src/pages/Settings.tsx:125
+msgid "Application tokens"
+msgstr "Sovellustunnukset"
+
+#: src/hooks/translations.ts:28
+msgid "Ascending"
+msgstr "Nouseva"
+
+#: src/components/SelectSeenDate.tsx:117
+msgid "At release date"
+msgstr "Julkaisupäivänä"
+
+#: src/pages/settings/Configuration.tsx:59
+#: src/pages/settings/Configuration.tsx:68
+msgid "Audible language"
+msgstr "Audible-kieli"
+
+#: src/components/Facets/ActiveFacetChips.tsx:76
+#: src/components/Facets/MediaTypeSection.tsx:24
+#: src/components/GridItem.tsx:91
+msgid "Audiobook"
+msgstr "Äänikirja"
+
+#: src/components/Nav.tsx:41
+#: src/components/Statistics/StatisticsSegment.tsx:199
+msgid "Audiobooks"
+msgstr "Äänikirjat"
+
+#: src/components/Facets/ActiveFacetChips.tsx:54
+#: src/components/Facets/CreatorSection.tsx:27
+msgid "Author"
+msgstr "Kirjailija"
+
+#: src/pages/settings/Preferences.tsx:42
+msgid "Automatically add similar items to your watchlist when you rate content"
+msgstr "Lisää automaattisesti samankaltaisia kohteita seurantalistallesi, kun arvioit sisältöä"
+
+#: src/pages/settings/Preferences.tsx:19
+msgid "Avoid episode spoilers"
+msgstr "Vältä jaksojen spoilereita"
+
+#: src/pages/settings/Preferences.tsx:30
+msgid "Avoid season spoilers"
+msgstr "Vältä kausien spoilereita"
+
+#: src/components/Facets/ActiveFacetChips.tsx:74
+#: src/components/Facets/MediaTypeSection.tsx:22
+#: src/components/GridItem.tsx:92
+msgid "Book"
+msgstr "Kirja"
+
+#: src/components/Nav.tsx:40
+#: src/components/Statistics/StatisticsSegment.tsx:158
+#: src/pages/import/Goodreads.tsx:65
+msgid "Books"
+msgstr "Kirjat"
+
+#: src/components/Nav.tsx:47
+msgid "Calendar"
+msgstr "Kalenteri"
+
+#: src/components/SelectLastSeenEpisode.tsx:159
+#: src/components/SelectSeenDate.tsx:164
+#: src/components/SetProgress.tsx:129
+#: src/components/StarRating.tsx:171
+msgid "Cancel"
+msgstr "Peruuta"
+
+#: src/pages/settings/Password.tsx:76
+msgid "Change password"
+msgstr "Vaihda salasana"
+
+#: src/components/Facets/ActiveFacetChips.tsx:331
+#: src/components/Facets/FacetDrawer.tsx:72
+msgid "Clear all"
+msgstr "Tyhjennä kaikki"
+
+#: src/components/Facets/FacetPanel.tsx:38
+msgid "Clear all filters"
+msgstr "Tyhjennä kaikki suodattimet"
+
+#: src/pages/settings/Configuration.tsx:148
+msgid "Client ID"
+msgstr "Client ID"
+
+#: src/pages/settings/Configuration.tsx:156
+msgid "Client Secret"
+msgstr "Client Secret"
+
+#: src/components/AddOrEditGroupButton.tsx:70
+#: src/components/AddToListModal.tsx:105
+msgid "Close"
+msgstr "Sulje"
+
+#: src/pages/Settings.tsx:139
+msgid "Configuration"
+msgstr "Asetukset"
+
+#: src/components/Confirm.tsx:73
+msgid "Confirm"
+msgstr "Vahvista"
+
+#: src/pages/settings/Password.tsx:41
+msgid "Confirm new password"
+msgstr "Vahvista uusi salasana"
+
+#: src/pages/Register.tsx:63
+msgid "Confirm password"
+msgstr "Vahvista salasana"
+
+#: src/pages/import/TraktTv.tsx:93
+msgid "Copy to clipboard"
+msgstr "Kopioi leikepöydälle"
+
+#: src/pages/GroupsPage.tsx:32
+msgid "Create a group to share Platform Recommended results with other users."
+msgstr "Luo ryhmä jakaaksesi alustan suosittelemia tuloksia muille käyttäjille."
+
+#: src/components/AddOrEditGroupButton.tsx:66
+#: src/components/AddOrEditGroupButton.tsx:87
+msgid "Create group"
+msgstr "Luo ryhmä"
+
+#: src/components/Facets/ActiveFacetChips.tsx:51
+#: src/components/Facets/ActiveFacetChips.tsx:58
+#: src/components/Facets/CreatorSection.tsx:24
+#: src/components/Facets/CreatorSection.tsx:32
+msgid "Creator"
+msgstr "Tekijä"
+
+#: src/pages/settings/Password.tsx:22
+msgid "Current password"
+msgstr "Nykyinen salasana"
+
+#: src/pages/settings/Password.tsx:71
+msgid "Current password is incorrect"
+msgstr "Nykyinen salasana on väärä"
+
+#: src/pages/import/Goodreads.tsx:78
+msgid "Currently reading"
+msgstr "Luen parhaillaan"
+
+#: src/pages/LogsPage.tsx:122
+msgid "Debug"
+msgstr "Virheenkorjaus"
+
+#: src/pages/GroupDetailPage.tsx:359
+msgid "Delete group"
+msgstr "Poista ryhmä"
+
+#. placeholder {0}: group?.name
+#: src/pages/GroupDetailPage.tsx:276
+msgid "Delete group \"{0}\"? This action cannot be undone."
+msgstr "Poistetaanko ryhmä \"{0}\"? Tätä toimintoa ei voi kumota."
+
+#: src/components/AddOrEditListButton.tsx:246
+msgid "Delete list"
+msgstr "Poista lista"
+
+#: src/hooks/translations.ts:29
+msgid "Descending"
+msgstr "Laskeva"
+
+#: src/components/AddOrEditListButton.tsx:151
+#: src/pages/EpisodePage.tsx:53
+#: src/pages/SeasonsPage.tsx:213
+msgid "Description"
+msgstr "Kuvaus"
+
+#: src/components/Facets/ActiveFacetChips.tsx:56
+#: src/components/Facets/CreatorSection.tsx:29
+msgid "Developer"
+msgstr "Kehittäjä"
+
+#: src/components/Facets/ActiveFacetChips.tsx:49
+#: src/components/Facets/CreatorSection.tsx:22
+msgid "Director"
+msgstr "Ohjaaja"
+
+#: src/components/Nav.tsx:161
+msgid "Do you really want to logout?"
+msgstr "Haluatko todella kirjautua ulos?"
+
+#. placeholder {0}: list.name
+#: src/components/AddOrEditListButton.tsx:229
+msgid "Do you really want to remove list \"{0}\""
+msgstr "Haluatko todella poistaa listan \"{0}\"?"
+
+#: src/components/SetProgress.tsx:110
+msgid "Duration"
+msgstr "Kesto"
+
+#: src/components/AddOrEditListButton.tsx:43
+#: src/components/AddOrEditListButton.tsx:133
+msgid "Edit list"
+msgstr "Muokkaa listaa"
+
+#: src/pages/settings/Configuration.tsx:27
+msgid "Enable registration"
+msgstr "Ota rekisteröityminen käyttöön"
+
+#: src/components/SelectLastSeenEpisode.tsx:106
+msgid "Episode"
+msgstr "Jakso"
+
+#. placeholder {0}: formatEpisodeNumber( episodesMap[seenEntry.episodeId] )
+#. placeholder {1}: episodesMap[seenEntry.episodeId].title
+#: src/pages/SeenHistory.tsx:111
+msgid "Episode {0} {1}"
+msgstr "Jakso {0} {1}"
+
+#: src/components/ImportSummaryTable.tsx:93
+#: src/pages/Details.tsx:383
+msgid "Episodes"
+msgstr "Jaksot"
+
+#: src/pages/Details.tsx:449
+msgid "Episodes page"
+msgstr "Jaksot-sivu"
+
+#: src/pages/import/TraktTv.tsx:143
+#: src/pages/LogsPage.tsx:102
+msgid "Error"
+msgstr "Virhe"
+
+#: src/pages/import/TraktTv.tsx:137
+msgid "Exporting"
+msgstr "Viedään"
+
+#: src/pages/GroupDetailPage.tsx:90
+msgid "Failed to add member. They may already be in the group."
+msgstr "Jäsenen lisääminen epäonnistui. Hän saattaa olla jo ryhmässä."
+
+#: src/pages/GroupDetailPage.tsx:291
+msgid "Failed to load group. It may have been deleted."
+msgstr "Ryhmän lataaminen epäonnistui. Se on ehkä poistettu."
+
+#: src/components/Facets/FacetDrawer.tsx:61
+#: src/components/Facets/FacetMobileButton.tsx:36
+#: src/components/Facets/FacetPanel.tsx:31
+msgid "Filters"
+msgstr "Suodattimet"
+
+#: src/pages/Details.tsx:528
+msgid "First unwatched episode"
+msgstr "Ensimmäinen katsomaton jakso"
+
+#: src/components/Nav.tsx:39
+#: src/components/Statistics/StatisticsGenreSegment.tsx:20
+#: src/components/Statistics/StatisticsSegment.tsx:117
+msgid "Games"
+msgstr "Pelit"
+
+#: src/pages/settings/Configuration.tsx:25
+msgid "General"
+msgstr "Yleiset"
+
+#: src/components/Facets/ActiveFacetChips.tsx:225
+#: src/components/Facets/GenreSection.tsx:37
+msgid "Genre"
+msgstr "Genre"
+
+#: src/pages/Statistics.tsx:154
+msgid "Genres"
+msgstr "Genret"
+
+#. placeholder {0}: deviceCode.verificationUrl
+#. placeholder {1}: deviceCode.userCode
+#: src/pages/import/TraktTv.tsx:66
+msgid "Go to <0>{0}</0> and enter following code: <1>{1}</1>"
+msgstr "Mene osoitteeseen <0>{0}</0> ja syötä seuraava koodi: <1>{1}</1>"
+
+#: src/pages/import/Goodreads.tsx:34
+msgid "Go to <0>https://www.goodreads.com/review/list</0> and copy RSS url from the bottom of the page"
+msgstr "Mene osoitteeseen <0>https://www.goodreads.com/review/list</0> ja kopioi RSS-URL sivun alareunasta"
+
+#: src/pages/settings/Notifications.tsx:110
+msgid "Gotify server url"
+msgstr "Gotify-palvelimen URL"
+
+#: src/pages/GroupDetailPage.tsx:310
+msgid "Group name"
+msgstr "Ryhmän nimi"
+
+#: src/components/Nav.tsx:50
+msgid "Groups"
+msgstr "Ryhmät"
+
+#: src/pages/settings/Preferences.tsx:31
+msgid "Hide overview of unseen seasons"
+msgstr "Piilota katsomattomien kausien yleiskatsaus"
+
+#: src/pages/settings/Preferences.tsx:20
+msgid "Hide title of unseen episodes"
+msgstr "Piilota katsomattomien jaksojen otsikot"
+
+#: src/components/Nav.tsx:36
+#: src/i18n/__tests__/i18n.test.ts:65
+msgid "Home"
+msgstr "Etusivu"
+
+#: src/pages/LogsPage.tsx:117
+msgid "Http"
+msgstr "Http"
+
+#: src/pages/Details.tsx:471
+msgid "I am listening it"
+msgstr "Kuuntelen sitä"
+
+#: src/pages/Details.tsx:472
+msgid "I am playing it"
+msgstr "Pelaan sitä"
+
+#: src/pages/Details.tsx:470
+msgid "I am reading it"
+msgstr "Luen sitä"
+
+#: src/pages/Details.tsx:469
+msgid "I am watching it"
+msgstr "Katson sitä"
+
+#: src/components/SelectSeenDate.tsx:124
+#: src/pages/Statistics.tsx:26
+msgid "I do not remember"
+msgstr "En muista"
+
+#: src/pages/Details.tsx:492
+msgid "I finished listening it"
+msgstr "Lopetin kuuntelun"
+
+#: src/pages/Details.tsx:495
+msgid "I finished playing it"
+msgstr "Lopetin pelaamisen"
+
+#: src/pages/Details.tsx:490
+msgid "I finished reading it"
+msgstr "Lopetin lukemisen"
+
+#: src/pages/Details.tsx:489
+msgid "I finished watching it"
+msgstr "Lopetin katsomisen"
+
+#: src/pages/settings/Configuration.tsx:129
+msgid "IGDB credentials"
+msgstr "IGDB-tunnukset"
+
+#: src/pages/import/Goodreads.tsx:57
+msgid "import"
+msgstr "tuo"
+
+#: src/components/Nav.tsx:48
+msgid "Import"
+msgstr "Tuo"
+
+#: src/pages/Import.tsx:17
+msgid "Import from"
+msgstr "Tuo kohteesta"
+
+#: src/pages/import/TraktTv.tsx:141
+msgid "Imported"
+msgstr "Tuotu"
+
+#: src/pages/import/Goodreads.tsx:62
+#: src/pages/import/TraktTv.tsx:142
+msgid "Importing"
+msgstr "Tuodaan"
+
+#: src/components/Nav.tsx:43
+msgid "In progress"
+msgstr "Käynnissä"
+
+#: src/pages/Login.tsx:82
+msgid "Incorrect password or username"
+msgstr "Väärä salasana tai käyttäjänimi"
+
+#: src/pages/LogsPage.tsx:112
+msgid "Info"
+msgstr "Tiedot"
+
+#: src/components/Facets/StatusSection.tsx:143
+msgid "Item must match all selected statuses"
+msgstr "Kohteen on vastattava kaikkia valittuja tiloja"
+
+#: src/pages/settings/Notifications.tsx:95
+msgid "Key"
+msgstr "Avain"
+
+#: src/components/Facets/ActiveFacetChips.tsx:235
+#: src/components/Facets/LanguageSection.tsx:95
+#: src/pages/Details.tsx:330
+msgid "Language"
+msgstr "Kieli"
+
+#: src/components/OrderBy.tsx:19
+msgid "Last airing"
+msgstr "Viimeisin esitys"
+
+#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
+#: src/pages/Details.tsx:537
+msgid "Last listened at {0}"
+msgstr "Kuunneltu viimeksi {0}"
+
+#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
+#: src/pages/Details.tsx:555
+msgid "Last played at {0}"
+msgstr "Pelattu viimeksi {0}"
+
+#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
+#: src/pages/Details.tsx:543
+msgid "Last read at {0}"
+msgstr "Luettu viimeksi {0}"
+
+#: src/components/OrderBy.tsx:14
+msgid "Last seen"
+msgstr "Katsottu viimeksi"
+
+#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
+#: src/pages/Details.tsx:549
+msgid "Last seen at {0}"
+msgstr "Katsottu viimeksi {0}"
+
+#. placeholder {0}: item.listName
+#: src/pages/import/TraktTv.tsx:320
+msgid "List {0} - episodes"
+msgstr "Lista {0} – jaksot"
+
+#. placeholder {0}: item.listName
+#: src/pages/import/TraktTv.tsx:302
+msgid "List {0} - movies"
+msgstr "Lista {0} – elokuvat"
+
+#. placeholder {0}: item.listName
+#: src/pages/import/TraktTv.tsx:314
+msgid "List {0} - seasons"
+msgstr "Lista {0} – kaudet"
+
+#. placeholder {0}: item.listName
+#: src/pages/import/TraktTv.tsx:308
+msgid "List {0} - shows"
+msgstr "Lista {0} – sarjat"
+
+#. placeholder {0}: list.listName
+#: src/pages/import/TraktTv.tsx:218
+msgid "List: {0}"
+msgstr "Lista: {0}"
+
+#: src/components/Facets/ActiveFacetChips.tsx:26
+#: src/components/Facets/StatusSection.tsx:33
+#: src/components/FilterBy.tsx:18
+msgid "Listened"
+msgstr "Kuunneltu"
+
+#. placeholder {0}: seenEntry.dateStr
+#: src/pages/SeenHistory.tsx:89
+msgid "Listened at {0}"
+msgstr "Kuunneltu {0}"
+
+#: src/pages/Details.tsx:597
+msgid "Listened history"
+msgstr "Kuunteluhistoria"
+
+#: src/components/Nav.tsx:49
+msgid "Lists"
+msgstr "Listat"
+
+#: src/components/AddToListModal.tsx:49
+#: src/components/PaginatedGridItems.tsx:384
+#: src/components/SelectLastSeenEpisode.tsx:67
+#: src/pages/Calendar.tsx:61
+#: src/pages/Details.tsx:205
+#: src/pages/EpisodePage.tsx:42
+#: src/pages/GroupDetailPage.tsx:285
+#: src/pages/GroupsPage.tsx:17
+#: src/pages/import/TraktTv.tsx:116
+#: src/pages/ListPage.tsx:86
+#: src/pages/ListsPage.tsx:29
+#: src/pages/Login.tsx:17
+#: src/pages/LogsPage.tsx:27
+#: src/pages/SeasonsPage.tsx:144
+#: src/pages/SeenHistory.tsx:30
+msgid "Loading"
+msgstr "Ladataan"
+
+#: src/pages/Login.tsx:33
+#: src/pages/Login.tsx:67
+#: src/pages/Register.tsx:85
+msgid "Login"
+msgstr "Kirjaudu sisään"
+
+#: src/components/Nav.tsx:166
+#: src/i18n/__tests__/i18n.test.ts:56
+msgid "Logout"
+msgstr "Kirjaudu ulos"
+
+#: src/pages/Settings.tsx:143
+msgid "Logs"
+msgstr "Lokit"
+
+#: src/components/Facets/RatingSection.tsx:68
+msgid "Maximum rating"
+msgstr "Enimmäisarvosana"
+
+#: src/components/Facets/YearSection.tsx:92
+msgid "Maximum year"
+msgstr "Enimmäisvuosi"
+
+#: src/components/OrderBy.tsx:21
+msgid "Media type"
+msgstr "Mediatyyppi"
+
+#: src/components/Facets/ActiveFacetChips.tsx:281
+#: src/components/Facets/MediaTypeSection.tsx:117
+msgid "Media Type"
+msgstr "Mediatyyppi"
+
+#: src/pages/GroupDetailPage.tsx:328
+msgid "Members"
+msgstr "Jäsenet"
+
+#: src/components/Facets/RatingSection.tsx:67
+msgid "Minimum rating"
+msgstr "Vähimmäisarvosana"
+
+#: src/components/Facets/YearSection.tsx:91
+msgid "Minimum year"
+msgstr "Vähimmäisvuosi"
+
+#: src/components/Facets/ActiveFacetChips.tsx:70
+#: src/components/Facets/MediaTypeSection.tsx:18
+#: src/components/GridItem.tsx:93
+msgid "Movie"
+msgstr "Elokuva"
+
+#: src/components/ImportSummaryTable.tsx:90
+#: src/components/Nav.tsx:38
+#: src/components/Statistics/StatisticsGenreSegment.tsx:17
+#: src/components/Statistics/StatisticsSegment.tsx:76
+msgid "Movies"
+msgstr "Elokuvat"
+
+#: src/utils.ts:152
+msgid "Movies, shows, seasons, episodes, books, audiobooks and video games I plan to watch/read/listen/play"
+msgstr "Elokuvat, sarjat, kaudet, jaksot, kirjat, äänikirjat ja videopelit, joita aion katsoa/lukea/kuunnella/pelata"
+
+#: src/hooks/translations.ts:8
+msgid "My rating"
+msgstr "Oma arvosanani"
+
+#: src/components/AddOrEditGroupButton.tsx:51
+#: src/components/AddOrEditListButton.tsx:137
+msgid "Name"
+msgstr "Nimi"
+
+#: src/pages/Details.tsx:281
+msgid "Network"
+msgstr "Verkosto"
+
+#: src/components/AddOrEditGroupButton.tsx:47
+msgid "New group"
+msgstr "Uusi ryhmä"
+
+#: src/components/AddOrEditListButton.tsx:133
+msgid "New list"
+msgstr "Uusi lista"
+
+#: src/pages/settings/Password.tsx:32
+msgid "New password"
+msgstr "Uusi salasana"
+
+#: src/components/OrderBy.tsx:18
+#: src/hooks/translations.ts:15
+msgid "Next airing"
+msgstr "Seuraava esitys"
+
+#: src/pages/Details.tsx:515
+msgid "Next episode"
+msgstr "Seuraava jakso"
+
+#: src/pages/Home.tsx:89
+msgid "Next episode to watch"
+msgstr "Seuraava katsottava jakso"
+
+#: src/components/Confirm.tsx:78
+msgid "No"
+msgstr "Ei"
+
+#: src/pages/SeenHistory.tsx:105
+msgid "No date"
+msgstr "Ei päivämäärää"
+
+#: src/pages/GroupsPage.tsx:29
+msgid "No groups yet"
+msgstr "Ei ryhmiä vielä"
+
+#: src/pages/GroupDetailPage.tsx:333
+msgid "No members yet"
+msgstr "Ei jäseniä vielä"
+
+#: src/pages/LogsPage.tsx:68
+msgid "No more logs"
+msgstr "Ei lisää lokeja"
+
+#: src/pages/GroupDetailPage.tsx:134
+msgid "No users found"
+msgstr "Käyttäjiä ei löytynyt"
+
+#: src/pages/import/TraktTv.tsx:245
+msgid "Not imported items"
+msgstr "Tuomatta jääneet kohteet"
+
+#: src/pages/settings/Notifications.tsx:174
+msgid "Notification platform"
+msgstr "Ilmoitusalusta"
+
+#: src/pages/Settings.tsx:129
+msgid "Notifications"
+msgstr "Ilmoitukset"
+
+#: src/components/SelectSeenDate.tsx:110
+msgid "Now"
+msgstr "Nyt"
+
+#: src/pages/SeasonsPage.tsx:230
+msgid "Number of episodes"
+msgstr "Jaksojen määrä"
+
+#: src/pages/Details.tsx:366
+msgid "Number of pages"
+msgstr "Sivujen määrä"
+
+#: src/components/Facets/ActiveFacetChips.tsx:23
+#: src/components/Facets/StatusSection.tsx:57
+#: src/components/FilterBy.tsx:14
+msgid "On watchlist"
+msgstr "Seurantalistalla"
+
+#: src/pages/Details.tsx:321
+msgid "Overview"
+msgstr "Yleiskatsaus"
+
+#: src/pages/Login.tsx:53
+#: src/pages/Register.tsx:49
+#: src/pages/Settings.tsx:119
+msgid "Password"
+msgstr "Salasana"
+
+#: src/pages/settings/Password.tsx:67
+msgid "Password has been changed"
+msgstr "Salasana on vaihdettu"
+
+#: src/pages/settings/Password.tsx:56
+msgid "Passwords do not match"
+msgstr "Salasanat eivät täsmää"
+
+#: src/pages/settings/Notifications.tsx:186
+msgid "Platform"
+msgstr "Alusta"
+
+#: src/components/OrderBy.tsx:24
+#: src/hooks/translations.ts:17
+msgid "Platform Recommended"
+msgstr "Alustan suosittelema"
+
+#: src/components/Facets/ActiveFacetChips.tsx:32
+#: src/components/Facets/StatusSection.tsx:39
+#: src/components/FilterBy.tsx:22
+msgid "Played"
+msgstr "Pelattu"
+
+#. placeholder {0}: seenEntry.dateStr
+#: src/pages/SeenHistory.tsx:101
+msgid "Played at {0}"
+msgstr "Pelattu {0}"
+
+#: src/pages/Details.tsx:605
+msgid "Played history"
+msgstr "Pelihistoria"
+
+#: src/pages/Settings.tsx:133
+msgid "Preferences"
+msgstr "Asetukset"
+
+#: src/pages/settings/Notifications.tsx:257
+#: src/pages/settings/Notifications.tsx:262
+msgid "Priority"
+msgstr "Prioriteetti"
+
+#: src/components/AddOrEditListButton.tsx:161
+#: src/components/AddOrEditListButton.tsx:166
+msgid "Privacy"
+msgstr "Yksityisyys"
+
+#: src/hooks/translations.ts:22
+msgid "Private"
+msgstr "Yksityinen"
+
+#: src/components/OrderBy.tsx:22
+#: src/pages/Details.tsx:500
+msgid "Progress"
+msgstr "Edistyminen"
+
+#: src/hooks/translations.ts:23
+msgid "Public"
+msgstr "Julkinen"
+
+#: src/pages/settings/Preferences.tsx:12
+msgid "Public reviews"
+msgstr "Julkiset arvostelut"
+
+#: src/components/Facets/ActiveFacetChips.tsx:269
+#: src/components/Facets/PublisherSection.tsx:53
+msgid "Publisher"
+msgstr "Julkaisija"
+
+#: src/components/Nav.tsx:45
+msgid "Random"
+msgstr "Satunnainen"
+
+#: src/pages/Random.tsx:107
+msgid "Random Audiobook"
+msgstr "Satunnainen äänikirja"
+
+#: src/pages/Random.tsx:94
+msgid "Random Book"
+msgstr "Satunnainen kirja"
+
+#: src/pages/Random.tsx:55
+msgid "Random Movie"
+msgstr "Satunnainen elokuva"
+
+#: src/pages/Random.tsx:68
+msgid "Random Tv Show"
+msgstr "Satunnainen TV-sarja"
+
+#: src/pages/Random.tsx:81
+msgid "Random Video Game"
+msgstr "Satunnainen videopeli"
+
+#: src/components/Facets/ActiveFacetChips.tsx:19
+#: src/components/Facets/StatusSection.tsx:53
+#: src/components/FilterBy.tsx:12
+msgid "Rated"
+msgstr "Arvosteltu"
+
+#: src/components/Facets/ActiveFacetChips.tsx:316
+#: src/components/Facets/RatingSection.tsx:57
+#: src/pages/import/Goodreads.tsx:83
+msgid "Rating"
+msgstr "Arvosana"
+
+#: src/pages/import/TraktTv.tsx:202
+msgid "Ratings"
+msgstr "Arvosanat"
+
+#: src/pages/import/TraktTv.tsx:294
+msgid "Ratings - episodes"
+msgstr "Arvosanat – jaksot"
+
+#: src/pages/import/TraktTv.tsx:279
+msgid "Ratings - movies"
+msgstr "Arvosanat – elokuvat"
+
+#: src/pages/import/TraktTv.tsx:289
+msgid "Ratings - seasons"
+msgstr "Arvosanat – kaudet"
+
+#: src/pages/import/TraktTv.tsx:284
+msgid "Ratings - shows"
+msgstr "Arvosanat – sarjat"
+
+#: src/components/Facets/ActiveFacetChips.tsx:29
+#: src/components/Facets/StatusSection.tsx:36
+#: src/components/FilterBy.tsx:20
+#: src/pages/import/Goodreads.tsx:68
+msgid "Read"
+msgstr "Luettu"
+
+#. placeholder {0}: seenEntry.dateStr
+#: src/pages/SeenHistory.tsx:93
+msgid "Read at {0}"
+msgstr "Luettu {0}"
+
+#: src/pages/Details.tsx:599
+msgid "Read history"
+msgstr "Lukuhistoria"
+
+#: src/pages/settings/Notifications.tsx:46
+msgid "Receive notification for all media items on your watchlist, when its release date changes"
+msgstr "Vastaanota ilmoituksia kaikista seurantalistasi kohteista, kun niiden julkaisupäivä muuttuu"
+
+#: src/pages/settings/Notifications.tsx:38
+msgid "Receive notification for all media items on your watchlist, when its status changes"
+msgstr "Vastaanota ilmoituksia kaikista seurantalistasi kohteista, kun niiden tila muuttuu"
+
+#: src/pages/settings/Notifications.tsx:24
+msgid "Receive notification for all media items on your watchlist, when they are released, including new seasons for tv shows"
+msgstr "Vastaanota ilmoituksia kaikista seurantalistasi kohteista, kun ne julkaistaan, mukaan lukien TV-sarjojen uudet kaudet"
+
+#: src/pages/settings/Notifications.tsx:54
+msgid "Receive notification for all tv shows on your watchlist, when its number of seasons changes"
+msgstr "Vastaanota ilmoituksia kaikista seurantalistasi TV-sarjoista, kun kausien määrä muuttuu"
+
+#: src/pages/settings/Notifications.tsx:30
+msgid "Receive notification for every episode for all tv shows on your watchlist, when it's released"
+msgstr "Vastaanota ilmoituksia kaikista seurantalistasi TV-sarjojen jaksoista, kun ne julkaistaan"
+
+#: src/hooks/translations.ts:9
+msgid "Recently added"
+msgstr "Äskettäin lisätty"
+
+#: src/hooks/translations.ts:11
+msgid "Recently aired"
+msgstr "Äskettäin esitetty"
+
+#: src/pages/Home.tsx:104
+msgid "Recently released"
+msgstr "Äskettäin julkaistu"
+
+#: src/hooks/translations.ts:10
+msgid "Recently watched"
+msgstr "Äskettäin katsottu"
+
+#: src/components/OrderBy.tsx:23
+#: src/hooks/translations.ts:16
+msgid "Recommended"
+msgstr "Suositeltu"
+
+#: src/pages/Login.tsx:75
+#: src/pages/Register.tsx:29
+#: src/pages/Register.tsx:77
+msgid "Register"
+msgstr "Rekisteröidy"
+
+#: src/components/GridItem.tsx:245
+msgid "Release <0/>"
+msgstr "Julkaisu <0/>"
+
+#: src/components/OrderBy.tsx:15
+#: src/hooks/translations.ts:12
+#: src/pages/Details.tsx:232
+#: src/pages/EpisodePage.tsx:80
+msgid "Release date"
+msgstr "Julkaisupäivä"
+
+#: src/components/GridItem.tsx:263
+msgid "Released <0/>"
+msgstr "Julkaistu <0/>"
+
+#: src/pages/GroupDetailPage.tsx:203
+msgid "Remove"
+msgstr "Poista"
+
+#. placeholder {0}: mediaItem.title
+#. placeholder {1}: season ? ' ' + formatSeasonNumber(season) : episode ? ' ' + formatEpisodeNumber(episode) : ''
+#: src/components/GridItem.tsx:136
+msgid "Remove \"{0}{1}\" from watchlist?"
+msgstr "Poista \"{0}{1}\" seurantalistalta?"
+
+#. placeholder {0}: member.name
+#: src/pages/GroupDetailPage.tsx:201
+msgid "Remove {0}"
+msgstr "Poista {0}"
+
+#. placeholder {0}: member.name
+#: src/pages/GroupDetailPage.tsx:168
+msgid "Remove {0} from this group?"
+msgstr "Poistetaanko {0} tästä ryhmästä?"
+
+#: src/components/Facets/ActiveFacetChips.tsx:107
+msgid "Remove {dimensionLabel}: {value} filter"
+msgstr "Poista suodatin {dimensionLabel}: {value}"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:131
+msgid "Remove episode from seen history"
+msgstr "Poista jakso katseluhistoriasta"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:125
+msgid "Remove from listened history"
+msgstr "Poista kuunteluhistoriasta"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:127
+msgid "Remove from played history"
+msgstr "Poista pelihistoriasta"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:126
+msgid "Remove from read history"
+msgstr "Poista lukuhistoriasta"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:128
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:135
+msgid "Remove from seen history"
+msgstr "Poista katseluhistoriasta"
+
+#: src/pages/Details.tsx:670
+msgid "Remove from watchlist"
+msgstr "Poista seurantalistalta"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:133
+msgid "Remove season from seen history"
+msgstr "Poista kausi katseluhistoriasta"
+
+#: src/pages/settings/ApplicationTokens.tsx:50
+msgid "Remove token"
+msgstr "Poista tunnus"
+
+#: src/pages/Details.tsx:65
+msgid "Review by <0><1>{author}</1></0> at {date}"
+msgstr "Arvostelu: <0><1>{author}</1></0>, päivämäärä: {date}"
+
+#. placeholder {0}: member.name
+#: src/pages/GroupDetailPage.tsx:191
+msgid "Role for {0}"
+msgstr "Rooli käyttäjälle {0}"
+
+#: src/pages/import/Goodreads.tsx:48
+msgid "RSS link"
+msgstr "RSS-linkki"
+
+#: src/hooks/translations.ts:13
+#: src/pages/Details.tsx:243
+#: src/pages/EpisodePage.tsx:71
+msgid "Runtime"
+msgstr "Kesto"
+
+#. placeholder {0}: season.seasonNumber.toString().padStart(2, '0')
+#: src/utils.ts:19
+msgid "S{0}"
+msgstr "K{0}"
+
+#. placeholder {0}: tvEpisode.seasonNumber .toString() .padStart(2, '0')
+#. placeholder {1}: tvEpisode.episodeNumber.toString().padStart(2, '0')
+#: src/utils.ts:13
+msgid "S{0}E{1}"
+msgstr "K{0}J{1}"
+
+#: src/pages/settings/Configuration.tsx:165
+#: src/pages/settings/Notifications.tsx:280
+msgid "Save"
+msgstr "Tallenna"
+
+#: src/components/AddOrEditListButton.tsx:219
+msgid "Save list"
+msgstr "Tallenna lista"
+
+#: src/components/StarRating.tsx:168
+msgid "Save review"
+msgstr "Tallenna arvostelu"
+
+#: src/components/PaginatedGridItems.tsx:63
+msgid "Search"
+msgstr "Hae"
+
+#: src/pages/GroupDetailPage.tsx:103
+msgid "Search by username…"
+msgstr "Hae käyttäjänimen mukaan…"
+
+#: src/components/PaginatedGridItems.tsx:304
+msgid "Search for items or <0>import</0>"
+msgstr "Search for items or <0>import</0>"
+
+#: src/pages/ListPage.tsx:124
+msgid "Search list"
+msgstr "Hae listalta"
+
+#: src/pages/GroupDetailPage.tsx:107
+msgid "Search users to add"
+msgstr "Hae käyttäjiä lisättäväksi"
+
+#: src/pages/GroupDetailPage.tsx:112
+msgid "Searching…"
+msgstr "Haetaan…"
+
+#: src/components/SelectLastSeenEpisode.tsx:83
+msgid "Season"
+msgstr "Kausi"
+
+#. placeholder {0}: season.seasonNumber
+#: src/pages/SeasonsPage.tsx:177
+msgid "Season {0}"
+msgstr "Kausi {0}"
+
+#: src/components/ImportSummaryTable.tsx:92
+#: src/pages/Details.tsx:376
+msgid "Seasons"
+msgstr "Kaudet"
+
+#: src/pages/Statistics.tsx:149
+msgid "Seen"
+msgstr "Katsottu"
+
+#. placeholder {0}: seenEntry.dateStr
+#: src/pages/SeenHistory.tsx:97
+msgid "Seen at {0}"
+msgstr "Katsottu {0}"
+
+#: src/pages/Details.tsx:602
+#: src/pages/import/TraktTv.tsx:191
+msgid "Seen history"
+msgstr "Katseluhistoria"
+
+#: src/pages/import/TraktTv.tsx:274
+msgid "Seen history - episodes"
+msgstr "Katseluhistoria – jaksot"
+
+#: src/pages/import/TraktTv.tsx:269
+msgid "Seen history - movies"
+msgstr "Katseluhistoria – elokuvat"
+
+#: src/components/SelectLastSeenEpisode.tsx:135
+msgid "Select"
+msgstr "Valitse"
+
+#: src/components/SelectSeenDate.tsx:160
+msgid "Select date"
+msgstr "Valitse päivämäärä"
+
+#: src/pages/settings/Notifications.tsx:265
+msgid "Select priority"
+msgstr "Valitse prioriteetti"
+
+#: src/pages/Statistics.tsx:195
+msgid "Select year"
+msgstr "Valitse vuosi"
+
+#: src/pages/Statistics.tsx:207
+msgid "Select Year"
+msgstr "Valitse vuosi"
+
+#: src/pages/settings/Notifications.tsx:29
+msgid "Send notification for episodes releases"
+msgstr "Lähetä ilmoitus jaksojen julkaisuista"
+
+#: src/pages/settings/Notifications.tsx:23
+msgid "Send notification for releases"
+msgstr "Lähetä ilmoitus julkaisuista"
+
+#: src/pages/settings/Notifications.tsx:53
+msgid "Send notification when number of seasons changes"
+msgstr "Lähetä ilmoitus, kun kausien määrä muuttuu"
+
+#: src/pages/settings/Notifications.tsx:45
+msgid "Send notification when release date changes"
+msgstr "Lähetä ilmoitus, kun julkaisupäivä muuttuu"
+
+#: src/pages/settings/Notifications.tsx:37
+msgid "Send notification when status changes"
+msgstr "Lähetä ilmoitus, kun tila muuttuu"
+
+#: src/App.tsx:101
+msgid "Server error: {errorMessage}"
+msgstr "Palvelinvirhe: {errorMessage}"
+
+#: src/pages/settings/Configuration.tsx:35
+#: src/pages/settings/Configuration.tsx:42
+msgid "Server language"
+msgstr "Palvelimen kieli"
+
+#: src/pages/settings/Notifications.tsx:146
+msgid "Server url (only for self hosting)"
+msgstr "Palvelimen URL (vain oman palvelimen käyttöön)"
+
+#: src/components/SetProgress.tsx:125
+msgid "Set"
+msgstr "Aseta"
+
+#: src/components/SetProgress.tsx:61
+#: src/pages/Details.tsx:705
+msgid "Set progress"
+msgstr "Aseta edistyminen"
+
+#: src/pages/Settings.tsx:76
+msgid "Settings"
+msgstr "Asetukset"
+
+#: src/components/Facets/ExpandableList.tsx:33
+msgid "Show less"
+msgstr "Näytä vähemmän"
+
+#: src/components/Facets/ExpandableList.tsx:33
+msgid "Show more"
+msgstr "Näytä lisää"
+
+#: src/pages/settings/Preferences.tsx:13
+msgid "Show your reviews to other users"
+msgstr "Näytä arvosteluisi muille käyttäjille"
+
+#: src/components/ImportSummaryTable.tsx:91
+msgid "Shows"
+msgstr "Sarjat"
+
+#: src/components/AddOrEditListButton.tsx:180
+#: src/components/AddOrEditListButton.tsx:185
+msgid "Sort by"
+msgstr "Järjestä"
+
+#: src/components/AddOrEditListButton.tsx:199
+#: src/components/AddOrEditListButton.tsx:204
+msgid "Sort order"
+msgstr "Järjestys"
+
+#: src/pages/Details.tsx:401
+msgid "Source"
+msgstr "Lähde"
+
+#: src/pages/import/TraktTv.tsx:110
+msgid "Start over"
+msgstr "Aloita alusta"
+
+#: src/components/Nav.tsx:46
+#: src/pages/Statistics.tsx:111
+msgid "Statistics"
+msgstr "Tilastot"
+
+#: src/components/Facets/ActiveFacetChips.tsx:293
+#: src/components/Facets/StatusSection.tsx:116
+#: src/components/OrderBy.tsx:16
+#: src/pages/Details.tsx:290
+msgid "Status"
+msgstr "Tila"
+
+#: src/components/ImportSummaryTable.tsx:84
+#: src/components/ImportSummaryTable.tsx:135
+msgid "Summary"
+msgstr "Yhteenveto"
+
+#: src/components/AddOrEditListButton.tsx:105
+msgid "There already exists a list with name \"{name}\""
+msgstr "Lista nimellä \"{name}\" on jo olemassa"
+
+#: src/pages/SeasonsPage.tsx:152
+msgid "This component can only be used with tv shows"
+msgstr "Tätä komponenttia voi käyttää vain TV-sarjojen kanssa"
+
+#: src/components/OrderBy.tsx:17
+#: src/hooks/translations.ts:14
+msgid "Title"
+msgstr "Otsikko"
+
+#: src/pages/settings/Configuration.tsx:88
+#: src/pages/settings/Configuration.tsx:95
+msgid "TMDB language"
+msgstr "TMDB-kieli"
+
+#: src/pages/import/Goodreads.tsx:73
+msgid "To read"
+msgstr "Luettavaa"
+
+#: src/pages/settings/Notifications.tsx:142
+msgid "Topic"
+msgstr "Aihe"
+
+#: src/pages/Details.tsx:254
+msgid "Total runtime"
+msgstr "Kokonaiskesto"
+
+#: src/components/GridItem.tsx:94
+#: src/components/Nav.tsx:37
+#: src/components/Statistics/StatisticsGenreSegment.tsx:16
+#: src/components/Statistics/StatisticsSegment.tsx:35
+msgid "Tv"
+msgstr "TV"
+
+#: src/components/Facets/ActiveFacetChips.tsx:72
+#: src/components/Facets/MediaTypeSection.tsx:20
+msgid "TV Show"
+msgstr "TV-sarja"
+
+#: src/pages/import/TraktTv.tsx:138
+msgid "Uninitialized"
+msgstr "Alustamaton"
+
+#: src/components/Facets/ActiveFacetChips.tsx:21
+#: src/components/Facets/StatusSection.tsx:55
+#: src/components/FilterBy.tsx:13
+#: src/pages/Home.tsx:122
+msgid "Unrated"
+msgstr "Arvostelematon"
+
+#: src/pages/Details.tsx:391
+msgid "Unseen episodes"
+msgstr "Katsomat jaksot"
+
+#: src/components/OrderBy.tsx:20
+msgid "Unseen episodes count"
+msgstr "Katsomattomien jaksojen määrä"
+
+#: src/components/Nav.tsx:42
+#: src/pages/Home.tsx:75
+msgid "Upcoming"
+msgstr "Tulossa"
+
+#: src/pages/Details.tsx:691
+msgid "Update metadata"
+msgstr "Päivitä metatiedot"
+
+#: src/pages/import/TraktTv.tsx:139
+msgid "Updating metadata"
+msgstr "Päivitetään metatietoja"
+
+#: src/pages/Login.tsx:38
+#: src/pages/Register.tsx:34
+msgid "Username"
+msgstr "Käyttäjänimi"
+
+#: src/pages/settings/About.tsx:11
+msgid "Version"
+msgstr "Versio"
+
+#: src/components/Facets/ActiveFacetChips.tsx:78
+#: src/components/Facets/MediaTypeSection.tsx:26
+#: src/components/GridItem.tsx:95
+msgid "Video game"
+msgstr "Videopeli"
+
+#: src/pages/GroupDetailPage.tsx:194
+#: src/pages/GroupDetailPage.tsx:208
+#: src/pages/GroupDetailPage.tsx:321
+#: src/pages/GroupsPage.tsx:50
+msgid "Viewer"
+msgstr "Katsoja"
+
+#: src/pages/import/TraktTv.tsx:140
+msgid "Waiting for authentication"
+msgstr "Odotetaan todennusta"
+
+#: src/pages/LogsPage.tsx:107
+msgid "Warning"
+msgstr "Varoitus"
+
+#: src/components/Facets/ActiveFacetChips.tsx:34
+#: src/components/Facets/StatusSection.tsx:41
+#: src/components/FilterBy.tsx:23
+msgid "Watched"
+msgstr "Katsottu"
+
+#: src/components/Nav.tsx:44
+#: src/pages/import/TraktTv.tsx:176
+#: src/utils.ts:157
+msgid "Watchlist"
+msgstr "Seurantalista"
+
+#: src/pages/import/TraktTv.tsx:264
+msgid "Watchlist - episodes"
+msgstr "Seurantalista – jaksot"
+
+#: src/pages/import/TraktTv.tsx:249
+msgid "Watchlist - movies"
+msgstr "Seurantalista – elokuvat"
+
+#: src/pages/import/TraktTv.tsx:259
+msgid "Watchlist - season"
+msgstr "Seurantalista – kausi"
+
+#: src/pages/import/TraktTv.tsx:254
+msgid "Watchlist - shows"
+msgstr "Seurantalista – sarjat"
+
+#: src/pages/settings/Notifications.tsx:127
+msgid "Webhook URL"
+msgstr "Webhook URL"
+
+#. placeholder {0}: season ? `${tvShow.title} ${formatSeasonNumber(season)}` : tvShow.title
+#: src/components/SelectLastSeenEpisode.tsx:71
+msgid "What is the last episode of \"{0}\" you see?"
+msgstr "Mikä on sarjan \"{0}\" viimeisin katsomasi jakso?"
+
+#. placeholder {0}: mediaItem.title
+#: src/components/SelectSeenDate.tsx:78
+msgid "When did you listen to \"{0}\"?"
+msgstr "Milloin kuuntelit teoksen \"{0}\"?"
+
+#. placeholder {0}: mediaItem.title
+#: src/components/SelectSeenDate.tsx:100
+msgid "When did you play \"{0}\"?"
+msgstr "Milloin pelasit peliä \"{0}\"?"
+
+#. placeholder {0}: mediaItem.title
+#: src/components/SelectSeenDate.tsx:82
+msgid "When did you read \"{0}\"?"
+msgstr "Milloin luit teoksen \"{0}\"?"
+
+#. placeholder {0}: episode ? `${mediaItem.title} ${formatEpisodeNumber(episode)}` : mediaItem.title
+#. placeholder {0}: mediaItem.title
+#: src/components/SelectSeenDate.tsx:86
+#: src/components/SelectSeenDate.tsx:90
+msgid "When did you see \"{0}\"?"
+msgstr "Milloin katsoit teoksen \"{0}\"?"
+
+#: src/pages/Details.tsx:125
+msgid "Where to watch"
+msgstr "Mistä katsoa"
+
+#: src/components/Facets/ActiveFacetChips.tsx:304
+#: src/components/Facets/YearSection.tsx:81
+msgid "Year"
+msgstr "Vuosi"
+
+#: src/components/Confirm.tsx:81
+msgid "Yes"
+msgstr "Kyllä"
+
+#: src/pages/GroupDetailPage.tsx:319
+msgid "Your role:"
+msgstr "Roolisi:"

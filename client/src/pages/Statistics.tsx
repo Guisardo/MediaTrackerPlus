@@ -13,6 +13,13 @@ import {
 import { SettingsSegment } from 'src/components/SettingsSegment';
 import StatisticsSeen from 'src/components/Statistics/Seen';
 import StatsticsGenre from 'src/components/Statistics/Genre';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from 'src/components/ui/select';
 
 export const noyear = () => {
   return {
@@ -28,7 +35,7 @@ export const allYear = () => {
   };
 };
 
-const StatisticsPage = (): JSX.Element => {
+const StatisticsPage = (): React.JSX.Element => {
   const [years, setYears] = useState<(number | string)[]>([]);
   const [currentYear, setCurrentYear] =
     useState<Statistics.StatisticsSeeninyearList.RequestQuery>({
@@ -99,18 +106,22 @@ const StatisticsPageLayout = () => {
   return (
     <>
       {route ? (
-        <>
-          <div className="text-4xl">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="text-2xl font-bold tracking-tight mb-4">
             <Trans>Statistics</Trans>
           </div>
           <div className="flex flex-col mt-2 sm:flex-row">
-            <div className="flex flex-col px-3 border rounded sm:shrink-0 max-w-fit h-fit">
+            <div className="flex flex-col px-3 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-900 shadow-sm sm:shrink-0 max-w-fit h-fit">
               {routeTitles.map(({ path, name }) => (
                 <NavLink
                   key={path}
                   to={path}
                   className={({ isActive }) =>
-                    clsx('my-2 cursor-pointer text', isActive && 'underline ')
+                    clsx(
+                      'my-2 cursor-pointer text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100',
+                      isActive &&
+                        'font-semibold text-zinc-900 dark:text-zinc-50 underline'
+                    )
                   }
                 >
                   {name}
@@ -123,7 +134,7 @@ const StatisticsPageLayout = () => {
               </SettingsSegment>
             </div>
           </div>
-        </>
+        </div>
       ) : (
         <Outlet />
       )}
@@ -167,26 +178,32 @@ export const YearSelector = (props: IStatistocsProps) => {
   }
 
   return (
-    <div className="flex mb-2">
-      <select
-        className="mr-1"
-        value={currentYear}
-        onChange={(e) => {
-          let value = e.target.value;
-          if (value == noyear().text) {
-            value = noyear().id;
+    <div className="flex mb-2 items-center gap-2">
+      <Select
+        value={String(currentYear)}
+        onValueChange={(value) => {
+          let resolvedValue: string | null = value;
+          if (resolvedValue == noyear().text) {
+            resolvedValue = noyear().id;
           }
-          if (value == allYear().text) {
-            value = null;
+          if (resolvedValue == allYear().text) {
+            resolvedValue = null;
           }
-          props.onYearChange({ year: value });
+          props.onYearChange({ year: resolvedValue });
         }}
       >
-        {props.years.map((year) => {
-          return <option key={year}>{year}</option>;
-        })}
-      </select>
-      <div className="font-bold" style={{ lineHeight: 2 }}>
+        <SelectTrigger aria-label={t`Select year`} className="w-fit">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {props.years.map((year) => (
+            <SelectItem key={year} value={String(year)}>
+              {year}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <div className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
         <Trans>Select Year</Trans>
       </div>
     </div>

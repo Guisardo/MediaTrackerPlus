@@ -7,6 +7,7 @@
  *  - @lingui/react      – Trans / useLingui passthrough
  *  - react-router-dom   – MemoryRouter + mock navigate
  *  - src/components/date – FormatDuration renders milliseconds as text
+ *  - src/components/ui/card – Card / CardContent passthrough
  */
 
 import React from 'react';
@@ -45,6 +46,16 @@ jest.mock('src/components/date', () => ({
     return React.createElement('span', null, String(milliseconds));
   },
 }));
+
+jest.mock('src/components/ui/card', () => {
+  const React = require('react');
+  return {
+    Card: ({ children, className }: any) =>
+      React.createElement('div', { 'data-testid': 'card', className }, children),
+    CardContent: ({ children, className }: any) =>
+      React.createElement('div', { 'data-testid': 'card-content', className }, children),
+  };
+});
 
 import StatisticsSegmant from 'src/components/Statistics/StatisticsSegment';
 
@@ -134,13 +145,13 @@ describe('StatisticsSegmant', () => {
     expect(divs.length).toBe(1);
   });
 
-  it('renders tv section content when plays > 0', () => {
+  it('renders tv section card when plays > 0', () => {
     const { container } = renderComponent({
       tv: { plays: 10, episodes: 20, items: 5, duration: 0 },
     });
-    // The TV section should be present with at least one div
-    const tvSection = container.querySelector('.mb-6');
-    expect(tvSection).toBeInTheDocument();
+    // The TV section should be present as a card
+    const card = container.querySelector('[data-testid="card"]');
+    expect(card).toBeInTheDocument();
   });
 
   it('navigates to /statistics/seen/tv when TV heading clicked (with year)', () => {
@@ -193,5 +204,21 @@ describe('StatisticsSegmant', () => {
     expect(screen.getByText('Tv')).toBeInTheDocument();
     expect(screen.getByText('Movies')).toBeInTheDocument();
     expect(screen.getByText('Books')).toBeInTheDocument();
+  });
+
+  it('renders section headings with font-semibold class', () => {
+    const { container } = renderComponent({
+      tv: { plays: 5, episodes: 10, items: 3, duration: 0 },
+    });
+    const heading = container.querySelector('.text-lg.font-semibold');
+    expect(heading).toBeInTheDocument();
+  });
+
+  it('renders metadata text with zinc color classes', () => {
+    const { container } = renderComponent({
+      tv: { plays: 5, episodes: 10, items: 3, duration: 0 },
+    });
+    const metadataDiv = container.querySelector('.text-sm.text-zinc-600');
+    expect(metadataDiv).toBeInTheDocument();
   });
 });

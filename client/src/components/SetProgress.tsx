@@ -4,6 +4,7 @@ import { Plural, Trans } from '@lingui/macro';
 import { MediaItemItemsResponse, MediaType } from 'mediatracker-api';
 import { addToProgress } from 'src/api/details';
 import { isAudiobook, isBook, isMovie, isVideoGame } from 'src/utils';
+import { Button } from 'src/components/ui/button';
 
 const InputComponent: FunctionComponent<{
   max: number;
@@ -120,13 +121,13 @@ export const SetProgressComponent: FunctionComponent<{
           </div>
         )}
 
-        <button className="w-full btn">
+        <Button variant="outline" className="w-full">
           <Trans>Set</Trans>
-        </button>
+        </Button>
       </form>
-      <div className="w-full mt-3 btn-red" onClick={() => closeModal()}>
+      <Button variant="destructive" className="w-full mt-3" onClick={() => closeModal()}>
         <Trans>Cancel</Trans>
-      </div>
+      </Button>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { queryClient } from 'src/App';
 import {
   MediaItemItemsResponse,
@@ -18,9 +18,10 @@ const getDetails = async (mediaItemId: number) => {
 };
 
 export const useDetails = (mediaItemId: number) => {
-  const { isLoading, error, data } = useQuery(detailsKey(mediaItemId), () =>
-    getDetails(mediaItemId)
-  );
+  const { isLoading, error, data } = useQuery({
+    queryKey: detailsKey(mediaItemId),
+    queryFn: () => getDetails(mediaItemId),
+  });
 
   return {
     isLoading: isLoading,
@@ -30,23 +31,21 @@ export const useDetails = (mediaItemId: number) => {
 };
 
 export const useUpdateMetadata = (mediaItemId: number) => {
-  const mutation = useMutation(
-    () => mediaTrackerApi.details.updateMetadata(mediaItemId),
-    {
-      onSuccess: () => queryClient.invalidateQueries(detailsKey(mediaItemId)),
-    }
-  );
+  const mutation = useMutation({
+    mutationFn: () => mediaTrackerApi.details.updateMetadata(mediaItemId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: detailsKey(mediaItemId) }),
+  });
 
   return {
     updateMetadata: mutation.mutate,
-    isLoading: mutation.isLoading,
+    isLoading: mutation.isPending,
     isError: mutation.isError,
   };
 };
 
 const updateMediaItem = async (mediaItem: MediaItemItemsResponse) => {
   const key = detailsKey(mediaItem.id);
-  await queryClient.invalidateQueries(key, { refetchInactive: true });
+  await queryClient.invalidateQueries({ queryKey: key, refetchType: 'all' });
 
   const updatedMediaItem =
     queryClient.getQueryData<MediaItemItemsResponse>(key) ||
@@ -57,7 +56,7 @@ const updateMediaItem = async (mediaItem: MediaItemItemsResponse) => {
   };
 
   queryClient.setQueriesData(
-    ['items'],
+    { queryKey: ['items'] },
     (items: Items.Paginated.ResponseBody) => {
       return {
         ...items,
@@ -66,14 +65,14 @@ const updateMediaItem = async (mediaItem: MediaItemItemsResponse) => {
     }
   );
 
-  queryClient.setQueriesData(['listItems'], (items: ListItemsResponse) => {
+  queryClient.setQueriesData({ queryKey: ['listItems'] }, (items: ListItemsResponse) => {
     return items?.map((item) => ({
       ...item,
       mediaItem: updater(item.mediaItem),
     }));
   });
 
-  queryClient.setQueriesData(['search'], (data: MediaItemItemsResponse[]) => {
+  queryClient.setQueriesData({ queryKey: ['search'] }, (data: MediaItemItemsResponse[]) => {
     return data?.map(updater);
   });
 };
@@ -103,7 +102,7 @@ export const setRating = async (
   });
 
   await updateMediaItem(mediaItem);
-  queryClient.setQueriesData(['listItems'], (items: ListItemsResponse) => {
+  queryClient.setQueriesData({ queryKey: ['listItems'] }, (items: ListItemsResponse) => {
     return items.map((item) => {
       if (item.mediaItem.id === mediaItem.id) {
         const userRating = {
@@ -159,13 +158,13 @@ export const removeFromWatchlist = async (args: {
   if (!season && !episode) {
     await updateMediaItem(mediaItem);
   } else {
-    queryClient.invalidateQueries(['details']);
-    queryClient.invalidateQueries(['items']);
+    queryClient.invalidateQueries({ queryKey: ['details'] });
+    queryClient.invalidateQueries({ queryKey: ['items'] });
   }
 
-  queryClient.invalidateQueries(['list']);
-  queryClient.invalidateQueries(['lists']);
-  queryClient.invalidateQueries(['listItems']);
+  queryClient.invalidateQueries({ queryKey: ['list'] });
+  queryClient.invalidateQueries({ queryKey: ['lists'] });
+  queryClient.invalidateQueries({ queryKey: ['listItems'] });
 };
 
 export const addToWatchlist = async (args: {
@@ -184,13 +183,13 @@ export const addToWatchlist = async (args: {
   if (!season && !episode) {
     await updateMediaItem(mediaItem);
   } else {
-    queryClient.invalidateQueries(['details']);
-    queryClient.invalidateQueries(['items']);
+    queryClient.invalidateQueries({ queryKey: ['details'] });
+    queryClient.invalidateQueries({ queryKey: ['items'] });
   }
 
-  queryClient.invalidateQueries(['list']);
-  queryClient.invalidateQueries(['lists']);
-  queryClient.invalidateQueries(['listItems']);
+  queryClient.invalidateQueries({ queryKey: ['list'] });
+  queryClient.invalidateQueries({ queryKey: ['lists'] });
+  queryClient.invalidateQueries({ queryKey: ['listItems'] });
 };
 
 export const addToProgress = async (args: {
@@ -207,8 +206,8 @@ export const addToProgress = async (args: {
     duration: duration,
   });
 
-  queryClient.invalidateQueries(detailsKey(mediaItemId));
-  queryClient.invalidateQueries(['items']);
+  queryClient.invalidateQueries({ queryKey: detailsKey(mediaItemId) });
+  queryClient.invalidateQueries({ queryKey: ['items'] });
 };
 
 export const markAsSeen = async (args: {
@@ -227,7 +226,7 @@ export const markAsSeen = async (args: {
   });
 
   await updateMediaItem(args.mediaItem);
-  queryClient.invalidateQueries(['items']);
+  queryClient.invalidateQueries({ queryKey: ['items'] });
 };
 
 export const setLastSeenEpisode = async (args: {
@@ -246,7 +245,7 @@ export const setLastSeenEpisode = async (args: {
   });
 
   await updateMediaItem(args.mediaItem);
-  queryClient.invalidateQueries(['items']);
+  queryClient.invalidateQueries({ queryKey: ['items'] });
 };
 
 export const markAsUnseen = async (args: {
@@ -266,7 +265,7 @@ export const markAsUnseen = async (args: {
   }
 
   await updateMediaItem(args.mediaItem);
-  queryClient.invalidateQueries(['items']);
+  queryClient.invalidateQueries({ queryKey: ['items'] });
 };
 
 export const removeFromSeenHistory = async (
@@ -276,5 +275,5 @@ export const removeFromSeenHistory = async (
     mediaItemId: mediaItem.id,
   });
   await updateMediaItem(mediaItem);
-  queryClient.invalidateQueries(['items']);
+  queryClient.invalidateQueries({ queryKey: ['items'] });
 };

@@ -1,10 +1,18 @@
-import React, { FunctionComponent, useEffect, useRef } from 'react';
+import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { t, Trans } from '@lingui/macro';
 import { User } from 'mediatracker-api';
 import { useNotificationPlatformsCredentials } from 'src/api/notificationPlatformsCredentials';
 import { useUser } from 'src/api/user';
 import { CheckboxWithTitleAndDescription } from 'src/components/Checkbox';
 import { SettingsSegment } from 'src/components/SettingsSegment';
+import { Button } from 'src/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from 'src/components/ui/select';
 
 export const SettingsNotificationsPage: FunctionComponent = () => {
   const { user, updateUser } = useUser();
@@ -55,89 +63,91 @@ export const SettingsNotificationsPage: FunctionComponent = () => {
         platformName="Pushbullet"
         href="https://www.pushbullet.com"
       >
-        <label>
-          <Trans>App token</Trans>
-          {/* https://www.pushbullet.com/#settings/account */}
-          <input name="token" required className="block" />
-        </label>
+        {(extraValues) => (
+          <label>
+            <Trans>App token</Trans>
+            {/* https://www.pushbullet.com/#settings/account */}
+            <input name="token" required className="block" />
+          </label>
+        )}
       </NotificationPlatformsCredentials>
 
       <NotificationPlatformsCredentials
         platformName="Pushover"
         href="https://pushover.net"
       >
-        <label>
-          {/* https://pushover.net */}
-          <Trans> User key</Trans>
-          <input name="key" required className="block" />
-        </label>
+        {(extraValues) => (
+          <label>
+            {/* https://pushover.net */}
+            <Trans> User key</Trans>
+            <input name="key" required className="block" />
+          </label>
+        )}
       </NotificationPlatformsCredentials>
 
       <NotificationPlatformsCredentials
         platformName="Pushsafer"
         href="https://www.pushsafer.com"
       >
-        <label>
-          {/* https://www.pushsafer.com/dashboard */}
-          <Trans>Key</Trans>
-          <input name="key" required className="block" />
-        </label>
+        {(extraValues) => (
+          <label>
+            {/* https://www.pushsafer.com/dashboard */}
+            <Trans>Key</Trans>
+            <input name="key" required className="block" />
+          </label>
+        )}
       </NotificationPlatformsCredentials>
 
       <NotificationPlatformsCredentials
         platformName="gotify"
         href="https://gotify.net"
+        hasPriority={true}
+        maxPriority={10}
       >
-        <label>
-          <Trans>Gotify server url</Trans>
-          <input name="url" type="url" required className="block" />
-        </label>
-        <label>
-          <Trans>Access Token</Trans>
-          <input name="token" required className="block" />
-        </label>
-        <label>
-          <Trans>Priority</Trans>
-          <select name="priority" className="block">
-            <option></option>
-            {new Array(10).fill(null).map((_, index) => (
-              <option key={index}>{index + 1}</option>
-            ))}
-          </select>
-        </label>
+        {(extraValues) => (
+          <>
+            <label>
+              <Trans>Gotify server url</Trans>
+              <input name="url" type="url" required className="block" />
+            </label>
+            <label>
+              <Trans>Access Token</Trans>
+              <input name="token" required className="block" />
+            </label>
+          </>
+        )}
       </NotificationPlatformsCredentials>
 
       <NotificationPlatformsCredentials
         platformName="Discord"
         href="https://discord.com"
       >
-        <label>
-          <Trans>Webhook URL</Trans>
-          <input name="url" type="url" required className="block" />
-        </label>
+        {(extraValues) => (
+          <label>
+            <Trans>Webhook URL</Trans>
+            <input name="url" type="url" required className="block" />
+          </label>
+        )}
       </NotificationPlatformsCredentials>
 
       <NotificationPlatformsCredentials
         platformName="ntfy"
         href="https://ntfy.sh"
+        hasPriority={true}
+        maxPriority={5}
       >
-        <label>
-          <Trans>Topic</Trans>
-          <input name="topic" required className="block" />
-        </label>
-        <label>
-          <Trans>Priority</Trans>
-          <select name="priority" className="block">
-            <option></option>
-            {new Array(5).fill(null).map((_, index) => (
-              <option key={index}>{index + 1}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          <Trans>Server url (only for self hosting)</Trans>
-          <input name="url" type="url" className="block" />
-        </label>
+        {(extraValues) => (
+          <>
+            <label>
+              <Trans>Topic</Trans>
+              <input name="topic" required className="block" />
+            </label>
+            <label>
+              <Trans>Server url (only for self hosting)</Trans>
+              <input name="url" type="url" className="block" />
+            </label>
+          </>
+        )}
       </NotificationPlatformsCredentials>
     </>
   );
@@ -152,20 +162,26 @@ const NotificationPlatform: FunctionComponent = () => {
 
   return (
     <>
-      <div className="flex mb-2">
-        <select
-          className="mr-1"
+      <div className="flex mb-2 items-center gap-2">
+        <Select
           value={user.notificationPlatform || ''}
-          onChange={(e) => {
+          onValueChange={(value) => {
             updateUser({
-              notificationPlatform: e.target.value as never,
+              notificationPlatform: value as never,
             });
           }}
         >
-          {platforms.map((platform) => (
-            <option key={platform}>{platform}</option>
-          ))}
-        </select>
+          <SelectTrigger aria-label={t`Notification platform`} className="w-fit">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {platforms.map((platform) => (
+              <SelectItem key={platform} value={platform}>
+                {platform}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <div>
           <Trans>Platform</Trans>
         </div>
@@ -177,9 +193,13 @@ const NotificationPlatform: FunctionComponent = () => {
 const NotificationPlatformsCredentials: FunctionComponent<{
   platformName: string;
   href: string;
+  hasPriority?: boolean;
+  maxPriority?: number;
+  children: (extraValues: Record<string, string>) => React.ReactNode;
 }> = (props) => {
-  const { platformName, href } = props;
-  const formRef = useRef<HTMLFormElement>();
+  const { platformName, href, hasPriority = false, maxPriority = 5 } = props;
+  const formRef = useRef<HTMLFormElement>(null);
+  const [priority, setPriority] = useState('');
 
   const {
     notificationPlatformsCredentials,
@@ -194,14 +214,18 @@ const NotificationPlatformsCredentials: FunctionComponent<{
       const credentials = notificationPlatformsCredentials[platformName];
 
       formRef.current
-        .querySelectorAll<HTMLInputElement | HTMLSelectElement>('input,select')
+        .querySelectorAll<HTMLInputElement>('input')
         .forEach((input) => {
           if (input.name in credentials && !input.value) {
             input.value = credentials[input.name];
           }
         });
+
+      if (hasPriority && 'priority' in credentials) {
+        setPriority(String(credentials['priority'] || ''));
+      }
     }
-  }, [platformName, notificationPlatformsCredentials]);
+  }, [platformName, notificationPlatformsCredentials, hasPriority]);
 
   return (
     <div className="mb-2">
@@ -213,7 +237,11 @@ const NotificationPlatformsCredentials: FunctionComponent<{
 
             const credentials = Object.fromEntries(
               new FormData(e.currentTarget).entries()
-            );
+            ) as Record<string, string>;
+
+            if (hasPriority) {
+              credentials['priority'] = priority;
+            }
 
             setNotificationPlatformsCredentials({
               platformName: platformName,
@@ -221,11 +249,36 @@ const NotificationPlatformsCredentials: FunctionComponent<{
             } as User.UpdateNotificationCredentials.RequestBody);
           }}
         >
-          {props.children}
+          {props.children({})}
 
-          <button className="mt-2 btn">
+          {hasPriority && (
+            <div className="mt-2">
+              <label id={`${platformName}-priority-label`}>
+                <Trans>Priority</Trans>
+              </label>
+              <Select value={priority} onValueChange={setPriority}>
+                <SelectTrigger
+                  aria-labelledby={`${platformName}-priority-label`}
+                  aria-label={t`Priority`}
+                  className="mt-1"
+                >
+                  <SelectValue placeholder={t`Select priority`} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">—</SelectItem>
+                  {new Array(maxPriority).fill(null).map((_, index) => (
+                    <SelectItem key={index + 1} value={String(index + 1)}>
+                      {index + 1}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          <Button variant="outline" className="mt-2">
             <Trans>Save</Trans>
-          </button>
+          </Button>
         </form>
       </SettingsSegment>
     </div>

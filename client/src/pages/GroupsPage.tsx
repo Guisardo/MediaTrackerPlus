@@ -24,7 +24,7 @@ export const GroupsPage: FunctionComponent = () => {
       </div>
 
       {groups.length === 0 ? (
-        <div className="flex flex-col items-center mt-10 text-center text-gray-500 dark:text-gray-400">
+        <div className="flex flex-col items-center mt-10 text-center text-zinc-500 dark:text-zinc-400">
           <div className="text-2xl mb-2">
             <Trans>No groups yet</Trans>
           </div>
@@ -43,7 +43,7 @@ export const GroupsPage: FunctionComponent = () => {
                 <Link to={`/groups/${group.id}`}>{group.name}</Link>
               </div>
 
-              <div className="pl-3 text-sm text-gray-500 dark:text-gray-400">
+              <div className="pl-3 text-sm text-zinc-500 dark:text-zinc-400">
                 {group.role === 'admin' ? (
                   <Trans>Admin</Trans>
                 ) : (
@@ -52,7 +52,7 @@ export const GroupsPage: FunctionComponent = () => {
               </div>
             </div>
 
-            <div className="text-sm text-gray-600 dark:text-gray-400">
+            <div className="text-sm text-zinc-600 dark:text-zinc-400">
               <Plural
                 value={group.memberCount}
                 one="# member"

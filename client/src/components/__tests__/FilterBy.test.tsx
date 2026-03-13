@@ -146,7 +146,7 @@ describe('useFilterBy (movie, normal page) – FilterByComponent menu options', 
     await openMenu(user);
 
     // 'All' is the initial selection; its <li> must have bg-zinc-300 (light) or
-    // dark:bg-slate-700 applied by clsx inside useMenuComponent.
+    // dark:bg-zinc-700 applied by clsx inside useMenuComponent.
     // 'All' appears in both the trigger and the dropdown <li>; find the <li> element.
     const allElements = screen.getAllByText('All');
     const allOption = allElements.find((el) => el.tagName === 'LI') || allElements[0];

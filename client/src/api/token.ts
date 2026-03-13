@@ -1,22 +1,27 @@
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { queryClient } from 'src/App';
 
 import { mediaTrackerApi } from 'src/api/api';
 
 export const useTokens = () => {
-  const { isLoading, error, data } = useQuery('tokens', () =>
-    mediaTrackerApi.tokens.get()
-  );
+  const { isLoading, error, data } = useQuery({
+    queryKey: ['tokens'],
+    queryFn: () => mediaTrackerApi.tokens.get(),
+  });
 
-  const addTokenMutation = useMutation(mediaTrackerApi.tokens.add, {
+  const addTokenMutation = useMutation({
+    mutationFn: (query: Parameters<typeof mediaTrackerApi.tokens.add>[0]) =>
+      mediaTrackerApi.tokens.add(query),
     onSuccess: () => {
-      queryClient.invalidateQueries('tokens');
+      queryClient.invalidateQueries({ queryKey: ['tokens'] });
     },
   });
 
-  const removeTokenMutation = useMutation(mediaTrackerApi.tokens.delete, {
+  const removeTokenMutation = useMutation({
+    mutationFn: (query: Parameters<typeof mediaTrackerApi.tokens.delete>[0]) =>
+      mediaTrackerApi.tokens.delete(query),
     onSuccess: () => {
-      queryClient.invalidateQueries('tokens');
+      queryClient.invalidateQueries({ queryKey: ['tokens'] });
     },
   });
 

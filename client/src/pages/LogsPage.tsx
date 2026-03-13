@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useCallback, useState } from 'react';
-import { useInfiniteQuery } from 'react-query';
+import { useInfiniteQuery, InfiniteData } from '@tanstack/react-query';
 import { t, Trans } from '@lingui/macro';
 
 import { mediaTrackerApi } from 'src/api/api';
@@ -9,19 +9,19 @@ import {
   ValidationErrorLogEntry,
 } from 'mediatracker-api';
 import { CheckboxWithTitleAndDescription } from 'src/components/Checkbox';
+import { Button } from 'src/components/ui/button';
 
 export const LogsPage: FunctionComponent = () => {
   const { levels, SelectLogLevelsComponent } = useSelectLogLevels();
 
   const { data, fetchNextPage, isFetchingNextPage, isLoading } =
-    useInfiniteQuery(
-      ['logs', levels],
-      ({ pageParam }) =>
+    useInfiniteQuery<LogEntry[], Error, InfiniteData<LogEntry[]>, (string | typeof levels)[], string | undefined>({
+      queryKey: ['logs', levels],
+      queryFn: ({ pageParam }) =>
         mediaTrackerApi.logs.get({ ...levels, from: pageParam, count: 100 }),
-      {
-        getNextPageParam: (lastPage) => lastPage.at(-1)?.id,
-      }
-    );
+      getNextPageParam: (lastPage) => lastPage.at(-1)?.id,
+      initialPageParam: undefined,
+    });
 
   if (isLoading) {
     return <Trans>Loading</Trans>;
@@ -34,7 +34,7 @@ export const LogsPage: FunctionComponent = () => {
         ?.flatMap((value) => value)
         ?.map((log) => (
           <div key={log.id} className="text-md">
-            <span className="text-sm text-slate-400 dark:text-slate-500">
+            <span className="text-sm text-zinc-400 dark:text-zinc-500">
               {new Date(log.timestamp).toLocaleString()}{' '}
             </span>
             <span
@@ -58,8 +58,8 @@ export const LogsPage: FunctionComponent = () => {
           </div>
         ))}
       <div className="flex justify-center mt-2">
-        <button
-          className="btn"
+        <Button
+          variant="outline"
           onClick={() =>
             fetchNextPage().then(
               (data) =>
@@ -71,7 +71,7 @@ export const LogsPage: FunctionComponent = () => {
           disabled={isFetchingNextPage}
         >
           Load more
-        </button>
+        </Button>
       </div>
     </>
   );

@@ -1,5 +1,4 @@
 import React, { FunctionComponent } from 'react';
-import styled from 'styled-components';
 import { t, Trans } from '@lingui/macro';
 import { parseISO } from 'date-fns';
 
@@ -42,6 +41,19 @@ export type GridItemAppearanceArgs = {
     showFirstUnwatchedEpisodeBadge?: boolean;
   };
 };
+
+/** Badge/icon pill used in the poster top bar */
+const ItemBadge: FunctionComponent<{
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
+  children: React.ReactNode;
+}> = ({ onClick, children }) => (
+  <div
+    className="rounded bg-red-900 px-1 text-lg ml-1 text-white hover:text-yellow-600 shadow-sm shadow-black"
+    onClick={onClick}
+  >
+    {children}
+  </div>
+);
 
 export const GridItem: FunctionComponent<{
   mediaItem: MediaItemItemsResponse;
@@ -96,8 +108,8 @@ export const GridItem: FunctionComponent<{
   }
 
   return (
-    <div className="item">
-      <div className="pb-4">
+    <div className="@container w-full">
+      <div className="rounded-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm pb-4">
         <Poster
           src={mediaItem.posterSmall}
           mediaType={mediaType}
@@ -115,7 +127,7 @@ export const GridItem: FunctionComponent<{
               {topBar.showOnWatchlistIcon && (
                 <div className="absolute top-0 left-0 inline-flex mt-1 pointer-events-auto hover:cursor-pointer">
                   {isOnWatchlist && (
-                    <Item
+                    <ItemBadge
                       onClick={async (e) => {
                         e.preventDefault();
 
@@ -135,7 +147,7 @@ export const GridItem: FunctionComponent<{
                       }}
                     >
                       <span className="flex material-icons">bookmark</span>
-                    </Item>
+                    </ItemBadge>
                   )}
                 </div>
               )}
@@ -147,31 +159,31 @@ export const GridItem: FunctionComponent<{
                 >
                   {topBar.showFirstUnwatchedEpisodeBadge &&
                     mediaItem.firstUnwatchedEpisode && (
-                      <Item>
+                      <ItemBadge>
                         {formatEpisodeNumber(mediaItem.firstUnwatchedEpisode)}
-                      </Item>
+                      </ItemBadge>
                     )}
                   {topBar.showUnwatchedEpisodesCount &&
                     mediaItem.unseenEpisodesCount > 0 && (
-                      <Item>{mediaItem.unseenEpisodesCount}</Item>
+                      <ItemBadge>{mediaItem.unseenEpisodesCount}</ItemBadge>
                     )}
                   {topBar.showUnwatchedEpisodesCount && mediaItem.seen == true && (
-                    <Item>
+                    <ItemBadge>
                       <i className="flex text-white material-icons hover:text-yellow-600">
                         check_circle_outline
                       </i>
-                    </Item>
+                    </ItemBadge>
                   )}
                 </a>
               ) : (
                 <>
                   {topBar.showUnwatchedEpisodesCount && mediaItem.seen == true && (
                     <div className="absolute inline-flex pointer-events-auto foo right-1 top-1">
-                      <Item>
+                      <ItemBadge>
                         <i className="flex text-white select-none material-icons">
                           check_circle_outline
                         </i>
-                      </Item>
+                      </ItemBadge>
                     </div>
                   )}
                 </>
@@ -190,9 +202,9 @@ export const GridItem: FunctionComponent<{
           )}
         </Poster>
 
-        <div className="mt-1 overflow-hidden whitespace-nowrap text-ellipsis">
+        <div className="mt-1 px-2 overflow-hidden whitespace-nowrap text-ellipsis">
           {/* Release year and MediaType */}
-          <div className="flex justify-between text-gray-500 dark:text-gray-400">
+          <div className="flex justify-between text-sm text-zinc-600 dark:text-zinc-400">
             <span>
               {mediaItem.releaseDate &&
                 parseISO(mediaItem.releaseDate).getFullYear()}
@@ -202,7 +214,7 @@ export const GridItem: FunctionComponent<{
           </div>
 
           {/* Title */}
-          <div className="overflow-hidden text-lg overflow-ellipsis whitespace-nowrap">
+          <div className="text-lg font-semibold truncate">
             {season && formatSeasonNumber(season) + ' '}
             {episode && formatEpisodeNumber(episode) + ' '}
             {mediaItem.title}
@@ -210,9 +222,9 @@ export const GridItem: FunctionComponent<{
 
           {hasProgress(mediaItem) && (
             <>
-              <div className="w-full h-2 mt-1 rounded bg-slate-300">
+              <div className="w-full h-2 mt-1 rounded bg-zinc-300 dark:bg-zinc-700">
                 <div
-                  className="h-full rounded bg-slate-900"
+                  className="h-full rounded bg-zinc-900 dark:bg-zinc-100"
                   style={{ width: `${mediaItem.progress * 100}%` }}
                 />
               </div>
@@ -220,7 +232,7 @@ export const GridItem: FunctionComponent<{
           )}
 
           {showNextAiring && (
-            <div className='overflow-hidden overflow-ellipsis whitespace-nowrap"'>
+            <div className='overflow-hidden overflow-ellipsis whitespace-nowrap text-sm text-zinc-600 dark:text-zinc-400"'>
               {mediaItem.mediaType === 'tv' && mediaItem.upcomingEpisode && (
                 <>
                   {formatEpisodeNumber(mediaItem.upcomingEpisode)}{' '}
@@ -238,7 +250,7 @@ export const GridItem: FunctionComponent<{
           )}
 
           {showLastAiring && (
-            <div className="overflow-hidden overflow-ellipsis whitespace-nowrap">
+            <div className="overflow-hidden overflow-ellipsis whitespace-nowrap text-sm text-zinc-600 dark:text-zinc-400">
               {mediaItem.mediaType === 'tv' && mediaItem.lastAiredEpisode && (
                 <>
                   {formatEpisodeNumber(mediaItem.lastAiredEpisode)}{' '}
@@ -283,7 +295,7 @@ export const GridItem: FunctionComponent<{
         {showMarksAsSeenFirstUnwatchedEpisode &&
           (!isTvShow(mediaItem) ||
             (isTvShow(mediaItem) && mediaItem.firstUnwatchedEpisode)) && (
-            <div className="flex flex-col items-center mt-2">
+            <div className="flex flex-col items-center mt-2 px-2">
               <AddToSeenHistoryButton
                 mediaItem={mediaItem}
                 episode={mediaItem.firstUnwatchedEpisode}
@@ -295,7 +307,7 @@ export const GridItem: FunctionComponent<{
         {showMarksAsSeenLastAiredEpisode &&
           (!isTvShow(mediaItem) ||
             (isTvShow(mediaItem) && mediaItem.lastAiredEpisode)) && (
-            <div className="flex flex-col items-center mt-2">
+            <div className="flex flex-col items-center mt-2 px-2">
               <AddToSeenHistoryButton
                 mediaItem={mediaItem}
                 episode={mediaItem.lastAiredEpisode}
@@ -307,7 +319,7 @@ export const GridItem: FunctionComponent<{
         {showAddToWatchlistAndMarkAsSeenButtons && (
           <>
             {!isOnWatchlist && (
-              <div className="flex flex-col items-center ">
+              <div className="flex flex-col items-center px-2">
                 <>
                   <div className="mt-2" />
                   <AddToWatchlistButton
@@ -335,8 +347,3 @@ export const GridItem: FunctionComponent<{
     </div>
   );
 };
-
-const Item = styled.div.attrs({
-  className:
-    'rounded bg-red-900 px-1 text-lg ml-1 text-white hover:text-yellow-600 shadow-sm shadow-black',
-})``;

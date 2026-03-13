@@ -1,5 +1,5 @@
 import { Statistics } from 'mediatracker-api';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { mediaTrackerApi } from 'src/api/api';
 
 export const useGenreSeen = (
@@ -14,9 +14,11 @@ export const useGenreSeen = (
     error: error,
     data: data,
     isFetched: isFetched,
-  } = useQuery(['genre', year], async () =>
-    mediaTrackerApi.statistics.statisticsGenresinyearList(year)
-  );
+  } = useQuery({
+    queryKey: ['genre', year],
+    queryFn: async () =>
+      mediaTrackerApi.statistics.statisticsGenresinyearList(year),
+  });
 
   return {
     error,
@@ -37,9 +39,11 @@ export const useSeen = (
     error: error,
     data: data,
     isFetched: isFetched,
-  } = useQuery(['statistics', year], async () =>
-    mediaTrackerApi.statistics.statisticsSeeninyearList(year)
-  );
+  } = useQuery({
+    queryKey: ['statistics', year],
+    queryFn: async () =>
+      mediaTrackerApi.statistics.statisticsSeeninyearList(year),
+  });
 
   return {
     error,

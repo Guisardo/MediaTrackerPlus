@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { mediaTrackerApi } from 'src/api/api';
 import { queryClient } from 'src/App';
 
@@ -12,22 +12,24 @@ export const useLists = (args: {
 
   const key = ['lists', userId, mediaItemId, seasonId, episodeId];
 
-  const { data, isLoading, isError } = useQuery(key, () =>
-    mediaTrackerApi.lists.getUsersLists({
-      userId: userId,
-      mediaItemId: mediaItemId,
-      seasonId: seasonId,
-      episodeId: episodeId,
-    })
-  );
+  const { data, isLoading, isError } = useQuery({
+    queryKey: key,
+    queryFn: () =>
+      mediaTrackerApi.lists.getUsersLists({
+        userId: userId,
+        mediaItemId: mediaItemId,
+        seasonId: seasonId,
+        episodeId: episodeId,
+      }),
+  });
 
   return {
     lists: data,
     isLoading,
     isError,
     invalidateListsQuery: () => {
-      queryClient.invalidateQueries(key);
-      queryClient.invalidateQueries(['details', mediaItemId]);
+      queryClient.invalidateQueries({ queryKey: key });
+      queryClient.invalidateQueries({ queryKey: ['details', mediaItemId] });
     },
   };
 };

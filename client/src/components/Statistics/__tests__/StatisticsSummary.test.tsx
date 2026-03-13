@@ -8,6 +8,7 @@
  *  - @lingui/macro / @lingui/react – passthrough
  *  - react-router-dom  – MemoryRouter + mock navigate
  *  - src/components/date – FormatDuration passthrough
+ *  - src/components/ui/card – Card / CardContent passthrough
  */
 
 import React from 'react';
@@ -46,6 +47,16 @@ jest.mock('src/components/date', () => ({
   },
 }));
 
+jest.mock('src/components/ui/card', () => {
+  const React = require('react');
+  return {
+    Card: ({ children, className }: any) =>
+      React.createElement('div', { 'data-testid': 'card', className }, children),
+    CardContent: ({ children, className }: any) =>
+      React.createElement('div', { 'data-testid': 'card-content', className }, children),
+  };
+});
+
 const mockSummary = jest.fn();
 jest.mock('src/api/api', () => ({
   mediaTrackerApi: {
@@ -55,16 +66,16 @@ jest.mock('src/api/api', () => ({
   },
 }));
 
-jest.mock('react-query', () => {
-  const actual = jest.requireActual('react-query');
+jest.mock('@tanstack/react-query', () => {
+  const actual = jest.requireActual('@tanstack/react-query');
   const React = require('react');
   return {
     ...actual,
-    useQuery: (key: any, fn: any) => {
+    useQuery: ({ queryKey, queryFn }: { queryKey: any; queryFn: any }) => {
       const [queryData, setQueryData] = React.useState(undefined);
       React.useEffect(() => {
-        if (fn) {
-          Promise.resolve(fn()).then(setQueryData).catch((_e) => { /* ignore */ });
+        if (queryFn) {
+          Promise.resolve(queryFn()).then(setQueryData).catch((_e) => { /* ignore */ });
         }
       }, []);
       return { data: queryData, isLoading: queryData === undefined, error: null };

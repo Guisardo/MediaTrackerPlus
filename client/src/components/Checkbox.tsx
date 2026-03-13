@@ -1,4 +1,6 @@
 import React, { FunctionComponent } from 'react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { cn } from '@/lib/utils';
 
 export const CheckboxWithTitleAndDescription: FunctionComponent<{
   title: string;
@@ -11,18 +13,19 @@ export const CheckboxWithTitleAndDescription: FunctionComponent<{
   return (
     <div>
       {description && (
-        <div className="font-light text-gray-600 dark:text-slate-200">
+        <div className="font-light text-zinc-600 dark:text-zinc-400">
           {description}
         </div>
       )}
-      <div className="inline-block pb-2">
-        <input
-          className="mr-1"
-          type="checkbox"
+      <div className="flex items-center space-x-2 pb-2">
+        <Checkbox
           checked={checked}
-          onChange={(e) => onChange(e.target.checked)}
+          onCheckedChange={onChange}
+          id={`checkbox-${title.replace(/\s+/g, '-').toLowerCase()}`}
         />
-        <span>{title}</span>
+        <label htmlFor={`checkbox-${title.replace(/\s+/g, '-').toLowerCase()}`} className="cursor-pointer select-none text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+          {title}
+        </label>
       </div>
     </div>
   );

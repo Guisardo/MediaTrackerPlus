@@ -1,5 +1,117 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
+/**
+ * Mock radix-ui Select primitives to render a native <select> in jsdom.
+ * Radix UI Select relies on pointer events and portals that don't work in jsdom.
+ * This mock renders a native select/option so tests can interact with them simply.
+ */
+jest.mock('radix-ui', () => {
+  const React = require('react');
+
+  const Root = ({ children, value, onValueChange, defaultValue }: any) => {
+    const [internalValue, setInternalValue] = React.useState(value ?? defaultValue ?? '');
+
+    React.useEffect(() => {
+      if (value !== undefined) setInternalValue(value);
+    }, [value]);
+
+    const handleChange = (newVal: string) => {
+      setInternalValue(newVal);
+      onValueChange?.(newVal);
+    };
+
+    return (
+      <div data-radix-select-root>
+        {React.Children.map(children, (child: React.ReactElement) => {
+          if (!React.isValidElement(child)) return child;
+          return React.cloneElement(child, { __value: internalValue, __onChange: handleChange } as any);
+        })}
+      </div>
+    );
+  };
+
+  const Trigger = React.forwardRef(({ children, 'aria-label': ariaLabel, __value, __onChange, ...props }: any, ref: any) => (
+    <button ref={ref} role="combobox" aria-label={ariaLabel} {...props}>{children}</button>
+  ));
+
+  const Value = ({ placeholder, __value }: any) => <span>{__value || placeholder || ''}</span>;
+
+  const Icon = ({ children }: any) => <>{children}</>;
+
+  const Portal = ({ children }: any) => <>{children}</>;
+
+  const Content = ({ children, __value, __onChange, ...props }: any) => (
+    <div>
+      {React.Children.map(children, (child: React.ReactElement) => {
+        if (!React.isValidElement(child)) return child;
+        return React.cloneElement(child, { __value, __onChange } as any);
+      })}
+    </div>
+  );
+
+  const Viewport = ({ children, __value, __onChange }: any) => (
+    <div>
+      {React.Children.map(children, (child: React.ReactElement) => {
+        if (!React.isValidElement(child)) return child;
+        return React.cloneElement(child, { __value, __onChange } as any);
+      })}
+    </div>
+  );
+
+  const Item = React.forwardRef(({ children, value, __value, __onChange, ...props }: any, ref: any) => (
+    <div
+      ref={ref}
+      role="option"
+      aria-selected={__value === value}
+      data-value={value}
+      onClick={() => __onChange?.(value)}
+      {...props}
+    >
+      <ItemText>{children}</ItemText>
+    </div>
+  ));
+
+  const ItemText = ({ children }: any) => <span>{children}</span>;
+
+  const ItemIndicator = ({ children }: any) => <>{children}</>;
+
+  const ScrollUpButton = ({ children }: any) => <>{children}</>;
+  const ScrollDownButton = ({ children }: any) => <>{children}</>;
+
+  const Group = ({ children, __value, __onChange }: any) => (
+    <div>
+      {React.Children.map(children, (child: React.ReactElement) => {
+        if (!React.isValidElement(child)) return child;
+        return React.cloneElement(child, { __value, __onChange } as any);
+      })}
+    </div>
+  );
+
+  const Label = ({ children }: any) => <div>{children}</div>;
+  const Separator = () => <hr />;
+
+  return {
+    Select: {
+      Root,
+      Trigger,
+      Value,
+      Icon,
+      Portal,
+      Content,
+      Viewport,
+      Item,
+      ItemText,
+      ItemIndicator,
+      ScrollUpButton,
+      ScrollDownButton,
+      Group,
+      Label,
+      Separator,
+    },
+  };
+});
 
 jest.mock('@lingui/core', () => ({
   i18n: {
@@ -191,34 +303,39 @@ describe('SelectLastSeenEpisode', () => {
   it('renders episode options in the episode selector', () => {
     const tvShow = createTvShow();
     mockUseDetails.mockReturnValue({ mediaItem: tvShow, isLoading: false });
-    const { container } = render(
+    render(
       <SelectLastSeenEpisode
         tvShow={tvShow as any}
         closeModal={jest.fn()}
       />
     );
+    // With the radix-ui mock, options render directly in the DOM as role="option"
     // The last season (Season 2) is pre-selected via useEffect, episodes should appear
-    const options = container.querySelectorAll('option');
-    const optionTexts = Array.from(options).map((o) => o.textContent);
+    const options = screen.getAllByRole('option');
+    const optionTexts = options.map((o) => o.textContent);
     expect(optionTexts.some((t) => t?.includes('Seven Thirty-Seven'))).toBe(true);
   });
 
-  it('changes season selection', () => {
+  it('changes season selection', async () => {
+    const user = userEvent.setup();
     const tvShow = createTvShow();
     mockUseDetails.mockReturnValue({ mediaItem: tvShow, isLoading: false });
-    const { container } = render(
+    render(
       <SelectLastSeenEpisode
         tvShow={tvShow as any}
         closeModal={jest.fn()}
       />
     );
-    const selects = screen.getAllByRole('combobox');
-    const seasonSelect = selects[0];
-    fireEvent.change(seasonSelect, { target: { value: '10' } });
-    // After changing to Season 1, its episodes should render as options
-    const options = container.querySelectorAll('option');
-    const optionTexts = Array.from(options).map((o) => o.textContent);
-    expect(optionTexts.some((t) => t?.includes('Pilot'))).toBe(true);
+    // Click Season 1 option directly (radix mock renders all options in DOM)
+    const season1Option = screen.getByRole('option', { name: 'Season 1' });
+    await user.click(season1Option);
+
+    // After clicking Season 1, its episodes should render as options
+    await waitFor(() => {
+      const options = screen.getAllByRole('option');
+      const optionTexts = options.map((o) => o.textContent);
+      expect(optionTexts.some((t) => t?.includes('Pilot'))).toBe(true);
+    });
   });
 
   it('filters out special seasons from season dropdown', () => {
@@ -247,10 +364,11 @@ describe('SelectLastSeenEpisode', () => {
         closeModal={jest.fn()}
       />
     );
+    // With radix mock, all options are rendered in the DOM
     const options = screen.getAllByRole('option');
     const optionTexts = options.map((o) => o.textContent);
-    expect(optionTexts).not.toContain('Specials');
-    expect(optionTexts).toContain('Season 1');
+    expect(optionTexts.every((t) => t !== 'Specials')).toBe(true);
+    expect(optionTexts.some((t) => t?.includes('Season 1'))).toBe(true);
   });
 
   it('opens modal and shows SelectSeenDateComponent when Select is clicked', () => {

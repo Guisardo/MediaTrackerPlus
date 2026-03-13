@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, useMutation, keepPreviousData } from '@tanstack/react-query';
 
 import { Items, MediaItemItemsResponse } from 'mediatracker-api';
 import { mediaTrackerApi } from 'src/api/api';
@@ -15,20 +15,19 @@ type paginatedApiReturnType = {
 export const useItems = (args: Items.Paginated.RequestQuery) => {
   const selectRandom = args.selectRandom ?? false;
 
-  const { error, data, isFetched } = useQuery(
-    ['items', args],
-    async () =>
+  const { error, data, isFetched } = useQuery({
+    queryKey: ['items', args],
+    queryFn: async () =>
       selectRandom
         ? mediaTrackerApi.items.random(args)
         : mediaTrackerApi.items.paginated(args),
-    {
-      keepPreviousData: true,
-    }
-  );
+    placeholderData: keepPreviousData,
+  });
 
-  const search = useMutation((query: string) =>
-    mediaTrackerApi.search.search({ mediaType: args.mediaType, q: query })
-  );
+  const search = useMutation({
+    mutationFn: (query: string) =>
+      mediaTrackerApi.search.search({ mediaType: args.mediaType, q: query }),
+  });
 
   return !selectRandom
     ? {
@@ -36,7 +35,7 @@ export const useItems = (args: Items.Paginated.RequestQuery) => {
           ? search.data
           : (data as paginatedApiReturnType)?.data,
         error: error,
-        isLoading: !isFetched || search.isLoading,
+        isLoading: !isFetched || search.isPending,
         numberOfPages: data
           ? (data as paginatedApiReturnType).totalPages
           : undefined,
@@ -48,7 +47,7 @@ export const useItems = (args: Items.Paginated.RequestQuery) => {
     : {
         items: search.data ? search.data : (data as MediaItemItemsResponse[]),
         error: error,
-        isLoading: !isFetched || search.isLoading,
+        isLoading: !isFetched || search.isPending,
         numberOfItemsTotal: data
           ? (data as MediaItemItemsResponse[]).length
           : undefined,

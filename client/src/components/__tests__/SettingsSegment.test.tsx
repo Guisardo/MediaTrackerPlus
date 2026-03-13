@@ -98,11 +98,11 @@ describe('SettingsSegment', () => {
     expect(outerDiv.className).toContain('rounded');
   });
 
-  it('applies the font-bold class to the title element', () => {
-    render(<SettingsSegment title="Bold Title" />);
+  it('applies the font-semibold class to the title element', () => {
+    render(<SettingsSegment title="Semibold Title" />);
 
-    const titleEl = screen.getByText('Bold Title');
-    expect(titleEl.className).toContain('font-bold');
+    const titleEl = screen.getByText('Semibold Title');
+    expect(titleEl.className).toContain('font-semibold');
   });
 
   // -------------------------------------------------------------------------

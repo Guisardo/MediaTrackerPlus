@@ -8,6 +8,7 @@ import { Modal, useOpenModalRef } from 'src/components/Modal';
 import { SelectSeenDate } from 'src/components/SelectSeenDate';
 import { formatEpisodeNumber, formatSeasonNumber } from 'src/utils';
 import { queryClient } from 'src/App';
+import { Button } from 'src/components/ui/button';
 
 export const StarRating: FunctionComponent<
   | { mediaItem: MediaItemItemsResponse }
@@ -103,8 +104,8 @@ const StarRatingModal: FunctionComponent<
 
   const _closeModal = () => {
     closeModal();
-    queryClient.invalidateQueries(['items']);
-    queryClient.invalidateQueries(['list']);
+    queryClient.invalidateQueries({ queryKey: ['items'] });
+    queryClient.invalidateQueries({ queryKey: ['list'] });
   };
 
   return (
@@ -115,7 +116,7 @@ const StarRatingModal: FunctionComponent<
         {episode && <> {formatEpisodeNumber(episode)}</>}
       </div>
 
-      <span className="flex px-1 m-auto cursor-pointer w-min dark:text-slate-200">
+      <span className="flex px-1 m-auto cursor-pointer w-min dark:text-zinc-200">
         {new Array(5).fill(null).map((value, index) => {
           return (
             <span
@@ -163,12 +164,12 @@ const StarRatingModal: FunctionComponent<
           onChange={(e) => setReview(e.currentTarget.value)}
         />
         <div className="flex w-full">
-          <button className="btn-blue">
+          <Button variant="default">
             <Trans>Save review</Trans>
-          </button>
-          <div className="ml-auto btn-red" onClick={() => _closeModal()}>
+          </Button>
+          <Button variant="destructive" className="ml-auto" onClick={() => _closeModal()}>
             <Trans>Cancel</Trans>
-          </div>
+          </Button>
         </div>
       </form>
     </div>
@@ -207,7 +208,7 @@ export const BadgeRating: FunctionComponent<
         openModal={(openModal) => (
           <>
             <span
-              className="flex w-min px-0.5 bg-gray-400 rounded shadow-lg cursor-pointer text-lg relative text-black select-none"
+              className="flex w-min px-0.5 bg-zinc-400 rounded shadow-lg cursor-pointer text-lg relative text-black select-none"
               onClick={() => openModal()}
             >
               <span

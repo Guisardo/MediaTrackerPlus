@@ -10,7 +10,7 @@
     "@babel/preset-react",
     "@babel/preset-typescript"
   ],
-  "plugins": ["@babel/plugin-transform-runtime", "macros"],
+  "plugins": ["@babel/plugin-transform-runtime", "@lingui/babel-plugin-lingui-macro"],
   "env": {
     "test": {
       "presets": [

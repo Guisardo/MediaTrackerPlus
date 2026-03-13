@@ -46,6 +46,7 @@ import {
   RemoveFromSeenHistoryButton,
 } from 'src/components/AddAndRemoveFromSeenHistoryButton';
 import { hasBeenSeenAtLeastOnce } from 'src/mediaItem';
+import { Button } from 'src/components/ui/button';
 
 const Review: FunctionComponent<{ userRating: UserRating }> = (props) => {
   const { userRating } = props;
@@ -307,7 +308,7 @@ export const DetailsPage: FunctionComponent = () => {
                   <span className="italic">{genre}</span>
 
                   {index < mediaItem.genres.length - 1 && (
-                    <span className="mx-1 text-gray-600">|</span>
+                    <span className="mx-1 text-zinc-600">|</span>
                   )}
                 </span>
               ))}
@@ -443,20 +444,21 @@ export const DetailsPage: FunctionComponent = () => {
       <div className="mt-3"></div>
 
       {mediaItem.mediaType === 'tv' && (
-        <Link
-          to={`/seasons/${mediaItem.id}`}
-          className="mt-3 text-green-600 dark:text-green-400 btn"
-        >
-          <Trans>Episodes page</Trans>
-        </Link>
+        <Button asChild variant="outline" className="mt-3 text-green-600 dark:text-green-400">
+          <Link to={`/seasons/${mediaItem.id}`}>
+            <Trans>Episodes page</Trans>
+          </Link>
+        </Button>
       )}
 
       {(hasBeenReleased(mediaItem) || !hasReleaseDate(mediaItem)) &&
         !isTvShow(mediaItem) && (
           <>
             {!hasProgress(mediaItem) && (
-              <div
-                className="mt-3 text-sm btn"
+              <Button
+                variant="outline"
+                size="sm"
+                className="mt-3"
                 onClick={async () => {
                   addToProgress({
                     mediaItemId: mediaItem.id,
@@ -468,13 +470,15 @@ export const DetailsPage: FunctionComponent = () => {
                 {isBook(mediaItem) && <Trans>I am reading it</Trans>}
                 {isAudiobook(mediaItem) && <Trans>I am listening it</Trans>}
                 {isVideoGame(mediaItem) && <Trans>I am playing it</Trans>}
-              </div>
+              </Button>
             )}
 
             {hasProgress(mediaItem) && (
               <>
-                <div
-                  className="mt-3 text-sm btn"
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="mt-3"
                   onClick={async () => {
                     addToProgress({
                       mediaItemId: mediaItem.id,
@@ -490,7 +494,7 @@ export const DetailsPage: FunctionComponent = () => {
                   {isVideoGame(mediaItem) && (
                     <Trans>I finished playing it</Trans>
                   )}
-                </div>
+                </Button>
 
                 <div className="mt-3">
                   <Trans>Progress</Trans>:{' '}
@@ -628,8 +632,9 @@ export const AddToWatchlistButton: FunctionComponent<{
   const { mediaItem, season, episode } = props;
 
   return (
-    <div
-      className="text-sm btn-blue "
+    <Button
+      variant="default"
+      size="sm"
       onClick={() =>
         addToWatchlist({
           mediaItem,
@@ -639,7 +644,7 @@ export const AddToWatchlistButton: FunctionComponent<{
       }
     >
       <Trans>Add to watchlist</Trans>
-    </div>
+    </Button>
   );
 };
 
@@ -651,8 +656,9 @@ export const RemoveFromWatchlistButton: FunctionComponent<{
   const { mediaItem, season, episode } = props;
 
   return (
-    <div
-      className="text-sm btn-red"
+    <Button
+      variant="destructive"
+      size="sm"
       onClick={() =>
         removeFromWatchlist({
           mediaItem,
@@ -662,7 +668,7 @@ export const RemoveFromWatchlistButton: FunctionComponent<{
       }
     >
       <Trans>Remove from watchlist</Trans>
-    </div>
+    </Button>
   );
 };
 
@@ -676,13 +682,14 @@ const UpdateMetadataButton: FunctionComponent<{
   );
 
   return (
-    <button
-      className="text-sm btn"
+    <Button
+      variant="outline"
+      size="sm"
       onClick={() => updateMetadata()}
       disabled={isLoading}
     >
       <Trans>Update metadata</Trans>
-    </button>
+    </Button>
   );
 };
 
@@ -694,9 +701,9 @@ const SetProgressButton: FunctionComponent<{
   return (
     <Modal
       openModal={(openModal) => (
-        <div className="text-sm text-green-500 btn" onClick={() => openModal()}>
+        <Button variant="outline" size="sm" className="text-green-500" onClick={() => openModal()}>
           <Trans>Set progress</Trans>
-        </div>
+        </Button>
       )}
     >
       {(closeModal) => (

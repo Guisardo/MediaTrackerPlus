@@ -1,24 +1,19 @@
-import { SpringConfig } from '@react-spring/core';
-import { animated, Spring, Transition } from '@react-spring/web';
-import { Portal } from 'src/components/Portal';
 import React, {
-  MouseEventHandler,
   useCallback,
   useEffect,
   useRef,
   useState,
 } from 'react';
+import {
+  Dialog,
+  DialogContent,
+} from '@/components/ui/dialog';
 
 export type ModalArgs<T> = {
   onClosed?: (arg?: T) => void;
   onBeforeClosed?: (arg?: T) => void;
   closeOnEscape?: boolean;
   closeOnBackgroundClick?: boolean;
-};
-
-const springConfig: SpringConfig = {
-  tension: 300,
-  friction: 30,
 };
 
 interface OpenModalRef {
@@ -37,9 +32,9 @@ export const useOpenModalRef = () => {
 };
 
 export const Modal = <ReturnType,>(props: {
-  openModal?: (openModal: () => void) => JSX.Element;
+  openModal?: (openModal: () => void) => React.JSX.Element;
   openModalRef?: React.MutableRefObject<OpenModalRef>;
-  children: (closeModal: () => void) => JSX.Element;
+  children: (closeModal: (arg?: ReturnType) => void) => React.JSX.Element;
   onClosed?: (arg?: ReturnType) => void;
   onBeforeClosed?: (arg?: ReturnType) => void;
   closeOnEscape?: boolean;
@@ -53,95 +48,89 @@ export const Modal = <ReturnType,>(props: {
     openModalRef,
   } = {
     closeOnBackgroundClick: true,
+    closeOnEscape: true,
     ...props,
   };
 
   const showOpen = props.openModal === undefined && openModalRef === undefined;
 
   const [isOpen, setIsOpen] = useState(showOpen || false);
-  const [wasOpened, setWasOpened] = useState(showOpen || false);
-  const [returnedValue, setReturnValue] = useState<ReturnType>();
+  const returnedValueRef = useRef<ReturnType | undefined>(undefined);
 
   const closeModal: (arg?: ReturnType) => void = useCallback(
     (arg) => {
       onBeforeClosed && onBeforeClosed(arg);
+      returnedValueRef.current = arg;
       setIsOpen(false);
-      setReturnValue(arg);
     },
     [onBeforeClosed]
   );
 
-  const openModal = () => {
+  const openModal = useCallback(() => {
     setIsOpen(true);
-    setWasOpened(true);
-  };
+  }, []);
 
   useEffect(() => {
     if (openModalRef?.current) {
       (openModalRef.current as OpenModalRefClass)._openModal = openModal;
     }
-  }, [openModalRef]);
+  }, [openModalRef, openModal]);
 
-  const mainContainerRef = useRef<HTMLDivElement>();
+  const handleOpenChange = useCallback(
+    (open: boolean) => {
+      if (!open) {
+        // Dialog is being closed externally (Escape key or overlay click).
+        // Radix fires onOpenChange(false) for both; individual handlers
+        // below prevent the specific events when disabled, so if we reach
+        // here the close was allowed.
+        onBeforeClosed && onBeforeClosed(returnedValueRef.current);
+        setIsOpen(false);
+      }
+    },
+    [onBeforeClosed]
+  );
 
-  const onClick: MouseEventHandler = (e) => {
-    if (!closeOnBackgroundClick) {
-      return;
+  /**
+   * Radix Dialog invokes onAnimationEnd after the closing animation
+   * completes.  We hook into this to fire the onClosed callback at the
+   * right time (matching the previous react-spring onRest behaviour).
+   */
+  const handleAnimationEnd = useCallback(() => {
+    if (!isOpen && onClosed) {
+      onClosed(returnedValueRef.current);
+      returnedValueRef.current = undefined;
     }
-
-    if (mainContainerRef.current === e.target) {
-      e.preventDefault();
-      e.stopPropagation();
-      closeModal();
-    }
-  };
+  }, [isOpen, onClosed]);
 
   return (
     <>
       {props.openModal && props.openModal(openModal)}
-      {wasOpened && (
-        <Transition
-          items={isOpen}
-          from={{ opacity: 0, marginTop: -500 }}
-          enter={{ opacity: 1, marginTop: 0 }}
-          leave={{ opacity: 0, marginTop: -500 }}
-          config={springConfig}
-          reverse={isOpen}
-          onRest={() => isOpen === false && onClosed && onClosed(returnedValue)}
+      <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+        <DialogContent
+          showCloseButton={false}
+          onAnimationEnd={handleAnimationEnd}
+          onEscapeKeyDown={(e) => {
+            if (!closeOnEscape) {
+              e.preventDefault();
+            }
+          }}
+          onPointerDownOutside={(e) => {
+            if (!closeOnBackgroundClick) {
+              e.preventDefault();
+            }
+          }}
+          onInteractOutside={(e) => {
+            if (!closeOnBackgroundClick) {
+              e.preventDefault();
+            }
+          }}
+          className="max-w-fit p-0 border-0 bg-transparent shadow-none"
         >
-          {(transitionStyles, show) => (
-            <>
-              {show && (
-                <Portal>
-                  <Spring
-                    from={{ backgroundColor: 'rgba(14,16,19,0.5)' }}
-                    to={{ backgroundColor: 'rgba(14,16,19,0)' }}
-                    config={springConfig}
-                    reverse={isOpen}
-                  >
-                    {(springStyles) => (
-                      <animated.div
-                        style={springStyles}
-                        className={
-                          'fixed top-0 bottom-0 left-0 right-0 flex items-center justify-center'
-                        }
-                        ref={mainContainerRef}
-                        onPointerDown={onClick}
-                      >
-                        <animated.div style={transitionStyles}>
-                          <div className="m-2 rounded bg-zinc-100 dark:bg-gray-900">
-                            {props.children(closeModal)}
-                          </div>
-                        </animated.div>
-                      </animated.div>
-                    )}
-                  </Spring>
-                </Portal>
-              )}
-            </>
-          )}
-        </Transition>
-      )}
+          <div className="rounded-lg bg-zinc-100 dark:bg-zinc-900">
+            {props.children(closeModal)}
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

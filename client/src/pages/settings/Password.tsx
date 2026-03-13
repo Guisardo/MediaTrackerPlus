@@ -4,6 +4,7 @@ import { t, Trans } from '@lingui/macro';
 
 import { FetchError } from 'src/api/api';
 import { useUser } from 'src/api/user';
+import { Button } from 'src/components/ui/button';
 
 export const SettingsPasswordPage = () => {
   const { updatePassword } = useUser();
@@ -46,8 +47,9 @@ export const SettingsPasswordPage = () => {
           onChange={(e) => setConfirmNewPassword(e.currentTarget.value)}
         />
         <br />
-        <button
-          className="mt-2 btn"
+        <Button
+          variant="outline"
+          className="mt-2"
           onClick={async () => {
             if (newPassword !== confirmNewPassword) {
               setSuccess(false);
@@ -72,7 +74,7 @@ export const SettingsPasswordPage = () => {
           }}
         >
           <Trans>Change password</Trans>
-        </button>
+        </Button>
       </form>
       {success !== undefined && (
         <div

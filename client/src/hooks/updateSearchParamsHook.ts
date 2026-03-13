@@ -15,7 +15,7 @@ export const useUpdateSearchParams = <T>(args: {
     : initialValue;
 
   const deleteFunction = useCallback(
-    ([name], value) => {
+    (name: string, value: T) => {
       if (!resetPage && value === initialValue) {
         return name !== filterParam;
       } else if (resetPage && value !== initialValue) {

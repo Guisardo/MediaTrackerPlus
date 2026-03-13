@@ -2,7 +2,6 @@ import React, { FunctionComponent, useState } from 'react';
 import clsx from 'clsx';
 import { t, Trans } from '@lingui/macro';
 import { NavLink, useLocation, useSearchParams } from 'react-router-dom';
-import { animated, Transition, Spring } from '@react-spring/web';
 
 import { useUser } from 'src/api/user';
 import { useDarkMode } from 'src/hooks/darkMode';
@@ -113,12 +112,15 @@ export const NavComponent: FunctionComponent = () => {
                 {routes.map((route) => (
                   <span
                     key={route.path}
-                    className="m-1 mr-2 text-xl whitespace-nowrap"
+                    className="m-1 mr-2 whitespace-nowrap"
                   >
                     <NavLink
                       to={getCrossTypeNavTarget(route.path)}
                       className={({ isActive }) =>
-                        clsx(isActive && 'underline')
+                        clsx(
+                          'text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors',
+                          isActive && 'font-semibold text-zinc-900 dark:text-zinc-50 underline'
+                        )
                       }
                     >
                       {route.name}
@@ -203,61 +205,46 @@ const SideBar: FunctionComponent<{
   const getCrossTypeNavTarget = useCrossTypeNavTarget();
 
   return (
-    <Transition
-      items={showSidebar}
-      from={{ marginRight: '-100%' }}
-      enter={{ marginRight: '0%' }}
-      leave={{ marginRight: '-100%' }}
-    >
-      {(transitionStyles, show) => (
-        <>
-          {show && (
-            <>
-              <Spring
-                from={{
-                  opacity: 0,
-                }}
-                to={{
-                  opacity: 0.3,
-                }}
-                reverse={!showSidebar}
-              >
-                {(styles) => (
-                  <animated.div
-                    style={styles}
-                    className={clsx(
-                      'fixed top-0 bottom-0 left-0 right-0 z-10 w-full h-full bg-gray-500',
-                      !showSidebar && 'pointer-events-none'
-                    )}
-                    onClick={() => hideSidebar()}
-                  ></animated.div>
-                )}
-              </Spring>
+    <>
+      {/* Backdrop overlay – fades in/out via CSS transition */}
+      <div
+        className={clsx(
+          'fixed top-0 bottom-0 left-0 right-0 z-10 w-full h-full bg-zinc-500 transition-opacity duration-300',
+          showSidebar ? 'opacity-30 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        )}
+        onClick={() => hideSidebar()}
+        aria-hidden="true"
+      />
 
-              <animated.div
-                style={transitionStyles}
-                className="fixed top-0 right-0 z-50 p-4 pr-10 overflow-hidden bg-red-100 dark:bg-gray-700 -bottom-full"
+      {/* Sidebar panel – slides in from the right via CSS transition */}
+      <div
+        className={clsx(
+          'fixed top-0 right-0 z-50 p-4 pr-10 overflow-hidden',
+          'bg-white dark:bg-zinc-900 border-l border-zinc-200 dark:border-zinc-800',
+          '-bottom-full',
+          'transition-transform duration-300',
+          showSidebar ? 'translate-x-0' : 'translate-x-full'
+        )}
+      >
+        <div className="flex flex-col md:flex-row">
+          {routes.map((route) => (
+            <span key={route.path} className="my-2 ml-1 mr-3 text-xl">
+              <NavLink
+                onClick={() => hideSidebar()}
+                to={getCrossTypeNavTarget(route.path)}
+                className={({ isActive }) =>
+                  clsx(
+                    'text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors',
+                    isActive && 'font-semibold text-zinc-900 dark:text-zinc-50'
+                  )
+                }
               >
-                <div className="flex flex-col md:flex-row">
-                  {routes.map((route) => (
-                    <span key={route.path} className="my-2 ml-1 mr-3 text-xl">
-                      <NavLink
-                        onClick={() => hideSidebar()}
-                        to={getCrossTypeNavTarget(route.path)}
-                        className={({ isActive }) =>
-                          clsx(isActive && 'selected')
-                        }
-                      >
-                        {route.name}
-                      </NavLink>
-                    </span>
-                  ))}
-                </div>
-              </animated.div>
-            </>
-          )}
-        </>
-      )}
-    </Transition>
+                {route.name}
+              </NavLink>
+            </span>
+          ))}
+        </div>
+      </div>
+    </>
   );
 };

@@ -1,7 +1,6 @@
 import React from 'react';
 import { IStatistocsProps, YearSelector } from 'src/pages/Statistics';
 import StatisticsGenreSegment from './StatisticsGenreSegment';
-import { useQuery } from 'react-query';
 import { mediaTrackerApi } from 'src/api/api';
 import { useGenreSeen } from 'src/hooks/statisticHooks';
 

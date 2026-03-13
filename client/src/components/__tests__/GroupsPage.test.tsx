@@ -55,9 +55,15 @@ jest.mock('@lingui/macro', () => {
 jest.mock('@lingui/react', () => {
   const React = require('react');
   return {
-    useLingui: () => ({ i18n: { _: (msg: string) => msg, locale: 'en' } }),
-    Trans: ({ id, children }: { id?: string; children?: React.ReactNode }) => (
-      <>{id || children}</>
+    useLingui: () => ({
+      i18n: {
+        _: (msg: any) =>
+          typeof msg === 'string' ? msg : msg?.message || msg?.id || '',
+        locale: 'en',
+      },
+    }),
+    Trans: ({ message, children }: { message?: string; children?: React.ReactNode }) => (
+      <>{message || children}</>
     ),
     I18nProvider: ({ children }: { children: React.ReactNode }) => (
       <>{children}</>
@@ -199,7 +205,7 @@ describe('GroupsPage – groups list', () => {
     // The Plural component is transformed by babel-plugin-macros into lingui's
     // ICU runtime. We verify the container element is rendered (even if the
     // ICU string is unprocessed in the jsdom test environment).
-    const memberCountEl = document.querySelector('.text-sm.text-gray-600');
+    const memberCountEl = document.querySelector('.text-sm.text-zinc-600');
     expect(memberCountEl).not.toBeNull();
     expect(memberCountEl).toBeInTheDocument();
   });
@@ -212,7 +218,7 @@ describe('GroupsPage – groups list', () => {
     expect(screen.getByText('Admin')).toBeInTheDocument();
     expect(screen.getByText('Viewer')).toBeInTheDocument();
     // Verify both groups' member count containers are rendered
-    const memberCountEls = document.querySelectorAll('.text-sm.text-gray-600');
+    const memberCountEls = document.querySelectorAll('.text-sm.text-zinc-600');
     expect(memberCountEls).toHaveLength(2);
   });
 

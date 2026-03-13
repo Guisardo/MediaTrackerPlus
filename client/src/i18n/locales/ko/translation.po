@@ -1,0 +1,1598 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2026-03-12 15:41-0300\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: ko\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#. js-lingui-explicit-id
+#: src/__tests__/ui-stack-migration.integration.test.ts:186
+msgid "i18n/i18n.ts"
+msgstr "i18n/i18n.ts"
+
+#: src/pages/settings/Notifications.tsx:82
+msgid " User key"
+msgstr " 사용자 키"
+
+#. placeholder {0}: 1
+#. placeholder {0}: 5
+#. placeholder {0}: list.itemsCount
+#: src/i18n/__tests__/i18n.test.ts:86
+#: src/i18n/__tests__/i18n.test.ts:98
+#: src/pages/ListsPage.tsx:55
+msgid "{0, plural, one {# item} other {# items}}"
+msgstr "{0, plural, one {# 항목} other {# 항목}}"
+
+#. placeholder {0}: group.memberCount
+#: src/pages/GroupsPage.tsx:56
+msgid "{0, plural, one {# member} other {# members}}"
+msgstr "{0, plural, one {# 명의 멤버} other {# 명의 멤버}}"
+
+#. placeholder {0}: filteredItems.length
+#. placeholder {0}: items.length
+#: src/pages/import/TraktTv.tsx:342
+#: src/pages/ListPage.tsx:131
+msgid "{0, plural, one {1 item} other {# items}}"
+msgstr "{0, plural, one {1 항목} other {# 항목}}"
+
+#. placeholder {0}: mediaItem.authors.length
+#: src/pages/Details.tsx:339
+msgid "{0, plural, one {Author} other {Authors}}"
+msgstr "{0, plural, one {작가} other {작가}}"
+
+#. placeholder {0}: searchResult?.length
+#: src/components/PaginatedGridItems.tsx:317
+msgid "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {Found # items for query \"<1>{searchQuery}</1>\"}}"
+msgstr "{0, plural, one {\"<0>{searchQuery}</0>\" 검색에서 # 개의 항목을 찾았습니다} other {\"<1>{searchQuery}</1>\" 검색에서 # 개의 항목을 찾았습니다}}"
+
+#. placeholder {0}: mediaItem.genres.length
+#: src/pages/Details.tsx:299
+msgid "{0, plural, one {Genre} other {Genres}}"
+msgstr "{0, plural, one {장르} other {장르}}"
+
+#. placeholder {0}: listsWithItem?.length
+#: src/components/AddToListModal.tsx:151
+msgid "{0, plural, one {Listed on 1 list} other {Listed on # lists}}"
+msgstr "{0, plural, one {목록 1개에 등록됨} other {목록 #개에 등록됨}}"
+
+#. placeholder {0}: mediaItem.seenHistory.length
+#: src/pages/Details.tsx:565
+#: src/pages/SeenHistory.tsx:43
+msgid "{0, plural, one {Listened 1 time} other {Listened # times}}"
+msgstr "{0, plural, one {1번 감상} other {#번 감상}}"
+
+#. placeholder {0}: mediaItem.narrators.length
+#: src/pages/Details.tsx:353
+msgid "{0, plural, one {Narrator} other {Narrators}}"
+msgstr "{0, plural, one {내레이터} other {내레이터}}"
+
+#. placeholder {0}: mediaItem.platform.length
+#: src/pages/Details.tsx:267
+msgid "{0, plural, one {Platform} other {platforms}}"
+msgstr "{0, plural, one {운영체제} other {운영체제}}"
+
+#. placeholder {0}: mediaItem.seenHistory.length
+#: src/pages/Details.tsx:589
+#: src/pages/SeenHistory.tsx:67
+msgid "{0, plural, one {Played 1 time} other {Played # times}}"
+msgstr "{0, plural, one {1번 플레이} other {#번 플레이}}"
+
+#. placeholder {0}: mediaItem.seenHistory.length
+#: src/pages/Details.tsx:573
+#: src/pages/SeenHistory.tsx:51
+msgid "{0, plural, one {Read 1 time} other {Read # times}}"
+msgstr "{0, plural, one {1번 감상} other {#번 감상}}"
+
+#. placeholder {0}: episode.seenHistory.length
+#. placeholder {0}: mediaItem.seenHistory.length
+#: src/pages/Details.tsx:581
+#: src/pages/SeasonsPage.tsx:87
+#: src/pages/SeenHistory.tsx:59
+msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
+msgstr "{0, plural, one {1번 시청} other {#번 시청}}"
+
+#. placeholder {0}: route.name
+#: src/components/Statistics/StatisticsGenreSegment.tsx:42
+msgid "{0}"
+msgstr "{0}"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:112
+msgid "{count, plural, one {Do you want to remove # seen history entry?} other {Do you want to remove all # seen history entries?}}"
+msgstr "{count, plural, one {시청 기록에서 #개의 항목을 제거하시겠습니까?} other {시청 기록에서 #개의 항목을 제거하시겠습니까?}}"
+
+#: src/components/SetProgress.tsx:119
+msgid "{duration, plural, one {minute} other {minutes}}"
+msgstr "{duration, plural, one {분} other {분}}"
+
+#. placeholder {0}: args.year ? 'in ' + args.year : ''
+#. placeholder {1}: args.genre ? 'with genre ' + args.genre : ''
+#. placeholder {2}: args.year ? 'in ' + args.year : ''
+#. placeholder {3}: args.genre ? 'with genre ' + args.genre : ''
+#: src/components/PaginatedGridItems.tsx:333
+msgid "{numberOfItemsTotal, plural, one {1 item {0} {1}} other {# item {2} {3}}}"
+msgstr "{numberOfItemsTotal, plural, one {1 항목 {0} {1}} other {# 항목 {2} {3}}}"
+
+#: src/components/SetProgress.tsx:43
+msgid "{value, plural, one {minute} other {minutes}}"
+msgstr "{value, plural, one {분} other {분}}"
+
+#: src/components/SetProgress.tsx:41
+msgid "{value, plural, one {page} other {pages}}"
+msgstr "{value, plural, one {페이지} other {페이지}}"
+
+#. placeholder {0}: item.genre
+#. placeholder {1}: item.count
+#: src/components/Statistics/StatisticsGenreSegment.tsx:61
+msgid "<0>{0}</0> (<1>{1}</1>)"
+msgstr "<0>{0}</0> (<1>{1}</1>)"
+
+#. placeholder {0}: data.audiobook.items
+#. placeholder {1}: data.audiobook.plays
+#: src/components/Statistics/StatisticsSegment.tsx:215
+msgid "<0>{0}</0> audiobooks (<1>{1}</1> plays)"
+msgstr "<0>{0}</0> 오디오북 (<1>{1}</1>번 감상)"
+
+#. placeholder {0}: data.book.items
+#. placeholder {1}: data.book.plays
+#: src/components/Statistics/StatisticsSegment.tsx:174
+msgid "<0>{0}</0> books (<1>{1}</1> reads)"
+msgstr "<0>{0}</0> 권 (<1>{1}</1>번 읽음)"
+
+#. placeholder {0}: data.tv.episodes
+#. placeholder {1}: data.tv.plays
+#. placeholder {2}: data.tv.items
+#: src/components/Statistics/StatisticsSegment.tsx:51
+msgid "<0>{0}</0> episodes (<1>{1}</1> plays of <2>{2}</2> shows)"
+msgstr "<0>{0}</0> 에피소드 (<2>{2}</2> 쇼, <1>{1}</1>번 시청)"
+
+#. placeholder {0}: data.movie.items
+#. placeholder {1}: data.movie.plays
+#: src/components/Statistics/StatisticsSegment.tsx:92
+msgid "<0>{0}</0> movies (<1>{1}</1> plays)"
+msgstr "<0>{0}</0> 영화 (<1>{1}</1>번 시청)"
+
+#. placeholder {0}: data.video_game.items
+#. placeholder {1}: data.video_game.plays
+#: src/components/Statistics/StatisticsSegment.tsx:133
+msgid "<0>{0}</0> video games (<1>{1}</1> plays)"
+msgstr "<0>{0}</0> 게임 (<1>{1}</1>번 플레이)"
+
+#: src/components/Statistics/StatisticsSegment.tsx:204
+msgid "<0><1/> </0>listening"
+msgstr "<0><1/> </0>감상"
+
+#: src/components/Statistics/StatisticsSegment.tsx:122
+msgid "<0><1/> </0>playing"
+msgstr "<0><1/> </0>플레이"
+
+#: src/components/Statistics/StatisticsSegment.tsx:163
+msgid "<0><1/> </0>reading"
+msgstr "<0><1/> </0>감상"
+
+#: src/components/Statistics/StatisticsSegment.tsx:40
+#: src/components/Statistics/StatisticsSegment.tsx:81
+msgid "<0><1/> </0>watching"
+msgstr "<0><1/> </0>시청"
+
+#: src/pages/Settings.tsx:113
+msgid "About"
+msgstr "정보"
+
+#: src/pages/settings/Notifications.tsx:114
+msgid "Access Token"
+msgstr "Access Token"
+
+#: src/components/Facets/ActiveFacetChips.tsx:219
+msgid "Active filters"
+msgstr "활성 필터"
+
+#. placeholder {0}: episode ? `${mediaItem.title} ${formatEpisodeNumber(episode)}` : season ? `${mediaItem.title} ${formatSeasonNumber(season)}` : mediaItem.title
+#: src/components/AddToListModal.tsx:55
+msgid "Add \"{0}\" to list"
+msgstr "\"{0}\"을(를) 목록에 추가"
+
+#. placeholder {0}: formatEpisodeNumber(episode)
+#. placeholder {0}: formatSeasonNumber(season)
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:48
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:52
+msgid "Add {0} to seen history"
+msgstr "시청 기록에 {0} 추가"
+
+#: src/components/AddToListModal.tsx:143
+msgid "Add episode to list"
+msgstr "목록에 에피소드 추가"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:59
+msgid "Add episode to seen history"
+msgstr "시청 기록에 에피소드 추가"
+
+#: src/components/AddOrEditListButton.tsx:43
+#: src/components/AddOrEditListButton.tsx:219
+msgid "Add list"
+msgstr "목록 추가"
+
+#: src/pages/GroupDetailPage.tsx:97
+msgid "Add member"
+msgstr "멤버 추가"
+
+#: src/pages/settings/Preferences.tsx:41
+msgid "Add recommendations to watchlist"
+msgstr "관심 목록에 추천 항목 추가"
+
+#: src/components/AddToListModal.tsx:145
+msgid "Add season to list"
+msgstr "목록에 시즌 추가"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:61
+msgid "Add season to seen history"
+msgstr "시청 기록에 시즌 추가"
+
+#: src/components/AddToListModal.tsx:147
+msgid "Add to list"
+msgstr "목록에 추가"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:41
+msgid "Add to listened history"
+msgstr "감상 기록에 추가"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:43
+msgid "Add to played history"
+msgstr "플레이 기록에 추가"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:42
+msgid "Add to read history"
+msgstr "감상 기록에 추가"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:44
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:56
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:63
+msgid "Add to seen history"
+msgstr "시청 기록에 추가"
+
+#: src/pages/Details.tsx:646
+msgid "Add to watchlist"
+msgstr "관심 목록에 추가"
+
+#: src/pages/settings/ApplicationTokens.tsx:31
+msgid "Add token"
+msgstr "토큰 추가"
+
+#: src/pages/GroupDetailPage.tsx:193
+#: src/pages/GroupDetailPage.tsx:208
+#: src/pages/GroupDetailPage.tsx:321
+#: src/pages/GroupsPage.tsx:48
+msgid "Admin"
+msgstr "관리자"
+
+#: src/components/FilterBy.tsx:11
+msgid "All"
+msgstr "전체"
+
+#: src/components/GroupSelector.tsx:150
+msgid "All Users"
+msgstr "모든 사용자"
+
+#: src/pages/Statistics.tsx:33
+msgid "All Years"
+msgstr "모든 연도"
+
+#: src/pages/settings/Configuration.tsx:145
+msgid "API keys can be acquired here"
+msgstr "여기에서 API 키를 얻을 수 있습니다."
+
+#: src/pages/settings/Notifications.tsx:68
+msgid "App token"
+msgstr "App token"
+
+#: src/pages/Settings.tsx:125
+msgid "Application tokens"
+msgstr "애플리케이션 토큰"
+
+#: src/hooks/translations.ts:28
+msgid "Ascending"
+msgstr "오름차순"
+
+#: src/components/SelectSeenDate.tsx:117
+msgid "At release date"
+msgstr "출시일"
+
+#: src/pages/settings/Configuration.tsx:59
+#: src/pages/settings/Configuration.tsx:68
+msgid "Audible language"
+msgstr "Audible 언어"
+
+#: src/components/Facets/ActiveFacetChips.tsx:76
+#: src/components/Facets/MediaTypeSection.tsx:24
+#: src/components/GridItem.tsx:91
+msgid "Audiobook"
+msgstr "오디오북"
+
+#: src/components/Nav.tsx:41
+#: src/components/Statistics/StatisticsSegment.tsx:199
+msgid "Audiobooks"
+msgstr "오디오북"
+
+#: src/components/Facets/ActiveFacetChips.tsx:54
+#: src/components/Facets/CreatorSection.tsx:27
+msgid "Author"
+msgstr "저자"
+
+#: src/pages/settings/Preferences.tsx:42
+msgid "Automatically add similar items to your watchlist when you rate content"
+msgstr "콘텐츠를 평가할 때 유사한 항목을 관심 목록에 자동으로 추가"
+
+#: src/pages/settings/Preferences.tsx:19
+msgid "Avoid episode spoilers"
+msgstr "에피소드 스포일러 방지"
+
+#: src/pages/settings/Preferences.tsx:30
+msgid "Avoid season spoilers"
+msgstr "시즌 스포일러 방지"
+
+#: src/components/Facets/ActiveFacetChips.tsx:74
+#: src/components/Facets/MediaTypeSection.tsx:22
+#: src/components/GridItem.tsx:92
+msgid "Book"
+msgstr "책"
+
+#: src/components/Nav.tsx:40
+#: src/components/Statistics/StatisticsSegment.tsx:158
+#: src/pages/import/Goodreads.tsx:65
+msgid "Books"
+msgstr "책"
+
+#: src/components/Nav.tsx:47
+msgid "Calendar"
+msgstr "달력"
+
+#: src/components/SelectLastSeenEpisode.tsx:159
+#: src/components/SelectSeenDate.tsx:164
+#: src/components/SetProgress.tsx:129
+#: src/components/StarRating.tsx:171
+msgid "Cancel"
+msgstr "취소"
+
+#: src/pages/settings/Password.tsx:76
+msgid "Change password"
+msgstr "비밀번호 변경"
+
+#: src/components/Facets/ActiveFacetChips.tsx:331
+#: src/components/Facets/FacetDrawer.tsx:72
+msgid "Clear all"
+msgstr "모두 지우기"
+
+#: src/components/Facets/FacetPanel.tsx:38
+msgid "Clear all filters"
+msgstr "모든 필터 지우기"
+
+#: src/pages/settings/Configuration.tsx:148
+msgid "Client ID"
+msgstr "Client ID"
+
+#: src/pages/settings/Configuration.tsx:156
+msgid "Client Secret"
+msgstr "Client Secret"
+
+#: src/components/AddOrEditGroupButton.tsx:70
+#: src/components/AddToListModal.tsx:105
+msgid "Close"
+msgstr "닫기"
+
+#: src/pages/Settings.tsx:139
+msgid "Configuration"
+msgstr "관리자 설정"
+
+#: src/components/Confirm.tsx:73
+msgid "Confirm"
+msgstr "확인"
+
+#: src/pages/settings/Password.tsx:41
+msgid "Confirm new password"
+msgstr "새 비밀번호 확인"
+
+#: src/pages/Register.tsx:63
+msgid "Confirm password"
+msgstr "비밀번호 확인"
+
+#: src/pages/import/TraktTv.tsx:93
+msgid "Copy to clipboard"
+msgstr "클립보드로 복사"
+
+#: src/pages/GroupsPage.tsx:32
+msgid "Create a group to share Platform Recommended results with other users."
+msgstr "그룹을 만들어 플랫폼 추천 결과를 다른 사용자와 공유하세요."
+
+#: src/components/AddOrEditGroupButton.tsx:66
+#: src/components/AddOrEditGroupButton.tsx:87
+msgid "Create group"
+msgstr "그룹 만들기"
+
+#: src/components/Facets/ActiveFacetChips.tsx:51
+#: src/components/Facets/ActiveFacetChips.tsx:58
+#: src/components/Facets/CreatorSection.tsx:24
+#: src/components/Facets/CreatorSection.tsx:32
+msgid "Creator"
+msgstr "크리에이터"
+
+#: src/pages/settings/Password.tsx:22
+msgid "Current password"
+msgstr "현재 비밀번호"
+
+#: src/pages/settings/Password.tsx:71
+msgid "Current password is incorrect"
+msgstr "현재 비밀번호가 일치하지 않습니다."
+
+#: src/pages/import/Goodreads.tsx:78
+msgid "Currently reading"
+msgstr "현재 감상 중"
+
+#: src/pages/LogsPage.tsx:122
+msgid "Debug"
+msgstr "디버그"
+
+#: src/pages/GroupDetailPage.tsx:359
+msgid "Delete group"
+msgstr "그룹 삭제"
+
+#. placeholder {0}: group?.name
+#: src/pages/GroupDetailPage.tsx:276
+msgid "Delete group \"{0}\"? This action cannot be undone."
+msgstr "\"{0}\" 그룹을 삭제하시겠습니까? 이 작업은 취소할 수 없습니다."
+
+#: src/components/AddOrEditListButton.tsx:246
+msgid "Delete list"
+msgstr "목록 제거"
+
+#: src/hooks/translations.ts:29
+msgid "Descending"
+msgstr "내림차순"
+
+#: src/components/AddOrEditListButton.tsx:151
+#: src/pages/EpisodePage.tsx:53
+#: src/pages/SeasonsPage.tsx:213
+msgid "Description"
+msgstr "설명"
+
+#: src/components/Facets/ActiveFacetChips.tsx:56
+#: src/components/Facets/CreatorSection.tsx:29
+msgid "Developer"
+msgstr "개발자"
+
+#: src/components/Facets/ActiveFacetChips.tsx:49
+#: src/components/Facets/CreatorSection.tsx:22
+msgid "Director"
+msgstr "감독"
+
+#: src/components/Nav.tsx:161
+msgid "Do you really want to logout?"
+msgstr "정말로 로그아웃하시겠습니까?"
+
+#. placeholder {0}: list.name
+#: src/components/AddOrEditListButton.tsx:229
+msgid "Do you really want to remove list \"{0}\""
+msgstr "정말로 \"{0}\" 목록을 삭제하시겠습니까?"
+
+#: src/components/SetProgress.tsx:110
+msgid "Duration"
+msgstr "시간"
+
+#: src/components/AddOrEditListButton.tsx:43
+#: src/components/AddOrEditListButton.tsx:133
+msgid "Edit list"
+msgstr "목록 편집"
+
+#: src/pages/settings/Configuration.tsx:27
+msgid "Enable registration"
+msgstr "회원가입 활성화"
+
+#: src/components/SelectLastSeenEpisode.tsx:106
+msgid "Episode"
+msgstr "에피소드"
+
+#. placeholder {0}: formatEpisodeNumber( episodesMap[seenEntry.episodeId] )
+#. placeholder {1}: episodesMap[seenEntry.episodeId].title
+#: src/pages/SeenHistory.tsx:111
+msgid "Episode {0} {1}"
+msgstr "에피소드 {0} {1}"
+
+#: src/components/ImportSummaryTable.tsx:93
+#: src/pages/Details.tsx:383
+msgid "Episodes"
+msgstr "에피소드"
+
+#: src/pages/Details.tsx:449
+msgid "Episodes page"
+msgstr "에피소드 페이지"
+
+#: src/pages/import/TraktTv.tsx:143
+#: src/pages/LogsPage.tsx:102
+msgid "Error"
+msgstr "에러"
+
+#: src/pages/import/TraktTv.tsx:137
+msgid "Exporting"
+msgstr "내보내는 중"
+
+#: src/pages/GroupDetailPage.tsx:90
+msgid "Failed to add member. They may already be in the group."
+msgstr "멤버 추가에 실패했습니다. 이미 그룹에 있을 수 있습니다."
+
+#: src/pages/GroupDetailPage.tsx:291
+msgid "Failed to load group. It may have been deleted."
+msgstr "그룹을 불러오는 데 실패했습니다. 삭제되었을 수 있습니다."
+
+#: src/components/Facets/FacetDrawer.tsx:61
+#: src/components/Facets/FacetMobileButton.tsx:36
+#: src/components/Facets/FacetPanel.tsx:31
+msgid "Filters"
+msgstr "필터"
+
+#: src/pages/Details.tsx:528
+msgid "First unwatched episode"
+msgstr "다음 에피소드"
+
+#: src/components/Nav.tsx:39
+#: src/components/Statistics/StatisticsGenreSegment.tsx:20
+#: src/components/Statistics/StatisticsSegment.tsx:117
+msgid "Games"
+msgstr "게임"
+
+#: src/pages/settings/Configuration.tsx:25
+msgid "General"
+msgstr "일반"
+
+#: src/components/Facets/ActiveFacetChips.tsx:225
+#: src/components/Facets/GenreSection.tsx:37
+msgid "Genre"
+msgstr "Genre"
+
+#: src/pages/Statistics.tsx:154
+msgid "Genres"
+msgstr "장르"
+
+#. placeholder {0}: deviceCode.verificationUrl
+#. placeholder {1}: deviceCode.userCode
+#: src/pages/import/TraktTv.tsx:66
+msgid "Go to <0>{0}</0> and enter following code: <1>{1}</1>"
+msgstr "<0>{0}</0> (으)로 이동하여 다음 코드를 입력하십시오: <1>{1}</1>"
+
+#: src/pages/import/Goodreads.tsx:34
+msgid "Go to <0>https://www.goodreads.com/review/list</0> and copy RSS url from the bottom of the page"
+msgstr "<0>https://www.goodreads.com/review/list</0>(으)로 이동하여 페이지 하단에서 RSS URL을 복사하십시오."
+
+#: src/pages/settings/Notifications.tsx:110
+msgid "Gotify server url"
+msgstr "Gotify 서버 URL"
+
+#: src/pages/GroupDetailPage.tsx:310
+msgid "Group name"
+msgstr "그룹 이름"
+
+#: src/components/Nav.tsx:50
+msgid "Groups"
+msgstr "그룹"
+
+#: src/pages/settings/Preferences.tsx:31
+msgid "Hide overview of unseen seasons"
+msgstr "시청하지 않은 시즌의 내용 숨기기"
+
+#: src/pages/settings/Preferences.tsx:20
+msgid "Hide title of unseen episodes"
+msgstr "시청하지 않은 에피소드 제목 숨기기"
+
+#: src/components/Nav.tsx:36
+#: src/i18n/__tests__/i18n.test.ts:65
+msgid "Home"
+msgstr "홈"
+
+#: src/pages/LogsPage.tsx:117
+msgid "Http"
+msgstr "HTTP"
+
+#: src/pages/Details.tsx:471
+msgid "I am listening it"
+msgstr "감상 중으로 설정"
+
+#: src/pages/Details.tsx:472
+msgid "I am playing it"
+msgstr "플레이 중으로 설정"
+
+#: src/pages/Details.tsx:470
+msgid "I am reading it"
+msgstr "감상 중으로 설정"
+
+#: src/pages/Details.tsx:469
+msgid "I am watching it"
+msgstr "시청 중으로 설정"
+
+#: src/components/SelectSeenDate.tsx:124
+#: src/pages/Statistics.tsx:26
+msgid "I do not remember"
+msgstr "기억 나지 않습니다"
+
+#: src/pages/Details.tsx:492
+msgid "I finished listening it"
+msgstr "감상 완료로 설정"
+
+#: src/pages/Details.tsx:495
+msgid "I finished playing it"
+msgstr "플레이 완료로 설정"
+
+#: src/pages/Details.tsx:490
+msgid "I finished reading it"
+msgstr "감상 완료로 설정"
+
+#: src/pages/Details.tsx:489
+msgid "I finished watching it"
+msgstr "시청 완료로 설정"
+
+#: src/pages/settings/Configuration.tsx:129
+msgid "IGDB credentials"
+msgstr "IGDB 자격 증명"
+
+#: src/pages/import/Goodreads.tsx:57
+msgid "import"
+msgstr "가져오기"
+
+#: src/components/Nav.tsx:48
+msgid "Import"
+msgstr "가져오기"
+
+#: src/pages/Import.tsx:17
+msgid "Import from"
+msgstr "다음에서 가져오기"
+
+#: src/pages/import/TraktTv.tsx:141
+msgid "Imported"
+msgstr "가져옴"
+
+#: src/pages/import/Goodreads.tsx:62
+#: src/pages/import/TraktTv.tsx:142
+msgid "Importing"
+msgstr "가져오는 중"
+
+#: src/components/Nav.tsx:43
+msgid "In progress"
+msgstr "진행 중"
+
+#: src/pages/Login.tsx:82
+msgid "Incorrect password or username"
+msgstr "잘못된 비밀번호 또는 사용자 이름입니다."
+
+#: src/pages/LogsPage.tsx:112
+msgid "Info"
+msgstr "정보"
+
+#: src/components/Facets/StatusSection.tsx:143
+msgid "Item must match all selected statuses"
+msgstr "항목이 선택한 모든 상태와 일치해야 합니다"
+
+#: src/pages/settings/Notifications.tsx:95
+msgid "Key"
+msgstr "Key"
+
+#: src/components/Facets/ActiveFacetChips.tsx:235
+#: src/components/Facets/LanguageSection.tsx:95
+#: src/pages/Details.tsx:330
+msgid "Language"
+msgstr "언어"
+
+#: src/components/OrderBy.tsx:19
+msgid "Last airing"
+msgstr "마지막 방송"
+
+#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
+#: src/pages/Details.tsx:537
+msgid "Last listened at {0}"
+msgstr "{0} 마지막으로 감상"
+
+#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
+#: src/pages/Details.tsx:555
+msgid "Last played at {0}"
+msgstr "{0} 마지막으로 플레이"
+
+#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
+#: src/pages/Details.tsx:543
+msgid "Last read at {0}"
+msgstr "{0} 마지막으로 감상"
+
+#: src/components/OrderBy.tsx:14
+msgid "Last seen"
+msgstr "최근 시청일"
+
+#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
+#: src/pages/Details.tsx:549
+msgid "Last seen at {0}"
+msgstr "{0} 마지막으로 시청"
+
+#. placeholder {0}: item.listName
+#: src/pages/import/TraktTv.tsx:320
+msgid "List {0} - episodes"
+msgstr "목록 {0} - 에피소드"
+
+#. placeholder {0}: item.listName
+#: src/pages/import/TraktTv.tsx:302
+msgid "List {0} - movies"
+msgstr "목록 {0} - 영화"
+
+#. placeholder {0}: item.listName
+#: src/pages/import/TraktTv.tsx:314
+msgid "List {0} - seasons"
+msgstr "목록 {0} - 시즌"
+
+#. placeholder {0}: item.listName
+#: src/pages/import/TraktTv.tsx:308
+msgid "List {0} - shows"
+msgstr "목록 {0} - 쇼"
+
+#. placeholder {0}: list.listName
+#: src/pages/import/TraktTv.tsx:218
+msgid "List: {0}"
+msgstr "목록: {0}"
+
+#: src/components/Facets/ActiveFacetChips.tsx:26
+#: src/components/Facets/StatusSection.tsx:33
+#: src/components/FilterBy.tsx:18
+msgid "Listened"
+msgstr "감상함"
+
+#. placeholder {0}: seenEntry.dateStr
+#: src/pages/SeenHistory.tsx:89
+msgid "Listened at {0}"
+msgstr "{0} 감상"
+
+#: src/pages/Details.tsx:597
+msgid "Listened history"
+msgstr "감상 기록"
+
+#: src/components/Nav.tsx:49
+msgid "Lists"
+msgstr "목록"
+
+#: src/components/AddToListModal.tsx:49
+#: src/components/PaginatedGridItems.tsx:384
+#: src/components/SelectLastSeenEpisode.tsx:67
+#: src/pages/Calendar.tsx:61
+#: src/pages/Details.tsx:205
+#: src/pages/EpisodePage.tsx:42
+#: src/pages/GroupDetailPage.tsx:285
+#: src/pages/GroupsPage.tsx:17
+#: src/pages/import/TraktTv.tsx:116
+#: src/pages/ListPage.tsx:86
+#: src/pages/ListsPage.tsx:29
+#: src/pages/Login.tsx:17
+#: src/pages/LogsPage.tsx:27
+#: src/pages/SeasonsPage.tsx:144
+#: src/pages/SeenHistory.tsx:30
+msgid "Loading"
+msgstr "불러오는 중"
+
+#: src/pages/Login.tsx:33
+#: src/pages/Login.tsx:67
+#: src/pages/Register.tsx:85
+msgid "Login"
+msgstr "로그인"
+
+#: src/components/Nav.tsx:166
+#: src/i18n/__tests__/i18n.test.ts:56
+msgid "Logout"
+msgstr "로그아웃"
+
+#: src/pages/Settings.tsx:143
+msgid "Logs"
+msgstr "로그"
+
+#: src/components/Facets/RatingSection.tsx:68
+msgid "Maximum rating"
+msgstr "최대 평점"
+
+#: src/components/Facets/YearSection.tsx:92
+msgid "Maximum year"
+msgstr "최대 연도"
+
+#: src/components/OrderBy.tsx:21
+msgid "Media type"
+msgstr "미디어 유형"
+
+#: src/components/Facets/ActiveFacetChips.tsx:281
+#: src/components/Facets/MediaTypeSection.tsx:117
+msgid "Media Type"
+msgstr "미디어 유형"
+
+#: src/pages/GroupDetailPage.tsx:328
+msgid "Members"
+msgstr "멤버"
+
+#: src/components/Facets/RatingSection.tsx:67
+msgid "Minimum rating"
+msgstr "최소 평점"
+
+#: src/components/Facets/YearSection.tsx:91
+msgid "Minimum year"
+msgstr "최소 연도"
+
+#: src/components/Facets/ActiveFacetChips.tsx:70
+#: src/components/Facets/MediaTypeSection.tsx:18
+#: src/components/GridItem.tsx:93
+msgid "Movie"
+msgstr "영화"
+
+#: src/components/ImportSummaryTable.tsx:90
+#: src/components/Nav.tsx:38
+#: src/components/Statistics/StatisticsGenreSegment.tsx:17
+#: src/components/Statistics/StatisticsSegment.tsx:76
+msgid "Movies"
+msgstr "영화"
+
+#: src/utils.ts:152
+msgid "Movies, shows, seasons, episodes, books, audiobooks and video games I plan to watch/read/listen/play"
+msgstr "내가 보고/읽고/듣고/플레이하고자 하는 영화, TV 쇼, 시즌, 에피소드, 책, 오디오북 및 게임"
+
+#: src/hooks/translations.ts:8
+msgid "My rating"
+msgstr "내 평점"
+
+#: src/components/AddOrEditGroupButton.tsx:51
+#: src/components/AddOrEditListButton.tsx:137
+msgid "Name"
+msgstr "이름"
+
+#: src/pages/Details.tsx:281
+msgid "Network"
+msgstr "네트워크"
+
+#: src/components/AddOrEditGroupButton.tsx:47
+msgid "New group"
+msgstr "새 그룹"
+
+#: src/components/AddOrEditListButton.tsx:133
+msgid "New list"
+msgstr "새 목록"
+
+#: src/pages/settings/Password.tsx:32
+msgid "New password"
+msgstr "새 비밀번호"
+
+#: src/components/OrderBy.tsx:18
+#: src/hooks/translations.ts:15
+msgid "Next airing"
+msgstr "다음 방송"
+
+#: src/pages/Details.tsx:515
+msgid "Next episode"
+msgstr "다음 에피소드"
+
+#: src/pages/Home.tsx:89
+msgid "Next episode to watch"
+msgstr "다음 에피소드"
+
+#: src/components/Confirm.tsx:78
+msgid "No"
+msgstr "아니오"
+
+#: src/pages/SeenHistory.tsx:105
+msgid "No date"
+msgstr "날짜 없음"
+
+#: src/pages/GroupsPage.tsx:29
+msgid "No groups yet"
+msgstr "아직 그룹 없음"
+
+#: src/pages/GroupDetailPage.tsx:333
+msgid "No members yet"
+msgstr "아직 멤버 없음"
+
+#: src/pages/LogsPage.tsx:68
+msgid "No more logs"
+msgstr "더 이상 로그 없음"
+
+#: src/pages/GroupDetailPage.tsx:134
+msgid "No users found"
+msgstr "사용자를 찾을 수 없음"
+
+#: src/pages/import/TraktTv.tsx:245
+msgid "Not imported items"
+msgstr "가져오지 않은 아이템"
+
+#: src/pages/settings/Notifications.tsx:174
+msgid "Notification platform"
+msgstr "알림 플랫폼"
+
+#: src/pages/Settings.tsx:129
+msgid "Notifications"
+msgstr "알림"
+
+#: src/components/SelectSeenDate.tsx:110
+msgid "Now"
+msgstr "지금"
+
+#: src/pages/SeasonsPage.tsx:230
+msgid "Number of episodes"
+msgstr "에피소드 수"
+
+#: src/pages/Details.tsx:366
+msgid "Number of pages"
+msgstr "페이지 수"
+
+#: src/components/Facets/ActiveFacetChips.tsx:23
+#: src/components/Facets/StatusSection.tsx:57
+#: src/components/FilterBy.tsx:14
+msgid "On watchlist"
+msgstr "관심 목록에 있음"
+
+#: src/pages/Details.tsx:321
+msgid "Overview"
+msgstr "개요"
+
+#: src/pages/Login.tsx:53
+#: src/pages/Register.tsx:49
+#: src/pages/Settings.tsx:119
+msgid "Password"
+msgstr "비밀번호"
+
+#: src/pages/settings/Password.tsx:67
+msgid "Password has been changed"
+msgstr "비밀번호가 변경되었습니다."
+
+#: src/pages/settings/Password.tsx:56
+msgid "Passwords do not match"
+msgstr "비밀번호가 일치하지 않습니다."
+
+#: src/pages/settings/Notifications.tsx:186
+msgid "Platform"
+msgstr "플랫폼"
+
+#: src/components/OrderBy.tsx:24
+#: src/hooks/translations.ts:17
+msgid "Platform Recommended"
+msgstr "플랫폼 추천"
+
+#: src/components/Facets/ActiveFacetChips.tsx:32
+#: src/components/Facets/StatusSection.tsx:39
+#: src/components/FilterBy.tsx:22
+msgid "Played"
+msgstr "플레이 함"
+
+#. placeholder {0}: seenEntry.dateStr
+#: src/pages/SeenHistory.tsx:101
+msgid "Played at {0}"
+msgstr "{0} 플레이"
+
+#: src/pages/Details.tsx:605
+msgid "Played history"
+msgstr "플레이 기록"
+
+#: src/pages/Settings.tsx:133
+msgid "Preferences"
+msgstr "환경 설정"
+
+#: src/pages/settings/Notifications.tsx:257
+#: src/pages/settings/Notifications.tsx:262
+msgid "Priority"
+msgstr "우선순위"
+
+#: src/components/AddOrEditListButton.tsx:161
+#: src/components/AddOrEditListButton.tsx:166
+msgid "Privacy"
+msgstr "개인정보"
+
+#: src/hooks/translations.ts:22
+msgid "Private"
+msgstr "비공개"
+
+#: src/components/OrderBy.tsx:22
+#: src/pages/Details.tsx:500
+msgid "Progress"
+msgstr "진행 상황"
+
+#: src/hooks/translations.ts:23
+msgid "Public"
+msgstr "공개"
+
+#: src/pages/settings/Preferences.tsx:12
+msgid "Public reviews"
+msgstr "공개 리뷰"
+
+#: src/components/Facets/ActiveFacetChips.tsx:269
+#: src/components/Facets/PublisherSection.tsx:53
+msgid "Publisher"
+msgstr "출판사"
+
+#: src/components/Nav.tsx:45
+msgid "Random"
+msgstr "무작위"
+
+#: src/pages/Random.tsx:107
+msgid "Random Audiobook"
+msgstr "무작위 오디오북"
+
+#: src/pages/Random.tsx:94
+msgid "Random Book"
+msgstr "무작위 책"
+
+#: src/pages/Random.tsx:55
+msgid "Random Movie"
+msgstr "무작위 영화"
+
+#: src/pages/Random.tsx:68
+msgid "Random Tv Show"
+msgstr "무작위 TV 쇼"
+
+#: src/pages/Random.tsx:81
+msgid "Random Video Game"
+msgstr "무작위 게임"
+
+#: src/components/Facets/ActiveFacetChips.tsx:19
+#: src/components/Facets/StatusSection.tsx:53
+#: src/components/FilterBy.tsx:12
+msgid "Rated"
+msgstr "평가함"
+
+#: src/components/Facets/ActiveFacetChips.tsx:316
+#: src/components/Facets/RatingSection.tsx:57
+#: src/pages/import/Goodreads.tsx:83
+msgid "Rating"
+msgstr "평점"
+
+#: src/pages/import/TraktTv.tsx:202
+msgid "Ratings"
+msgstr "평점"
+
+#: src/pages/import/TraktTv.tsx:294
+msgid "Ratings - episodes"
+msgstr "평점 - 에피소드"
+
+#: src/pages/import/TraktTv.tsx:279
+msgid "Ratings - movies"
+msgstr "평점 - 영화"
+
+#: src/pages/import/TraktTv.tsx:289
+msgid "Ratings - seasons"
+msgstr "평점 - 시즌"
+
+#: src/pages/import/TraktTv.tsx:284
+msgid "Ratings - shows"
+msgstr "평점 - 쇼"
+
+#: src/components/Facets/ActiveFacetChips.tsx:29
+#: src/components/Facets/StatusSection.tsx:36
+#: src/components/FilterBy.tsx:20
+#: src/pages/import/Goodreads.tsx:68
+msgid "Read"
+msgstr "읽음"
+
+#. placeholder {0}: seenEntry.dateStr
+#: src/pages/SeenHistory.tsx:93
+msgid "Read at {0}"
+msgstr "{0} 감상"
+
+#: src/pages/Details.tsx:599
+msgid "Read history"
+msgstr "감상 기록"
+
+#: src/pages/settings/Notifications.tsx:46
+msgid "Receive notification for all media items on your watchlist, when its release date changes"
+msgstr "관심 목록에 있는 미디어 항목의 출시 날짜가 변경되면 알림을 받습니다."
+
+#: src/pages/settings/Notifications.tsx:38
+msgid "Receive notification for all media items on your watchlist, when its status changes"
+msgstr "관심 목록에 있는 미디어 항목의 상태가 변경되면 알림을 받습니다."
+
+#: src/pages/settings/Notifications.tsx:24
+msgid "Receive notification for all media items on your watchlist, when they are released, including new seasons for tv shows"
+msgstr "TV 쇼의 새 시즌을 포함하여 관심 목록에 있는 미디어 항목이 출시되면 알림을 받습니다."
+
+#: src/pages/settings/Notifications.tsx:54
+msgid "Receive notification for all tv shows on your watchlist, when its number of seasons changes"
+msgstr "관심 목록에 있는 TV 쇼의 새 시즌이 출시되면 알림을 받습니다."
+
+#: src/pages/settings/Notifications.tsx:30
+msgid "Receive notification for every episode for all tv shows on your watchlist, when it's released"
+msgstr "관심 목록에 있는 TV 쇼의 새 에피소드가 출시되면 알림을 받습니다."
+
+#: src/hooks/translations.ts:9
+msgid "Recently added"
+msgstr "최근 추가된 항목"
+
+#: src/hooks/translations.ts:11
+msgid "Recently aired"
+msgstr "최근 방영"
+
+#: src/pages/Home.tsx:104
+msgid "Recently released"
+msgstr "최근 출시"
+
+#: src/hooks/translations.ts:10
+msgid "Recently watched"
+msgstr "최근 시청 항목"
+
+#: src/components/OrderBy.tsx:23
+#: src/hooks/translations.ts:16
+msgid "Recommended"
+msgstr "추천"
+
+#: src/pages/Login.tsx:75
+#: src/pages/Register.tsx:29
+#: src/pages/Register.tsx:77
+msgid "Register"
+msgstr "회원가입"
+
+#: src/components/GridItem.tsx:245
+msgid "Release <0/>"
+msgstr "<0/>에 출시"
+
+#: src/components/OrderBy.tsx:15
+#: src/hooks/translations.ts:12
+#: src/pages/Details.tsx:232
+#: src/pages/EpisodePage.tsx:80
+msgid "Release date"
+msgstr "출시일"
+
+#: src/components/GridItem.tsx:263
+msgid "Released <0/>"
+msgstr "<0/>에 출시됨"
+
+#: src/pages/GroupDetailPage.tsx:203
+msgid "Remove"
+msgstr "제거"
+
+#. placeholder {0}: mediaItem.title
+#. placeholder {1}: season ? ' ' + formatSeasonNumber(season) : episode ? ' ' + formatEpisodeNumber(episode) : ''
+#: src/components/GridItem.tsx:136
+msgid "Remove \"{0}{1}\" from watchlist?"
+msgstr "\"{0}{1}\"을(를) 관심 목록에서 삭제하시겠습니까?"
+
+#. placeholder {0}: member.name
+#: src/pages/GroupDetailPage.tsx:201
+msgid "Remove {0}"
+msgstr "{0} 제거"
+
+#. placeholder {0}: member.name
+#: src/pages/GroupDetailPage.tsx:168
+msgid "Remove {0} from this group?"
+msgstr "이 그룹에서 {0}을(를) 제거하시겠습니까?"
+
+#: src/components/Facets/ActiveFacetChips.tsx:107
+msgid "Remove {dimensionLabel}: {value} filter"
+msgstr "{dimensionLabel}: {value} 필터 삭제"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:131
+msgid "Remove episode from seen history"
+msgstr "시청 기록에서 에피소드 제거"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:125
+msgid "Remove from listened history"
+msgstr "감상 기록에서 제거"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:127
+msgid "Remove from played history"
+msgstr "플레이 기록에서 제거"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:126
+msgid "Remove from read history"
+msgstr "감상 기록에서 제거"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:128
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:135
+msgid "Remove from seen history"
+msgstr "시청 기록에서 제거"
+
+#: src/pages/Details.tsx:670
+msgid "Remove from watchlist"
+msgstr "관심 목록에서 제거"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:133
+msgid "Remove season from seen history"
+msgstr "시청 기록에서 시즌 제거"
+
+#: src/pages/settings/ApplicationTokens.tsx:50
+msgid "Remove token"
+msgstr "토큰 제거"
+
+#: src/pages/Details.tsx:65
+msgid "Review by <0><1>{author}</1></0> at {date}"
+msgstr "<0><1>{author}</1></0> 의 리뷰, {date}"
+
+#. placeholder {0}: member.name
+#: src/pages/GroupDetailPage.tsx:191
+msgid "Role for {0}"
+msgstr "{0}의 역할"
+
+#: src/pages/import/Goodreads.tsx:48
+msgid "RSS link"
+msgstr "RSS 링크"
+
+#: src/hooks/translations.ts:13
+#: src/pages/Details.tsx:243
+#: src/pages/EpisodePage.tsx:71
+msgid "Runtime"
+msgstr "러닝타임"
+
+#. placeholder {0}: season.seasonNumber.toString().padStart(2, '0')
+#: src/utils.ts:19
+msgid "S{0}"
+msgstr "시즌{0}"
+
+#. placeholder {0}: tvEpisode.seasonNumber .toString() .padStart(2, '0')
+#. placeholder {1}: tvEpisode.episodeNumber.toString().padStart(2, '0')
+#: src/utils.ts:13
+msgid "S{0}E{1}"
+msgstr "S{0}E{1}"
+
+#: src/pages/settings/Configuration.tsx:165
+#: src/pages/settings/Notifications.tsx:280
+msgid "Save"
+msgstr "저장"
+
+#: src/components/AddOrEditListButton.tsx:219
+msgid "Save list"
+msgstr "목록 저장"
+
+#: src/components/StarRating.tsx:168
+msgid "Save review"
+msgstr "리뷰 저장"
+
+#: src/components/PaginatedGridItems.tsx:63
+msgid "Search"
+msgstr "Search"
+
+#: src/pages/GroupDetailPage.tsx:103
+msgid "Search by username…"
+msgstr "사용자 이름으로 검색…"
+
+#: src/components/PaginatedGridItems.tsx:304
+msgid "Search for items or <0>import</0>"
+msgstr "항목을 검색하거나 <0>가져오기</0>"
+
+#: src/pages/ListPage.tsx:124
+msgid "Search list"
+msgstr "목록 검색"
+
+#: src/pages/GroupDetailPage.tsx:107
+msgid "Search users to add"
+msgstr "추가할 사용자 검색"
+
+#: src/pages/GroupDetailPage.tsx:112
+msgid "Searching…"
+msgstr "검색 중…"
+
+#: src/components/SelectLastSeenEpisode.tsx:83
+msgid "Season"
+msgstr "시즌"
+
+#. placeholder {0}: season.seasonNumber
+#: src/pages/SeasonsPage.tsx:177
+msgid "Season {0}"
+msgstr "시즌 {0}"
+
+#: src/components/ImportSummaryTable.tsx:92
+#: src/pages/Details.tsx:376
+msgid "Seasons"
+msgstr "시즌"
+
+#: src/pages/Statistics.tsx:149
+msgid "Seen"
+msgstr "시청 완료"
+
+#. placeholder {0}: seenEntry.dateStr
+#: src/pages/SeenHistory.tsx:97
+msgid "Seen at {0}"
+msgstr "{0} 시청"
+
+#: src/pages/Details.tsx:602
+#: src/pages/import/TraktTv.tsx:191
+msgid "Seen history"
+msgstr "시청 기록"
+
+#: src/pages/import/TraktTv.tsx:274
+msgid "Seen history - episodes"
+msgstr "시청 기록 - 에피소드"
+
+#: src/pages/import/TraktTv.tsx:269
+msgid "Seen history - movies"
+msgstr "시청 기록 - 영화"
+
+#: src/components/SelectLastSeenEpisode.tsx:135
+msgid "Select"
+msgstr "선택"
+
+#: src/components/SelectSeenDate.tsx:160
+msgid "Select date"
+msgstr "날짜 선택"
+
+#: src/pages/settings/Notifications.tsx:265
+msgid "Select priority"
+msgstr "우선순위 선택"
+
+#: src/pages/Statistics.tsx:195
+msgid "Select year"
+msgstr "연도 선택"
+
+#: src/pages/Statistics.tsx:207
+msgid "Select Year"
+msgstr "Select Year"
+
+#: src/pages/settings/Notifications.tsx:29
+msgid "Send notification for episodes releases"
+msgstr "새 에피소드 출시 알림 보내기"
+
+#: src/pages/settings/Notifications.tsx:23
+msgid "Send notification for releases"
+msgstr "출시 알림 보내기"
+
+#: src/pages/settings/Notifications.tsx:53
+msgid "Send notification when number of seasons changes"
+msgstr "새 시즌 출시 알림 보내기"
+
+#: src/pages/settings/Notifications.tsx:45
+msgid "Send notification when release date changes"
+msgstr "출시일이 변경되면 알림 보내기"
+
+#: src/pages/settings/Notifications.tsx:37
+msgid "Send notification when status changes"
+msgstr "상태가 변경되면 알림 보내기"
+
+#: src/App.tsx:101
+msgid "Server error: {errorMessage}"
+msgstr "서버 에러: {errorMessage}"
+
+#: src/pages/settings/Configuration.tsx:35
+#: src/pages/settings/Configuration.tsx:42
+msgid "Server language"
+msgstr "서버 언어"
+
+#: src/pages/settings/Notifications.tsx:146
+msgid "Server url (only for self hosting)"
+msgstr "서버 URL(자체 호스팅 전용)"
+
+#: src/components/SetProgress.tsx:125
+msgid "Set"
+msgstr "설정"
+
+#: src/components/SetProgress.tsx:61
+#: src/pages/Details.tsx:705
+msgid "Set progress"
+msgstr "진행율 설정"
+
+#: src/pages/Settings.tsx:76
+msgid "Settings"
+msgstr "설정"
+
+#: src/components/Facets/ExpandableList.tsx:33
+msgid "Show less"
+msgstr "접기"
+
+#: src/components/Facets/ExpandableList.tsx:33
+msgid "Show more"
+msgstr "더 보기"
+
+#: src/pages/settings/Preferences.tsx:13
+msgid "Show your reviews to other users"
+msgstr "다른 사용자에게 내 리뷰 표시"
+
+#: src/components/ImportSummaryTable.tsx:91
+msgid "Shows"
+msgstr "표시"
+
+#: src/components/AddOrEditListButton.tsx:180
+#: src/components/AddOrEditListButton.tsx:185
+msgid "Sort by"
+msgstr "정렬"
+
+#: src/components/AddOrEditListButton.tsx:199
+#: src/components/AddOrEditListButton.tsx:204
+msgid "Sort order"
+msgstr "정렬 순서"
+
+#: src/pages/Details.tsx:401
+msgid "Source"
+msgstr "출처"
+
+#: src/pages/import/TraktTv.tsx:110
+msgid "Start over"
+msgstr "다시 시작"
+
+#: src/components/Nav.tsx:46
+#: src/pages/Statistics.tsx:111
+msgid "Statistics"
+msgstr "통계"
+
+#: src/components/Facets/ActiveFacetChips.tsx:293
+#: src/components/Facets/StatusSection.tsx:116
+#: src/components/OrderBy.tsx:16
+#: src/pages/Details.tsx:290
+msgid "Status"
+msgstr "상태"
+
+#: src/components/ImportSummaryTable.tsx:84
+#: src/components/ImportSummaryTable.tsx:135
+msgid "Summary"
+msgstr "요약"
+
+#: src/components/AddOrEditListButton.tsx:105
+msgid "There already exists a list with name \"{name}\""
+msgstr "\"{name}\" 이름의 목록이 이미 존재합니다"
+
+#: src/pages/SeasonsPage.tsx:152
+msgid "This component can only be used with tv shows"
+msgstr "이 구성요소는 TV 프로그램에서만 사용할 수 있습니다."
+
+#: src/components/OrderBy.tsx:17
+#: src/hooks/translations.ts:14
+msgid "Title"
+msgstr "제목"
+
+#: src/pages/settings/Configuration.tsx:88
+#: src/pages/settings/Configuration.tsx:95
+msgid "TMDB language"
+msgstr "TMDB 언어"
+
+#: src/pages/import/Goodreads.tsx:73
+msgid "To read"
+msgstr "읽을 목록"
+
+#: src/pages/settings/Notifications.tsx:142
+msgid "Topic"
+msgstr "Topic"
+
+#: src/pages/Details.tsx:254
+msgid "Total runtime"
+msgstr "전체 러닝타임"
+
+#: src/components/GridItem.tsx:94
+#: src/components/Nav.tsx:37
+#: src/components/Statistics/StatisticsGenreSegment.tsx:16
+#: src/components/Statistics/StatisticsSegment.tsx:35
+msgid "Tv"
+msgstr "TV"
+
+#: src/components/Facets/ActiveFacetChips.tsx:72
+#: src/components/Facets/MediaTypeSection.tsx:20
+msgid "TV Show"
+msgstr "TV 프로그램"
+
+#: src/pages/import/TraktTv.tsx:138
+msgid "Uninitialized"
+msgstr "초기화되지 않음"
+
+#: src/components/Facets/ActiveFacetChips.tsx:21
+#: src/components/Facets/StatusSection.tsx:55
+#: src/components/FilterBy.tsx:13
+#: src/pages/Home.tsx:122
+msgid "Unrated"
+msgstr "평가 안 함"
+
+#: src/pages/Details.tsx:391
+msgid "Unseen episodes"
+msgstr "시청하지 않은 에피소드"
+
+#: src/components/OrderBy.tsx:20
+msgid "Unseen episodes count"
+msgstr "시청하지 않은 에피소드 수"
+
+#: src/components/Nav.tsx:42
+#: src/pages/Home.tsx:75
+msgid "Upcoming"
+msgstr "출시 예정"
+
+#: src/pages/Details.tsx:691
+msgid "Update metadata"
+msgstr "메타데이터 업데이트"
+
+#: src/pages/import/TraktTv.tsx:139
+msgid "Updating metadata"
+msgstr "메타데이터 업데이트 중"
+
+#: src/pages/Login.tsx:38
+#: src/pages/Register.tsx:34
+msgid "Username"
+msgstr "사용자 이름"
+
+#: src/pages/settings/About.tsx:11
+msgid "Version"
+msgstr "버전"
+
+#: src/components/Facets/ActiveFacetChips.tsx:78
+#: src/components/Facets/MediaTypeSection.tsx:26
+#: src/components/GridItem.tsx:95
+msgid "Video game"
+msgstr "게임"
+
+#: src/pages/GroupDetailPage.tsx:194
+#: src/pages/GroupDetailPage.tsx:208
+#: src/pages/GroupDetailPage.tsx:321
+#: src/pages/GroupsPage.tsx:50
+msgid "Viewer"
+msgstr "뷰어"
+
+#: src/pages/import/TraktTv.tsx:140
+msgid "Waiting for authentication"
+msgstr "인증 대기 중"
+
+#: src/pages/LogsPage.tsx:107
+msgid "Warning"
+msgstr "경고"
+
+#: src/components/Facets/ActiveFacetChips.tsx:34
+#: src/components/Facets/StatusSection.tsx:41
+#: src/components/FilterBy.tsx:23
+msgid "Watched"
+msgstr "시청 완료"
+
+#: src/components/Nav.tsx:44
+#: src/pages/import/TraktTv.tsx:176
+#: src/utils.ts:157
+msgid "Watchlist"
+msgstr "관심 목록"
+
+#: src/pages/import/TraktTv.tsx:264
+msgid "Watchlist - episodes"
+msgstr "관심 목록 - 에피소드"
+
+#: src/pages/import/TraktTv.tsx:249
+msgid "Watchlist - movies"
+msgstr "관심 목록 - 영화"
+
+#: src/pages/import/TraktTv.tsx:259
+msgid "Watchlist - season"
+msgstr "관심 목록 - 시즌"
+
+#: src/pages/import/TraktTv.tsx:254
+msgid "Watchlist - shows"
+msgstr "관심 목록 - 쇼"
+
+#: src/pages/settings/Notifications.tsx:127
+msgid "Webhook URL"
+msgstr "웹훅 URL"
+
+#. placeholder {0}: season ? `${tvShow.title} ${formatSeasonNumber(season)}` : tvShow.title
+#: src/components/SelectLastSeenEpisode.tsx:71
+msgid "What is the last episode of \"{0}\" you see?"
+msgstr "\"{0}\"의 마지막으로 본 에피소드는 무엇입니까?"
+
+#. placeholder {0}: mediaItem.title
+#: src/components/SelectSeenDate.tsx:78
+msgid "When did you listen to \"{0}\"?"
+msgstr "\"{0}\"을(를) 언제 들으셨습니까?"
+
+#. placeholder {0}: mediaItem.title
+#: src/components/SelectSeenDate.tsx:100
+msgid "When did you play \"{0}\"?"
+msgstr "\"{0}\"을(를) 언제 플레이하셨습니까?"
+
+#. placeholder {0}: mediaItem.title
+#: src/components/SelectSeenDate.tsx:82
+msgid "When did you read \"{0}\"?"
+msgstr "\"{0}\"을(를) 언제 읽으셨습니까?"
+
+#. placeholder {0}: episode ? `${mediaItem.title} ${formatEpisodeNumber(episode)}` : mediaItem.title
+#. placeholder {0}: mediaItem.title
+#: src/components/SelectSeenDate.tsx:86
+#: src/components/SelectSeenDate.tsx:90
+msgid "When did you see \"{0}\"?"
+msgstr "\"{0}\"을(를) 언제 보셨습니까?"
+
+#: src/pages/Details.tsx:125
+msgid "Where to watch"
+msgstr "보는 곳"
+
+#: src/components/Facets/ActiveFacetChips.tsx:304
+#: src/components/Facets/YearSection.tsx:81
+msgid "Year"
+msgstr "연도"
+
+#: src/components/Confirm.tsx:81
+msgid "Yes"
+msgstr "예"
+
+#: src/pages/GroupDetailPage.tsx:319
+msgid "Your role:"
+msgstr "내 역할:"

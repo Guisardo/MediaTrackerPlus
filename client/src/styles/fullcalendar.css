@@ -1,10 +1,91 @@
-.fc .fc-scrollgrid-section-sticky > *,
-.fc-theme-standard .fc-list-day-cushion {
-  @apply dark:bg-neutral-800 bg-neutral-200;
+@reference "tailwindcss";
+
+/*
+ * FullCalendar CSS custom property overrides.
+ * Integrates FullCalendar's chrome with the shadcn/ui design system
+ * (zinc/blue palette, new-york style).
+ *
+ * All overrides use --fc-* custom properties documented by FullCalendar:
+ * https://fullcalendar.io/docs/css-customization
+ *
+ * Override `:root` for light mode, `.dark` for dark mode.
+ */
+
+:root {
+  /* Grid borders use zinc-200 */
+  --fc-border-color: theme(--color-zinc-200);
+
+  /* Toolbar buttons use blue-600 primary */
+  --fc-button-bg-color: theme(--color-blue-600);
+  --fc-button-border-color: theme(--color-blue-600);
+  --fc-button-hover-bg-color: theme(--color-blue-700);
+  --fc-button-hover-border-color: theme(--color-blue-700);
+  --fc-button-active-bg-color: theme(--color-blue-700);
+  --fc-button-active-border-color: theme(--color-blue-700);
+
+  /* Today highlight uses blue-50 */
+  --fc-today-bg-color: theme(--color-blue-50);
+
+  /* Calendar events use blue-600 */
+  --fc-event-bg-color: theme(--color-blue-600);
+  --fc-event-border-color: theme(--color-blue-600);
+
+  /* Page background is transparent (inherits app background) */
+  --fc-page-bg-color: transparent;
+
+  /* Toolbar button text */
+  --fc-button-text-color: theme(--color-white);
+
+  /* Neutral background overrides */
+  --fc-neutral-bg-color: theme(--color-zinc-100);
+  --fc-neutral-text-color: theme(--color-zinc-600);
+
+  /* Match shadcn/ui border radius (0.375rem = new-york style) */
+  --fc-event-border-radius: 0.375rem;
+
+  /* List view row height */
+  --fc-list-event-hover-bg-color: theme(--color-zinc-100);
 }
 
+.dark {
+  /* Grid borders use zinc-700 for dark mode */
+  --fc-border-color: theme(--color-zinc-700);
+
+  /* Toolbar buttons use blue-500 (lighter for dark mode) */
+  --fc-button-bg-color: theme(--color-blue-500);
+  --fc-button-border-color: theme(--color-blue-500);
+  --fc-button-hover-bg-color: theme(--color-blue-600);
+  --fc-button-hover-border-color: theme(--color-blue-600);
+  --fc-button-active-bg-color: theme(--color-blue-600);
+  --fc-button-active-border-color: theme(--color-blue-600);
+
+  /* Today highlight uses blue-950 for dark mode */
+  --fc-today-bg-color: theme(--color-blue-950);
+
+  /* Calendar events use blue-500 for dark mode */
+  --fc-event-bg-color: theme(--color-blue-500);
+  --fc-event-border-color: theme(--color-blue-500);
+
+  /* Page background is transparent */
+  --fc-page-bg-color: transparent;
+
+  /* Neutral background overrides for dark mode */
+  --fc-neutral-bg-color: theme(--color-zinc-800);
+  --fc-neutral-text-color: theme(--color-zinc-400);
+
+  /* List view hover for dark mode */
+  --fc-list-event-hover-bg-color: theme(--color-zinc-800);
+}
+
+/* Sticky day headers + list day cushion: use zinc design tokens */
+.fc .fc-scrollgrid-section-sticky > *,
+.fc-theme-standard .fc-list-day-cushion {
+  @apply dark:bg-zinc-800 bg-zinc-200;
+}
+
+/* List view hover row: zinc tokens (replaces neutral-800/200 from original) */
 .fc .fc-list-event:hover td {
-  @apply bg-neutral-800/30 dark:bg-neutral-200/30;
+  @apply bg-zinc-100 dark:bg-zinc-800;
 }
 
 .fc .fc-list-event:hover a {
@@ -13,4 +94,33 @@
 
 .fc .fc-event:hover a {
   text-decoration: none !important;
+}
+
+/* Toolbar button border-radius matches shadcn/ui (new-york: 0.375rem) */
+.fc .fc-button {
+  border-radius: 0.375rem;
+}
+
+/* Calendar table borders use the override border-color */
+.fc-theme-standard td,
+.fc-theme-standard th {
+  border-color: var(--fc-border-color);
+}
+
+.fc-theme-standard .fc-scrollgrid {
+  border-color: var(--fc-border-color);
+}
+
+/* Ensure text colors adapt to dark mode for day numbers and event times */
+.fc .fc-daygrid-day-number,
+.fc .fc-col-header-cell-cushion {
+  @apply text-zinc-700 dark:text-zinc-300;
+}
+
+.fc .fc-list-event-title a {
+  @apply text-zinc-800 dark:text-zinc-200;
+}
+
+.fc .fc-list-event-time {
+  @apply text-zinc-500 dark:text-zinc-400;
 }

@@ -2,14 +2,13 @@
  * Tests for src/components/Confirm.tsx
  *
  * Confirm is an async imperative function that:
- *   1. Appends a div to document#portal
- *   2. Uses ReactDOM.render to show a Modal with Yes/No buttons
+ *   1. Appends a div to document.body
+ *   2. Uses createRoot to show a shadcn/ui Dialog with Yes/No buttons
  *   3. Resolves to true (Yes) or false (No)
- *   4. Removes the appended div from the portal after resolving
+ *   4. Unmounts the root and removes the appended div after resolving
  *
- * All heavy dependencies (Modal, @react-spring/web, @lingui/macro,
- * @lingui/react) are mocked so tests run synchronously without animation
- * frames or real i18n context.
+ * Radix Dialog and i18n dependencies are mocked so tests run synchronously
+ * without animation frames or real i18n context.
  */
 
 import React from 'react';
@@ -44,40 +43,67 @@ jest.mock('@lingui/core', () => ({
 }));
 
 /**
- * Simplified Modal: immediately renders children with a no-op closeModal.
- * This bypasses @react-spring/web and Portal dependencies.
- * React is required inside the factory because jest.mock is hoisted before
- * imports and the outer React variable is not yet defined.
+ * Mock radix-ui Dialog primitives — render synchronously in jsdom.
+ * The Dialog must propagate `open` state to Content so it conditionally
+ * renders children.
  */
-jest.mock('src/components/Modal', () => {
+jest.mock('radix-ui', () => {
   const React = require('react');
+
+  const Root = ({ children, open, onOpenChange, ...rest }: any) => (
+    <div data-testid="dialog-root" {...rest}>
+      {React.Children.map(children, (child: React.ReactElement) => {
+        if (!React.isValidElement(child)) return child;
+        return React.cloneElement(child, { __open: open, __onOpenChange: onOpenChange } as any);
+      })}
+    </div>
+  );
+
+  const Portal = ({ children }: any) => <>{children}</>;
+
+  const Overlay = React.forwardRef(({ children, ...props }: any, ref: any) => {
+    const { __open, __onOpenChange, ...rest } = props;
+    return <div ref={ref} {...rest}>{children}</div>;
+  });
+
+  const Content = React.forwardRef(({ children, __open, __onOpenChange, ...props }: any, ref: any) => {
+    if (!__open) return null;
+    return <div ref={ref} {...props}>{children}</div>;
+  });
+
+  const Close = React.forwardRef((props: any, ref: any) => {
+    const { children, ...rest } = props;
+    return <button ref={ref} {...rest}>{children}</button>;
+  });
+
+  const Trigger = React.forwardRef((props: any, ref: any) => {
+    const { children, ...rest } = props;
+    return <button ref={ref} {...rest}>{children}</button>;
+  });
+
+  const Title = React.forwardRef(({ children, ...props }: any, ref: any) => (
+    <h2 ref={ref} {...props}>{children}</h2>
+  ));
+
+  const Description = React.forwardRef(({ children, ...props }: any, ref: any) => (
+    <p ref={ref} {...props}>{children}</p>
+  ));
+
   return {
-    Modal: ({ children }: { children: (closeModal: () => void) => React.ReactElement }) =>
-      React.createElement('div', { 'data-testid': 'modal-wrapper' }, children(() => { /* noop */ })),
+    Dialog: {
+      Root,
+      Portal,
+      Overlay,
+      Content,
+      Close,
+      Trigger,
+      Title,
+      Description,
+    },
   };
 });
 
 import { Confirm } from 'src/components/Confirm';
-
-// ---------------------------------------------------------------------------
-// DOM setup – #portal element required by Confirm
-// ---------------------------------------------------------------------------
-
-let portalEl: HTMLDivElement;
-
-beforeEach(() => {
-  portalEl = document.createElement('div');
-  portalEl.id = 'portal';
-  document.body.appendChild(portalEl);
-});
-
-afterEach(() => {
-  // Clean up any lingering portal children
-  while (portalEl.firstChild) {
-    portalEl.removeChild(portalEl.firstChild);
-  }
-  document.body.removeChild(portalEl);
-});
 
 // ---------------------------------------------------------------------------
 // Tests
@@ -122,18 +148,21 @@ describe('Confirm', () => {
     expect(await confirmPromise).toBe(false);
   });
 
-  it('removes the appended node from the portal after resolving', async () => {
+  it('cleans up the appended node from document.body after resolving', async () => {
     const user = userEvent.setup();
+    const bodyChildCountBefore = document.body.childNodes.length;
+
     const confirmPromise = Confirm('Clean up?');
 
     await waitFor(() => expect(screen.getByText('Yes')).toBeInTheDocument());
 
-    const childCountBefore = portalEl.childNodes.length;
-    expect(childCountBefore).toBeGreaterThan(0);
+    // A new div was appended to body
+    expect(document.body.childNodes.length).toBeGreaterThan(bodyChildCountBefore);
 
     await user.click(screen.getByText('Yes'));
     await confirmPromise;
 
-    expect(portalEl.childNodes.length).toBe(childCountBefore - 1);
+    // After resolving, the appended div should be cleaned up
+    expect(document.body.childNodes.length).toBe(bodyChildCountBefore);
   });
 });

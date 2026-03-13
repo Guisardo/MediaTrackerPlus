@@ -1,0 +1,1598 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2026-03-12 15:41-0300\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: zh\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#. js-lingui-explicit-id
+#: src/__tests__/ui-stack-migration.integration.test.ts:186
+msgid "i18n/i18n.ts"
+msgstr "i18n/i18n.ts"
+
+#: src/pages/settings/Notifications.tsx:82
+msgid " User key"
+msgstr " 用户密钥"
+
+#. placeholder {0}: 1
+#. placeholder {0}: 5
+#. placeholder {0}: list.itemsCount
+#: src/i18n/__tests__/i18n.test.ts:86
+#: src/i18n/__tests__/i18n.test.ts:98
+#: src/pages/ListsPage.tsx:55
+msgid "{0, plural, one {# item} other {# items}}"
+msgstr "{0, plural, other {# 项}}"
+
+#. placeholder {0}: group.memberCount
+#: src/pages/GroupsPage.tsx:56
+msgid "{0, plural, one {# member} other {# members}}"
+msgstr "{0, plural, one {# 位成员} other {# 位成员}}"
+
+#. placeholder {0}: filteredItems.length
+#. placeholder {0}: items.length
+#: src/pages/import/TraktTv.tsx:342
+#: src/pages/ListPage.tsx:131
+msgid "{0, plural, one {1 item} other {# items}}"
+msgstr "{0, plural, other {# 项}}"
+
+#. placeholder {0}: mediaItem.authors.length
+#: src/pages/Details.tsx:339
+msgid "{0, plural, one {Author} other {Authors}}"
+msgstr "{0, plural, other {作者}}"
+
+#. placeholder {0}: searchResult?.length
+#: src/components/PaginatedGridItems.tsx:317
+msgid "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {Found # items for query \"<1>{searchQuery}</1>\"}}"
+msgstr "{0, plural, one {在查询「<0>{searchQuery}</0>」中找到 # 个项目} other {在查询「<1>{searchQuery}</1>」中找到 # 个项目}}"
+
+#. placeholder {0}: mediaItem.genres.length
+#: src/pages/Details.tsx:299
+msgid "{0, plural, one {Genre} other {Genres}}"
+msgstr "{0, plural, other {类型}}"
+
+#. placeholder {0}: listsWithItem?.length
+#: src/components/AddToListModal.tsx:151
+msgid "{0, plural, one {Listed on 1 list} other {Listed on # lists}}"
+msgstr "{0, plural, other {已在 # 个列表中}}"
+
+#. placeholder {0}: mediaItem.seenHistory.length
+#: src/pages/Details.tsx:565
+#: src/pages/SeenHistory.tsx:43
+msgid "{0, plural, one {Listened 1 time} other {Listened # times}}"
+msgstr "{0, plural, other {已收听 # 次}}"
+
+#. placeholder {0}: mediaItem.narrators.length
+#: src/pages/Details.tsx:353
+msgid "{0, plural, one {Narrator} other {Narrators}}"
+msgstr "{0, plural, other {旁白}}"
+
+#. placeholder {0}: mediaItem.platform.length
+#: src/pages/Details.tsx:267
+msgid "{0, plural, one {Platform} other {platforms}}"
+msgstr "{0, plural, other {平台}}"
+
+#. placeholder {0}: mediaItem.seenHistory.length
+#: src/pages/Details.tsx:589
+#: src/pages/SeenHistory.tsx:67
+msgid "{0, plural, one {Played 1 time} other {Played # times}}"
+msgstr "{0, plural, other {已游玩 # 次}}"
+
+#. placeholder {0}: mediaItem.seenHistory.length
+#: src/pages/Details.tsx:573
+#: src/pages/SeenHistory.tsx:51
+msgid "{0, plural, one {Read 1 time} other {Read # times}}"
+msgstr "{0, plural, other {已阅读 # 次}}"
+
+#. placeholder {0}: episode.seenHistory.length
+#. placeholder {0}: mediaItem.seenHistory.length
+#: src/pages/Details.tsx:581
+#: src/pages/SeasonsPage.tsx:87
+#: src/pages/SeenHistory.tsx:59
+msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
+msgstr "{0, plural, other {已观看 # 次}}"
+
+#. placeholder {0}: route.name
+#: src/components/Statistics/StatisticsGenreSegment.tsx:42
+msgid "{0}"
+msgstr "{0}"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:112
+msgid "{count, plural, one {Do you want to remove # seen history entry?} other {Do you want to remove all # seen history entries?}}"
+msgstr "{count, plural, other {确定要删除所有 # 条观看历史记录吗？}}"
+
+#: src/components/SetProgress.tsx:119
+msgid "{duration, plural, one {minute} other {minutes}}"
+msgstr "{duration, plural, other {分钟}}"
+
+#. placeholder {0}: args.year ? 'in ' + args.year : ''
+#. placeholder {1}: args.genre ? 'with genre ' + args.genre : ''
+#. placeholder {2}: args.year ? 'in ' + args.year : ''
+#. placeholder {3}: args.genre ? 'with genre ' + args.genre : ''
+#: src/components/PaginatedGridItems.tsx:333
+msgid "{numberOfItemsTotal, plural, one {1 item {0} {1}} other {# item {2} {3}}}"
+msgstr "{numberOfItemsTotal, plural, other {# 项 {2} {3}}}"
+
+#: src/components/SetProgress.tsx:43
+msgid "{value, plural, one {minute} other {minutes}}"
+msgstr "{value, plural, other {分钟}}"
+
+#: src/components/SetProgress.tsx:41
+msgid "{value, plural, one {page} other {pages}}"
+msgstr "{value, plural, other {页}}"
+
+#. placeholder {0}: item.genre
+#. placeholder {1}: item.count
+#: src/components/Statistics/StatisticsGenreSegment.tsx:61
+msgid "<0>{0}</0> (<1>{1}</1>)"
+msgstr "<0>{0}</0> (<1>{1}</1>)"
+
+#. placeholder {0}: data.audiobook.items
+#. placeholder {1}: data.audiobook.plays
+#: src/components/Statistics/StatisticsSegment.tsx:215
+msgid "<0>{0}</0> audiobooks (<1>{1}</1> plays)"
+msgstr "<0>{0}</0> 本有声书 (<1>{1}</1> 次播放)"
+
+#. placeholder {0}: data.book.items
+#. placeholder {1}: data.book.plays
+#: src/components/Statistics/StatisticsSegment.tsx:174
+msgid "<0>{0}</0> books (<1>{1}</1> reads)"
+msgstr "<0>{0}</0> 本书 (<1>{1}</1> 次阅读)"
+
+#. placeholder {0}: data.tv.episodes
+#. placeholder {1}: data.tv.plays
+#. placeholder {2}: data.tv.items
+#: src/components/Statistics/StatisticsSegment.tsx:51
+msgid "<0>{0}</0> episodes (<1>{1}</1> plays of <2>{2}</2> shows)"
+msgstr "<0>{0}</0> 集 (<2>{2}</2> 部剧的 <1>{1}</1> 次播放)"
+
+#. placeholder {0}: data.movie.items
+#. placeholder {1}: data.movie.plays
+#: src/components/Statistics/StatisticsSegment.tsx:92
+msgid "<0>{0}</0> movies (<1>{1}</1> plays)"
+msgstr "<0>{0}</0> 部电影 (<1>{1}</1> 次观看)"
+
+#. placeholder {0}: data.video_game.items
+#. placeholder {1}: data.video_game.plays
+#: src/components/Statistics/StatisticsSegment.tsx:133
+msgid "<0>{0}</0> video games (<1>{1}</1> plays)"
+msgstr "<0>{0}</0> 款视频游戏 (<1>{1}</1> 次游玩)"
+
+#: src/components/Statistics/StatisticsSegment.tsx:204
+msgid "<0><1/> </0>listening"
+msgstr "<0><1/> </0>正在收听"
+
+#: src/components/Statistics/StatisticsSegment.tsx:122
+msgid "<0><1/> </0>playing"
+msgstr "<0><1/> </0>正在游玩"
+
+#: src/components/Statistics/StatisticsSegment.tsx:163
+msgid "<0><1/> </0>reading"
+msgstr "<0><1/> </0>正在阅读"
+
+#: src/components/Statistics/StatisticsSegment.tsx:40
+#: src/components/Statistics/StatisticsSegment.tsx:81
+msgid "<0><1/> </0>watching"
+msgstr "<0><1/> </0>正在观看"
+
+#: src/pages/Settings.tsx:113
+msgid "About"
+msgstr "关于"
+
+#: src/pages/settings/Notifications.tsx:114
+msgid "Access Token"
+msgstr "访问令牌"
+
+#: src/components/Facets/ActiveFacetChips.tsx:219
+msgid "Active filters"
+msgstr "活跃筛选"
+
+#. placeholder {0}: episode ? `${mediaItem.title} ${formatEpisodeNumber(episode)}` : season ? `${mediaItem.title} ${formatSeasonNumber(season)}` : mediaItem.title
+#: src/components/AddToListModal.tsx:55
+msgid "Add \"{0}\" to list"
+msgstr "将 \"{0}\" 添加到列表"
+
+#. placeholder {0}: formatEpisodeNumber(episode)
+#. placeholder {0}: formatSeasonNumber(season)
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:48
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:52
+msgid "Add {0} to seen history"
+msgstr "将 {0} 添加到观看历史"
+
+#: src/components/AddToListModal.tsx:143
+msgid "Add episode to list"
+msgstr "将剧集添加到列表"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:59
+msgid "Add episode to seen history"
+msgstr "将剧集添加到观看历史"
+
+#: src/components/AddOrEditListButton.tsx:43
+#: src/components/AddOrEditListButton.tsx:219
+msgid "Add list"
+msgstr "添加列表"
+
+#: src/pages/GroupDetailPage.tsx:97
+msgid "Add member"
+msgstr "添加成员"
+
+#: src/pages/settings/Preferences.tsx:41
+msgid "Add recommendations to watchlist"
+msgstr "将推荐内容添加到观看清单"
+
+#: src/components/AddToListModal.tsx:145
+msgid "Add season to list"
+msgstr "将季度添加到列表"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:61
+msgid "Add season to seen history"
+msgstr "将季度添加到观看历史"
+
+#: src/components/AddToListModal.tsx:147
+msgid "Add to list"
+msgstr "添加到列表"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:41
+msgid "Add to listened history"
+msgstr "添加到收听历史"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:43
+msgid "Add to played history"
+msgstr "添加到游玩历史"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:42
+msgid "Add to read history"
+msgstr "添加到阅读历史"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:44
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:56
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:63
+msgid "Add to seen history"
+msgstr "添加到观看历史"
+
+#: src/pages/Details.tsx:646
+msgid "Add to watchlist"
+msgstr "添加到观看清单"
+
+#: src/pages/settings/ApplicationTokens.tsx:31
+msgid "Add token"
+msgstr "添加令牌"
+
+#: src/pages/GroupDetailPage.tsx:193
+#: src/pages/GroupDetailPage.tsx:208
+#: src/pages/GroupDetailPage.tsx:321
+#: src/pages/GroupsPage.tsx:48
+msgid "Admin"
+msgstr "管理员"
+
+#: src/components/FilterBy.tsx:11
+msgid "All"
+msgstr "全部"
+
+#: src/components/GroupSelector.tsx:150
+msgid "All Users"
+msgstr "所有用户"
+
+#: src/pages/Statistics.tsx:33
+msgid "All Years"
+msgstr "所有年份"
+
+#: src/pages/settings/Configuration.tsx:145
+msgid "API keys can be acquired here"
+msgstr "可在此处获取API密钥"
+
+#: src/pages/settings/Notifications.tsx:68
+msgid "App token"
+msgstr "应用令牌"
+
+#: src/pages/Settings.tsx:125
+msgid "Application tokens"
+msgstr "应用程序令牌"
+
+#: src/hooks/translations.ts:28
+msgid "Ascending"
+msgstr "升序"
+
+#: src/components/SelectSeenDate.tsx:117
+msgid "At release date"
+msgstr "在发布日"
+
+#: src/pages/settings/Configuration.tsx:59
+#: src/pages/settings/Configuration.tsx:68
+msgid "Audible language"
+msgstr "Audible语言"
+
+#: src/components/Facets/ActiveFacetChips.tsx:76
+#: src/components/Facets/MediaTypeSection.tsx:24
+#: src/components/GridItem.tsx:91
+msgid "Audiobook"
+msgstr "有声书"
+
+#: src/components/Nav.tsx:41
+#: src/components/Statistics/StatisticsSegment.tsx:199
+msgid "Audiobooks"
+msgstr "有声书"
+
+#: src/components/Facets/ActiveFacetChips.tsx:54
+#: src/components/Facets/CreatorSection.tsx:27
+msgid "Author"
+msgstr "作者"
+
+#: src/pages/settings/Preferences.tsx:42
+msgid "Automatically add similar items to your watchlist when you rate content"
+msgstr "评价内容时自动将类似内容添加到观看清单"
+
+#: src/pages/settings/Preferences.tsx:19
+msgid "Avoid episode spoilers"
+msgstr "避免剧集剧透"
+
+#: src/pages/settings/Preferences.tsx:30
+msgid "Avoid season spoilers"
+msgstr "避免季度剧透"
+
+#: src/components/Facets/ActiveFacetChips.tsx:74
+#: src/components/Facets/MediaTypeSection.tsx:22
+#: src/components/GridItem.tsx:92
+msgid "Book"
+msgstr "书籍"
+
+#: src/components/Nav.tsx:40
+#: src/components/Statistics/StatisticsSegment.tsx:158
+#: src/pages/import/Goodreads.tsx:65
+msgid "Books"
+msgstr "书籍"
+
+#: src/components/Nav.tsx:47
+msgid "Calendar"
+msgstr "日历"
+
+#: src/components/SelectLastSeenEpisode.tsx:159
+#: src/components/SelectSeenDate.tsx:164
+#: src/components/SetProgress.tsx:129
+#: src/components/StarRating.tsx:171
+msgid "Cancel"
+msgstr "取消"
+
+#: src/pages/settings/Password.tsx:76
+msgid "Change password"
+msgstr "修改密码"
+
+#: src/components/Facets/ActiveFacetChips.tsx:331
+#: src/components/Facets/FacetDrawer.tsx:72
+msgid "Clear all"
+msgstr "全部清除"
+
+#: src/components/Facets/FacetPanel.tsx:38
+msgid "Clear all filters"
+msgstr "清除所有筛选"
+
+#: src/pages/settings/Configuration.tsx:148
+msgid "Client ID"
+msgstr "客户端ID"
+
+#: src/pages/settings/Configuration.tsx:156
+msgid "Client Secret"
+msgstr "客户端密钥"
+
+#: src/components/AddOrEditGroupButton.tsx:70
+#: src/components/AddToListModal.tsx:105
+msgid "Close"
+msgstr "关闭"
+
+#: src/pages/Settings.tsx:139
+msgid "Configuration"
+msgstr "配置"
+
+#: src/components/Confirm.tsx:73
+msgid "Confirm"
+msgstr "确认"
+
+#: src/pages/settings/Password.tsx:41
+msgid "Confirm new password"
+msgstr "确认新密码"
+
+#: src/pages/Register.tsx:63
+msgid "Confirm password"
+msgstr "确认密码"
+
+#: src/pages/import/TraktTv.tsx:93
+msgid "Copy to clipboard"
+msgstr "复制到剪贴板"
+
+#: src/pages/GroupsPage.tsx:32
+msgid "Create a group to share Platform Recommended results with other users."
+msgstr "创建一个群组，与其他用户共享平台推荐结果。"
+
+#: src/components/AddOrEditGroupButton.tsx:66
+#: src/components/AddOrEditGroupButton.tsx:87
+msgid "Create group"
+msgstr "创建群组"
+
+#: src/components/Facets/ActiveFacetChips.tsx:51
+#: src/components/Facets/ActiveFacetChips.tsx:58
+#: src/components/Facets/CreatorSection.tsx:24
+#: src/components/Facets/CreatorSection.tsx:32
+msgid "Creator"
+msgstr "创作者"
+
+#: src/pages/settings/Password.tsx:22
+msgid "Current password"
+msgstr "当前密码"
+
+#: src/pages/settings/Password.tsx:71
+msgid "Current password is incorrect"
+msgstr "当前密码不正确"
+
+#: src/pages/import/Goodreads.tsx:78
+msgid "Currently reading"
+msgstr "正在阅读"
+
+#: src/pages/LogsPage.tsx:122
+msgid "Debug"
+msgstr "调试"
+
+#: src/pages/GroupDetailPage.tsx:359
+msgid "Delete group"
+msgstr "删除群组"
+
+#. placeholder {0}: group?.name
+#: src/pages/GroupDetailPage.tsx:276
+msgid "Delete group \"{0}\"? This action cannot be undone."
+msgstr "删除群组「{0}」？此操作无法撤销。"
+
+#: src/components/AddOrEditListButton.tsx:246
+msgid "Delete list"
+msgstr "删除列表"
+
+#: src/hooks/translations.ts:29
+msgid "Descending"
+msgstr "降序"
+
+#: src/components/AddOrEditListButton.tsx:151
+#: src/pages/EpisodePage.tsx:53
+#: src/pages/SeasonsPage.tsx:213
+msgid "Description"
+msgstr "描述"
+
+#: src/components/Facets/ActiveFacetChips.tsx:56
+#: src/components/Facets/CreatorSection.tsx:29
+msgid "Developer"
+msgstr "开发商"
+
+#: src/components/Facets/ActiveFacetChips.tsx:49
+#: src/components/Facets/CreatorSection.tsx:22
+msgid "Director"
+msgstr "导演"
+
+#: src/components/Nav.tsx:161
+msgid "Do you really want to logout?"
+msgstr "确定要退出登录吗？"
+
+#. placeholder {0}: list.name
+#: src/components/AddOrEditListButton.tsx:229
+msgid "Do you really want to remove list \"{0}\""
+msgstr "确定要删除列表 \"{0}\" 吗？"
+
+#: src/components/SetProgress.tsx:110
+msgid "Duration"
+msgstr "时长"
+
+#: src/components/AddOrEditListButton.tsx:43
+#: src/components/AddOrEditListButton.tsx:133
+msgid "Edit list"
+msgstr "编辑列表"
+
+#: src/pages/settings/Configuration.tsx:27
+msgid "Enable registration"
+msgstr "启用注册"
+
+#: src/components/SelectLastSeenEpisode.tsx:106
+msgid "Episode"
+msgstr "剧集"
+
+#. placeholder {0}: formatEpisodeNumber( episodesMap[seenEntry.episodeId] )
+#. placeholder {1}: episodesMap[seenEntry.episodeId].title
+#: src/pages/SeenHistory.tsx:111
+msgid "Episode {0} {1}"
+msgstr "剧集 {0} {1}"
+
+#: src/components/ImportSummaryTable.tsx:93
+#: src/pages/Details.tsx:383
+msgid "Episodes"
+msgstr "剧集"
+
+#: src/pages/Details.tsx:449
+msgid "Episodes page"
+msgstr "剧集页面"
+
+#: src/pages/import/TraktTv.tsx:143
+#: src/pages/LogsPage.tsx:102
+msgid "Error"
+msgstr "错误"
+
+#: src/pages/import/TraktTv.tsx:137
+msgid "Exporting"
+msgstr "导出中"
+
+#: src/pages/GroupDetailPage.tsx:90
+msgid "Failed to add member. They may already be in the group."
+msgstr "添加成员失败。他们可能已经在该群组中。"
+
+#: src/pages/GroupDetailPage.tsx:291
+msgid "Failed to load group. It may have been deleted."
+msgstr "加载群组失败。群组可能已被删除。"
+
+#: src/components/Facets/FacetDrawer.tsx:61
+#: src/components/Facets/FacetMobileButton.tsx:36
+#: src/components/Facets/FacetPanel.tsx:31
+msgid "Filters"
+msgstr "筛选"
+
+#: src/pages/Details.tsx:528
+msgid "First unwatched episode"
+msgstr "第一个未观看的剧集"
+
+#: src/components/Nav.tsx:39
+#: src/components/Statistics/StatisticsGenreSegment.tsx:20
+#: src/components/Statistics/StatisticsSegment.tsx:117
+msgid "Games"
+msgstr "游戏"
+
+#: src/pages/settings/Configuration.tsx:25
+msgid "General"
+msgstr "常规"
+
+#: src/components/Facets/ActiveFacetChips.tsx:225
+#: src/components/Facets/GenreSection.tsx:37
+msgid "Genre"
+msgstr "Genre"
+
+#: src/pages/Statistics.tsx:154
+msgid "Genres"
+msgstr "类型"
+
+#. placeholder {0}: deviceCode.verificationUrl
+#. placeholder {1}: deviceCode.userCode
+#: src/pages/import/TraktTv.tsx:66
+msgid "Go to <0>{0}</0> and enter following code: <1>{1}</1>"
+msgstr "前往 <0>{0}</0> 并输入以下代码: <1>{1}</1>"
+
+#: src/pages/import/Goodreads.tsx:34
+msgid "Go to <0>https://www.goodreads.com/review/list</0> and copy RSS url from the bottom of the page"
+msgstr "前往 <0>https://www.goodreads.com/review/list</0> 并从页面底部复制RSS链接"
+
+#: src/pages/settings/Notifications.tsx:110
+msgid "Gotify server url"
+msgstr "Gotify服务器URL"
+
+#: src/pages/GroupDetailPage.tsx:310
+msgid "Group name"
+msgstr "群组名称"
+
+#: src/components/Nav.tsx:50
+msgid "Groups"
+msgstr "群组"
+
+#: src/pages/settings/Preferences.tsx:31
+msgid "Hide overview of unseen seasons"
+msgstr "隐藏未观看季度的概述"
+
+#: src/pages/settings/Preferences.tsx:20
+msgid "Hide title of unseen episodes"
+msgstr "隐藏未观看剧集的标题"
+
+#: src/components/Nav.tsx:36
+#: src/i18n/__tests__/i18n.test.ts:65
+msgid "Home"
+msgstr "主页"
+
+#: src/pages/LogsPage.tsx:117
+msgid "Http"
+msgstr "Http"
+
+#: src/pages/Details.tsx:471
+msgid "I am listening it"
+msgstr "正在收听"
+
+#: src/pages/Details.tsx:472
+msgid "I am playing it"
+msgstr "正在游玩"
+
+#: src/pages/Details.tsx:470
+msgid "I am reading it"
+msgstr "正在阅读"
+
+#: src/pages/Details.tsx:469
+msgid "I am watching it"
+msgstr "正在观看"
+
+#: src/components/SelectSeenDate.tsx:124
+#: src/pages/Statistics.tsx:26
+msgid "I do not remember"
+msgstr "不记得了"
+
+#: src/pages/Details.tsx:492
+msgid "I finished listening it"
+msgstr "已收听完毕"
+
+#: src/pages/Details.tsx:495
+msgid "I finished playing it"
+msgstr "已游玩完毕"
+
+#: src/pages/Details.tsx:490
+msgid "I finished reading it"
+msgstr "已阅读完毕"
+
+#: src/pages/Details.tsx:489
+msgid "I finished watching it"
+msgstr "已观看完毕"
+
+#: src/pages/settings/Configuration.tsx:129
+msgid "IGDB credentials"
+msgstr "IGDB认证信息"
+
+#: src/pages/import/Goodreads.tsx:57
+msgid "import"
+msgstr "导入"
+
+#: src/components/Nav.tsx:48
+msgid "Import"
+msgstr "导入"
+
+#: src/pages/Import.tsx:17
+msgid "Import from"
+msgstr "导入来源"
+
+#: src/pages/import/TraktTv.tsx:141
+msgid "Imported"
+msgstr "已导入"
+
+#: src/pages/import/Goodreads.tsx:62
+#: src/pages/import/TraktTv.tsx:142
+msgid "Importing"
+msgstr "导入中"
+
+#: src/components/Nav.tsx:43
+msgid "In progress"
+msgstr "进行中"
+
+#: src/pages/Login.tsx:82
+msgid "Incorrect password or username"
+msgstr "密码或用户名不正确"
+
+#: src/pages/LogsPage.tsx:112
+msgid "Info"
+msgstr "信息"
+
+#: src/components/Facets/StatusSection.tsx:143
+msgid "Item must match all selected statuses"
+msgstr "项目必须匹配所有选中的状态"
+
+#: src/pages/settings/Notifications.tsx:95
+msgid "Key"
+msgstr "密钥"
+
+#: src/components/Facets/ActiveFacetChips.tsx:235
+#: src/components/Facets/LanguageSection.tsx:95
+#: src/pages/Details.tsx:330
+msgid "Language"
+msgstr "语言"
+
+#: src/components/OrderBy.tsx:19
+msgid "Last airing"
+msgstr "最近播出"
+
+#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
+#: src/pages/Details.tsx:537
+msgid "Last listened at {0}"
+msgstr "最近收听于 {0}"
+
+#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
+#: src/pages/Details.tsx:555
+msgid "Last played at {0}"
+msgstr "最近游玩于 {0}"
+
+#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
+#: src/pages/Details.tsx:543
+msgid "Last read at {0}"
+msgstr "最近阅读于 {0}"
+
+#: src/components/OrderBy.tsx:14
+msgid "Last seen"
+msgstr "最近观看"
+
+#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
+#: src/pages/Details.tsx:549
+msgid "Last seen at {0}"
+msgstr "最近观看于 {0}"
+
+#. placeholder {0}: item.listName
+#: src/pages/import/TraktTv.tsx:320
+msgid "List {0} - episodes"
+msgstr "列表 {0} - 剧集"
+
+#. placeholder {0}: item.listName
+#: src/pages/import/TraktTv.tsx:302
+msgid "List {0} - movies"
+msgstr "列表 {0} - 电影"
+
+#. placeholder {0}: item.listName
+#: src/pages/import/TraktTv.tsx:314
+msgid "List {0} - seasons"
+msgstr "列表 {0} - 季度"
+
+#. placeholder {0}: item.listName
+#: src/pages/import/TraktTv.tsx:308
+msgid "List {0} - shows"
+msgstr "列表 {0} - 电视剧"
+
+#. placeholder {0}: list.listName
+#: src/pages/import/TraktTv.tsx:218
+msgid "List: {0}"
+msgstr "列表: {0}"
+
+#: src/components/Facets/ActiveFacetChips.tsx:26
+#: src/components/Facets/StatusSection.tsx:33
+#: src/components/FilterBy.tsx:18
+msgid "Listened"
+msgstr "已收听"
+
+#. placeholder {0}: seenEntry.dateStr
+#: src/pages/SeenHistory.tsx:89
+msgid "Listened at {0}"
+msgstr "收听于 {0}"
+
+#: src/pages/Details.tsx:597
+msgid "Listened history"
+msgstr "收听历史"
+
+#: src/components/Nav.tsx:49
+msgid "Lists"
+msgstr "列表"
+
+#: src/components/AddToListModal.tsx:49
+#: src/components/PaginatedGridItems.tsx:384
+#: src/components/SelectLastSeenEpisode.tsx:67
+#: src/pages/Calendar.tsx:61
+#: src/pages/Details.tsx:205
+#: src/pages/EpisodePage.tsx:42
+#: src/pages/GroupDetailPage.tsx:285
+#: src/pages/GroupsPage.tsx:17
+#: src/pages/import/TraktTv.tsx:116
+#: src/pages/ListPage.tsx:86
+#: src/pages/ListsPage.tsx:29
+#: src/pages/Login.tsx:17
+#: src/pages/LogsPage.tsx:27
+#: src/pages/SeasonsPage.tsx:144
+#: src/pages/SeenHistory.tsx:30
+msgid "Loading"
+msgstr "加载中"
+
+#: src/pages/Login.tsx:33
+#: src/pages/Login.tsx:67
+#: src/pages/Register.tsx:85
+msgid "Login"
+msgstr "登录"
+
+#: src/components/Nav.tsx:166
+#: src/i18n/__tests__/i18n.test.ts:56
+msgid "Logout"
+msgstr "退出登录"
+
+#: src/pages/Settings.tsx:143
+msgid "Logs"
+msgstr "日志"
+
+#: src/components/Facets/RatingSection.tsx:68
+msgid "Maximum rating"
+msgstr "最高评分"
+
+#: src/components/Facets/YearSection.tsx:92
+msgid "Maximum year"
+msgstr "最大年份"
+
+#: src/components/OrderBy.tsx:21
+msgid "Media type"
+msgstr "媒体类型"
+
+#: src/components/Facets/ActiveFacetChips.tsx:281
+#: src/components/Facets/MediaTypeSection.tsx:117
+msgid "Media Type"
+msgstr "媒体类型"
+
+#: src/pages/GroupDetailPage.tsx:328
+msgid "Members"
+msgstr "成员"
+
+#: src/components/Facets/RatingSection.tsx:67
+msgid "Minimum rating"
+msgstr "最低评分"
+
+#: src/components/Facets/YearSection.tsx:91
+msgid "Minimum year"
+msgstr "最小年份"
+
+#: src/components/Facets/ActiveFacetChips.tsx:70
+#: src/components/Facets/MediaTypeSection.tsx:18
+#: src/components/GridItem.tsx:93
+msgid "Movie"
+msgstr "电影"
+
+#: src/components/ImportSummaryTable.tsx:90
+#: src/components/Nav.tsx:38
+#: src/components/Statistics/StatisticsGenreSegment.tsx:17
+#: src/components/Statistics/StatisticsSegment.tsx:76
+msgid "Movies"
+msgstr "电影"
+
+#: src/utils.ts:152
+msgid "Movies, shows, seasons, episodes, books, audiobooks and video games I plan to watch/read/listen/play"
+msgstr "我计划观看/阅读/收听/游玩的电影、电视剧、季度、剧集、书籍、有声书和视频游戏"
+
+#: src/hooks/translations.ts:8
+msgid "My rating"
+msgstr "我的评分"
+
+#: src/components/AddOrEditGroupButton.tsx:51
+#: src/components/AddOrEditListButton.tsx:137
+msgid "Name"
+msgstr "名称"
+
+#: src/pages/Details.tsx:281
+msgid "Network"
+msgstr "网络"
+
+#: src/components/AddOrEditGroupButton.tsx:47
+msgid "New group"
+msgstr "新建群组"
+
+#: src/components/AddOrEditListButton.tsx:133
+msgid "New list"
+msgstr "新建列表"
+
+#: src/pages/settings/Password.tsx:32
+msgid "New password"
+msgstr "新密码"
+
+#: src/components/OrderBy.tsx:18
+#: src/hooks/translations.ts:15
+msgid "Next airing"
+msgstr "下次播出"
+
+#: src/pages/Details.tsx:515
+msgid "Next episode"
+msgstr "下一集"
+
+#: src/pages/Home.tsx:89
+msgid "Next episode to watch"
+msgstr "下一个待观看的剧集"
+
+#: src/components/Confirm.tsx:78
+msgid "No"
+msgstr "否"
+
+#: src/pages/SeenHistory.tsx:105
+msgid "No date"
+msgstr "无日期"
+
+#: src/pages/GroupsPage.tsx:29
+msgid "No groups yet"
+msgstr "暂无群组"
+
+#: src/pages/GroupDetailPage.tsx:333
+msgid "No members yet"
+msgstr "暂无成员"
+
+#: src/pages/LogsPage.tsx:68
+msgid "No more logs"
+msgstr "没有更多日志"
+
+#: src/pages/GroupDetailPage.tsx:134
+msgid "No users found"
+msgstr "未找到用户"
+
+#: src/pages/import/TraktTv.tsx:245
+msgid "Not imported items"
+msgstr "未导入的内容"
+
+#: src/pages/settings/Notifications.tsx:174
+msgid "Notification platform"
+msgstr "通知平台"
+
+#: src/pages/Settings.tsx:129
+msgid "Notifications"
+msgstr "通知"
+
+#: src/components/SelectSeenDate.tsx:110
+msgid "Now"
+msgstr "现在"
+
+#: src/pages/SeasonsPage.tsx:230
+msgid "Number of episodes"
+msgstr "剧集数量"
+
+#: src/pages/Details.tsx:366
+msgid "Number of pages"
+msgstr "页数"
+
+#: src/components/Facets/ActiveFacetChips.tsx:23
+#: src/components/Facets/StatusSection.tsx:57
+#: src/components/FilterBy.tsx:14
+msgid "On watchlist"
+msgstr "已在观看清单"
+
+#: src/pages/Details.tsx:321
+msgid "Overview"
+msgstr "概述"
+
+#: src/pages/Login.tsx:53
+#: src/pages/Register.tsx:49
+#: src/pages/Settings.tsx:119
+msgid "Password"
+msgstr "密码"
+
+#: src/pages/settings/Password.tsx:67
+msgid "Password has been changed"
+msgstr "密码已更改"
+
+#: src/pages/settings/Password.tsx:56
+msgid "Passwords do not match"
+msgstr "密码不匹配"
+
+#: src/pages/settings/Notifications.tsx:186
+msgid "Platform"
+msgstr "平台"
+
+#: src/components/OrderBy.tsx:24
+#: src/hooks/translations.ts:17
+msgid "Platform Recommended"
+msgstr "平台推荐"
+
+#: src/components/Facets/ActiveFacetChips.tsx:32
+#: src/components/Facets/StatusSection.tsx:39
+#: src/components/FilterBy.tsx:22
+msgid "Played"
+msgstr "已游玩"
+
+#. placeholder {0}: seenEntry.dateStr
+#: src/pages/SeenHistory.tsx:101
+msgid "Played at {0}"
+msgstr "游玩于 {0}"
+
+#: src/pages/Details.tsx:605
+msgid "Played history"
+msgstr "游玩历史"
+
+#: src/pages/Settings.tsx:133
+msgid "Preferences"
+msgstr "偏好设置"
+
+#: src/pages/settings/Notifications.tsx:257
+#: src/pages/settings/Notifications.tsx:262
+msgid "Priority"
+msgstr "优先级"
+
+#: src/components/AddOrEditListButton.tsx:161
+#: src/components/AddOrEditListButton.tsx:166
+msgid "Privacy"
+msgstr "隐私"
+
+#: src/hooks/translations.ts:22
+msgid "Private"
+msgstr "私密"
+
+#: src/components/OrderBy.tsx:22
+#: src/pages/Details.tsx:500
+msgid "Progress"
+msgstr "进度"
+
+#: src/hooks/translations.ts:23
+msgid "Public"
+msgstr "公开"
+
+#: src/pages/settings/Preferences.tsx:12
+msgid "Public reviews"
+msgstr "公开评价"
+
+#: src/components/Facets/ActiveFacetChips.tsx:269
+#: src/components/Facets/PublisherSection.tsx:53
+msgid "Publisher"
+msgstr "出版商"
+
+#: src/components/Nav.tsx:45
+msgid "Random"
+msgstr "随机"
+
+#: src/pages/Random.tsx:107
+msgid "Random Audiobook"
+msgstr "随机有声书"
+
+#: src/pages/Random.tsx:94
+msgid "Random Book"
+msgstr "随机书籍"
+
+#: src/pages/Random.tsx:55
+msgid "Random Movie"
+msgstr "随机电影"
+
+#: src/pages/Random.tsx:68
+msgid "Random Tv Show"
+msgstr "随机电视剧"
+
+#: src/pages/Random.tsx:81
+msgid "Random Video Game"
+msgstr "随机视频游戏"
+
+#: src/components/Facets/ActiveFacetChips.tsx:19
+#: src/components/Facets/StatusSection.tsx:53
+#: src/components/FilterBy.tsx:12
+msgid "Rated"
+msgstr "已评分"
+
+#: src/components/Facets/ActiveFacetChips.tsx:316
+#: src/components/Facets/RatingSection.tsx:57
+#: src/pages/import/Goodreads.tsx:83
+msgid "Rating"
+msgstr "评分"
+
+#: src/pages/import/TraktTv.tsx:202
+msgid "Ratings"
+msgstr "评分"
+
+#: src/pages/import/TraktTv.tsx:294
+msgid "Ratings - episodes"
+msgstr "评分 - 剧集"
+
+#: src/pages/import/TraktTv.tsx:279
+msgid "Ratings - movies"
+msgstr "评分 - 电影"
+
+#: src/pages/import/TraktTv.tsx:289
+msgid "Ratings - seasons"
+msgstr "评分 - 季度"
+
+#: src/pages/import/TraktTv.tsx:284
+msgid "Ratings - shows"
+msgstr "评分 - 电视剧"
+
+#: src/components/Facets/ActiveFacetChips.tsx:29
+#: src/components/Facets/StatusSection.tsx:36
+#: src/components/FilterBy.tsx:20
+#: src/pages/import/Goodreads.tsx:68
+msgid "Read"
+msgstr "已阅读"
+
+#. placeholder {0}: seenEntry.dateStr
+#: src/pages/SeenHistory.tsx:93
+msgid "Read at {0}"
+msgstr "阅读于 {0}"
+
+#: src/pages/Details.tsx:599
+msgid "Read history"
+msgstr "阅读历史"
+
+#: src/pages/settings/Notifications.tsx:46
+msgid "Receive notification for all media items on your watchlist, when its release date changes"
+msgstr "当观看清单中的媒体内容发布日期变更时接收通知"
+
+#: src/pages/settings/Notifications.tsx:38
+msgid "Receive notification for all media items on your watchlist, when its status changes"
+msgstr "当观看清单中的媒体内容状态变更时接收通知"
+
+#: src/pages/settings/Notifications.tsx:24
+msgid "Receive notification for all media items on your watchlist, when they are released, including new seasons for tv shows"
+msgstr "当观看清单中的媒体内容发布时接收通知（包括电视剧新季度）"
+
+#: src/pages/settings/Notifications.tsx:54
+msgid "Receive notification for all tv shows on your watchlist, when its number of seasons changes"
+msgstr "当观看清单中的电视剧季度数量变更时接收通知"
+
+#: src/pages/settings/Notifications.tsx:30
+msgid "Receive notification for every episode for all tv shows on your watchlist, when it's released"
+msgstr "当观看清单中的电视剧每一集发布时接收通知"
+
+#: src/hooks/translations.ts:9
+msgid "Recently added"
+msgstr "最近添加"
+
+#: src/hooks/translations.ts:11
+msgid "Recently aired"
+msgstr "最近播出"
+
+#: src/pages/Home.tsx:104
+msgid "Recently released"
+msgstr "最近发布"
+
+#: src/hooks/translations.ts:10
+msgid "Recently watched"
+msgstr "最近观看"
+
+#: src/components/OrderBy.tsx:23
+#: src/hooks/translations.ts:16
+msgid "Recommended"
+msgstr "推荐"
+
+#: src/pages/Login.tsx:75
+#: src/pages/Register.tsx:29
+#: src/pages/Register.tsx:77
+msgid "Register"
+msgstr "注册"
+
+#: src/components/GridItem.tsx:245
+msgid "Release <0/>"
+msgstr "发布 <0/>"
+
+#: src/components/OrderBy.tsx:15
+#: src/hooks/translations.ts:12
+#: src/pages/Details.tsx:232
+#: src/pages/EpisodePage.tsx:80
+msgid "Release date"
+msgstr "发布日期"
+
+#: src/components/GridItem.tsx:263
+msgid "Released <0/>"
+msgstr "已发布 <0/>"
+
+#: src/pages/GroupDetailPage.tsx:203
+msgid "Remove"
+msgstr "移除"
+
+#. placeholder {0}: mediaItem.title
+#. placeholder {1}: season ? ' ' + formatSeasonNumber(season) : episode ? ' ' + formatEpisodeNumber(episode) : ''
+#: src/components/GridItem.tsx:136
+msgid "Remove \"{0}{1}\" from watchlist?"
+msgstr "从追踪列表中移除 \"{0}{1}\"？"
+
+#. placeholder {0}: member.name
+#: src/pages/GroupDetailPage.tsx:201
+msgid "Remove {0}"
+msgstr "移除 {0}"
+
+#. placeholder {0}: member.name
+#: src/pages/GroupDetailPage.tsx:168
+msgid "Remove {0} from this group?"
+msgstr "从该群组移除 {0}？"
+
+#: src/components/Facets/ActiveFacetChips.tsx:107
+msgid "Remove {dimensionLabel}: {value} filter"
+msgstr "移除筛选 {dimensionLabel}: {value}"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:131
+msgid "Remove episode from seen history"
+msgstr "从观看历史中移除剧集"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:125
+msgid "Remove from listened history"
+msgstr "从收听历史中移除"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:127
+msgid "Remove from played history"
+msgstr "从游玩历史中移除"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:126
+msgid "Remove from read history"
+msgstr "从阅读历史中移除"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:128
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:135
+msgid "Remove from seen history"
+msgstr "从观看历史中移除"
+
+#: src/pages/Details.tsx:670
+msgid "Remove from watchlist"
+msgstr "从观看清单中移除"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:133
+msgid "Remove season from seen history"
+msgstr "从观看历史中移除季度"
+
+#: src/pages/settings/ApplicationTokens.tsx:50
+msgid "Remove token"
+msgstr "删除令牌"
+
+#: src/pages/Details.tsx:65
+msgid "Review by <0><1>{author}</1></0> at {date}"
+msgstr "<0><1>{author}</1></0> 于 {date} 的评价"
+
+#. placeholder {0}: member.name
+#: src/pages/GroupDetailPage.tsx:191
+msgid "Role for {0}"
+msgstr "{0} 的角色"
+
+#: src/pages/import/Goodreads.tsx:48
+msgid "RSS link"
+msgstr "RSS链接"
+
+#: src/hooks/translations.ts:13
+#: src/pages/Details.tsx:243
+#: src/pages/EpisodePage.tsx:71
+msgid "Runtime"
+msgstr "片长"
+
+#. placeholder {0}: season.seasonNumber.toString().padStart(2, '0')
+#: src/utils.ts:19
+msgid "S{0}"
+msgstr "S{0}"
+
+#. placeholder {0}: tvEpisode.seasonNumber .toString() .padStart(2, '0')
+#. placeholder {1}: tvEpisode.episodeNumber.toString().padStart(2, '0')
+#: src/utils.ts:13
+msgid "S{0}E{1}"
+msgstr "S{0}E{1}"
+
+#: src/pages/settings/Configuration.tsx:165
+#: src/pages/settings/Notifications.tsx:280
+msgid "Save"
+msgstr "保存"
+
+#: src/components/AddOrEditListButton.tsx:219
+msgid "Save list"
+msgstr "保存列表"
+
+#: src/components/StarRating.tsx:168
+msgid "Save review"
+msgstr "保存评价"
+
+#: src/components/PaginatedGridItems.tsx:63
+msgid "Search"
+msgstr "搜索"
+
+#: src/pages/GroupDetailPage.tsx:103
+msgid "Search by username…"
+msgstr "按用户名搜索…"
+
+#: src/components/PaginatedGridItems.tsx:304
+msgid "Search for items or <0>import</0>"
+msgstr "Search for items or <0>import</0>"
+
+#: src/pages/ListPage.tsx:124
+msgid "Search list"
+msgstr "搜索列表"
+
+#: src/pages/GroupDetailPage.tsx:107
+msgid "Search users to add"
+msgstr "搜索要添加的用户"
+
+#: src/pages/GroupDetailPage.tsx:112
+msgid "Searching…"
+msgstr "搜索中…"
+
+#: src/components/SelectLastSeenEpisode.tsx:83
+msgid "Season"
+msgstr "季度"
+
+#. placeholder {0}: season.seasonNumber
+#: src/pages/SeasonsPage.tsx:177
+msgid "Season {0}"
+msgstr "第 {0} 季"
+
+#: src/components/ImportSummaryTable.tsx:92
+#: src/pages/Details.tsx:376
+msgid "Seasons"
+msgstr "季度"
+
+#: src/pages/Statistics.tsx:149
+msgid "Seen"
+msgstr "已观看"
+
+#. placeholder {0}: seenEntry.dateStr
+#: src/pages/SeenHistory.tsx:97
+msgid "Seen at {0}"
+msgstr "观看于 {0}"
+
+#: src/pages/Details.tsx:602
+#: src/pages/import/TraktTv.tsx:191
+msgid "Seen history"
+msgstr "观看历史"
+
+#: src/pages/import/TraktTv.tsx:274
+msgid "Seen history - episodes"
+msgstr "观看历史 - 剧集"
+
+#: src/pages/import/TraktTv.tsx:269
+msgid "Seen history - movies"
+msgstr "观看历史 - 电影"
+
+#: src/components/SelectLastSeenEpisode.tsx:135
+msgid "Select"
+msgstr "选择"
+
+#: src/components/SelectSeenDate.tsx:160
+msgid "Select date"
+msgstr "选择日期"
+
+#: src/pages/settings/Notifications.tsx:265
+msgid "Select priority"
+msgstr "选择优先级"
+
+#: src/pages/Statistics.tsx:195
+msgid "Select year"
+msgstr "选择年份"
+
+#: src/pages/Statistics.tsx:207
+msgid "Select Year"
+msgstr "选择年份"
+
+#: src/pages/settings/Notifications.tsx:29
+msgid "Send notification for episodes releases"
+msgstr "发送剧集发布通知"
+
+#: src/pages/settings/Notifications.tsx:23
+msgid "Send notification for releases"
+msgstr "发送发布通知"
+
+#: src/pages/settings/Notifications.tsx:53
+msgid "Send notification when number of seasons changes"
+msgstr "季度数量变更时发送通知"
+
+#: src/pages/settings/Notifications.tsx:45
+msgid "Send notification when release date changes"
+msgstr "发布日期变更时发送通知"
+
+#: src/pages/settings/Notifications.tsx:37
+msgid "Send notification when status changes"
+msgstr "状态变更时发送通知"
+
+#: src/App.tsx:101
+msgid "Server error: {errorMessage}"
+msgstr "服务器错误: {errorMessage}"
+
+#: src/pages/settings/Configuration.tsx:35
+#: src/pages/settings/Configuration.tsx:42
+msgid "Server language"
+msgstr "服务器语言"
+
+#: src/pages/settings/Notifications.tsx:146
+msgid "Server url (only for self hosting)"
+msgstr "服务器URL（仅限自托管）"
+
+#: src/components/SetProgress.tsx:125
+msgid "Set"
+msgstr "设置"
+
+#: src/components/SetProgress.tsx:61
+#: src/pages/Details.tsx:705
+msgid "Set progress"
+msgstr "设置进度"
+
+#: src/pages/Settings.tsx:76
+msgid "Settings"
+msgstr "设置"
+
+#: src/components/Facets/ExpandableList.tsx:33
+msgid "Show less"
+msgstr "收起"
+
+#: src/components/Facets/ExpandableList.tsx:33
+msgid "Show more"
+msgstr "展开更多"
+
+#: src/pages/settings/Preferences.tsx:13
+msgid "Show your reviews to other users"
+msgstr "向其他用户显示您的评价"
+
+#: src/components/ImportSummaryTable.tsx:91
+msgid "Shows"
+msgstr "电视剧"
+
+#: src/components/AddOrEditListButton.tsx:180
+#: src/components/AddOrEditListButton.tsx:185
+msgid "Sort by"
+msgstr "排序方式"
+
+#: src/components/AddOrEditListButton.tsx:199
+#: src/components/AddOrEditListButton.tsx:204
+msgid "Sort order"
+msgstr "排序顺序"
+
+#: src/pages/Details.tsx:401
+msgid "Source"
+msgstr "来源"
+
+#: src/pages/import/TraktTv.tsx:110
+msgid "Start over"
+msgstr "重新开始"
+
+#: src/components/Nav.tsx:46
+#: src/pages/Statistics.tsx:111
+msgid "Statistics"
+msgstr "统计"
+
+#: src/components/Facets/ActiveFacetChips.tsx:293
+#: src/components/Facets/StatusSection.tsx:116
+#: src/components/OrderBy.tsx:16
+#: src/pages/Details.tsx:290
+msgid "Status"
+msgstr "状态"
+
+#: src/components/ImportSummaryTable.tsx:84
+#: src/components/ImportSummaryTable.tsx:135
+msgid "Summary"
+msgstr "摘要"
+
+#: src/components/AddOrEditListButton.tsx:105
+msgid "There already exists a list with name \"{name}\""
+msgstr "已存在名为 \"{name}\" 的列表"
+
+#: src/pages/SeasonsPage.tsx:152
+msgid "This component can only be used with tv shows"
+msgstr "此组件只能用于电视剧"
+
+#: src/components/OrderBy.tsx:17
+#: src/hooks/translations.ts:14
+msgid "Title"
+msgstr "标题"
+
+#: src/pages/settings/Configuration.tsx:88
+#: src/pages/settings/Configuration.tsx:95
+msgid "TMDB language"
+msgstr "TMDB语言"
+
+#: src/pages/import/Goodreads.tsx:73
+msgid "To read"
+msgstr "待阅读"
+
+#: src/pages/settings/Notifications.tsx:142
+msgid "Topic"
+msgstr "主题"
+
+#: src/pages/Details.tsx:254
+msgid "Total runtime"
+msgstr "总片长"
+
+#: src/components/GridItem.tsx:94
+#: src/components/Nav.tsx:37
+#: src/components/Statistics/StatisticsGenreSegment.tsx:16
+#: src/components/Statistics/StatisticsSegment.tsx:35
+msgid "Tv"
+msgstr "电视"
+
+#: src/components/Facets/ActiveFacetChips.tsx:72
+#: src/components/Facets/MediaTypeSection.tsx:20
+msgid "TV Show"
+msgstr "电视节目"
+
+#: src/pages/import/TraktTv.tsx:138
+msgid "Uninitialized"
+msgstr "未初始化"
+
+#: src/components/Facets/ActiveFacetChips.tsx:21
+#: src/components/Facets/StatusSection.tsx:55
+#: src/components/FilterBy.tsx:13
+#: src/pages/Home.tsx:122
+msgid "Unrated"
+msgstr "未评分"
+
+#: src/pages/Details.tsx:391
+msgid "Unseen episodes"
+msgstr "未观看的剧集"
+
+#: src/components/OrderBy.tsx:20
+msgid "Unseen episodes count"
+msgstr "未观看剧集数量"
+
+#: src/components/Nav.tsx:42
+#: src/pages/Home.tsx:75
+msgid "Upcoming"
+msgstr "即将推出"
+
+#: src/pages/Details.tsx:691
+msgid "Update metadata"
+msgstr "更新元数据"
+
+#: src/pages/import/TraktTv.tsx:139
+msgid "Updating metadata"
+msgstr "正在更新元数据"
+
+#: src/pages/Login.tsx:38
+#: src/pages/Register.tsx:34
+msgid "Username"
+msgstr "用户名"
+
+#: src/pages/settings/About.tsx:11
+msgid "Version"
+msgstr "版本"
+
+#: src/components/Facets/ActiveFacetChips.tsx:78
+#: src/components/Facets/MediaTypeSection.tsx:26
+#: src/components/GridItem.tsx:95
+msgid "Video game"
+msgstr "视频游戏"
+
+#: src/pages/GroupDetailPage.tsx:194
+#: src/pages/GroupDetailPage.tsx:208
+#: src/pages/GroupDetailPage.tsx:321
+#: src/pages/GroupsPage.tsx:50
+msgid "Viewer"
+msgstr "观看者"
+
+#: src/pages/import/TraktTv.tsx:140
+msgid "Waiting for authentication"
+msgstr "等待认证"
+
+#: src/pages/LogsPage.tsx:107
+msgid "Warning"
+msgstr "警告"
+
+#: src/components/Facets/ActiveFacetChips.tsx:34
+#: src/components/Facets/StatusSection.tsx:41
+#: src/components/FilterBy.tsx:23
+msgid "Watched"
+msgstr "已观看"
+
+#: src/components/Nav.tsx:44
+#: src/pages/import/TraktTv.tsx:176
+#: src/utils.ts:157
+msgid "Watchlist"
+msgstr "观看清单"
+
+#: src/pages/import/TraktTv.tsx:264
+msgid "Watchlist - episodes"
+msgstr "观看清单 - 剧集"
+
+#: src/pages/import/TraktTv.tsx:249
+msgid "Watchlist - movies"
+msgstr "观看清单 - 电影"
+
+#: src/pages/import/TraktTv.tsx:259
+msgid "Watchlist - season"
+msgstr "观看清单 - 季度"
+
+#: src/pages/import/TraktTv.tsx:254
+msgid "Watchlist - shows"
+msgstr "观看清单 - 电视剧"
+
+#: src/pages/settings/Notifications.tsx:127
+msgid "Webhook URL"
+msgstr "Webhook URL"
+
+#. placeholder {0}: season ? `${tvShow.title} ${formatSeasonNumber(season)}` : tvShow.title
+#: src/components/SelectLastSeenEpisode.tsx:71
+msgid "What is the last episode of \"{0}\" you see?"
+msgstr "你看的 \"{0}\" 最后一集是哪集？"
+
+#. placeholder {0}: mediaItem.title
+#: src/components/SelectSeenDate.tsx:78
+msgid "When did you listen to \"{0}\"?"
+msgstr "你什么时候听的 \"{0}\"？"
+
+#. placeholder {0}: mediaItem.title
+#: src/components/SelectSeenDate.tsx:100
+msgid "When did you play \"{0}\"?"
+msgstr "你什么时候玩的 \"{0}\"？"
+
+#. placeholder {0}: mediaItem.title
+#: src/components/SelectSeenDate.tsx:82
+msgid "When did you read \"{0}\"?"
+msgstr "你什么时候读的 \"{0}\"？"
+
+#. placeholder {0}: episode ? `${mediaItem.title} ${formatEpisodeNumber(episode)}` : mediaItem.title
+#. placeholder {0}: mediaItem.title
+#: src/components/SelectSeenDate.tsx:86
+#: src/components/SelectSeenDate.tsx:90
+msgid "When did you see \"{0}\"?"
+msgstr "你什么时候看的 \"{0}\"？"
+
+#: src/pages/Details.tsx:125
+msgid "Where to watch"
+msgstr "在哪里观看"
+
+#: src/components/Facets/ActiveFacetChips.tsx:304
+#: src/components/Facets/YearSection.tsx:81
+msgid "Year"
+msgstr "年份"
+
+#: src/components/Confirm.tsx:81
+msgid "Yes"
+msgstr "是"
+
+#: src/pages/GroupDetailPage.tsx:319
+msgid "Your role:"
+msgstr "您的角色："

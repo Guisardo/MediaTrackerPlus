@@ -19,29 +19,7 @@
  *  7. No extra keys are present (array lengths match expectations)
  */
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { act } from 'react-dom/test-utils';
-
-// renderHook polyfill — @testing-library/react v12 does not export renderHook.
-function renderHook<T>(callback: () => T): { result: { current: T }; rerender: () => void } {
-  const result = { current: undefined as unknown as T };
-  const container = document.createElement('div');
-  document.body.appendChild(container);
-  function TestComponent() {
-    result.current = callback();
-    return null;
-  }
-  act(() => {
-    ReactDOM.render(React.createElement(TestComponent), container);
-  });
-  const rerender = () => {
-    act(() => {
-      ReactDOM.render(React.createElement(TestComponent), container);
-    });
-  };
-  return { result, rerender };
-}
+import { renderHook } from '@testing-library/react';
 
 // ---------------------------------------------------------------------------
 // Mock @lingui/macro BEFORE importing the hooks

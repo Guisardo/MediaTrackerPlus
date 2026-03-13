@@ -178,19 +178,20 @@ jest.mock('@lingui/react', () => {
     });
   };
 
-  const Trans = ({ id, children, values, components }: any) => {
-    if (id) {
+  const Trans = ({ id, message, children, values, components }: any) => {
+    // In Lingui v5, the babel plugin sets id=hash and message=readable ICU text.
+    // Use message (readable text with ICU patterns) for resolution, fall back to id.
+    const text = message || id;
+    if (text) {
       if (components) {
-        // Handle Trans with component substitutions (e.g. Trans wrapping Link)
-        let resolvedId = id;
-        // Replace value placeholders first
+        let resolved = text;
         if (values) {
-          resolvedId = resolveICU(resolvedId, values);
+          resolved = resolveICU(resolved, values);
         }
-        const nodes = substituteComponents(resolvedId, components);
+        const nodes = substituteComponents(resolved, components);
         return React.createElement(React.Fragment, null, ...nodes);
       }
-      const resolved = resolveICU(id, values ?? {});
+      const resolved = resolveICU(text, values ?? {});
       return React.createElement(React.Fragment, null, resolved);
     }
     return React.createElement(React.Fragment, null, children ?? null);
@@ -200,7 +201,12 @@ jest.mock('@lingui/react', () => {
     Trans,
     I18nProvider: ({ children }: any) =>
       React.createElement(React.Fragment, null, children),
-    useLingui: () => ({ i18n: { _: (id: any) => (typeof id === 'string' ? id : id?.id ?? '') } }),
+    useLingui: () => ({
+      i18n: {
+        _: (id: any) =>
+          typeof id === 'string' ? id : id?.message || id?.id || '',
+      },
+    }),
   };
 });
 

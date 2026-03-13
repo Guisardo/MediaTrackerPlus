@@ -2,16 +2,14 @@
 
 exports[`SettingsSegment matches a stable snapshot for the basic (no href) case 1`] = `
 <div
-  class="p-3 border rounded-sm"
+  class="rounded-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm p-6"
 >
   <div
-    class="mb-2 text-2xl font-bold"
+    class="mb-2 text-lg font-semibold"
   >
     Snapshot Test
   </div>
-  <div
-    class=""
-  >
+  <div>
     <button>
       Action
     </button>
@@ -21,17 +19,15 @@ exports[`SettingsSegment matches a stable snapshot for the basic (no href) case 
 
 exports[`SettingsSegment matches a stable snapshot for the linked (href) case 1`] = `
 <div
-  class="p-3 border rounded-sm"
+  class="rounded-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm p-6"
 >
   <a
-    class="mb-2 text-2xl font-bold underline"
+    class="mb-2 text-lg font-semibold underline block"
     href="/docs"
   >
     Linked Snapshot
   </a>
-  <div
-    class=""
-  >
+  <div>
     <p>
       Some content
     </p>

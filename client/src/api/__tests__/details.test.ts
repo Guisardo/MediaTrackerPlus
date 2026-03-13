@@ -17,7 +17,7 @@
 
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // ---------------------------------------------------------------------------
 // Mocks
@@ -109,7 +109,7 @@ const makeEpisode = (overrides = {}) =>
 const createTestQueryClient = () =>
   new QueryClient({
     defaultOptions: {
-      queries: { retry: false, cacheTime: 0 },
+      queries: { retry: false, gcTime: 0 },
       mutations: { retry: false },
     },
   });
@@ -277,9 +277,9 @@ describe('removeFromWatchlist', () => {
     const mediaItem = makeMediaItem({ id: 3 });
     await removeFromWatchlist({ mediaItem });
 
-    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith(['list']);
-    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith(['lists']);
-    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith(['listItems']);
+    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith({ queryKey: ['list'] });
+    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith({ queryKey: ['lists'] });
+    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith({ queryKey: ['listItems'] });
   });
 
   it('passes seasonId when a season is provided', async () => {
@@ -317,8 +317,8 @@ describe('addToWatchlist', () => {
     const mediaItem = makeMediaItem({ id: 4 });
     await addToWatchlist({ mediaItem });
 
-    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith(['list']);
-    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith(['lists']);
+    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith({ queryKey: ['list'] });
+    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith({ queryKey: ['lists'] });
   });
 });
 
@@ -405,9 +405,9 @@ describe('addToProgress', () => {
     await addToProgress({ mediaItemId: 7, progress: 0.5 });
 
     expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith(
-      detailsKey(7)
+      { queryKey: detailsKey(7) }
     );
-    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith(['items']);
+    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith({ queryKey: ['items'] });
   });
 });
 

@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   GroupDetailResponse,
   GroupMemberResponse,
@@ -23,16 +23,17 @@ const groupDetailQueryKey = (groupId: number) => ['group', groupId];
  *  - invalidateUserGroupsQuery: invalidates cache to trigger a refetch
  */
 export const useUserGroups = () => {
-  const { data, isLoading, isError } = useQuery(USER_GROUPS_QUERY_KEY, () =>
-    mediaTrackerApi.group.listGroups()
-  );
+  const { data, isLoading, isError } = useQuery({
+    queryKey: [USER_GROUPS_QUERY_KEY],
+    queryFn: () => mediaTrackerApi.group.listGroups(),
+  });
 
   return {
     groups: data as GroupResponse[] | undefined,
     isLoading,
     isError,
     invalidateUserGroupsQuery: () => {
-      queryClient.invalidateQueries(USER_GROUPS_QUERY_KEY);
+      queryClient.invalidateQueries({ queryKey: [USER_GROUPS_QUERY_KEY] });
     },
   };
 };
@@ -43,18 +44,16 @@ export const useUserGroups = () => {
  * Automatically invalidates the userGroups query on success.
  */
 export const useCreateGroup = () => {
-  const mutation = useMutation(
-    (name: string) => mediaTrackerApi.group.createGroup({ name }),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(USER_GROUPS_QUERY_KEY);
-      },
-    }
-  );
+  const mutation = useMutation({
+    mutationFn: (name: string) => mediaTrackerApi.group.createGroup({ name }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [USER_GROUPS_QUERY_KEY] });
+    },
+  });
 
   return {
     createGroup: mutation.mutateAsync,
-    isLoading: mutation.isLoading,
+    isLoading: mutation.isPending,
     isError: mutation.isError,
   };
 };
@@ -71,16 +70,17 @@ export const useCreateGroup = () => {
 export const useGroup = (groupId: number) => {
   const key = groupDetailQueryKey(groupId);
 
-  const { data, isLoading, isError } = useQuery(key, () =>
-    mediaTrackerApi.group.getGroup(groupId)
-  );
+  const { data, isLoading, isError } = useQuery({
+    queryKey: key,
+    queryFn: () => mediaTrackerApi.group.getGroup(groupId),
+  });
 
   return {
     group: data as GroupDetailResponse | undefined,
     isLoading,
     isError,
     invalidateGroupQuery: () => {
-      queryClient.invalidateQueries(key);
+      queryClient.invalidateQueries({ queryKey: key });
     },
   };
 };
@@ -91,19 +91,17 @@ export const useGroup = (groupId: number) => {
  * Invalidates the group detail and userGroups caches on success.
  */
 export const useUpdateGroup = (groupId: number) => {
-  const mutation = useMutation(
-    (name: string) => mediaTrackerApi.group.updateGroup(groupId, { name }),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(groupDetailQueryKey(groupId));
-        queryClient.invalidateQueries(USER_GROUPS_QUERY_KEY);
-      },
-    }
-  );
+  const mutation = useMutation({
+    mutationFn: (name: string) => mediaTrackerApi.group.updateGroup(groupId, { name }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: groupDetailQueryKey(groupId) });
+      queryClient.invalidateQueries({ queryKey: [USER_GROUPS_QUERY_KEY] });
+    },
+  });
 
   return {
     updateGroup: mutation.mutateAsync,
-    isLoading: mutation.isLoading,
+    isLoading: mutation.isPending,
     isError: mutation.isError,
   };
 };
@@ -114,18 +112,16 @@ export const useUpdateGroup = (groupId: number) => {
  * Invalidates the userGroups cache on success.
  */
 export const useDeleteGroup = (groupId: number) => {
-  const mutation = useMutation(
-    () => mediaTrackerApi.group.deleteGroup(groupId),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(USER_GROUPS_QUERY_KEY);
-      },
-    }
-  );
+  const mutation = useMutation({
+    mutationFn: () => mediaTrackerApi.group.deleteGroup(groupId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [USER_GROUPS_QUERY_KEY] });
+    },
+  });
 
   return {
     deleteGroup: mutation.mutateAsync,
-    isLoading: mutation.isLoading,
+    isLoading: mutation.isPending,
     isError: mutation.isError,
   };
 };
@@ -136,20 +132,18 @@ export const useDeleteGroup = (groupId: number) => {
  * Invalidates the group detail cache on success.
  */
 export const useAddGroupMember = (groupId: number) => {
-  const mutation = useMutation(
-    ({ userId, role }: { userId: number; role: UserGroupRole }) =>
+  const mutation = useMutation({
+    mutationFn: ({ userId, role }: { userId: number; role: UserGroupRole }) =>
       mediaTrackerApi.group.addGroupMember(groupId, { userId, role }),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(groupDetailQueryKey(groupId));
-        queryClient.invalidateQueries(USER_GROUPS_QUERY_KEY);
-      },
-    }
-  );
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: groupDetailQueryKey(groupId) });
+      queryClient.invalidateQueries({ queryKey: [USER_GROUPS_QUERY_KEY] });
+    },
+  });
 
   return {
     addGroupMember: mutation.mutateAsync,
-    isLoading: mutation.isLoading,
+    isLoading: mutation.isPending,
     isError: mutation.isError,
   };
 };
@@ -161,19 +155,17 @@ export const useAddGroupMember = (groupId: number) => {
  * the sole-admin soft-delete changes the group's availability).
  */
 export const useRemoveGroupMember = (groupId: number) => {
-  const mutation = useMutation(
-    (userId: number) => mediaTrackerApi.group.removeGroupMember(groupId, userId),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(groupDetailQueryKey(groupId));
-        queryClient.invalidateQueries(USER_GROUPS_QUERY_KEY);
-      },
-    }
-  );
+  const mutation = useMutation({
+    mutationFn: (userId: number) => mediaTrackerApi.group.removeGroupMember(groupId, userId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: groupDetailQueryKey(groupId) });
+      queryClient.invalidateQueries({ queryKey: [USER_GROUPS_QUERY_KEY] });
+    },
+  });
 
   return {
     removeGroupMember: mutation.mutateAsync,
-    isLoading: mutation.isLoading,
+    isLoading: mutation.isPending,
     isError: mutation.isError,
   };
 };
@@ -184,19 +176,17 @@ export const useRemoveGroupMember = (groupId: number) => {
  * Invalidates the group detail cache on success.
  */
 export const useUpdateGroupMemberRole = (groupId: number) => {
-  const mutation = useMutation(
-    ({ userId, role }: { userId: number; role: UserGroupRole }) =>
+  const mutation = useMutation({
+    mutationFn: ({ userId, role }: { userId: number; role: UserGroupRole }) =>
       mediaTrackerApi.group.updateGroupMemberRole(groupId, userId, { role }),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(groupDetailQueryKey(groupId));
-      },
-    }
-  );
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: groupDetailQueryKey(groupId) });
+    },
+  });
 
   return {
     updateGroupMemberRole: mutation.mutateAsync,
-    isLoading: mutation.isLoading,
+    isLoading: mutation.isPending,
     isError: mutation.isError,
   };
 };

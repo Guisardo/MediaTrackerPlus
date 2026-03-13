@@ -1,0 +1,1598 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2026-03-12 15:41-0300\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: pl\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#. js-lingui-explicit-id
+#: src/__tests__/ui-stack-migration.integration.test.ts:186
+msgid "i18n/i18n.ts"
+msgstr "i18n/i18n.ts"
+
+#: src/pages/settings/Notifications.tsx:82
+msgid " User key"
+msgstr " Klucz użytkownika"
+
+#. placeholder {0}: 1
+#. placeholder {0}: 5
+#. placeholder {0}: list.itemsCount
+#: src/i18n/__tests__/i18n.test.ts:86
+#: src/i18n/__tests__/i18n.test.ts:98
+#: src/pages/ListsPage.tsx:55
+msgid "{0, plural, one {# item} other {# items}}"
+msgstr "{0, plural, one {# element} other {# elementy}}"
+
+#. placeholder {0}: group.memberCount
+#: src/pages/GroupsPage.tsx:56
+msgid "{0, plural, one {# member} other {# members}}"
+msgstr "{0, plural, one {# członek} other {# członków}}"
+
+#. placeholder {0}: filteredItems.length
+#. placeholder {0}: items.length
+#: src/pages/import/TraktTv.tsx:342
+#: src/pages/ListPage.tsx:131
+msgid "{0, plural, one {1 item} other {# items}}"
+msgstr "{0, plural, one {1 element} other {# elementy}}"
+
+#. placeholder {0}: mediaItem.authors.length
+#: src/pages/Details.tsx:339
+msgid "{0, plural, one {Author} other {Authors}}"
+msgstr "{0, plural, one {Autor} other {Autorzy}}"
+
+#. placeholder {0}: searchResult?.length
+#: src/components/PaginatedGridItems.tsx:317
+msgid "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {Found # items for query \"<1>{searchQuery}</1>\"}}"
+msgstr "{0, plural, one {Znaleziono # element dla zapytania \"<0>{searchQuery}</0>\"} other {Znaleziono # elementów dla zapytania \"<1>{searchQuery}</1>\"}}"
+
+#. placeholder {0}: mediaItem.genres.length
+#: src/pages/Details.tsx:299
+msgid "{0, plural, one {Genre} other {Genres}}"
+msgstr "{0, plural, one {Gatunek} other {Gatunki}}"
+
+#. placeholder {0}: listsWithItem?.length
+#: src/components/AddToListModal.tsx:151
+msgid "{0, plural, one {Listed on 1 list} other {Listed on # lists}}"
+msgstr "{0, plural, one {Dodano do 1 listy} other {Dodano do # list}}"
+
+#. placeholder {0}: mediaItem.seenHistory.length
+#: src/pages/Details.tsx:565
+#: src/pages/SeenHistory.tsx:43
+msgid "{0, plural, one {Listened 1 time} other {Listened # times}}"
+msgstr "{0, plural, one {Słuchano 1 raz} other {Słuchano # razy}}"
+
+#. placeholder {0}: mediaItem.narrators.length
+#: src/pages/Details.tsx:353
+msgid "{0, plural, one {Narrator} other {Narrators}}"
+msgstr "{0, plural, one {Narrator} other {Narratorzy}}"
+
+#. placeholder {0}: mediaItem.platform.length
+#: src/pages/Details.tsx:267
+msgid "{0, plural, one {Platform} other {platforms}}"
+msgstr "{0, plural, one {Platforma} other {platformy}}"
+
+#. placeholder {0}: mediaItem.seenHistory.length
+#: src/pages/Details.tsx:589
+#: src/pages/SeenHistory.tsx:67
+msgid "{0, plural, one {Played 1 time} other {Played # times}}"
+msgstr "{0, plural, one {Grano 1 raz} other {Grano # razy}}"
+
+#. placeholder {0}: mediaItem.seenHistory.length
+#: src/pages/Details.tsx:573
+#: src/pages/SeenHistory.tsx:51
+msgid "{0, plural, one {Read 1 time} other {Read # times}}"
+msgstr "{0, plural, one {Czytano 1 raz} other {Czytano # razy}}"
+
+#. placeholder {0}: episode.seenHistory.length
+#. placeholder {0}: mediaItem.seenHistory.length
+#: src/pages/Details.tsx:581
+#: src/pages/SeasonsPage.tsx:87
+#: src/pages/SeenHistory.tsx:59
+msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
+msgstr "{0, plural, one {Widziano 1 raz} other {Widziano # razy}}"
+
+#. placeholder {0}: route.name
+#: src/components/Statistics/StatisticsGenreSegment.tsx:42
+msgid "{0}"
+msgstr "{0}"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:112
+msgid "{count, plural, one {Do you want to remove # seen history entry?} other {Do you want to remove all # seen history entries?}}"
+msgstr "{count, plural, one {Czy chcesz usunąć # wpis z historii obejrzanych?} other {Czy chcesz usunąć wszystkie # wpisy z historii obejrzanych?}}"
+
+#: src/components/SetProgress.tsx:119
+msgid "{duration, plural, one {minute} other {minutes}}"
+msgstr "{duration, plural, one {minuta} other {minut}}"
+
+#. placeholder {0}: args.year ? 'in ' + args.year : ''
+#. placeholder {1}: args.genre ? 'with genre ' + args.genre : ''
+#. placeholder {2}: args.year ? 'in ' + args.year : ''
+#. placeholder {3}: args.genre ? 'with genre ' + args.genre : ''
+#: src/components/PaginatedGridItems.tsx:333
+msgid "{numberOfItemsTotal, plural, one {1 item {0} {1}} other {# item {2} {3}}}"
+msgstr "{numberOfItemsTotal, plural, one {1 element {0} {1}} other {# elementy {2} {3}}}"
+
+#: src/components/SetProgress.tsx:43
+msgid "{value, plural, one {minute} other {minutes}}"
+msgstr "{value, plural, one {minuta} other {minut}}"
+
+#: src/components/SetProgress.tsx:41
+msgid "{value, plural, one {page} other {pages}}"
+msgstr "{value, plural, one {strona} other {stron}}"
+
+#. placeholder {0}: item.genre
+#. placeholder {1}: item.count
+#: src/components/Statistics/StatisticsGenreSegment.tsx:61
+msgid "<0>{0}</0> (<1>{1}</1>)"
+msgstr "<0>{0}</0> (<1>{1}</1>)"
+
+#. placeholder {0}: data.audiobook.items
+#. placeholder {1}: data.audiobook.plays
+#: src/components/Statistics/StatisticsSegment.tsx:215
+msgid "<0>{0}</0> audiobooks (<1>{1}</1> plays)"
+msgstr "<0>{0}</0> audiobooków (<1>{1}</1> odtworzeń)"
+
+#. placeholder {0}: data.book.items
+#. placeholder {1}: data.book.plays
+#: src/components/Statistics/StatisticsSegment.tsx:174
+msgid "<0>{0}</0> books (<1>{1}</1> reads)"
+msgstr "<0>{0}</0> książki (<1>{1}</1> czytań)"
+
+#. placeholder {0}: data.tv.episodes
+#. placeholder {1}: data.tv.plays
+#. placeholder {2}: data.tv.items
+#: src/components/Statistics/StatisticsSegment.tsx:51
+msgid "<0>{0}</0> episodes (<1>{1}</1> plays of <2>{2}</2> shows)"
+msgstr "<0>{0}</0> odcinków (<1>{1}</1> odtworzeń z <2>{2}</2> seriali)"
+
+#. placeholder {0}: data.movie.items
+#. placeholder {1}: data.movie.plays
+#: src/components/Statistics/StatisticsSegment.tsx:92
+msgid "<0>{0}</0> movies (<1>{1}</1> plays)"
+msgstr "<0>{0}</0> filmów (<1>{1}</1> odtworzeń)"
+
+#. placeholder {0}: data.video_game.items
+#. placeholder {1}: data.video_game.plays
+#: src/components/Statistics/StatisticsSegment.tsx:133
+msgid "<0>{0}</0> video games (<1>{1}</1> plays)"
+msgstr "<0>{0}</0> gier wideo (<1>{1}</1> rozgrywek)"
+
+#: src/components/Statistics/StatisticsSegment.tsx:204
+msgid "<0><1/> </0>listening"
+msgstr "<0><1/> </0>słuchanie"
+
+#: src/components/Statistics/StatisticsSegment.tsx:122
+msgid "<0><1/> </0>playing"
+msgstr "<0><1/> </0>granie"
+
+#: src/components/Statistics/StatisticsSegment.tsx:163
+msgid "<0><1/> </0>reading"
+msgstr "<0><1/> </0>czytanie"
+
+#: src/components/Statistics/StatisticsSegment.tsx:40
+#: src/components/Statistics/StatisticsSegment.tsx:81
+msgid "<0><1/> </0>watching"
+msgstr "<0><1/> </0>oglądanie"
+
+#: src/pages/Settings.tsx:113
+msgid "About"
+msgstr "O aplikacji"
+
+#: src/pages/settings/Notifications.tsx:114
+msgid "Access Token"
+msgstr "Token dostępu"
+
+#: src/components/Facets/ActiveFacetChips.tsx:219
+msgid "Active filters"
+msgstr "Aktywne filtry"
+
+#. placeholder {0}: episode ? `${mediaItem.title} ${formatEpisodeNumber(episode)}` : season ? `${mediaItem.title} ${formatSeasonNumber(season)}` : mediaItem.title
+#: src/components/AddToListModal.tsx:55
+msgid "Add \"{0}\" to list"
+msgstr "Dodaj \"{0}\" do listy"
+
+#. placeholder {0}: formatEpisodeNumber(episode)
+#. placeholder {0}: formatSeasonNumber(season)
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:48
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:52
+msgid "Add {0} to seen history"
+msgstr "Dodaj {0} do obejrzanych"
+
+#: src/components/AddToListModal.tsx:143
+msgid "Add episode to list"
+msgstr "Dodaj odcinek do listy"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:59
+msgid "Add episode to seen history"
+msgstr "Dodaj odcinek do obejrzanych"
+
+#: src/components/AddOrEditListButton.tsx:43
+#: src/components/AddOrEditListButton.tsx:219
+msgid "Add list"
+msgstr "Utwórz listę"
+
+#: src/pages/GroupDetailPage.tsx:97
+msgid "Add member"
+msgstr "Dodaj członka"
+
+#: src/pages/settings/Preferences.tsx:41
+msgid "Add recommendations to watchlist"
+msgstr "Dodaj rekomendacje do listy oglądanych"
+
+#: src/components/AddToListModal.tsx:145
+msgid "Add season to list"
+msgstr "Dodaj sezon do listy"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:61
+msgid "Add season to seen history"
+msgstr "Dodaj sezon do obejrzanych"
+
+#: src/components/AddToListModal.tsx:147
+msgid "Add to list"
+msgstr "Dodaj do listy"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:41
+msgid "Add to listened history"
+msgstr "Dodaj do odsłuchanych"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:43
+msgid "Add to played history"
+msgstr "Dodaj do historii ogranych"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:42
+msgid "Add to read history"
+msgstr "Dodaj do przeczytanych"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:44
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:56
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:63
+msgid "Add to seen history"
+msgstr "Dodaj do obejrzanych"
+
+#: src/pages/Details.tsx:646
+msgid "Add to watchlist"
+msgstr "Dodaj do listy oglądanych"
+
+#: src/pages/settings/ApplicationTokens.tsx:31
+msgid "Add token"
+msgstr "Dodaj token"
+
+#: src/pages/GroupDetailPage.tsx:193
+#: src/pages/GroupDetailPage.tsx:208
+#: src/pages/GroupDetailPage.tsx:321
+#: src/pages/GroupsPage.tsx:48
+msgid "Admin"
+msgstr "Administrator"
+
+#: src/components/FilterBy.tsx:11
+msgid "All"
+msgstr "Wszystko"
+
+#: src/components/GroupSelector.tsx:150
+msgid "All Users"
+msgstr "Wszyscy użytkownicy"
+
+#: src/pages/Statistics.tsx:33
+msgid "All Years"
+msgstr "Wszystkie lata"
+
+#: src/pages/settings/Configuration.tsx:145
+msgid "API keys can be acquired here"
+msgstr "Klucze API można zdobyć tutaj"
+
+#: src/pages/settings/Notifications.tsx:68
+msgid "App token"
+msgstr "Token aplikacji"
+
+#: src/pages/Settings.tsx:125
+msgid "Application tokens"
+msgstr "Tokeny aplikacji"
+
+#: src/hooks/translations.ts:28
+msgid "Ascending"
+msgstr "Rosnąco"
+
+#: src/components/SelectSeenDate.tsx:117
+msgid "At release date"
+msgstr "W dniu wydania"
+
+#: src/pages/settings/Configuration.tsx:59
+#: src/pages/settings/Configuration.tsx:68
+msgid "Audible language"
+msgstr "Język Audible"
+
+#: src/components/Facets/ActiveFacetChips.tsx:76
+#: src/components/Facets/MediaTypeSection.tsx:24
+#: src/components/GridItem.tsx:91
+msgid "Audiobook"
+msgstr "Audiobook"
+
+#: src/components/Nav.tsx:41
+#: src/components/Statistics/StatisticsSegment.tsx:199
+msgid "Audiobooks"
+msgstr "Audiobooki"
+
+#: src/components/Facets/ActiveFacetChips.tsx:54
+#: src/components/Facets/CreatorSection.tsx:27
+msgid "Author"
+msgstr "Autor"
+
+#: src/pages/settings/Preferences.tsx:42
+msgid "Automatically add similar items to your watchlist when you rate content"
+msgstr "Automatycznie dodawaj podobne elementy do listy oglądanych podczas oceniania treści"
+
+#: src/pages/settings/Preferences.tsx:19
+msgid "Avoid episode spoilers"
+msgstr "Unikaj spoilerów odcinków"
+
+#: src/pages/settings/Preferences.tsx:30
+msgid "Avoid season spoilers"
+msgstr "Unikaj spoilerów sezonu"
+
+#: src/components/Facets/ActiveFacetChips.tsx:74
+#: src/components/Facets/MediaTypeSection.tsx:22
+#: src/components/GridItem.tsx:92
+msgid "Book"
+msgstr "Książka"
+
+#: src/components/Nav.tsx:40
+#: src/components/Statistics/StatisticsSegment.tsx:158
+#: src/pages/import/Goodreads.tsx:65
+msgid "Books"
+msgstr "Książki"
+
+#: src/components/Nav.tsx:47
+msgid "Calendar"
+msgstr "Kalendarz"
+
+#: src/components/SelectLastSeenEpisode.tsx:159
+#: src/components/SelectSeenDate.tsx:164
+#: src/components/SetProgress.tsx:129
+#: src/components/StarRating.tsx:171
+msgid "Cancel"
+msgstr "Anuluj"
+
+#: src/pages/settings/Password.tsx:76
+msgid "Change password"
+msgstr "Zmień hasło"
+
+#: src/components/Facets/ActiveFacetChips.tsx:331
+#: src/components/Facets/FacetDrawer.tsx:72
+msgid "Clear all"
+msgstr "Wyczyść wszystko"
+
+#: src/components/Facets/FacetPanel.tsx:38
+msgid "Clear all filters"
+msgstr "Wyczyść wszystkie filtry"
+
+#: src/pages/settings/Configuration.tsx:148
+msgid "Client ID"
+msgstr "ID klienta"
+
+#: src/pages/settings/Configuration.tsx:156
+msgid "Client Secret"
+msgstr "Sekret klienta"
+
+#: src/components/AddOrEditGroupButton.tsx:70
+#: src/components/AddToListModal.tsx:105
+msgid "Close"
+msgstr "Zamknij"
+
+#: src/pages/Settings.tsx:139
+msgid "Configuration"
+msgstr "Konfiguracja"
+
+#: src/components/Confirm.tsx:73
+msgid "Confirm"
+msgstr "Potwierdź"
+
+#: src/pages/settings/Password.tsx:41
+msgid "Confirm new password"
+msgstr "Potwierdź nowe hasło"
+
+#: src/pages/Register.tsx:63
+msgid "Confirm password"
+msgstr "Powtórz hasło"
+
+#: src/pages/import/TraktTv.tsx:93
+msgid "Copy to clipboard"
+msgstr "Skopiuj do schowka"
+
+#: src/pages/GroupsPage.tsx:32
+msgid "Create a group to share Platform Recommended results with other users."
+msgstr "Utwórz grupę, aby udostępniać wyniki Rekomendowane przez Platformę innym użytkownikom."
+
+#: src/components/AddOrEditGroupButton.tsx:66
+#: src/components/AddOrEditGroupButton.tsx:87
+msgid "Create group"
+msgstr "Utwórz grupę"
+
+#: src/components/Facets/ActiveFacetChips.tsx:51
+#: src/components/Facets/ActiveFacetChips.tsx:58
+#: src/components/Facets/CreatorSection.tsx:24
+#: src/components/Facets/CreatorSection.tsx:32
+msgid "Creator"
+msgstr "Twórca"
+
+#: src/pages/settings/Password.tsx:22
+msgid "Current password"
+msgstr "Aktualne hasło"
+
+#: src/pages/settings/Password.tsx:71
+msgid "Current password is incorrect"
+msgstr "Bieżące hasło jest nieprawidłowe"
+
+#: src/pages/import/Goodreads.tsx:78
+msgid "Currently reading"
+msgstr "Aktualnie czytane"
+
+#: src/pages/LogsPage.tsx:122
+msgid "Debug"
+msgstr "Debugowanie"
+
+#: src/pages/GroupDetailPage.tsx:359
+msgid "Delete group"
+msgstr "Usuń grupę"
+
+#. placeholder {0}: group?.name
+#: src/pages/GroupDetailPage.tsx:276
+msgid "Delete group \"{0}\"? This action cannot be undone."
+msgstr "Usunąć grupę \"{0}\"? Tej akcji nie można cofnąć."
+
+#: src/components/AddOrEditListButton.tsx:246
+msgid "Delete list"
+msgstr "Usuń listę"
+
+#: src/hooks/translations.ts:29
+msgid "Descending"
+msgstr "Malejąco"
+
+#: src/components/AddOrEditListButton.tsx:151
+#: src/pages/EpisodePage.tsx:53
+#: src/pages/SeasonsPage.tsx:213
+msgid "Description"
+msgstr "Opis"
+
+#: src/components/Facets/ActiveFacetChips.tsx:56
+#: src/components/Facets/CreatorSection.tsx:29
+msgid "Developer"
+msgstr "Deweloper"
+
+#: src/components/Facets/ActiveFacetChips.tsx:49
+#: src/components/Facets/CreatorSection.tsx:22
+msgid "Director"
+msgstr "Reżyser"
+
+#: src/components/Nav.tsx:161
+msgid "Do you really want to logout?"
+msgstr "Czy na pewno chcesz się wylogować?"
+
+#. placeholder {0}: list.name
+#: src/components/AddOrEditListButton.tsx:229
+msgid "Do you really want to remove list \"{0}\""
+msgstr "Czy na pewno chcesz usunąć listę \"{0}\"?"
+
+#: src/components/SetProgress.tsx:110
+msgid "Duration"
+msgstr "Czas trwania"
+
+#: src/components/AddOrEditListButton.tsx:43
+#: src/components/AddOrEditListButton.tsx:133
+msgid "Edit list"
+msgstr "Edytuj listę"
+
+#: src/pages/settings/Configuration.tsx:27
+msgid "Enable registration"
+msgstr "Włącz rejestrację"
+
+#: src/components/SelectLastSeenEpisode.tsx:106
+msgid "Episode"
+msgstr "Odcinek"
+
+#. placeholder {0}: formatEpisodeNumber( episodesMap[seenEntry.episodeId] )
+#. placeholder {1}: episodesMap[seenEntry.episodeId].title
+#: src/pages/SeenHistory.tsx:111
+msgid "Episode {0} {1}"
+msgstr "Odcinek {0} {1}"
+
+#: src/components/ImportSummaryTable.tsx:93
+#: src/pages/Details.tsx:383
+msgid "Episodes"
+msgstr "Odcinki"
+
+#: src/pages/Details.tsx:449
+msgid "Episodes page"
+msgstr "Strona odcinków"
+
+#: src/pages/import/TraktTv.tsx:143
+#: src/pages/LogsPage.tsx:102
+msgid "Error"
+msgstr "Błąd"
+
+#: src/pages/import/TraktTv.tsx:137
+msgid "Exporting"
+msgstr "Eksportowanie"
+
+#: src/pages/GroupDetailPage.tsx:90
+msgid "Failed to add member. They may already be in the group."
+msgstr "Nie udało się dodać członka. Może już być w grupie."
+
+#: src/pages/GroupDetailPage.tsx:291
+msgid "Failed to load group. It may have been deleted."
+msgstr "Nie udało się załadować grupy. Mogła zostać usunięta."
+
+#: src/components/Facets/FacetDrawer.tsx:61
+#: src/components/Facets/FacetMobileButton.tsx:36
+#: src/components/Facets/FacetPanel.tsx:31
+msgid "Filters"
+msgstr "Filtry"
+
+#: src/pages/Details.tsx:528
+msgid "First unwatched episode"
+msgstr "Pierwszy nieobejrzany odcinek"
+
+#: src/components/Nav.tsx:39
+#: src/components/Statistics/StatisticsGenreSegment.tsx:20
+#: src/components/Statistics/StatisticsSegment.tsx:117
+msgid "Games"
+msgstr "Gry"
+
+#: src/pages/settings/Configuration.tsx:25
+msgid "General"
+msgstr "Ogólne"
+
+#: src/components/Facets/ActiveFacetChips.tsx:225
+#: src/components/Facets/GenreSection.tsx:37
+msgid "Genre"
+msgstr "Genre"
+
+#: src/pages/Statistics.tsx:154
+msgid "Genres"
+msgstr "Gatunki"
+
+#. placeholder {0}: deviceCode.verificationUrl
+#. placeholder {1}: deviceCode.userCode
+#: src/pages/import/TraktTv.tsx:66
+msgid "Go to <0>{0}</0> and enter following code: <1>{1}</1>"
+msgstr "Przejdź do <0>{0}</0> i wprowadź następujący kod: <1>{1}</1>"
+
+#: src/pages/import/Goodreads.tsx:34
+msgid "Go to <0>https://www.goodreads.com/review/list</0> and copy RSS url from the bottom of the page"
+msgstr "Przejdź do <0>https://www.goodreads.com/review/list</0> i skopiuj URL RSS z dołu strony"
+
+#: src/pages/settings/Notifications.tsx:110
+msgid "Gotify server url"
+msgstr "Adres URL serwera Gotify"
+
+#: src/pages/GroupDetailPage.tsx:310
+msgid "Group name"
+msgstr "Nazwa grupy"
+
+#: src/components/Nav.tsx:50
+msgid "Groups"
+msgstr "Grupy"
+
+#: src/pages/settings/Preferences.tsx:31
+msgid "Hide overview of unseen seasons"
+msgstr "Ukryj przegląd niewidzianych sezonów"
+
+#: src/pages/settings/Preferences.tsx:20
+msgid "Hide title of unseen episodes"
+msgstr "Ukryj tytuł nieobejrzanych odcinków"
+
+#: src/components/Nav.tsx:36
+#: src/i18n/__tests__/i18n.test.ts:65
+msgid "Home"
+msgstr "Strona główna"
+
+#: src/pages/LogsPage.tsx:117
+msgid "Http"
+msgstr "Http"
+
+#: src/pages/Details.tsx:471
+msgid "I am listening it"
+msgstr "Słucham tego"
+
+#: src/pages/Details.tsx:472
+msgid "I am playing it"
+msgstr "Gram w to"
+
+#: src/pages/Details.tsx:470
+msgid "I am reading it"
+msgstr "Czytam to"
+
+#: src/pages/Details.tsx:469
+msgid "I am watching it"
+msgstr "Oglądam"
+
+#: src/components/SelectSeenDate.tsx:124
+#: src/pages/Statistics.tsx:26
+msgid "I do not remember"
+msgstr "Nie pamiętam"
+
+#: src/pages/Details.tsx:492
+msgid "I finished listening it"
+msgstr "Skończyłem słuchać"
+
+#: src/pages/Details.tsx:495
+msgid "I finished playing it"
+msgstr "Skończyłem grać"
+
+#: src/pages/Details.tsx:490
+msgid "I finished reading it"
+msgstr "Skończyłem czytać"
+
+#: src/pages/Details.tsx:489
+msgid "I finished watching it"
+msgstr "Skończyłem oglądać"
+
+#: src/pages/settings/Configuration.tsx:129
+msgid "IGDB credentials"
+msgstr "Poświadczenia IGDB"
+
+#: src/pages/import/Goodreads.tsx:57
+msgid "import"
+msgstr "importuj"
+
+#: src/components/Nav.tsx:48
+msgid "Import"
+msgstr "Importuj"
+
+#: src/pages/Import.tsx:17
+msgid "Import from"
+msgstr "Importuj z"
+
+#: src/pages/import/TraktTv.tsx:141
+msgid "Imported"
+msgstr "Zaimportowano"
+
+#: src/pages/import/Goodreads.tsx:62
+#: src/pages/import/TraktTv.tsx:142
+msgid "Importing"
+msgstr "Importowanie"
+
+#: src/components/Nav.tsx:43
+msgid "In progress"
+msgstr "W trakcie"
+
+#: src/pages/Login.tsx:82
+msgid "Incorrect password or username"
+msgstr "Nieprawidłowe hasło lub nazwa użytkownika"
+
+#: src/pages/LogsPage.tsx:112
+msgid "Info"
+msgstr "Informacje"
+
+#: src/components/Facets/StatusSection.tsx:143
+msgid "Item must match all selected statuses"
+msgstr "Element musi pasować do wszystkich wybranych statusów"
+
+#: src/pages/settings/Notifications.tsx:95
+msgid "Key"
+msgstr "Klucz"
+
+#: src/components/Facets/ActiveFacetChips.tsx:235
+#: src/components/Facets/LanguageSection.tsx:95
+#: src/pages/Details.tsx:330
+msgid "Language"
+msgstr "Język"
+
+#: src/components/OrderBy.tsx:19
+msgid "Last airing"
+msgstr "Ostatnia emisja"
+
+#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
+#: src/pages/Details.tsx:537
+msgid "Last listened at {0}"
+msgstr "Ostatnio słuchano w {0}"
+
+#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
+#: src/pages/Details.tsx:555
+msgid "Last played at {0}"
+msgstr "Ostatnio grano w {0}"
+
+#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
+#: src/pages/Details.tsx:543
+msgid "Last read at {0}"
+msgstr "Ostatnio czytano w {0}"
+
+#: src/components/OrderBy.tsx:14
+msgid "Last seen"
+msgstr "Ostatnio oglądane"
+
+#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
+#: src/pages/Details.tsx:549
+msgid "Last seen at {0}"
+msgstr "Ostatnio oglądane w {0}"
+
+#. placeholder {0}: item.listName
+#: src/pages/import/TraktTv.tsx:320
+msgid "List {0} - episodes"
+msgstr "Lista {0} - odcinki"
+
+#. placeholder {0}: item.listName
+#: src/pages/import/TraktTv.tsx:302
+msgid "List {0} - movies"
+msgstr "Lista {0} - filmy"
+
+#. placeholder {0}: item.listName
+#: src/pages/import/TraktTv.tsx:314
+msgid "List {0} - seasons"
+msgstr "Lista {0} - sezony"
+
+#. placeholder {0}: item.listName
+#: src/pages/import/TraktTv.tsx:308
+msgid "List {0} - shows"
+msgstr "Lista {0} - seriale"
+
+#. placeholder {0}: list.listName
+#: src/pages/import/TraktTv.tsx:218
+msgid "List: {0}"
+msgstr "Lista: {0}"
+
+#: src/components/Facets/ActiveFacetChips.tsx:26
+#: src/components/Facets/StatusSection.tsx:33
+#: src/components/FilterBy.tsx:18
+msgid "Listened"
+msgstr "Słuchano"
+
+#. placeholder {0}: seenEntry.dateStr
+#: src/pages/SeenHistory.tsx:89
+msgid "Listened at {0}"
+msgstr "Słuchano w {0}"
+
+#: src/pages/Details.tsx:597
+msgid "Listened history"
+msgstr "Historia słuchanych"
+
+#: src/components/Nav.tsx:49
+msgid "Lists"
+msgstr "Listy"
+
+#: src/components/AddToListModal.tsx:49
+#: src/components/PaginatedGridItems.tsx:384
+#: src/components/SelectLastSeenEpisode.tsx:67
+#: src/pages/Calendar.tsx:61
+#: src/pages/Details.tsx:205
+#: src/pages/EpisodePage.tsx:42
+#: src/pages/GroupDetailPage.tsx:285
+#: src/pages/GroupsPage.tsx:17
+#: src/pages/import/TraktTv.tsx:116
+#: src/pages/ListPage.tsx:86
+#: src/pages/ListsPage.tsx:29
+#: src/pages/Login.tsx:17
+#: src/pages/LogsPage.tsx:27
+#: src/pages/SeasonsPage.tsx:144
+#: src/pages/SeenHistory.tsx:30
+msgid "Loading"
+msgstr "Ładowanie"
+
+#: src/pages/Login.tsx:33
+#: src/pages/Login.tsx:67
+#: src/pages/Register.tsx:85
+msgid "Login"
+msgstr "Zaloguj się"
+
+#: src/components/Nav.tsx:166
+#: src/i18n/__tests__/i18n.test.ts:56
+msgid "Logout"
+msgstr "Wyloguj się"
+
+#: src/pages/Settings.tsx:143
+msgid "Logs"
+msgstr "Logi"
+
+#: src/components/Facets/RatingSection.tsx:68
+msgid "Maximum rating"
+msgstr "Maksymalna ocena"
+
+#: src/components/Facets/YearSection.tsx:92
+msgid "Maximum year"
+msgstr "Maksymalny rok"
+
+#: src/components/OrderBy.tsx:21
+msgid "Media type"
+msgstr "Rodzaj mediów"
+
+#: src/components/Facets/ActiveFacetChips.tsx:281
+#: src/components/Facets/MediaTypeSection.tsx:117
+msgid "Media Type"
+msgstr "Typ mediów"
+
+#: src/pages/GroupDetailPage.tsx:328
+msgid "Members"
+msgstr "Członkowie"
+
+#: src/components/Facets/RatingSection.tsx:67
+msgid "Minimum rating"
+msgstr "Minimalna ocena"
+
+#: src/components/Facets/YearSection.tsx:91
+msgid "Minimum year"
+msgstr "Minimalny rok"
+
+#: src/components/Facets/ActiveFacetChips.tsx:70
+#: src/components/Facets/MediaTypeSection.tsx:18
+#: src/components/GridItem.tsx:93
+msgid "Movie"
+msgstr "Film"
+
+#: src/components/ImportSummaryTable.tsx:90
+#: src/components/Nav.tsx:38
+#: src/components/Statistics/StatisticsGenreSegment.tsx:17
+#: src/components/Statistics/StatisticsSegment.tsx:76
+msgid "Movies"
+msgstr "Filmy"
+
+#: src/utils.ts:152
+msgid "Movies, shows, seasons, episodes, books, audiobooks and video games I plan to watch/read/listen/play"
+msgstr "Filmy, seriale, sezony, odcinki, książki, audiobooki i gry wideo, które planuję obejrzeć/przeczytać/wysłuchać/zagrać"
+
+#: src/hooks/translations.ts:8
+msgid "My rating"
+msgstr "Moja ocena"
+
+#: src/components/AddOrEditGroupButton.tsx:51
+#: src/components/AddOrEditListButton.tsx:137
+msgid "Name"
+msgstr "Nazwa"
+
+#: src/pages/Details.tsx:281
+msgid "Network"
+msgstr "Sieć"
+
+#: src/components/AddOrEditGroupButton.tsx:47
+msgid "New group"
+msgstr "Nowa grupa"
+
+#: src/components/AddOrEditListButton.tsx:133
+msgid "New list"
+msgstr "Nowa lista"
+
+#: src/pages/settings/Password.tsx:32
+msgid "New password"
+msgstr "Nowe hasło"
+
+#: src/components/OrderBy.tsx:18
+#: src/hooks/translations.ts:15
+msgid "Next airing"
+msgstr "Następna emisja"
+
+#: src/pages/Details.tsx:515
+msgid "Next episode"
+msgstr "Następny odcinek"
+
+#: src/pages/Home.tsx:89
+msgid "Next episode to watch"
+msgstr "Następny odcinek do obejrzenia"
+
+#: src/components/Confirm.tsx:78
+msgid "No"
+msgstr "Nie"
+
+#: src/pages/SeenHistory.tsx:105
+msgid "No date"
+msgstr "Brak daty"
+
+#: src/pages/GroupsPage.tsx:29
+msgid "No groups yet"
+msgstr "Brak grup"
+
+#: src/pages/GroupDetailPage.tsx:333
+msgid "No members yet"
+msgstr "Brak członków"
+
+#: src/pages/LogsPage.tsx:68
+msgid "No more logs"
+msgstr "Nie ma więcej wpisów"
+
+#: src/pages/GroupDetailPage.tsx:134
+msgid "No users found"
+msgstr "Nie znaleziono użytkowników"
+
+#: src/pages/import/TraktTv.tsx:245
+msgid "Not imported items"
+msgstr "Nie zaimportowane elementy"
+
+#: src/pages/settings/Notifications.tsx:174
+msgid "Notification platform"
+msgstr "Platforma powiadomień"
+
+#: src/pages/Settings.tsx:129
+msgid "Notifications"
+msgstr "Powiadomienia"
+
+#: src/components/SelectSeenDate.tsx:110
+msgid "Now"
+msgstr "Teraz"
+
+#: src/pages/SeasonsPage.tsx:230
+msgid "Number of episodes"
+msgstr "Liczba odcinków"
+
+#: src/pages/Details.tsx:366
+msgid "Number of pages"
+msgstr "Liczba stron"
+
+#: src/components/Facets/ActiveFacetChips.tsx:23
+#: src/components/Facets/StatusSection.tsx:57
+#: src/components/FilterBy.tsx:14
+msgid "On watchlist"
+msgstr "Na liście do obejrzenia"
+
+#: src/pages/Details.tsx:321
+msgid "Overview"
+msgstr "Podsumowanie"
+
+#: src/pages/Login.tsx:53
+#: src/pages/Register.tsx:49
+#: src/pages/Settings.tsx:119
+msgid "Password"
+msgstr "Hasło"
+
+#: src/pages/settings/Password.tsx:67
+msgid "Password has been changed"
+msgstr "Hasło zostało zmienione"
+
+#: src/pages/settings/Password.tsx:56
+msgid "Passwords do not match"
+msgstr "Hasła nie są zgodne"
+
+#: src/pages/settings/Notifications.tsx:186
+msgid "Platform"
+msgstr "Platforma"
+
+#: src/components/OrderBy.tsx:24
+#: src/hooks/translations.ts:17
+msgid "Platform Recommended"
+msgstr "Polecane przez Platformę"
+
+#: src/components/Facets/ActiveFacetChips.tsx:32
+#: src/components/Facets/StatusSection.tsx:39
+#: src/components/FilterBy.tsx:22
+msgid "Played"
+msgstr "Grano"
+
+#. placeholder {0}: seenEntry.dateStr
+#: src/pages/SeenHistory.tsx:101
+msgid "Played at {0}"
+msgstr "Grane w {0}"
+
+#: src/pages/Details.tsx:605
+msgid "Played history"
+msgstr "Historia grania"
+
+#: src/pages/Settings.tsx:133
+msgid "Preferences"
+msgstr "Ustawienia"
+
+#: src/pages/settings/Notifications.tsx:257
+#: src/pages/settings/Notifications.tsx:262
+msgid "Priority"
+msgstr "Priorytet"
+
+#: src/components/AddOrEditListButton.tsx:161
+#: src/components/AddOrEditListButton.tsx:166
+msgid "Privacy"
+msgstr "Prywatność"
+
+#: src/hooks/translations.ts:22
+msgid "Private"
+msgstr "Prywatny"
+
+#: src/components/OrderBy.tsx:22
+#: src/pages/Details.tsx:500
+msgid "Progress"
+msgstr "Postęp"
+
+#: src/hooks/translations.ts:23
+msgid "Public"
+msgstr "Publiczny"
+
+#: src/pages/settings/Preferences.tsx:12
+msgid "Public reviews"
+msgstr "Publiczne recenzje"
+
+#: src/components/Facets/ActiveFacetChips.tsx:269
+#: src/components/Facets/PublisherSection.tsx:53
+msgid "Publisher"
+msgstr "Wydawca"
+
+#: src/components/Nav.tsx:45
+msgid "Random"
+msgstr "Losowy"
+
+#: src/pages/Random.tsx:107
+msgid "Random Audiobook"
+msgstr "Losowy audiobook"
+
+#: src/pages/Random.tsx:94
+msgid "Random Book"
+msgstr "Losowa książka"
+
+#: src/pages/Random.tsx:55
+msgid "Random Movie"
+msgstr "Losowy film"
+
+#: src/pages/Random.tsx:68
+msgid "Random Tv Show"
+msgstr "Losowy serial"
+
+#: src/pages/Random.tsx:81
+msgid "Random Video Game"
+msgstr "Losowa gra wideo"
+
+#: src/components/Facets/ActiveFacetChips.tsx:19
+#: src/components/Facets/StatusSection.tsx:53
+#: src/components/FilterBy.tsx:12
+msgid "Rated"
+msgstr "Ocenione"
+
+#: src/components/Facets/ActiveFacetChips.tsx:316
+#: src/components/Facets/RatingSection.tsx:57
+#: src/pages/import/Goodreads.tsx:83
+msgid "Rating"
+msgstr "Klasyfikacja"
+
+#: src/pages/import/TraktTv.tsx:202
+msgid "Ratings"
+msgstr "Oceny"
+
+#: src/pages/import/TraktTv.tsx:294
+msgid "Ratings - episodes"
+msgstr "Oceny - odcinki"
+
+#: src/pages/import/TraktTv.tsx:279
+msgid "Ratings - movies"
+msgstr "Oceny - filmy"
+
+#: src/pages/import/TraktTv.tsx:289
+msgid "Ratings - seasons"
+msgstr "Oceny - sezony"
+
+#: src/pages/import/TraktTv.tsx:284
+msgid "Ratings - shows"
+msgstr "Oceny - seriale"
+
+#: src/components/Facets/ActiveFacetChips.tsx:29
+#: src/components/Facets/StatusSection.tsx:36
+#: src/components/FilterBy.tsx:20
+#: src/pages/import/Goodreads.tsx:68
+msgid "Read"
+msgstr "Czytaj"
+
+#. placeholder {0}: seenEntry.dateStr
+#: src/pages/SeenHistory.tsx:93
+msgid "Read at {0}"
+msgstr "Przeczytano {0}"
+
+#: src/pages/Details.tsx:599
+msgid "Read history"
+msgstr "Historia czytania"
+
+#: src/pages/settings/Notifications.tsx:46
+msgid "Receive notification for all media items on your watchlist, when its release date changes"
+msgstr "Otrzymuj powiadomienia dla wszystkich elementów na liście oglądanych, gdy zmieni się data premiery"
+
+#: src/pages/settings/Notifications.tsx:38
+msgid "Receive notification for all media items on your watchlist, when its status changes"
+msgstr "Otrzymuj powiadomienia dla wszystkich elementów na liście oglądanych, gdy zmieni się status"
+
+#: src/pages/settings/Notifications.tsx:24
+msgid "Receive notification for all media items on your watchlist, when they are released, including new seasons for tv shows"
+msgstr "Otrzymuj powiadomienia dla wszystkich elementów na liście oglądanych, gdy zostaną wydane, w tym nowe sezony seriali"
+
+#: src/pages/settings/Notifications.tsx:54
+msgid "Receive notification for all tv shows on your watchlist, when its number of seasons changes"
+msgstr "Otrzymuj powiadomienia dla wszystkich seriali na liście oglądanych, gdy zmieni się liczba sezonów"
+
+#: src/pages/settings/Notifications.tsx:30
+msgid "Receive notification for every episode for all tv shows on your watchlist, when it's released"
+msgstr "Otrzymuj powiadomienie dla każdego odcinka wszystkich seriali na liście oglądanych, gdy zostanie wydany"
+
+#: src/hooks/translations.ts:9
+msgid "Recently added"
+msgstr "Ostatnio dodane"
+
+#: src/hooks/translations.ts:11
+msgid "Recently aired"
+msgstr "Niedawno emitowane"
+
+#: src/pages/Home.tsx:104
+msgid "Recently released"
+msgstr "Niedawno wydane"
+
+#: src/hooks/translations.ts:10
+msgid "Recently watched"
+msgstr "Niedawno obejrzane"
+
+#: src/components/OrderBy.tsx:23
+#: src/hooks/translations.ts:16
+msgid "Recommended"
+msgstr "Polecane"
+
+#: src/pages/Login.tsx:75
+#: src/pages/Register.tsx:29
+#: src/pages/Register.tsx:77
+msgid "Register"
+msgstr "Rejestr"
+
+#: src/components/GridItem.tsx:245
+msgid "Release <0/>"
+msgstr "Wydanie <0/>"
+
+#: src/components/OrderBy.tsx:15
+#: src/hooks/translations.ts:12
+#: src/pages/Details.tsx:232
+#: src/pages/EpisodePage.tsx:80
+msgid "Release date"
+msgstr "Data premiery"
+
+#: src/components/GridItem.tsx:263
+msgid "Released <0/>"
+msgstr "Wydano <0/>"
+
+#: src/pages/GroupDetailPage.tsx:203
+msgid "Remove"
+msgstr "Usuń"
+
+#. placeholder {0}: mediaItem.title
+#. placeholder {1}: season ? ' ' + formatSeasonNumber(season) : episode ? ' ' + formatEpisodeNumber(episode) : ''
+#: src/components/GridItem.tsx:136
+msgid "Remove \"{0}{1}\" from watchlist?"
+msgstr "Usunąć \"{0}{1}\" z listy obserwowanych?"
+
+#. placeholder {0}: member.name
+#: src/pages/GroupDetailPage.tsx:201
+msgid "Remove {0}"
+msgstr "Usuń {0}"
+
+#. placeholder {0}: member.name
+#: src/pages/GroupDetailPage.tsx:168
+msgid "Remove {0} from this group?"
+msgstr "Usunąć {0} z tej grupy?"
+
+#: src/components/Facets/ActiveFacetChips.tsx:107
+msgid "Remove {dimensionLabel}: {value} filter"
+msgstr "Usuń filtr {dimensionLabel}: {value}"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:131
+msgid "Remove episode from seen history"
+msgstr "Usuń odcinek z obejrzanych"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:125
+msgid "Remove from listened history"
+msgstr "Usuń z odsłuchanych"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:127
+msgid "Remove from played history"
+msgstr "Usuń z historii odtwarzania"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:126
+msgid "Remove from read history"
+msgstr "Usuń z przeczytanych"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:128
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:135
+msgid "Remove from seen history"
+msgstr "Usuń z obejrzanych"
+
+#: src/pages/Details.tsx:670
+msgid "Remove from watchlist"
+msgstr "Usuń z obserwowanych"
+
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:133
+msgid "Remove season from seen history"
+msgstr "Usuń sezon z obejrzanych"
+
+#: src/pages/settings/ApplicationTokens.tsx:50
+msgid "Remove token"
+msgstr "Usuń token"
+
+#: src/pages/Details.tsx:65
+msgid "Review by <0><1>{author}</1></0> at {date}"
+msgstr "Recenzja autorstwa <0><1>{author}</1></0> z dnia {date}"
+
+#. placeholder {0}: member.name
+#: src/pages/GroupDetailPage.tsx:191
+msgid "Role for {0}"
+msgstr "Rola dla {0}"
+
+#: src/pages/import/Goodreads.tsx:48
+msgid "RSS link"
+msgstr "Łącze RSS"
+
+#: src/hooks/translations.ts:13
+#: src/pages/Details.tsx:243
+#: src/pages/EpisodePage.tsx:71
+msgid "Runtime"
+msgstr "Czas trwania"
+
+#. placeholder {0}: season.seasonNumber.toString().padStart(2, '0')
+#: src/utils.ts:19
+msgid "S{0}"
+msgstr "S{0}"
+
+#. placeholder {0}: tvEpisode.seasonNumber .toString() .padStart(2, '0')
+#. placeholder {1}: tvEpisode.episodeNumber.toString().padStart(2, '0')
+#: src/utils.ts:13
+msgid "S{0}E{1}"
+msgstr "S{0}E{1}"
+
+#: src/pages/settings/Configuration.tsx:165
+#: src/pages/settings/Notifications.tsx:280
+msgid "Save"
+msgstr "Zapisz"
+
+#: src/components/AddOrEditListButton.tsx:219
+msgid "Save list"
+msgstr "Zapisz listę"
+
+#: src/components/StarRating.tsx:168
+msgid "Save review"
+msgstr "Zapisz recenzję"
+
+#: src/components/PaginatedGridItems.tsx:63
+msgid "Search"
+msgstr "Szukaj"
+
+#: src/pages/GroupDetailPage.tsx:103
+msgid "Search by username…"
+msgstr "Szukaj według nazwy użytkownika…"
+
+#: src/components/PaginatedGridItems.tsx:304
+msgid "Search for items or <0>import</0>"
+msgstr "Search for items or <0>import</0>"
+
+#: src/pages/ListPage.tsx:124
+msgid "Search list"
+msgstr "Przeszukaj listę"
+
+#: src/pages/GroupDetailPage.tsx:107
+msgid "Search users to add"
+msgstr "Szukaj użytkowników do dodania"
+
+#: src/pages/GroupDetailPage.tsx:112
+msgid "Searching…"
+msgstr "Wyszukiwanie…"
+
+#: src/components/SelectLastSeenEpisode.tsx:83
+msgid "Season"
+msgstr "Sezon"
+
+#. placeholder {0}: season.seasonNumber
+#: src/pages/SeasonsPage.tsx:177
+msgid "Season {0}"
+msgstr "Sezon {0}"
+
+#: src/components/ImportSummaryTable.tsx:92
+#: src/pages/Details.tsx:376
+msgid "Seasons"
+msgstr "Sezony"
+
+#: src/pages/Statistics.tsx:149
+msgid "Seen"
+msgstr "Widziano"
+
+#. placeholder {0}: seenEntry.dateStr
+#: src/pages/SeenHistory.tsx:97
+msgid "Seen at {0}"
+msgstr "Widziano w {0}"
+
+#: src/pages/Details.tsx:602
+#: src/pages/import/TraktTv.tsx:191
+msgid "Seen history"
+msgstr "Historia obejrzanych"
+
+#: src/pages/import/TraktTv.tsx:274
+msgid "Seen history - episodes"
+msgstr "Historia obejrzanych - odcinki"
+
+#: src/pages/import/TraktTv.tsx:269
+msgid "Seen history - movies"
+msgstr "Historia obejrzanych - filmy"
+
+#: src/components/SelectLastSeenEpisode.tsx:135
+msgid "Select"
+msgstr "Wybierz"
+
+#: src/components/SelectSeenDate.tsx:160
+msgid "Select date"
+msgstr "Wybierz datę"
+
+#: src/pages/settings/Notifications.tsx:265
+msgid "Select priority"
+msgstr "Wybierz priorytet"
+
+#: src/pages/Statistics.tsx:195
+msgid "Select year"
+msgstr "Wybierz rok"
+
+#: src/pages/Statistics.tsx:207
+msgid "Select Year"
+msgstr "Wybierz rok"
+
+#: src/pages/settings/Notifications.tsx:29
+msgid "Send notification for episodes releases"
+msgstr "Wyślij powiadomienie o wydaniu odcinków"
+
+#: src/pages/settings/Notifications.tsx:23
+msgid "Send notification for releases"
+msgstr "Wyślij powiadomienie o wydaniach"
+
+#: src/pages/settings/Notifications.tsx:53
+msgid "Send notification when number of seasons changes"
+msgstr "Wyślij powiadomienie, gdy liczba sezonów się zmieni"
+
+#: src/pages/settings/Notifications.tsx:45
+msgid "Send notification when release date changes"
+msgstr "Wyślij powiadomienie, gdy zmieni się data premiery"
+
+#: src/pages/settings/Notifications.tsx:37
+msgid "Send notification when status changes"
+msgstr "Wyślij powiadomienie, gdy zmieni się status"
+
+#: src/App.tsx:101
+msgid "Server error: {errorMessage}"
+msgstr "Błąd serwera: {errorMessage}"
+
+#: src/pages/settings/Configuration.tsx:35
+#: src/pages/settings/Configuration.tsx:42
+msgid "Server language"
+msgstr "Język serwera"
+
+#: src/pages/settings/Notifications.tsx:146
+msgid "Server url (only for self hosting)"
+msgstr "Adres URL serwera (tylko dla własnego hostingu)"
+
+#: src/components/SetProgress.tsx:125
+msgid "Set"
+msgstr "Ustaw"
+
+#: src/components/SetProgress.tsx:61
+#: src/pages/Details.tsx:705
+msgid "Set progress"
+msgstr "Ustaw postęp"
+
+#: src/pages/Settings.tsx:76
+msgid "Settings"
+msgstr "Ustawienia"
+
+#: src/components/Facets/ExpandableList.tsx:33
+msgid "Show less"
+msgstr "Pokaż mniej"
+
+#: src/components/Facets/ExpandableList.tsx:33
+msgid "Show more"
+msgstr "Pokaż więcej"
+
+#: src/pages/settings/Preferences.tsx:13
+msgid "Show your reviews to other users"
+msgstr "Pokaż swoje recenzje innym użytkownikom"
+
+#: src/components/ImportSummaryTable.tsx:91
+msgid "Shows"
+msgstr "Seriale"
+
+#: src/components/AddOrEditListButton.tsx:180
+#: src/components/AddOrEditListButton.tsx:185
+msgid "Sort by"
+msgstr "Sortuj według"
+
+#: src/components/AddOrEditListButton.tsx:199
+#: src/components/AddOrEditListButton.tsx:204
+msgid "Sort order"
+msgstr "Porządek sortowania"
+
+#: src/pages/Details.tsx:401
+msgid "Source"
+msgstr "Źródło"
+
+#: src/pages/import/TraktTv.tsx:110
+msgid "Start over"
+msgstr "Zacznij od nowa"
+
+#: src/components/Nav.tsx:46
+#: src/pages/Statistics.tsx:111
+msgid "Statistics"
+msgstr "Statystyki"
+
+#: src/components/Facets/ActiveFacetChips.tsx:293
+#: src/components/Facets/StatusSection.tsx:116
+#: src/components/OrderBy.tsx:16
+#: src/pages/Details.tsx:290
+msgid "Status"
+msgstr "Status"
+
+#: src/components/ImportSummaryTable.tsx:84
+#: src/components/ImportSummaryTable.tsx:135
+msgid "Summary"
+msgstr "Podsumowanie"
+
+#: src/components/AddOrEditListButton.tsx:105
+msgid "There already exists a list with name \"{name}\""
+msgstr "Lista o nazwie \"{name}\" już istnieje"
+
+#: src/pages/SeasonsPage.tsx:152
+msgid "This component can only be used with tv shows"
+msgstr "Ten komponent może być używany tylko z serialami telewizyjnymi"
+
+#: src/components/OrderBy.tsx:17
+#: src/hooks/translations.ts:14
+msgid "Title"
+msgstr "Tytuł"
+
+#: src/pages/settings/Configuration.tsx:88
+#: src/pages/settings/Configuration.tsx:95
+msgid "TMDB language"
+msgstr "Język TMDB"
+
+#: src/pages/import/Goodreads.tsx:73
+msgid "To read"
+msgstr "Do przeczytania"
+
+#: src/pages/settings/Notifications.tsx:142
+msgid "Topic"
+msgstr "Temat"
+
+#: src/pages/Details.tsx:254
+msgid "Total runtime"
+msgstr "Całkowity czas trwania"
+
+#: src/components/GridItem.tsx:94
+#: src/components/Nav.tsx:37
+#: src/components/Statistics/StatisticsGenreSegment.tsx:16
+#: src/components/Statistics/StatisticsSegment.tsx:35
+msgid "Tv"
+msgstr "TV"
+
+#: src/components/Facets/ActiveFacetChips.tsx:72
+#: src/components/Facets/MediaTypeSection.tsx:20
+msgid "TV Show"
+msgstr "Serial TV"
+
+#: src/pages/import/TraktTv.tsx:138
+msgid "Uninitialized"
+msgstr "Niezainicjowany"
+
+#: src/components/Facets/ActiveFacetChips.tsx:21
+#: src/components/Facets/StatusSection.tsx:55
+#: src/components/FilterBy.tsx:13
+#: src/pages/Home.tsx:122
+msgid "Unrated"
+msgstr "Brak oceny"
+
+#: src/pages/Details.tsx:391
+msgid "Unseen episodes"
+msgstr "Nieobejrzane odcinki"
+
+#: src/components/OrderBy.tsx:20
+msgid "Unseen episodes count"
+msgstr "Liczba nieobejrzanych odcinków"
+
+#: src/components/Nav.tsx:42
+#: src/pages/Home.tsx:75
+msgid "Upcoming"
+msgstr "Wkrótce"
+
+#: src/pages/Details.tsx:691
+msgid "Update metadata"
+msgstr "Aktualizuj metadane"
+
+#: src/pages/import/TraktTv.tsx:139
+msgid "Updating metadata"
+msgstr "Aktualizowanie metadanych"
+
+#: src/pages/Login.tsx:38
+#: src/pages/Register.tsx:34
+msgid "Username"
+msgstr "Nazwa użytkownika"
+
+#: src/pages/settings/About.tsx:11
+msgid "Version"
+msgstr "Wersja"
+
+#: src/components/Facets/ActiveFacetChips.tsx:78
+#: src/components/Facets/MediaTypeSection.tsx:26
+#: src/components/GridItem.tsx:95
+msgid "Video game"
+msgstr "Gra wideo"
+
+#: src/pages/GroupDetailPage.tsx:194
+#: src/pages/GroupDetailPage.tsx:208
+#: src/pages/GroupDetailPage.tsx:321
+#: src/pages/GroupsPage.tsx:50
+msgid "Viewer"
+msgstr "Widz"
+
+#: src/pages/import/TraktTv.tsx:140
+msgid "Waiting for authentication"
+msgstr "Oczekiwanie na uwierzytelnianie"
+
+#: src/pages/LogsPage.tsx:107
+msgid "Warning"
+msgstr "Uwaga"
+
+#: src/components/Facets/ActiveFacetChips.tsx:34
+#: src/components/Facets/StatusSection.tsx:41
+#: src/components/FilterBy.tsx:23
+msgid "Watched"
+msgstr "Obejrzane"
+
+#: src/components/Nav.tsx:44
+#: src/pages/import/TraktTv.tsx:176
+#: src/utils.ts:157
+msgid "Watchlist"
+msgstr "Lista oglądanych"
+
+#: src/pages/import/TraktTv.tsx:264
+msgid "Watchlist - episodes"
+msgstr "Lista oglądanych - odcinki"
+
+#: src/pages/import/TraktTv.tsx:249
+msgid "Watchlist - movies"
+msgstr "Lista oglądanych - filmy"
+
+#: src/pages/import/TraktTv.tsx:259
+msgid "Watchlist - season"
+msgstr "Lista oglądanych - sezon"
+
+#: src/pages/import/TraktTv.tsx:254
+msgid "Watchlist - shows"
+msgstr "Lista oglądanych - seriale"
+
+#: src/pages/settings/Notifications.tsx:127
+msgid "Webhook URL"
+msgstr "URL webhooka"
+
+#. placeholder {0}: season ? `${tvShow.title} ${formatSeasonNumber(season)}` : tvShow.title
+#: src/components/SelectLastSeenEpisode.tsx:71
+msgid "What is the last episode of \"{0}\" you see?"
+msgstr "Jaki jest ostatni odcinek \"{0}\", który widziałeś?"
+
+#. placeholder {0}: mediaItem.title
+#: src/components/SelectSeenDate.tsx:78
+msgid "When did you listen to \"{0}\"?"
+msgstr "Kiedy słuchałeś \"{0}\"?"
+
+#. placeholder {0}: mediaItem.title
+#: src/components/SelectSeenDate.tsx:100
+msgid "When did you play \"{0}\"?"
+msgstr "Kiedy grałeś w \"{0}\"?"
+
+#. placeholder {0}: mediaItem.title
+#: src/components/SelectSeenDate.tsx:82
+msgid "When did you read \"{0}\"?"
+msgstr "Kiedy czytałeś \"{0}\"?"
+
+#. placeholder {0}: episode ? `${mediaItem.title} ${formatEpisodeNumber(episode)}` : mediaItem.title
+#. placeholder {0}: mediaItem.title
+#: src/components/SelectSeenDate.tsx:86
+#: src/components/SelectSeenDate.tsx:90
+msgid "When did you see \"{0}\"?"
+msgstr "Kiedy widziałeś \"{0}\"?"
+
+#: src/pages/Details.tsx:125
+msgid "Where to watch"
+msgstr "Gdzie obejrzeć"
+
+#: src/components/Facets/ActiveFacetChips.tsx:304
+#: src/components/Facets/YearSection.tsx:81
+msgid "Year"
+msgstr "Rok"
+
+#: src/components/Confirm.tsx:81
+msgid "Yes"
+msgstr "Tak"
+
+#: src/pages/GroupDetailPage.tsx:319
+msgid "Your role:"
+msgstr "Twoja rola:"

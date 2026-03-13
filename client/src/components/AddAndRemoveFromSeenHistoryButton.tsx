@@ -20,6 +20,7 @@ import { Modal } from 'src/components/Modal';
 import { SelectSeenDate } from 'src/components/SelectSeenDate';
 import { markAsUnseen } from 'src/api/details';
 import { Confirm } from 'src/components/Confirm';
+import { Button } from 'src/components/ui/button';
 
 export const AddToSeenHistoryButton: FunctionComponent<{
   mediaItem: MediaItemItemsResponse;
@@ -36,7 +37,7 @@ export const AddToSeenHistoryButton: FunctionComponent<{
     <>
       <Modal
         openModal={(openModal) => (
-          <div className="text-sm btn-blue bg" onClick={openModal}>
+          <Button variant="default" size="sm" onClick={openModal}>
             {isAudiobook(mediaItem) && <Trans>Add to listened history</Trans>}
             {isBook(mediaItem) && <Trans>Add to read history</Trans>}
             {isVideoGame(mediaItem) && <Trans>Add to played history</Trans>}
@@ -61,7 +62,7 @@ export const AddToSeenHistoryButton: FunctionComponent<{
               ) : (
                 <Trans>Add to seen history</Trans>
               ))}
-          </div>
+          </Button>
         )}
       >
         {(closeModal) => (
@@ -103,8 +104,9 @@ export const RemoveFromSeenHistoryButton: FunctionComponent<{
       : mediaItem.seenHistory?.length;
 
   return (
-    <div
-      className="text-sm btn-red"
+    <Button
+      variant="destructive"
+      size="sm"
       onClick={async () =>
         (await Confirm(
           plural(count, {
@@ -132,6 +134,6 @@ export const RemoveFromSeenHistoryButton: FunctionComponent<{
         ) : (
           <Trans>Remove from seen history</Trans>
         ))}
-    </div>
+    </Button>
   );
 };

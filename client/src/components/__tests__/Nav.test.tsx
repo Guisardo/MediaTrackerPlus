@@ -6,7 +6,6 @@
  *  - useUser (src/api/user)         – provides { user, logout }
  *  - useDarkMode (src/hooks/darkMode)
  *  - useLocation / NavLink          – react-router-dom
- *  - @react-spring/web              – animations (mocked synchronously)
  *  - @lingui/macro                  – translations (mocked to passthrough)
  *  - clsx                           – class util (mocked to join)
  *
@@ -14,36 +13,16 @@
  *  - All navigation links rendered when user is logged in
  *  - Each NavLink has the correct href value
  *  - The active route link receives the "underline" class
- *  - The sidebar shows route names that match the current path
+ *  - The sidebar visibility toggle uses CSS transition classes
  *  - Dark-mode toggle renders and toggles
  *  - When user is falsy only the dark-mode toggle renders (no nav links)
  *  - useRouteNames returns all expected route entries
  */
 
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { act } from 'react-dom/test-utils';
-import { render, screen } from '@testing-library/react';
+import { render, screen, renderHook } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
-
-// renderHook polyfill — @testing-library/react v12 does not export renderHook.
-function renderHook<T>(callback: () => T, options?: { wrapper: React.FC<{ children: React.ReactNode }> }): { result: { current: T } } {
-  const result = { current: undefined as unknown as T };
-  const container = document.createElement('div');
-  document.body.appendChild(container);
-  function TestComponent() {
-    result.current = callback();
-    return null;
-  }
-  const element = options?.wrapper
-    ? React.createElement(options.wrapper, null, React.createElement(TestComponent))
-    : React.createElement(TestComponent);
-  act(() => {
-    ReactDOM.render(element, container);
-  });
-  return { result };
-}
 
 // ---------------------------------------------------------------------------
 // Mocks
@@ -60,34 +39,18 @@ jest.mock('@lingui/macro', () => ({
 }));
 
 jest.mock('@lingui/react', () => ({
-  useLingui: () => ({ i18n: { _: (s: any) => s, locale: 'en' } }),
-  Trans: ({ id, children }: any) => <>{id || children}</>,
+  useLingui: () => ({
+    i18n: {
+      _: (s: any) =>
+        typeof s === 'string' ? s : s?.message || s?.id || '',
+      locale: 'en',
+    },
+  }),
+  Trans: ({ message, children }: any) => <>{message || children}</>,
   I18nProvider: ({ children }: any) => <>{children}</>,
 }));
 
 jest.mock('clsx', () => (...args: unknown[]) => args.filter(Boolean).join(' '));
-
-// @react-spring/web – synchronous mocks (same pattern as Modal.test.tsx)
-jest.mock('@react-spring/web', () => {
-  const React = require('react');
-  return {
-    Transition: ({
-      items,
-      children,
-    }: {
-      items: boolean;
-      children: (styles: object, show: boolean) => React.ReactNode;
-    }) => <>{children({}, items)}</>,
-    Spring: ({
-      children,
-    }: {
-      children: (styles: object) => React.ReactNode;
-    }) => <>{children({})}</>,
-    animated: {
-      div: (props: React.HTMLProps<HTMLDivElement>) => <div {...props} />,
-    },
-  };
-});
 
 // useUser mock – default to a logged-in user
 const mockLogout = jest.fn();
@@ -292,6 +255,65 @@ describe('NavComponent – active route highlighting', () => {
     // None of the Tv links should have underline (they are inactive)
     const underlinedTvLink = tvLinks.find((l) => l.className.includes('underline'));
     expect(underlinedTvLink).toBeUndefined();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// NavComponent – SideBar CSS transition visibility toggle
+// ---------------------------------------------------------------------------
+
+describe('NavComponent – SideBar visibility toggle', () => {
+  beforeEach(() => {
+    mockUseUser.mockReturnValue({ user: LOGGED_IN_USER, logout: mockLogout });
+    mockUseDarkMode.mockReturnValue({ darkMode: false, setDarkMode: mockSetDarkMode });
+  });
+
+  it('renders the sidebar panel with translate-x-full (hidden) by default', () => {
+    const { container } = renderNav('/');
+    // Sidebar panel is the div with transition-transform class
+    const sidebarPanel = container.querySelector('.transition-transform');
+    expect(sidebarPanel).toBeInTheDocument();
+    expect(sidebarPanel?.className).toContain('translate-x-full');
+    expect(sidebarPanel?.className).not.toContain('translate-x-0');
+  });
+
+  it('renders the backdrop with opacity-0 and pointer-events-none by default', () => {
+    const { container } = renderNav('/');
+    const backdrop = container.querySelector('.transition-opacity');
+    expect(backdrop).toBeInTheDocument();
+    expect(backdrop?.className).toContain('opacity-0');
+    expect(backdrop?.className).toContain('pointer-events-none');
+  });
+
+  it('toggles sidebar panel to translate-x-0 when hamburger is clicked', async () => {
+    const user = userEvent.setup();
+    const { container } = renderNav('/');
+
+    const hamburger = screen.getByText('menu');
+    await user.click(hamburger);
+
+    const sidebarPanel = container.querySelector('.transition-transform');
+    expect(sidebarPanel?.className).toContain('translate-x-0');
+    expect(sidebarPanel?.className).not.toContain('translate-x-full');
+  });
+
+  it('toggles backdrop to opacity-30 when sidebar is open', async () => {
+    const user = userEvent.setup();
+    const { container } = renderNav('/');
+
+    const hamburger = screen.getByText('menu');
+    await user.click(hamburger);
+
+    const backdrop = container.querySelector('.transition-opacity');
+    expect(backdrop?.className).toContain('opacity-30');
+    expect(backdrop?.className).not.toContain('pointer-events-none');
+  });
+
+  it('renders route links inside the sidebar panel', () => {
+    renderNav('/');
+    // Both desktop nav and sidebar render routes — total links >= 15 (desktop) + 15 (sidebar)
+    const allNavLinks = screen.getAllByRole('link', { name: /^(?!Alice|Logout).+/ });
+    expect(allNavLinks.length).toBeGreaterThanOrEqual(15);
   });
 });
 

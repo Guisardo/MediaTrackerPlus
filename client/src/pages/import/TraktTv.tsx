@@ -1,6 +1,5 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { useMutation, useQuery } from 'react-query';
-import { useSpring, animated } from 'react-spring';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Plural, t, Trans } from '@lingui/macro';
 
 import { mediaTrackerApi } from 'src/api/api';
@@ -11,14 +10,15 @@ import {
 } from 'mediatracker-api';
 import { TvImportSummaryTable } from 'src/components/ImportSummaryTable';
 import { queryClient } from 'src/App';
+import { Button } from 'src/components/ui/button';
 
 const useTraktTvImport = () => {
   const [_state, setState] = useState<ImportState>();
 
-  const { data: deviceCode } = useQuery(
-    ['import', 'TraktTv', 'device-code'],
-    mediaTrackerApi.importTrakttv.deviceToken
-  );
+  const { data: deviceCode } = useQuery({
+    queryKey: ['import', 'TraktTv', 'device-code'],
+    queryFn: mediaTrackerApi.importTrakttv.deviceToken,
+  });
 
   const [state, setStateResponse] =
     useState<ImportTrakttv.State.ResponseBody>();
@@ -35,16 +35,14 @@ const useTraktTvImport = () => {
     };
   }, []);
 
-  const startOverMutation = useMutation(
-    () => mediaTrackerApi.importTrakttv.startOver(),
-    {
-      onSettled: () => {
-        setState(undefined);
-        queryClient.removeQueries(['import', 'TraktTv']);
-        queryClient.invalidateQueries(['import', 'TraktTv']);
-      },
-    }
-  );
+  const startOverMutation = useMutation({
+    mutationFn: () => mediaTrackerApi.importTrakttv.startOver(),
+    onSettled: () => {
+      setState(undefined);
+      queryClient.removeQueries({ queryKey: ['import', 'TraktTv'] });
+      queryClient.invalidateQueries({ queryKey: ['import', 'TraktTv'] });
+    },
+  });
 
   return {
     deviceCode,
@@ -55,6 +53,7 @@ const useTraktTvImport = () => {
 
 export const TraktTvImportPage: FunctionComponent = () => {
   const { deviceCode, state, startOver } = useTraktTvImport();
+  const stateMap = useStateMap();
 
   return (
     <div className="flex flex-col justify-center w-full mt-4">
@@ -79,8 +78,10 @@ export const TraktTvImportPage: FunctionComponent = () => {
                 </div>
                 {navigator.clipboard && (
                   <div>
-                    <div
-                      className="mt-2 text-sm btn"
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="mt-2"
                       onClick={async () => {
                         try {
                           navigator.clipboard.writeText(deviceCode.userCode);
@@ -90,7 +91,7 @@ export const TraktTvImportPage: FunctionComponent = () => {
                       }}
                     >
                       <Trans>Copy to clipboard</Trans>
-                    </div>
+                    </Button>
                   </div>
                 )}
               </div>
@@ -105,9 +106,9 @@ export const TraktTvImportPage: FunctionComponent = () => {
 
             {state.state === 'imported' && (
               <>
-                <div className="mt-2 btn" onClick={() => startOver()}>
+                <Button variant="outline" className="mt-2" onClick={() => startOver()}>
                   <Trans>Start over</Trans>
-                </div>
+                </Button>
               </>
             )}
           </>
@@ -132,7 +133,7 @@ export const TraktTvImportPage: FunctionComponent = () => {
   );
 };
 
-const stateMap: Record<ImportState, string> = {
+const useStateMap = (): Record<ImportState, string> => ({
   exporting: t`Exporting`,
   uninitialized: t`Uninitialized`,
   'updating-metadata': t`Updating metadata`,
@@ -140,23 +141,20 @@ const stateMap: Record<ImportState, string> = {
   imported: t`Imported`,
   importing: t`Importing`,
   error: t`Error`,
-};
+});
 
 const ProgressBarComponent: FunctionComponent<{ progress: number }> = (
   props
 ) => {
   const progress = props.progress * 100;
 
-  const style = useSpring({
-    background: `linear-gradient(to right, blue ${progress}%, transparent 0%)`,
-    from: { background: 'linear-gradient(to right, blue 0%, transparent 0%)' },
-  });
-
   return (
-    <animated.div
-      className="block h-4 border rounded w-80 bg-grad"
-      style={style}
-    ></animated.div>
+    <div
+      className="block h-4 border rounded w-80 transition-all duration-300"
+      style={{
+        background: `linear-gradient(to right, blue ${progress}%, transparent 0%)`,
+      }}
+    ></div>
   );
 };
 

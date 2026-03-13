@@ -28,7 +28,7 @@ export const useMenuComponent = <T extends string>(args: {
     }
   }, [selectedValue, initialSelection]);
 
-  const Menu: FunctionComponent = (params) => {
+  const Menu: FunctionComponent<{ children: React.ReactNode }> = (params) => {
     const { children } = params;
     const [showMenu, setShowMenu] = useState(false);
     const ref = useRef(null);
@@ -58,14 +58,14 @@ export const useMenuComponent = <T extends string>(args: {
         >
           {children}
           {showMenu && (
-            <ul className="absolute right-0 z-10 transition-all rounded shadow-lg shadow-black bg-zinc-100 dark:bg-gray-900">
+            <ul className="absolute right-0 z-10 transition-all rounded shadow-lg shadow-black bg-zinc-100 dark:bg-zinc-900">
               {values.map((value) =>
                 value ? (
                   <li
                     key={value}
                     className={clsx(
                       'px-2 py-1 rounded hover:bg-red-700 whitespace-nowrap',
-                      selectedValue === value && 'dark:bg-slate-700 bg-zinc-300'
+                      selectedValue === value && 'dark:bg-zinc-700 bg-zinc-300'
                     )}
                     onClick={() => {
                       setSelectedValue(value);

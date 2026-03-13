@@ -50,17 +50,23 @@ jest.mock('@lingui/macro', () => {
   };
 });
 
-// The babel-plugin-macros transform rewrites @lingui/macro imports into
-// @lingui/react imports at compile time.  We must also mock @lingui/react so
+// The @lingui/babel-plugin-lingui-macro transform rewrites @lingui/macro imports
+// into @lingui/react imports at compile time.  We must also mock @lingui/react so
 // that Trans (and useLingui) work without a real I18nProvider.
-// After babel transform, <Trans>text</Trans> becomes <Trans id="text" />,
-// so we render the id prop as text content.
+// After babel transform, <Trans>text</Trans> becomes <Trans id="hash" message="text" />,
+// so we render the message prop as text content.
 jest.mock('@lingui/react', () => {
   const React = require('react');
   return {
-    useLingui: () => ({ i18n: { _: (msg: string) => msg, locale: 'en' } }),
-    Trans: ({ id, children }: { id?: string; children?: React.ReactNode }) => (
-      <>{id || children}</>
+    useLingui: () => ({
+      i18n: {
+        _: (msg: any) =>
+          typeof msg === 'string' ? msg : msg?.message || msg?.id || '',
+        locale: 'en',
+      },
+    }),
+    Trans: ({ message, children }: { message?: string; children?: React.ReactNode }) => (
+      <>{message || children}</>
     ),
     I18nProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   };

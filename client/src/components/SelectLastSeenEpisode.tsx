@@ -6,6 +6,14 @@ import { Modal } from 'src/components/Modal';
 import { SelectSeenDateComponent } from 'src/components/SelectSeenDate';
 import { MediaItemItemsResponse, TvSeason } from 'mediatracker-api';
 import { formatSeasonNumber } from 'src/utils';
+import { Button } from 'src/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from 'src/components/ui/select';
 
 export const SelectLastSeenEpisode: FunctionComponent<{
   tvShow: MediaItemItemsResponse;
@@ -74,37 +82,47 @@ export const SelectLastSeenEpisode: FunctionComponent<{
                 <span className="mr-2">
                   <Trans>Season</Trans>:
                 </span>
-                <select
-                  value={selectedSeasonId}
-                  onChange={(e) => setSelectedSeasonId(Number(e.target.value))}
+                <Select
+                  value={String(selectedSeasonId)}
+                  onValueChange={(value) => setSelectedSeasonId(Number(value))}
                 >
-                  {tvShow.seasons
-                    ?.filter((season) => !season.isSpecialSeason)
-                    .map((season) => (
-                      <option key={season.id} value={season.id}>
-                        {season.title}
-                      </option>
-                    ))}
-                </select>
+                  <SelectTrigger aria-label="Season">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {tvShow.seasons
+                      ?.filter((season) => !season.isSpecialSeason)
+                      .map((season) => (
+                        <SelectItem key={season.id} value={String(season.id)}>
+                          {season.title}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
               </div>
             )}
             <div className="py-2">
               <span className="mr-2">
                 <Trans>Episode</Trans>:
               </span>
-              <select
-                value={selectedEpisodeId}
-                onChange={(e) => setSelectedEpisodeId(Number(e.target.value))}
+              <Select
+                value={String(selectedEpisodeId)}
+                onValueChange={(value) => setSelectedEpisodeId(Number(value))}
               >
-                {selectedSeason?.episodes?.map((episode) => (
-                  <option key={episode.id} value={episode.id}>
-                    {!episode.title.endsWith(` ${episode.episodeNumber}`) &&
-                      episode.episodeNumber + '. '}
+                <SelectTrigger aria-label="Episode">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {selectedSeason?.episodes?.map((episode) => (
+                    <SelectItem key={episode.id} value={String(episode.id)}>
+                      {!episode.title.endsWith(` ${episode.episodeNumber}`) &&
+                        episode.episodeNumber + '. '}
 
-                    {episode.title}
-                  </option>
-                ))}
-              </select>
+                      {episode.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <div className="flex justify-between mt-2">
@@ -113,9 +131,9 @@ export const SelectLastSeenEpisode: FunctionComponent<{
               closeOnEscape={true}
               onBeforeClosed={() => closeModal(true)}
               openModal={(onClick) => (
-                <div className="btn-blue" onClick={onClick}>
+                <Button variant="default" onClick={onClick}>
                   <Trans>Select</Trans>
-                </div>
+                </Button>
               )}
             >
               {(closeModal) => (
@@ -137,9 +155,9 @@ export const SelectLastSeenEpisode: FunctionComponent<{
               )}
             </Modal>
 
-            <div className="btn-red" onClick={() => closeModal()}>
+            <Button variant="destructive" onClick={() => closeModal()}>
               <Trans>Cancel</Trans>
-            </div>
+            </Button>
           </div>
         </>
       )}

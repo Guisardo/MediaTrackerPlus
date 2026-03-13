@@ -14,7 +14,9 @@
     "react-hooks/exhaustive-deps": "warn",
     "@typescript-eslint/no-unused-vars": "off",
     "no-empty-function": "off",
-    "@typescript-eslint/no-empty-function": ["error"]
+    "@typescript-eslint/no-empty-function": ["error"],
+    "react/prop-types": "off",
+    "react/react-in-jsx-scope": "off"
   },
   "settings": {
     "react": {

@@ -1,17 +1,15 @@
-import React, { FunctionComponent, useState, useEffect, useCallback, useRef } from 'react';
+import React, { FunctionComponent, useState, useEffect, useCallback } from 'react';
+import { Slider } from '@/components/ui/slider';
 
 /**
- * FacetRangeSlider renders a dual-handle range slider using native HTML
- * range inputs together with paired numeric text inputs.
- *
- * Uses two overlapping `<input type="range">` elements to create a dual-thumb
- * slider without any third-party dependencies, avoiding React 17 compatibility
- * issues with Radix's jsx-runtime usage.
+ * FacetRangeSlider renders a dual-handle range slider using the shadcn/ui
+ * Slider component (which wraps @radix-ui/react-slider) together with paired
+ * numeric text inputs.
  *
  * ## Interaction model
  * - Dragging either slider handle updates the corresponding numeric input in
- *   real-time.
- * - URL params are written only on slider *release* (mouseup/touchend) to avoid
+ *   real-time via `onValueChange`.
+ * - URL params are written only on slider *release* (`onValueCommit`) to avoid
  *   flooding the browser history on every pixel of drag movement.
  * - Typing into a numeric input updates the slider value immediately on blur;
  *   out-of-range values are clamped to [min, max] and invalid (non-numeric)
@@ -19,8 +17,8 @@ import React, { FunctionComponent, useState, useEffect, useCallback, useRef } fr
  *
  * ## Reuse
  * This component is reused by:
- *   - YearSection  (US-012) — min=earliest year, max=current year, step=1
- *   - RatingSection (US-013) — min=0, max=10, step=0.5
+ *   - YearSection   — min=earliest year, max=current year, step=1
+ *   - RatingSection — min=0, max=10, step=0.5
  */
 export const FacetRangeSlider: FunctionComponent<{
   /** Minimum possible value for the range. */
@@ -83,39 +81,33 @@ export const FacetRangeSlider: FunctionComponent<{
   }, [valueMin, valueMax, min, max, decimalPlaces]);
 
   // --- Slider handlers ----------------------------------------------------
-  const handleMinSliderChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const raw = parseFloat(e.target.value);
-      // Ensure lower handle doesn't exceed upper handle.
-      const clamped = Math.min(raw, sliderValues[1] - step);
-      setSliderValues([clamped, sliderValues[1]]);
-      setMinInputValue(clamped.toFixed(decimalPlaces));
-    },
-    [sliderValues, step, decimalPlaces]
-  );
 
-  const handleMaxSliderChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const raw = parseFloat(e.target.value);
-      // Ensure upper handle doesn't go below lower handle.
-      const clamped = Math.max(raw, sliderValues[0] + step);
-      setSliderValues([sliderValues[0], clamped]);
-      setMaxInputValue(clamped.toFixed(decimalPlaces));
+  /** Real-time update during drag — keeps the numeric inputs in sync. */
+  const handleValueChange = useCallback(
+    (values: number[]) => {
+      const [newMin, newMax] = values as [number, number];
+      setSliderValues([newMin, newMax]);
+      setMinInputValue(newMin.toFixed(decimalPlaces));
+      setMaxInputValue(newMax.toFixed(decimalPlaces));
     },
-    [sliderValues, step, decimalPlaces]
+    [decimalPlaces]
   );
 
   /**
-   * Commit on release (mouseup/touchend).
+   * Commit on release — fires when the user lets go of a thumb.
    * Pass null for a bound when it equals the extreme (min/max) to keep the
    * URL clean.
    */
-  const handleSliderCommit = useCallback(() => {
-    onCommit(
-      sliderValues[0] === min ? null : sliderValues[0],
-      sliderValues[1] === max ? null : sliderValues[1]
-    );
-  }, [min, max, sliderValues, onCommit]);
+  const handleValueCommit = useCallback(
+    (values: number[]) => {
+      const [newMin, newMax] = values as [number, number];
+      onCommit(
+        newMin === min ? null : newMin,
+        newMax === max ? null : newMax
+      );
+    },
+    [min, max, onCommit]
+  );
 
   // --- Numeric input handlers ---------------------------------------------
   const handleMinInputBlur = useCallback(() => {
@@ -153,63 +145,24 @@ export const FacetRangeSlider: FunctionComponent<{
     []
   );
 
-  // --- Track fill percentage for visual feedback --------------------------
-  const range = max - min || 1;
-  const minPercent = ((sliderValues[0] - min) / range) * 100;
-  const maxPercent = ((sliderValues[1] - min) / range) * 100;
-
   return (
     <div className="space-y-3">
-      {/* Dual-thumb range slider using two overlapping native range inputs */}
-      <div className="relative w-full h-5 flex items-center select-none touch-none">
-        {/* Background track */}
-        <div className="absolute w-full h-1.5 rounded-full bg-gray-200 dark:bg-slate-600" />
-
-        {/* Active range fill */}
-        <div
-          className="absolute h-1.5 rounded-full bg-blue-500 dark:bg-blue-400"
-          style={{
-            left: `${minPercent}%`,
-            width: `${maxPercent - minPercent}%`,
-          }}
-        />
-
-        {/* Lower-bound range input */}
-        <input
-          type="range"
-          className="absolute w-full h-1.5 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:dark:bg-slate-200 [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-blue-500 [&::-webkit-slider-thumb]:dark:border-blue-400 [&::-webkit-slider-thumb]:shadow [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:dark:bg-slate-200 [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-blue-500 [&::-moz-range-thumb]:dark:border-blue-400 [&::-moz-range-thumb]:shadow [&::-moz-range-thumb]:cursor-pointer"
-          min={min}
-          max={max}
-          step={step}
-          value={sliderValues[0]}
-          onChange={handleMinSliderChange}
-          onMouseUp={handleSliderCommit}
-          onTouchEnd={handleSliderCommit}
-          aria-label={minInputLabel}
-          style={{ zIndex: sliderValues[0] > max - step ? 5 : 3 }}
-        />
-
-        {/* Upper-bound range input */}
-        <input
-          type="range"
-          className="absolute w-full h-1.5 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:dark:bg-slate-200 [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-blue-500 [&::-webkit-slider-thumb]:dark:border-blue-400 [&::-webkit-slider-thumb]:shadow [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:dark:bg-slate-200 [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-blue-500 [&::-moz-range-thumb]:dark:border-blue-400 [&::-moz-range-thumb]:shadow [&::-moz-range-thumb]:cursor-pointer"
-          min={min}
-          max={max}
-          step={step}
-          value={sliderValues[1]}
-          onChange={handleMaxSliderChange}
-          onMouseUp={handleSliderCommit}
-          onTouchEnd={handleSliderCommit}
-          aria-label={maxInputLabel}
-          style={{ zIndex: 4 }}
-        />
-      </div>
+      {/* Dual-thumb range slider using shadcn/ui Slider (Radix) */}
+      <Slider
+        min={min}
+        max={max}
+        step={step}
+        value={sliderValues}
+        onValueChange={handleValueChange}
+        onValueCommit={handleValueCommit}
+        aria-label={`${minInputLabel} to ${maxInputLabel}`}
+      />
 
       {/* Paired numeric inputs */}
       <div className="flex items-center gap-2">
         <input
           type="number"
-          className="w-full px-2 py-1 text-xs rounded border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500 tabular-nums"
+          className="w-full px-2 py-1 text-xs rounded border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 focus:outline-none focus:ring-1 focus:ring-blue-500 tabular-nums"
           aria-label={minInputLabel}
           value={minInputValue}
           min={min}
@@ -220,14 +173,14 @@ export const FacetRangeSlider: FunctionComponent<{
           onKeyDown={handleInputKeyDown}
         />
         <span
-          className="flex-shrink-0 text-xs text-gray-400 dark:text-slate-500"
+          className="flex-shrink-0 text-xs text-zinc-400 dark:text-zinc-500"
           aria-hidden="true"
         >
           –
         </span>
         <input
           type="number"
-          className="w-full px-2 py-1 text-xs rounded border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500 tabular-nums"
+          className="w-full px-2 py-1 text-xs rounded border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 focus:outline-none focus:ring-1 focus:ring-blue-500 tabular-nums"
           aria-label={maxInputLabel}
           value={maxInputValue}
           min={min}
