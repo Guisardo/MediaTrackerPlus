@@ -30,6 +30,12 @@ Started: Thu Mar 12 13:27:30 -03 2026
 - Jest `moduleNameMapper` needs `'^@/(.*)$': '<rootDir>/src/$1'` entry to resolve `@/` alias in test files
 - shadcn/ui Button uses `@radix-ui/react-slot` for the `asChild` prop — install it alongside cva and tailwind-merge
 - clsx v2+ uses a default export: `import clsx from 'clsx'` not `import { clsx } from 'clsx'`
+- shadcn/ui Button variants: `.btn` → `variant="outline"`, `.btn-blue` → `variant="default"`, `.btn-red` → `variant="destructive"`; use `asChild` to style `<Link>` elements as buttons
+- Modal.tsx uses shadcn/ui Dialog (Radix) — no more @react-spring/web or Portal; public API unchanged (openModal, openModalRef, children(closeModal), onClosed, onBeforeClosed)
+- Confirm.tsx uses shadcn/ui Dialog directly — `await Confirm(msg)` imperative API preserved; appends to document.body (Radix handles its own portal)
+- For Radix Dialog test mocks: propagate `open` from Root to Content via `__open` prop using `React.cloneElement`; Content returns null when `!__open`
+- `radix-ui` v1.4+ is the unified import package (not individual `@radix-ui/react-dialog` packages)
+- `#portal` div still needed by FacetDrawer.tsx — will be removed in US-017 when FacetDrawer migrates to Sheet
 
 ---
 
@@ -357,3 +363,118 @@ Migrated Tailwind CSS from v3.0.24 to v4.2.1. Replaced JS-based configuration wi
 - `createRoot` returns a root object with `.render()` and `.unmount()` — for imperative rendering (like Confirm.tsx), call `root.unmount()` before removing the DOM node
 
 ---
+
+## 2026-03-12 - US-009 — Phase 1 gate — design review checkpoint
+
+### What Was Implemented
+- Created `client/tasks/design-direction.md` with comprehensive design documentation
+- Documented design system foundation: shadcn/ui v4 new-york style, zinc+blue palette, CSS variables
+- Specified navigation patterns: sidebar on ≥1024px, slide-in drawer <1024px
+- Documented typography scale: page titles, section headings, body, metadata
+- Defined card pattern: `rounded-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm`
+- Specified page shell pattern: `max-w-7xl mx-auto px-4 sm:px-6`
+- Documented responsive grid layout with CSS container queries
+- Established Phase 2 component migration priority list (13 items, from Button to Integration Tests)
+- Documented completion criteria: no styled-components, no SCSS, no ReactDOM.render, all pages passing
+- Locked in all design decisions — no open questions remain
+
+### Files Changed
+- `client/tasks/design-direction.md` — NEW: 326 lines of design documentation
+
+### Verification
+- Typecheck: 0 errors
+- Git commit: `feat: US-009 - Phase 1 gate — design review checkpoint`
+
+### Learnings for Future Iterations
+- This document serves as the gate for Phase 2 — all subsequent stories must adhere to these design decisions
+- The design decisions are now locked: shadcn/ui new-york, zinc+blue, Tailwind v4, React 19, Vite 6, Lingui v5
+- Phase 2 stories should refer to this document for design guidance
+- The component migration priority list ensures sequential dependencies are respected (e.g., Button before Dialog)
+- No component author has discretion to deviate from these design tokens — all 31 pages must use the documented patterns
+
+---
+
+## 2026-03-12 - US-010
+
+- What was implemented: Replaced all custom `.btn`, `.btn-red`, `.btn-blue` CSS utility classes with the shadcn/ui `<Button>` component across 19 component and page files. Removed the three `@utility` blocks from `tailwind.css`. Updated the existing test that checked for `.btn-blue` CSS class to check for `button` element instead.
+
+- Files changed:
+  - `client/src/components/AddAndRemoveFromSeenHistoryButton.tsx`
+  - `client/src/components/Confirm.tsx`
+  - `client/src/components/SelectSeenDate.tsx`
+  - `client/src/components/SelectLastSeenEpisode.tsx`
+  - `client/src/components/AddOrEditGroupButton.tsx`
+  - `client/src/components/AddOrEditListButton.tsx`
+  - `client/src/components/AddToListModal.tsx`
+  - `client/src/components/StarRating.tsx`
+  - `client/src/components/SetProgress.tsx`
+  - `client/src/components/__tests__/AddAndRemoveFromSeenHistoryButton.test.tsx`
+  - `client/src/pages/Details.tsx`
+  - `client/src/pages/GroupDetailPage.tsx`
+  - `client/src/pages/Import.tsx`
+  - `client/src/pages/LogsPage.tsx`
+  - `client/src/pages/import/Goodreads.tsx`
+  - `client/src/pages/import/TraktTv.tsx`
+  - `client/src/pages/settings/Password.tsx`
+  - `client/src/pages/settings/ApplicationTokens.tsx`
+  - `client/src/pages/settings/Configuration.tsx`
+  - `client/src/pages/settings/Notifications.tsx`
+  - `client/src/styles/tailwind.css`
+
+- **Learnings for future iterations:**
+  - Variant mapping: `.btn` → `variant="outline"`, `.btn-blue` → `variant="default"`, `.btn-red` → `variant="destructive"`
+  - Many old "buttons" were `<div>` elements with `onClick` — shadcn/ui Button renders a semantic `<button>` directly, so move the `onClick` prop directly to `<Button>`
+  - For `<Link>` elements styled as buttons, use `<Button asChild variant="outline"><Link to="...">text</Link></Button>` — `asChild` forwards Button's styles and role to the child element via Radix Slot
+  - When a `<div className="text-sm btn*">` is migrated, use `size="sm"` on Button and drop `text-sm` from className — the sm size has its own font-size
+  - Keep additional spacing/layout classes (e.g. `mt-3`, `ml-auto`, `w-full`) in `className` prop on Button — they're additive with Button's base styles via `cn()`
+  - Submit buttons inside forms: Button renders as `<button type="submit">` by default, so no explicit `type="submit"` needed unless overriding
+  - Tests that queried `.btn-blue` class must be updated to use `button` role query (`container.querySelector('button')` or `screen.getByRole('button', ...)`)
+
+---
+
+## 2026-03-12 - US-011 — Replace custom Modal/Portal/Confirm with shadcn/ui Dialog + migrate all callsites
+
+### What Was Implemented
+- Installed shadcn/ui Dialog component (`npx shadcn@latest add dialog`) which added `radix-ui` v1.4.3 dependency and generated `client/src/components/ui/dialog.tsx`
+- Rewrote `Modal.tsx` to use shadcn/ui Dialog (Radix Dialog) instead of `@react-spring/web` Transition/Spring animations and custom Portal component:
+  - Preserved identical public API: `openModal`, `openModalRef`, `children(closeModal)`, `onClosed`, `onBeforeClosed`, `closeOnEscape`, `closeOnBackgroundClick`
+  - Preserved `useOpenModalRef` hook and `ModalArgs<T>` type export
+  - Replaced react-spring animations with Radix Dialog's built-in CSS animations
+  - Replaced custom Portal with Radix Dialog's built-in portal
+  - Used `onEscapeKeyDown`, `onPointerDownOutside`, `onInteractOutside` Radix props for granular close control
+  - Used `onAnimationEnd` to fire `onClosed` callback (replacing react-spring `onRest`)
+- Rewrote `Confirm.tsx` to use shadcn/ui Dialog directly instead of wrapping Modal:
+  - Preserved `await Confirm(message)` imperative API — returns `Promise<boolean>`
+  - Now appends temp div to `document.body` instead of `#portal` (Radix handles its own portal)
+  - Uses `Dialog`, `DialogContent`, `DialogHeader`, `DialogTitle`, `DialogDescription`, `DialogFooter`
+  - No changes needed to any of the 4 callsites (GridItem, AddOrEditListButton, AddAndRemoveFromSeenHistoryButton, GroupDetailPage)
+- Removed `<div id="modals"></div>` from `index.html` (was unused/legacy)
+- Updated `Modal.test.tsx`: Replaced `@react-spring/web` and `Portal` mocks with `radix-ui` mock that propagates `open` state through `__open` prop to Content
+- Updated `Confirm.test.tsx`: Replaced `Modal` mock with `radix-ui` mock, removed `#portal` DOM setup (Confirm now appends to `document.body`)
+- Updated `StarRating.test.tsx`: Replaced `@react-spring/web` and `Portal` mocks with `radix-ui` mock (BadgeRating uses Modal which now uses Dialog)
+
+### Files Changed
+- `client/package.json` + `client/package-lock.json` — added `radix-ui@^1.4.3`
+- `client/src/components/ui/dialog.tsx` — NEW: shadcn/ui Dialog component
+- `client/src/components/Modal.tsx` — complete rewrite to use Dialog
+- `client/src/components/Confirm.tsx` — complete rewrite to use Dialog directly
+- `client/index.html` — removed `<div id="modals"></div>`
+- `client/src/components/__tests__/Modal.test.tsx` — updated mocks for Radix Dialog
+- `client/src/components/__tests__/Confirm.test.tsx` — updated mocks for Radix Dialog
+- `client/src/components/__tests__/StarRating.test.tsx` — updated mocks for Radix Dialog
+
+### Verification
+- Typecheck: 0 errors
+- Tests: 73 suites, 1160 tests, all passing
+- Browser: Frontend loads without Dialog/Modal/Radix errors (backend-only errors from API 500s)
+
+### Learnings for Future Iterations
+- Radix Dialog `onOpenChange(false)` fires for both Escape key and overlay click — to disable one independently, use `onEscapeKeyDown(e.preventDefault())` and `onPointerDownOutside(e.preventDefault())` instead of blocking in `onOpenChange`
+- For test mocking, Radix Dialog needs `open` state propagated from Root to Content — use a `__open` prop via `React.cloneElement` in the Root mock to conditionally render Content
+- The `onAnimationEnd` callback on DialogContent fires after Radix's CSS close animation — use it as the equivalent of react-spring's `onRest` to trigger `onClosed` callbacks
+- shadcn/ui Dialog uses `radix-ui` (v1.4+) as the unified import, not individual `@radix-ui/react-dialog` packages
+- Other test files that mock `src/components/Modal` with a simplified render function (AddOrEditListButton, AddOrEditGroupButton, AddAndRemoveFromSeenHistoryButton, SelectLastSeenEpisode) still work because Modal's public API is unchanged
+- `#portal` div is still needed by FacetDrawer.tsx (will be removed in US-017 when FacetDrawer migrates to Sheet)
+
+---
+

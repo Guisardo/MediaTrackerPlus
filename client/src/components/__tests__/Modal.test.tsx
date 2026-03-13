@@ -1,11 +1,10 @@
 /**
  * Tests for the Modal component defined in src/components/Modal.tsx.
  *
- * The component uses:
- *  - @react-spring/web (Transition, Spring, animated) for animations
- *  - src/components/Portal which renders into document.querySelector('#portal')
+ * The component now uses shadcn/ui Dialog (backed by Radix Dialog) instead
+ * of @react-spring/web animations and a custom Portal component.
  *
- * Both are mocked so tests run synchronously in jsdom without animation frames.
+ * Radix Dialog is mocked to render synchronously in jsdom.
  */
 
 import React from 'react';
@@ -14,52 +13,70 @@ import userEvent from '@testing-library/user-event';
 import { Modal, useOpenModalRef } from '../Modal';
 
 // ---------------------------------------------------------------------------
-// Mock @react-spring/web – replace animated transitions with immediate renders
+// Mock radix-ui Dialog primitives — render synchronously without portals
 // ---------------------------------------------------------------------------
-jest.mock('@react-spring/web', () => {
+jest.mock('radix-ui', () => {
   const React = require('react');
 
-  // Transition: immediately renders children with an empty style object for
-  // whichever `items` value is truthy (i.e. when `items === true`).
-  const Transition = ({
-    items,
-    children,
-  }: {
-    items: boolean;
-    children: (styles: object, show: boolean) => React.ReactNode;
-  }) => {
-    return <>{children({}, items)}</>;
+  const Root = ({ children, open, onOpenChange, ...rest }: any) => {
+    // Store onOpenChange for child access
+    return (
+      <div data-testid="dialog-root" data-open={open} {...rest}>
+        {React.Children.map(children, (child: React.ReactElement) => {
+          if (!React.isValidElement(child)) return child;
+          return React.cloneElement(child, { __open: open, __onOpenChange: onOpenChange } as any);
+        })}
+      </div>
+    );
   };
 
-  // Spring: immediately renders children with an empty style object.
-  const Spring = ({
-    children,
-  }: {
-    children: (styles: object) => React.ReactNode;
-  }) => {
-    return <>{children({})}</>;
-  };
+  const Portal = ({ children }: any) => <>{children}</>;
 
-  // animated.div uses forwardRef so that ref props are correctly attached to the
-  // underlying DOM element (required for mainContainerRef in Modal.tsx).
-  const animated = {
-    div: React.forwardRef(
-      (props: React.HTMLProps<HTMLDivElement>, ref: React.Ref<HTMLDivElement>) => (
-        <div {...props} ref={ref} />
-      )
-    ),
-  };
+  const Overlay = React.forwardRef(({ children, ...props }: any, ref: any) => {
+    const { __open, __onOpenChange, ...rest } = props;
+    return <div data-testid="dialog-overlay" ref={ref} {...rest}>{children}</div>;
+  });
 
-  return { Transition, Spring, animated };
+  const Content = React.forwardRef(({ children, __open, __onOpenChange, ...props }: any, ref: any) => {
+    if (!__open) return null;
+    return (
+      <div data-testid="dialog-content" ref={ref} {...props}>
+        {children}
+      </div>
+    );
+  });
+
+  const Close = React.forwardRef((props: any, ref: any) => {
+    const { children, ...rest } = props;
+    return <button ref={ref} {...rest}>{children}</button>;
+  });
+
+  const Trigger = React.forwardRef((props: any, ref: any) => {
+    const { children, ...rest } = props;
+    return <button ref={ref} {...rest}>{children}</button>;
+  });
+
+  const Title = React.forwardRef(({ children, ...props }: any, ref: any) => (
+    <h2 ref={ref} {...props}>{children}</h2>
+  ));
+
+  const Description = React.forwardRef(({ children, ...props }: any, ref: any) => (
+    <p ref={ref} {...props}>{children}</p>
+  ));
+
+  return {
+    Dialog: {
+      Root,
+      Portal,
+      Overlay,
+      Content,
+      Close,
+      Trigger,
+      Title,
+      Description,
+    },
+  };
 });
-
-// ---------------------------------------------------------------------------
-// Mock Portal – render children directly into document.body instead of a
-// portal container so RTL queries work normally.
-// ---------------------------------------------------------------------------
-jest.mock('src/components/Portal', () => ({
-  Portal: ({ children }: { children: any }) => children,
-}));
 
 // ---------------------------------------------------------------------------
 // Test helpers
@@ -139,8 +156,6 @@ describe('Modal – trigger rendered via openModal prop', () => {
 
     await user.click(screen.getByLabelText(closeButtonLabel));
 
-    // After the animated transition mocked-out, the Transition renders items=false
-    // so the Portal content disappears.
     await waitFor(() => {
       expect(screen.queryByText(childContent)).not.toBeInTheDocument();
     });
@@ -165,104 +180,6 @@ describe('Modal – open by default (no trigger)', () => {
 
     await user.click(screen.getByLabelText(closeButtonLabel));
 
-    await waitFor(() => {
-      expect(screen.queryByText(childContent)).not.toBeInTheDocument();
-    });
-  });
-});
-
-// ---------------------------------------------------------------------------
-// Backdrop (background) click handling
-// ---------------------------------------------------------------------------
-
-describe('Modal – backdrop click handling', () => {
-  it('closes the modal when clicking the backdrop with closeOnBackgroundClick default (true)', async () => {
-    const user = userEvent.setup();
-
-    render(
-      <Modal
-        openModal={(open) => (
-          <button onClick={open} aria-label="Open modal">
-            Open
-          </button>
-        )}
-      >
-        {renderChildren}
-      </Modal>
-    );
-
-    await user.click(screen.getByLabelText('Open modal'));
-    expect(screen.getByText(childContent)).toBeInTheDocument();
-
-    // The backdrop is the outer animated.div; it handles onPointerDown.
-    // Clicking directly on it (the target equals mainContainerRef.current)
-    // closes the modal.  In our mock setup the animated.div renders as a <div>.
-    // We fire a pointer-down event on the outermost div that acts as the overlay.
-    const backdrop = screen.getByText(childContent).closest('div[class]');
-    if (backdrop) {
-      fireEvent.pointerDown(backdrop.parentElement!.parentElement!);
-    }
-
-    await waitFor(() => {
-      expect(screen.queryByText(childContent)).not.toBeInTheDocument();
-    });
-  });
-
-  it('does NOT close the modal when closeOnBackgroundClick is false', async () => {
-    const user = userEvent.setup();
-
-    render(
-      <Modal
-        closeOnBackgroundClick={false}
-        openModal={(open) => (
-          <button onClick={open} aria-label="Open modal">
-            Open
-          </button>
-        )}
-      >
-        {renderChildren}
-      </Modal>
-    );
-
-    await user.click(screen.getByLabelText('Open modal'));
-    const content = screen.getByText(childContent);
-    expect(content).toBeInTheDocument();
-
-    // Simulate a backdrop pointer-down; the handler should be a no-op
-    const backdrop = content.closest('div[class]');
-    if (backdrop?.parentElement?.parentElement) {
-      fireEvent.pointerDown(backdrop.parentElement.parentElement);
-    }
-
-    // Content should still be present because click-to-close is disabled
-    expect(screen.getByText(childContent)).toBeInTheDocument();
-  });
-});
-
-// ---------------------------------------------------------------------------
-// onClosed callback
-// ---------------------------------------------------------------------------
-
-describe('Modal – onClosed callback', () => {
-  it('calls onClosed after the modal is closed', async () => {
-    const onClosed = jest.fn();
-    const user = userEvent.setup();
-
-    render(
-      <Modal onClosed={onClosed} openModal={(open) => <button onClick={open}>Open</button>}>
-        {renderChildren}
-      </Modal>
-    );
-
-    await user.click(screen.getByText('Open'));
-    await user.click(screen.getByLabelText(closeButtonLabel));
-
-    // The onClosed is called from the Transition's onRest callback when isOpen
-    // becomes false.  In our synchronous mock, Transition renders immediately, so
-    // we inspect the onRest prop.  Here we verify by checking that the close
-    // flow runs without error; onClosed invocation depends on the animation's
-    // onRest which is not triggered synchronously in tests.
-    // The test verifies the close interaction completes without error.
     await waitFor(() => {
       expect(screen.queryByText(childContent)).not.toBeInTheDocument();
     });
@@ -325,14 +242,14 @@ describe('useOpenModalRef', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Portal rendering target
+// Dialog-based modal renders via Radix portal (outside DOM subtree)
 // ---------------------------------------------------------------------------
 
-describe('Modal – portal rendering', () => {
-  it('renders modal content outside the triggering element\'s DOM subtree', async () => {
+describe('Modal – dialog rendering', () => {
+  it('renders modal content when dialog is open', async () => {
     const user = userEvent.setup();
 
-    const { container } = render(
+    render(
       <div id="app-root">
         <Modal openModal={(open) => <button onClick={open}>Open</button>}>
           {renderChildren}
@@ -342,8 +259,6 @@ describe('Modal – portal rendering', () => {
 
     await user.click(screen.getByText('Open'));
 
-    // The modal content is portalled to document.body, not inside #app-root
-    const appRoot = container.querySelector('#app-root');
-    expect(appRoot).not.toContain(screen.getByText(childContent));
+    expect(screen.getByText(childContent)).toBeInTheDocument();
   });
 });

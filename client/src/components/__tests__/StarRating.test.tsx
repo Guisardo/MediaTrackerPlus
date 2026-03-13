@@ -35,24 +35,45 @@ jest.mock('src/App', () => ({
   },
 }));
 
-// Modal and its peer deps – StarRating itself does NOT render Modal directly,
-// but the file also exports BadgeRating which does. We only test StarRating.
-jest.mock('@react-spring/web', () => {
+// Mock radix-ui Dialog primitives — Modal.tsx now uses shadcn/ui Dialog
+// (backed by Radix) instead of @react-spring/web + Portal.
+jest.mock('radix-ui', () => {
   const React = require('react');
+
+  const Root = ({ children, open, onOpenChange, ...rest }: any) => (
+    <div data-testid="dialog-root" {...rest}>
+      {React.Children.map(children, (child: React.ReactElement) => {
+        if (!React.isValidElement(child)) return child;
+        return React.cloneElement(child, { __open: open, __onOpenChange: onOpenChange } as any);
+      })}
+    </div>
+  );
+
+  const Portal = ({ children }: any) => <>{children}</>;
+  const Overlay = React.forwardRef(({ children, __open, __onOpenChange, ...props }: any, ref: any) => (
+    <div ref={ref} {...props}>{children}</div>
+  ));
+  const Content = React.forwardRef(({ children, __open, __onOpenChange, ...props }: any, ref: any) => {
+    if (!__open) return null;
+    return <div ref={ref} {...props}>{children}</div>;
+  });
+  const Close = React.forwardRef(({ children, ...props }: any, ref: any) => (
+    <button ref={ref} {...props}>{children}</button>
+  ));
+  const Trigger = React.forwardRef(({ children, ...props }: any, ref: any) => (
+    <button ref={ref} {...props}>{children}</button>
+  ));
+  const Title = React.forwardRef(({ children, ...props }: any, ref: any) => (
+    <h2 ref={ref} {...props}>{children}</h2>
+  ));
+  const Description = React.forwardRef(({ children, ...props }: any, ref: any) => (
+    <p ref={ref} {...props}>{children}</p>
+  ));
+
   return {
-    Transition: ({ items, children }: { items: boolean; children: (s: object, show: boolean) => React.ReactNode }) =>
-      <>{children({}, items)}</>,
-    Spring: ({ children }: { children: (s: object) => React.ReactNode }) =>
-      <>{children({})}</>,
-    animated: {
-      div: (props: React.HTMLProps<HTMLDivElement>) => <div {...props} />,
-    },
+    Dialog: { Root, Portal, Overlay, Content, Close, Trigger, Title, Description },
   };
 });
-
-jest.mock('src/components/Portal', () => ({
-  Portal: ({ children }: { children: any }) => children,
-}));
 
 jest.mock('src/components/SelectSeenDate', () => {
   const React = require('react');
