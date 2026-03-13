@@ -306,11 +306,11 @@ msgstr "Audible language"
 
 #: src/components/Facets/ActiveFacetChips.tsx:76
 #: src/components/Facets/MediaTypeSection.tsx:24
-#: src/components/GridItem.tsx:79
+#: src/components/GridItem.tsx:91
 msgid "Audiobook"
 msgstr "Audiobook"
 
-#: src/components/Nav.tsx:42
+#: src/components/Nav.tsx:41
 #: src/components/Statistics/StatisticsSegment.tsx:189
 msgid "Audiobooks"
 msgstr "Audiobooks"
@@ -334,17 +334,17 @@ msgstr "Avoid season spoilers"
 
 #: src/components/Facets/ActiveFacetChips.tsx:74
 #: src/components/Facets/MediaTypeSection.tsx:22
-#: src/components/GridItem.tsx:80
+#: src/components/GridItem.tsx:92
 msgid "Book"
 msgstr "Book"
 
-#: src/components/Nav.tsx:41
+#: src/components/Nav.tsx:40
 #: src/components/Statistics/StatisticsSegment.tsx:150
 #: src/pages/import/Goodreads.tsx:65
 msgid "Books"
 msgstr "Books"
 
-#: src/components/Nav.tsx:48
+#: src/components/Nav.tsx:47
 msgid "Calendar"
 msgstr "Calendar"
 
@@ -360,7 +360,7 @@ msgid "Change password"
 msgstr "Change password"
 
 #: src/components/Facets/ActiveFacetChips.tsx:331
-#: src/components/Facets/FacetDrawer.tsx:93
+#: src/components/Facets/FacetDrawer.tsx:72
 msgid "Clear all"
 msgstr "Clear all"
 
@@ -466,7 +466,7 @@ msgstr "Developer"
 msgid "Director"
 msgstr "Director"
 
-#: src/components/Nav.tsx:159
+#: src/components/Nav.tsx:161
 msgid "Do you really want to logout?"
 msgstr "Do you really want to logout?"
 
@@ -524,7 +524,7 @@ msgstr "Failed to add member. They may already be in the group."
 msgid "Failed to load group. It may have been deleted."
 msgstr "Failed to load group. It may have been deleted."
 
-#: src/components/Facets/FacetDrawer.tsx:82
+#: src/components/Facets/FacetDrawer.tsx:61
 #: src/components/Facets/FacetMobileButton.tsx:36
 #: src/components/Facets/FacetPanel.tsx:31
 msgid "Filters"
@@ -534,7 +534,7 @@ msgstr "Filters"
 msgid "First unwatched episode"
 msgstr "First unwatched episode"
 
-#: src/components/Nav.tsx:40
+#: src/components/Nav.tsx:39
 #: src/components/Statistics/StatisticsGenreSegment.tsx:19
 #: src/components/Statistics/StatisticsSegment.tsx:111
 msgid "Games"
@@ -571,7 +571,7 @@ msgstr "Gotify server url"
 msgid "Group name"
 msgstr "Group name"
 
-#: src/components/Nav.tsx:51
+#: src/components/Nav.tsx:50
 msgid "Groups"
 msgstr "Groups"
 
@@ -583,7 +583,7 @@ msgstr "Hide overview of unseen seasons"
 msgid "Hide title of unseen episodes"
 msgstr "Hide title of unseen episodes"
 
-#: src/components/Nav.tsx:37
+#: src/components/Nav.tsx:36
 #: src/i18n/__tests__/i18n.test.ts:65
 msgid "Home"
 msgstr "Home"
@@ -637,7 +637,7 @@ msgstr "IGDB credentials"
 msgid "import"
 msgstr "import"
 
-#: src/components/Nav.tsx:49
+#: src/components/Nav.tsx:48
 msgid "Import"
 msgstr "Import"
 
@@ -654,7 +654,7 @@ msgstr "Imported"
 msgid "Importing"
 msgstr "Importing"
 
-#: src/components/Nav.tsx:44
+#: src/components/Nav.tsx:43
 msgid "In progress"
 msgstr "In progress"
 
@@ -748,7 +748,7 @@ msgstr "Listened at {0}"
 msgid "Listened history"
 msgstr "Listened history"
 
-#: src/components/Nav.tsx:50
+#: src/components/Nav.tsx:49
 msgid "Lists"
 msgstr "Lists"
 
@@ -776,7 +776,7 @@ msgstr "Loading"
 msgid "Login"
 msgstr "Login"
 
-#: src/components/Nav.tsx:164
+#: src/components/Nav.tsx:166
 #: src/i18n/__tests__/i18n.test.ts:56
 msgid "Logout"
 msgstr "Logout"
@@ -816,12 +816,12 @@ msgstr "Minimum year"
 
 #: src/components/Facets/ActiveFacetChips.tsx:70
 #: src/components/Facets/MediaTypeSection.tsx:18
-#: src/components/GridItem.tsx:81
+#: src/components/GridItem.tsx:93
 msgid "Movie"
 msgstr "Movie"
 
 #: src/components/ImportSummaryTable.tsx:90
-#: src/components/Nav.tsx:39
+#: src/components/Nav.tsx:38
 #: src/components/Statistics/StatisticsGenreSegment.tsx:16
 #: src/components/Statistics/StatisticsSegment.tsx:72
 msgid "Movies"
@@ -1001,7 +1001,7 @@ msgstr "Public reviews"
 msgid "Publisher"
 msgstr "Publisher"
 
-#: src/components/Nav.tsx:46
+#: src/components/Nav.tsx:45
 msgid "Random"
 msgstr "Random"
 
@@ -1120,7 +1120,7 @@ msgstr "Recommended"
 msgid "Register"
 msgstr "Register"
 
-#: src/components/GridItem.tsx:240
+#: src/components/GridItem.tsx:245
 msgid "Release <0/>"
 msgstr "Release <0/>"
 
@@ -1131,7 +1131,7 @@ msgstr "Release <0/>"
 msgid "Release date"
 msgstr "Release date"
 
-#: src/components/GridItem.tsx:258
+#: src/components/GridItem.tsx:263
 msgid "Released <0/>"
 msgstr "Released <0/>"
 
@@ -1141,7 +1141,7 @@ msgstr "Remove"
 
 #. placeholder {0}: mediaItem.title
 #. placeholder {1}: season ? ' ' + formatSeasonNumber(season) : episode ? ' ' + formatEpisodeNumber(episode) : ''
-#: src/components/GridItem.tsx:125
+#: src/components/GridItem.tsx:136
 msgid "Remove \"{0}{1}\" from watchlist?"
 msgstr "Remove \"{0}{1}\" from watchlist?"
 
@@ -1395,7 +1395,7 @@ msgstr "Source"
 msgid "Start over"
 msgstr "Start over"
 
-#: src/components/Nav.tsx:47
+#: src/components/Nav.tsx:46
 #: src/pages/Statistics.tsx:111
 msgid "Statistics"
 msgstr "Statistics"
@@ -1442,8 +1442,8 @@ msgstr "Topic"
 msgid "Total runtime"
 msgstr "Total runtime"
 
-#: src/components/GridItem.tsx:82
-#: src/components/Nav.tsx:38
+#: src/components/GridItem.tsx:94
+#: src/components/Nav.tsx:37
 #: src/components/Statistics/StatisticsGenreSegment.tsx:15
 #: src/components/Statistics/StatisticsSegment.tsx:33
 msgid "Tv"
@@ -1473,7 +1473,7 @@ msgstr "Unseen episodes"
 msgid "Unseen episodes count"
 msgstr "Unseen episodes count"
 
-#: src/components/Nav.tsx:43
+#: src/components/Nav.tsx:42
 #: src/pages/Home.tsx:75
 msgid "Upcoming"
 msgstr "Upcoming"
@@ -1497,7 +1497,7 @@ msgstr "Version"
 
 #: src/components/Facets/ActiveFacetChips.tsx:78
 #: src/components/Facets/MediaTypeSection.tsx:26
-#: src/components/GridItem.tsx:83
+#: src/components/GridItem.tsx:95
 msgid "Video game"
 msgstr "Video game"
 
@@ -1522,7 +1522,7 @@ msgstr "Warning"
 msgid "Watched"
 msgstr "Watched"
 
-#: src/components/Nav.tsx:45
+#: src/components/Nav.tsx:44
 #: src/pages/import/TraktTv.tsx:181
 #: src/utils.ts:157
 msgid "Watchlist"

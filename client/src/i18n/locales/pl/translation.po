@@ -306,11 +306,11 @@ msgstr "Język Audible"
 
 #: src/components/Facets/ActiveFacetChips.tsx:76
 #: src/components/Facets/MediaTypeSection.tsx:24
-#: src/components/GridItem.tsx:79
+#: src/components/GridItem.tsx:91
 msgid "Audiobook"
 msgstr "Audiobook"
 
-#: src/components/Nav.tsx:42
+#: src/components/Nav.tsx:41
 #: src/components/Statistics/StatisticsSegment.tsx:189
 msgid "Audiobooks"
 msgstr "Audiobooki"
@@ -334,17 +334,17 @@ msgstr "Unikaj spoilerów sezonu"
 
 #: src/components/Facets/ActiveFacetChips.tsx:74
 #: src/components/Facets/MediaTypeSection.tsx:22
-#: src/components/GridItem.tsx:80
+#: src/components/GridItem.tsx:92
 msgid "Book"
 msgstr "Książka"
 
-#: src/components/Nav.tsx:41
+#: src/components/Nav.tsx:40
 #: src/components/Statistics/StatisticsSegment.tsx:150
 #: src/pages/import/Goodreads.tsx:65
 msgid "Books"
 msgstr "Książki"
 
-#: src/components/Nav.tsx:48
+#: src/components/Nav.tsx:47
 msgid "Calendar"
 msgstr "Kalendarz"
 
@@ -360,7 +360,7 @@ msgid "Change password"
 msgstr "Zmień hasło"
 
 #: src/components/Facets/ActiveFacetChips.tsx:331
-#: src/components/Facets/FacetDrawer.tsx:93
+#: src/components/Facets/FacetDrawer.tsx:72
 msgid "Clear all"
 msgstr "Wyczyść wszystko"
 
@@ -466,7 +466,7 @@ msgstr "Deweloper"
 msgid "Director"
 msgstr "Reżyser"
 
-#: src/components/Nav.tsx:159
+#: src/components/Nav.tsx:161
 msgid "Do you really want to logout?"
 msgstr "Czy na pewno chcesz się wylogować?"
 
@@ -524,7 +524,7 @@ msgstr ""
 msgid "Failed to load group. It may have been deleted."
 msgstr ""
 
-#: src/components/Facets/FacetDrawer.tsx:82
+#: src/components/Facets/FacetDrawer.tsx:61
 #: src/components/Facets/FacetMobileButton.tsx:36
 #: src/components/Facets/FacetPanel.tsx:31
 msgid "Filters"
@@ -534,7 +534,7 @@ msgstr "Filtry"
 msgid "First unwatched episode"
 msgstr "Pierwszy nieobejrzany odcinek"
 
-#: src/components/Nav.tsx:40
+#: src/components/Nav.tsx:39
 #: src/components/Statistics/StatisticsGenreSegment.tsx:19
 #: src/components/Statistics/StatisticsSegment.tsx:111
 msgid "Games"
@@ -571,7 +571,7 @@ msgstr "Adres URL serwera Gotify"
 msgid "Group name"
 msgstr ""
 
-#: src/components/Nav.tsx:51
+#: src/components/Nav.tsx:50
 msgid "Groups"
 msgstr ""
 
@@ -583,7 +583,7 @@ msgstr "Ukryj przegląd niewidzianych sezonów"
 msgid "Hide title of unseen episodes"
 msgstr "Ukryj tytuł nieobejrzanych odcinków"
 
-#: src/components/Nav.tsx:37
+#: src/components/Nav.tsx:36
 #: src/i18n/__tests__/i18n.test.ts:65
 msgid "Home"
 msgstr "Strona główna"
@@ -637,7 +637,7 @@ msgstr "Poświadczenia IGDB"
 msgid "import"
 msgstr "importuj"
 
-#: src/components/Nav.tsx:49
+#: src/components/Nav.tsx:48
 msgid "Import"
 msgstr "Importuj"
 
@@ -654,7 +654,7 @@ msgstr "Zaimportowano"
 msgid "Importing"
 msgstr "Importowanie"
 
-#: src/components/Nav.tsx:44
+#: src/components/Nav.tsx:43
 msgid "In progress"
 msgstr "W trakcie"
 
@@ -748,7 +748,7 @@ msgstr "Słuchano w {0}"
 msgid "Listened history"
 msgstr "Historia słuchanych"
 
-#: src/components/Nav.tsx:50
+#: src/components/Nav.tsx:49
 msgid "Lists"
 msgstr "Listy"
 
@@ -776,7 +776,7 @@ msgstr "Ładowanie"
 msgid "Login"
 msgstr "Zaloguj się"
 
-#: src/components/Nav.tsx:164
+#: src/components/Nav.tsx:166
 #: src/i18n/__tests__/i18n.test.ts:56
 msgid "Logout"
 msgstr "Wyloguj się"
@@ -816,12 +816,12 @@ msgstr "Minimalny rok"
 
 #: src/components/Facets/ActiveFacetChips.tsx:70
 #: src/components/Facets/MediaTypeSection.tsx:18
-#: src/components/GridItem.tsx:81
+#: src/components/GridItem.tsx:93
 msgid "Movie"
 msgstr "Film"
 
 #: src/components/ImportSummaryTable.tsx:90
-#: src/components/Nav.tsx:39
+#: src/components/Nav.tsx:38
 #: src/components/Statistics/StatisticsGenreSegment.tsx:16
 #: src/components/Statistics/StatisticsSegment.tsx:72
 msgid "Movies"
@@ -1001,7 +1001,7 @@ msgstr "Publiczne recenzje"
 msgid "Publisher"
 msgstr "Wydawca"
 
-#: src/components/Nav.tsx:46
+#: src/components/Nav.tsx:45
 msgid "Random"
 msgstr "Losowy"
 
@@ -1120,7 +1120,7 @@ msgstr "Polecane"
 msgid "Register"
 msgstr "Rejestr"
 
-#: src/components/GridItem.tsx:240
+#: src/components/GridItem.tsx:245
 msgid "Release <0/>"
 msgstr "Wydanie <0/>"
 
@@ -1131,7 +1131,7 @@ msgstr "Wydanie <0/>"
 msgid "Release date"
 msgstr "Data premiery"
 
-#: src/components/GridItem.tsx:258
+#: src/components/GridItem.tsx:263
 msgid "Released <0/>"
 msgstr "Wydano <0/>"
 
@@ -1141,7 +1141,7 @@ msgstr ""
 
 #. placeholder {0}: mediaItem.title
 #. placeholder {1}: season ? ' ' + formatSeasonNumber(season) : episode ? ' ' + formatEpisodeNumber(episode) : ''
-#: src/components/GridItem.tsx:125
+#: src/components/GridItem.tsx:136
 msgid "Remove \"{0}{1}\" from watchlist?"
 msgstr "Usunąć \"{0}{1}\" z listy obserwowanych?"
 
@@ -1395,7 +1395,7 @@ msgstr "Źródło"
 msgid "Start over"
 msgstr "Zacznij od nowa"
 
-#: src/components/Nav.tsx:47
+#: src/components/Nav.tsx:46
 #: src/pages/Statistics.tsx:111
 msgid "Statistics"
 msgstr "Statystyki"
@@ -1442,8 +1442,8 @@ msgstr "Temat"
 msgid "Total runtime"
 msgstr "Całkowity czas trwania"
 
-#: src/components/GridItem.tsx:82
-#: src/components/Nav.tsx:38
+#: src/components/GridItem.tsx:94
+#: src/components/Nav.tsx:37
 #: src/components/Statistics/StatisticsGenreSegment.tsx:15
 #: src/components/Statistics/StatisticsSegment.tsx:33
 msgid "Tv"
@@ -1473,7 +1473,7 @@ msgstr "Nieobejrzane odcinki"
 msgid "Unseen episodes count"
 msgstr "Liczba nieobejrzanych odcinków"
 
-#: src/components/Nav.tsx:43
+#: src/components/Nav.tsx:42
 #: src/pages/Home.tsx:75
 msgid "Upcoming"
 msgstr "Wkrótce"
@@ -1497,7 +1497,7 @@ msgstr "Wersja"
 
 #: src/components/Facets/ActiveFacetChips.tsx:78
 #: src/components/Facets/MediaTypeSection.tsx:26
-#: src/components/GridItem.tsx:83
+#: src/components/GridItem.tsx:95
 msgid "Video game"
 msgstr "Gra wideo"
 
@@ -1522,7 +1522,7 @@ msgstr "Uwaga"
 msgid "Watched"
 msgstr "Obejrzane"
 
-#: src/components/Nav.tsx:45
+#: src/components/Nav.tsx:44
 #: src/pages/import/TraktTv.tsx:181
 #: src/utils.ts:157
 msgid "Watchlist"

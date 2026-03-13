@@ -306,11 +306,11 @@ msgstr "لغة Audible"
 
 #: src/components/Facets/ActiveFacetChips.tsx:76
 #: src/components/Facets/MediaTypeSection.tsx:24
-#: src/components/GridItem.tsx:79
+#: src/components/GridItem.tsx:91
 msgid "Audiobook"
 msgstr "كتاب صوتي"
 
-#: src/components/Nav.tsx:42
+#: src/components/Nav.tsx:41
 #: src/components/Statistics/StatisticsSegment.tsx:189
 msgid "Audiobooks"
 msgstr "كتب صوتية"
@@ -334,17 +334,17 @@ msgstr "تجنب الحرق للمواسم"
 
 #: src/components/Facets/ActiveFacetChips.tsx:74
 #: src/components/Facets/MediaTypeSection.tsx:22
-#: src/components/GridItem.tsx:80
+#: src/components/GridItem.tsx:92
 msgid "Book"
 msgstr "كتاب"
 
-#: src/components/Nav.tsx:41
+#: src/components/Nav.tsx:40
 #: src/components/Statistics/StatisticsSegment.tsx:150
 #: src/pages/import/Goodreads.tsx:65
 msgid "Books"
 msgstr "كتب"
 
-#: src/components/Nav.tsx:48
+#: src/components/Nav.tsx:47
 msgid "Calendar"
 msgstr "تقويم"
 
@@ -360,7 +360,7 @@ msgid "Change password"
 msgstr "تغيير كلمة المرور"
 
 #: src/components/Facets/ActiveFacetChips.tsx:331
-#: src/components/Facets/FacetDrawer.tsx:93
+#: src/components/Facets/FacetDrawer.tsx:72
 msgid "Clear all"
 msgstr "مسح الكل"
 
@@ -466,7 +466,7 @@ msgstr "المطور"
 msgid "Director"
 msgstr "المخرج"
 
-#: src/components/Nav.tsx:159
+#: src/components/Nav.tsx:161
 msgid "Do you really want to logout?"
 msgstr "هل تريد فعلاً تسجيل الخروج؟"
 
@@ -524,7 +524,7 @@ msgstr ""
 msgid "Failed to load group. It may have been deleted."
 msgstr ""
 
-#: src/components/Facets/FacetDrawer.tsx:82
+#: src/components/Facets/FacetDrawer.tsx:61
 #: src/components/Facets/FacetMobileButton.tsx:36
 #: src/components/Facets/FacetPanel.tsx:31
 msgid "Filters"
@@ -534,7 +534,7 @@ msgstr "المرشحات"
 msgid "First unwatched episode"
 msgstr "أول حلقة لم تُشاهَد"
 
-#: src/components/Nav.tsx:40
+#: src/components/Nav.tsx:39
 #: src/components/Statistics/StatisticsGenreSegment.tsx:19
 #: src/components/Statistics/StatisticsSegment.tsx:111
 msgid "Games"
@@ -571,7 +571,7 @@ msgstr "رابط خادم Gotify"
 msgid "Group name"
 msgstr ""
 
-#: src/components/Nav.tsx:51
+#: src/components/Nav.tsx:50
 msgid "Groups"
 msgstr ""
 
@@ -583,7 +583,7 @@ msgstr "إخفاء نظرة عامة على المواسم غير المشاهد
 msgid "Hide title of unseen episodes"
 msgstr "إخفاء عنوان الحلقات غير المشاهدة"
 
-#: src/components/Nav.tsx:37
+#: src/components/Nav.tsx:36
 #: src/i18n/__tests__/i18n.test.ts:65
 msgid "Home"
 msgstr "الرئيسية"
@@ -637,7 +637,7 @@ msgstr "بيانات اعتماد IGDB"
 msgid "import"
 msgstr "استيراد"
 
-#: src/components/Nav.tsx:49
+#: src/components/Nav.tsx:48
 msgid "Import"
 msgstr "استيراد"
 
@@ -654,7 +654,7 @@ msgstr "تم الاستيراد"
 msgid "Importing"
 msgstr "جارٍ الاستيراد"
 
-#: src/components/Nav.tsx:44
+#: src/components/Nav.tsx:43
 msgid "In progress"
 msgstr "قيد التنفيذ"
 
@@ -748,7 +748,7 @@ msgstr "استُمع في {0}"
 msgid "Listened history"
 msgstr "سجل الاستماع"
 
-#: src/components/Nav.tsx:50
+#: src/components/Nav.tsx:49
 msgid "Lists"
 msgstr "القوائم"
 
@@ -776,7 +776,7 @@ msgstr "جارٍ التحميل"
 msgid "Login"
 msgstr "تسجيل الدخول"
 
-#: src/components/Nav.tsx:164
+#: src/components/Nav.tsx:166
 #: src/i18n/__tests__/i18n.test.ts:56
 msgid "Logout"
 msgstr "تسجيل الخروج"
@@ -816,12 +816,12 @@ msgstr "السنة الدنيا"
 
 #: src/components/Facets/ActiveFacetChips.tsx:70
 #: src/components/Facets/MediaTypeSection.tsx:18
-#: src/components/GridItem.tsx:81
+#: src/components/GridItem.tsx:93
 msgid "Movie"
 msgstr "فيلم"
 
 #: src/components/ImportSummaryTable.tsx:90
-#: src/components/Nav.tsx:39
+#: src/components/Nav.tsx:38
 #: src/components/Statistics/StatisticsGenreSegment.tsx:16
 #: src/components/Statistics/StatisticsSegment.tsx:72
 msgid "Movies"
@@ -1001,7 +1001,7 @@ msgstr "المراجعات العامة"
 msgid "Publisher"
 msgstr "الناشر"
 
-#: src/components/Nav.tsx:46
+#: src/components/Nav.tsx:45
 msgid "Random"
 msgstr "عشوائي"
 
@@ -1120,7 +1120,7 @@ msgstr "موصى به"
 msgid "Register"
 msgstr "تسجيل"
 
-#: src/components/GridItem.tsx:240
+#: src/components/GridItem.tsx:245
 msgid "Release <0/>"
 msgstr "الإصدار <0/>"
 
@@ -1131,7 +1131,7 @@ msgstr "الإصدار <0/>"
 msgid "Release date"
 msgstr "تاريخ الإصدار"
 
-#: src/components/GridItem.tsx:258
+#: src/components/GridItem.tsx:263
 msgid "Released <0/>"
 msgstr "صدر <0/>"
 
@@ -1141,7 +1141,7 @@ msgstr ""
 
 #. placeholder {0}: mediaItem.title
 #. placeholder {1}: season ? ' ' + formatSeasonNumber(season) : episode ? ' ' + formatEpisodeNumber(episode) : ''
-#: src/components/GridItem.tsx:125
+#: src/components/GridItem.tsx:136
 msgid "Remove \"{0}{1}\" from watchlist?"
 msgstr "إزالة \"{0}{1}\" من قائمة المتابعة؟"
 
@@ -1395,7 +1395,7 @@ msgstr "المصدر"
 msgid "Start over"
 msgstr "ابدأ من جديد"
 
-#: src/components/Nav.tsx:47
+#: src/components/Nav.tsx:46
 #: src/pages/Statistics.tsx:111
 msgid "Statistics"
 msgstr "إحصاءات"
@@ -1442,8 +1442,8 @@ msgstr "الموضوع"
 msgid "Total runtime"
 msgstr "إجمالي وقت التشغيل"
 
-#: src/components/GridItem.tsx:82
-#: src/components/Nav.tsx:38
+#: src/components/GridItem.tsx:94
+#: src/components/Nav.tsx:37
 #: src/components/Statistics/StatisticsGenreSegment.tsx:15
 #: src/components/Statistics/StatisticsSegment.tsx:33
 msgid "Tv"
@@ -1473,7 +1473,7 @@ msgstr "حلقات لم تُشاهَد"
 msgid "Unseen episodes count"
 msgstr "عدد الحلقات غير المشاهدة"
 
-#: src/components/Nav.tsx:43
+#: src/components/Nav.tsx:42
 #: src/pages/Home.tsx:75
 msgid "Upcoming"
 msgstr "قادم"
@@ -1497,7 +1497,7 @@ msgstr "الإصدار"
 
 #: src/components/Facets/ActiveFacetChips.tsx:78
 #: src/components/Facets/MediaTypeSection.tsx:26
-#: src/components/GridItem.tsx:83
+#: src/components/GridItem.tsx:95
 msgid "Video game"
 msgstr "لعبة فيديو"
 
@@ -1522,7 +1522,7 @@ msgstr "تحذير"
 msgid "Watched"
 msgstr "مشاهَد"
 
-#: src/components/Nav.tsx:45
+#: src/components/Nav.tsx:44
 #: src/pages/import/TraktTv.tsx:181
 #: src/utils.ts:157
 msgid "Watchlist"

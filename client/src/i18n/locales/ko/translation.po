@@ -306,11 +306,11 @@ msgstr "Audible 언어"
 
 #: src/components/Facets/ActiveFacetChips.tsx:76
 #: src/components/Facets/MediaTypeSection.tsx:24
-#: src/components/GridItem.tsx:79
+#: src/components/GridItem.tsx:91
 msgid "Audiobook"
 msgstr "오디오북"
 
-#: src/components/Nav.tsx:42
+#: src/components/Nav.tsx:41
 #: src/components/Statistics/StatisticsSegment.tsx:189
 msgid "Audiobooks"
 msgstr "오디오북"
@@ -334,17 +334,17 @@ msgstr "시즌 스포일러 방지"
 
 #: src/components/Facets/ActiveFacetChips.tsx:74
 #: src/components/Facets/MediaTypeSection.tsx:22
-#: src/components/GridItem.tsx:80
+#: src/components/GridItem.tsx:92
 msgid "Book"
 msgstr "책"
 
-#: src/components/Nav.tsx:41
+#: src/components/Nav.tsx:40
 #: src/components/Statistics/StatisticsSegment.tsx:150
 #: src/pages/import/Goodreads.tsx:65
 msgid "Books"
 msgstr "책"
 
-#: src/components/Nav.tsx:48
+#: src/components/Nav.tsx:47
 msgid "Calendar"
 msgstr "달력"
 
@@ -360,7 +360,7 @@ msgid "Change password"
 msgstr "비밀번호 변경"
 
 #: src/components/Facets/ActiveFacetChips.tsx:331
-#: src/components/Facets/FacetDrawer.tsx:93
+#: src/components/Facets/FacetDrawer.tsx:72
 msgid "Clear all"
 msgstr "모두 지우기"
 
@@ -466,7 +466,7 @@ msgstr "개발자"
 msgid "Director"
 msgstr "감독"
 
-#: src/components/Nav.tsx:159
+#: src/components/Nav.tsx:161
 msgid "Do you really want to logout?"
 msgstr "정말로 로그아웃하시겠습니까?"
 
@@ -524,7 +524,7 @@ msgstr ""
 msgid "Failed to load group. It may have been deleted."
 msgstr ""
 
-#: src/components/Facets/FacetDrawer.tsx:82
+#: src/components/Facets/FacetDrawer.tsx:61
 #: src/components/Facets/FacetMobileButton.tsx:36
 #: src/components/Facets/FacetPanel.tsx:31
 msgid "Filters"
@@ -534,7 +534,7 @@ msgstr "필터"
 msgid "First unwatched episode"
 msgstr "다음 에피소드"
 
-#: src/components/Nav.tsx:40
+#: src/components/Nav.tsx:39
 #: src/components/Statistics/StatisticsGenreSegment.tsx:19
 #: src/components/Statistics/StatisticsSegment.tsx:111
 msgid "Games"
@@ -571,7 +571,7 @@ msgstr "Gotify 서버 URL"
 msgid "Group name"
 msgstr ""
 
-#: src/components/Nav.tsx:51
+#: src/components/Nav.tsx:50
 msgid "Groups"
 msgstr ""
 
@@ -583,7 +583,7 @@ msgstr "시청하지 않은 시즌의 내용 숨기기"
 msgid "Hide title of unseen episodes"
 msgstr "시청하지 않은 에피소드 제목 숨기기"
 
-#: src/components/Nav.tsx:37
+#: src/components/Nav.tsx:36
 #: src/i18n/__tests__/i18n.test.ts:65
 msgid "Home"
 msgstr "홈"
@@ -637,7 +637,7 @@ msgstr "IGDB 자격 증명"
 msgid "import"
 msgstr "가져오기"
 
-#: src/components/Nav.tsx:49
+#: src/components/Nav.tsx:48
 msgid "Import"
 msgstr "가져오기"
 
@@ -654,7 +654,7 @@ msgstr "가져옴"
 msgid "Importing"
 msgstr "가져오는 중"
 
-#: src/components/Nav.tsx:44
+#: src/components/Nav.tsx:43
 msgid "In progress"
 msgstr "진행 중"
 
@@ -748,7 +748,7 @@ msgstr "{0} 감상"
 msgid "Listened history"
 msgstr "감상 기록"
 
-#: src/components/Nav.tsx:50
+#: src/components/Nav.tsx:49
 msgid "Lists"
 msgstr "목록"
 
@@ -776,7 +776,7 @@ msgstr "불러오는 중"
 msgid "Login"
 msgstr "로그인"
 
-#: src/components/Nav.tsx:164
+#: src/components/Nav.tsx:166
 #: src/i18n/__tests__/i18n.test.ts:56
 msgid "Logout"
 msgstr "로그아웃"
@@ -816,12 +816,12 @@ msgstr "최소 연도"
 
 #: src/components/Facets/ActiveFacetChips.tsx:70
 #: src/components/Facets/MediaTypeSection.tsx:18
-#: src/components/GridItem.tsx:81
+#: src/components/GridItem.tsx:93
 msgid "Movie"
 msgstr "영화"
 
 #: src/components/ImportSummaryTable.tsx:90
-#: src/components/Nav.tsx:39
+#: src/components/Nav.tsx:38
 #: src/components/Statistics/StatisticsGenreSegment.tsx:16
 #: src/components/Statistics/StatisticsSegment.tsx:72
 msgid "Movies"
@@ -1001,7 +1001,7 @@ msgstr "공개 리뷰"
 msgid "Publisher"
 msgstr "출판사"
 
-#: src/components/Nav.tsx:46
+#: src/components/Nav.tsx:45
 msgid "Random"
 msgstr "무작위"
 
@@ -1120,7 +1120,7 @@ msgstr "추천"
 msgid "Register"
 msgstr "회원가입"
 
-#: src/components/GridItem.tsx:240
+#: src/components/GridItem.tsx:245
 msgid "Release <0/>"
 msgstr "<0/>에 출시"
 
@@ -1131,7 +1131,7 @@ msgstr "<0/>에 출시"
 msgid "Release date"
 msgstr "출시일"
 
-#: src/components/GridItem.tsx:258
+#: src/components/GridItem.tsx:263
 msgid "Released <0/>"
 msgstr "<0/>에 출시됨"
 
@@ -1141,7 +1141,7 @@ msgstr ""
 
 #. placeholder {0}: mediaItem.title
 #. placeholder {1}: season ? ' ' + formatSeasonNumber(season) : episode ? ' ' + formatEpisodeNumber(episode) : ''
-#: src/components/GridItem.tsx:125
+#: src/components/GridItem.tsx:136
 msgid "Remove \"{0}{1}\" from watchlist?"
 msgstr "\"{0}{1}\"을(를) 관심 목록에서 삭제하시겠습니까?"
 
@@ -1395,7 +1395,7 @@ msgstr "출처"
 msgid "Start over"
 msgstr "다시 시작"
 
-#: src/components/Nav.tsx:47
+#: src/components/Nav.tsx:46
 #: src/pages/Statistics.tsx:111
 msgid "Statistics"
 msgstr "통계"
@@ -1442,8 +1442,8 @@ msgstr "Topic"
 msgid "Total runtime"
 msgstr "전체 러닝타임"
 
-#: src/components/GridItem.tsx:82
-#: src/components/Nav.tsx:38
+#: src/components/GridItem.tsx:94
+#: src/components/Nav.tsx:37
 #: src/components/Statistics/StatisticsGenreSegment.tsx:15
 #: src/components/Statistics/StatisticsSegment.tsx:33
 msgid "Tv"
@@ -1473,7 +1473,7 @@ msgstr "시청하지 않은 에피소드"
 msgid "Unseen episodes count"
 msgstr "시청하지 않은 에피소드 수"
 
-#: src/components/Nav.tsx:43
+#: src/components/Nav.tsx:42
 #: src/pages/Home.tsx:75
 msgid "Upcoming"
 msgstr "출시 예정"
@@ -1497,7 +1497,7 @@ msgstr "버전"
 
 #: src/components/Facets/ActiveFacetChips.tsx:78
 #: src/components/Facets/MediaTypeSection.tsx:26
-#: src/components/GridItem.tsx:83
+#: src/components/GridItem.tsx:95
 msgid "Video game"
 msgstr "게임"
 
@@ -1522,7 +1522,7 @@ msgstr "경고"
 msgid "Watched"
 msgstr "시청 완료"
 
-#: src/components/Nav.tsx:45
+#: src/components/Nav.tsx:44
 #: src/pages/import/TraktTv.tsx:181
 #: src/utils.ts:157
 msgid "Watchlist"

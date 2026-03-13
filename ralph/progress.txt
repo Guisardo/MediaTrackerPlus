@@ -46,6 +46,9 @@ Started: Thu Mar 12 13:27:30 -03 2026
 - After US-015, `styled-components` has 0 remaining imports in `client/src/` — the package is ready to be removed in US-020
 - CSS transitions for sidebar/overlay: `transition-transform duration-300` + `translate-x-full`/`translate-x-0` for slide, `transition-opacity duration-300` + `opacity-0`/`opacity-30` for fade — always render both elements in DOM, toggle classes via state (no conditional rendering needed)
 - Nav.tsx `@react-spring/web` removed — Nav.test.tsx no longer needs `@react-spring/web` mock; test CSS transition classes directly via `container.querySelector('.transition-transform')`
+- shadcn/ui Sheet mock in tests: use `React.createContext` to share `open`/`onOpenChange` between `Sheet` (provider) and `SheetContent` (consumer); `SheetContent` returns null when `!open` — same pattern as Dialog mocks
+- `window.matchMedia` is not implemented in jsdom — add `Object.defineProperty(window, 'matchMedia', { value: jest.fn().mockImplementation(...) })` at the top of any test file that renders components using `window.matchMedia`
+- shadcn/ui Sheet uses `side` prop for slide direction: `"bottom"` (mobile) or `"right"` (desktop); detect via `window.matchMedia('(min-width: 1024px)')` with `addEventListener('change', ...)` for responsiveness
 
 ---
 
@@ -583,6 +586,32 @@ Migrated Tailwind CSS from v3.0.24 to v4.2.1. Replaced JS-based configuration wi
 
 ---
 
+## 2026-03-13 - US-017 — Migrate FacetDrawer to shadcn/ui Sheet
+
+- **What was implemented**: Replaced the `Portal`-based `FacetDrawer` with shadcn/ui `Sheet`. The Sheet component provides built-in portal mounting, overlay/backdrop, focus trapping, Escape key handling, and CSS slide animations — eliminating all manual DOM management (body overflow lock, keydown listener, custom backdrop div). The Sheet slides in from `side="bottom"` on mobile (<1024px) and `side="right"` on desktop (≥1024px), detected via `window.matchMedia`. Updated FacetDrawer.test.tsx with a Sheet mock (context-based, same pattern as Dialog mocks) and added a `window.matchMedia` stub for jsdom. Deleted `Portal.tsx` and `Portal.test.tsx` (zero remaining direct importers). Removed `<div id="portal">` from `index.html`. Applied zinc/blue design tokens to replace gray/slate colors.
+
+- **Files changed**:
+  - `client/src/components/ui/sheet.tsx` — NEW: shadcn/ui Sheet component (installed via `npx shadcn@latest add sheet`)
+  - `client/src/components/Facets/FacetDrawer.tsx` — Complete rewrite using Sheet; removed Portal import; responsive side prop via matchMedia
+  - `client/src/components/Facets/__tests__/FacetDrawer.test.tsx` — Updated: Sheet mock with context-based open propagation; added window.matchMedia stub; 11 tests passing
+  - `client/src/components/Portal.tsx` — DELETED
+  - `client/src/components/__tests__/Portal.test.tsx` — DELETED
+  - `client/index.html` — Removed `<div id="portal"></div>`
+
+- **Verification**:
+  - Typecheck: 0 errors
+  - Tests: 74 suites, 1173 tests, all passing
+  - Browser: No JS errors from Sheet/FacetDrawer changes (pre-existing API 500 error from missing backend)
+  - `grep -rn "from 'src/components/Portal'" client/src/` → 0 results
+
+- **Learnings for future iterations:**
+  - shadcn/ui Sheet mock pattern: `React.createContext` shared between `Sheet` (Provider with `open`/`onOpenChange`) and `SheetContent` (consumer that returns null when `!open`) — add a simulated overlay div with `onClick: () => onOpenChange(false)` for backdrop-click tests
+  - jsdom does not implement `window.matchMedia` — any component using it needs `Object.defineProperty(window, 'matchMedia', { writable: true, value: jest.fn().mockImplementation(query => ({ matches: false, addEventListener: jest.fn(), removeEventListener: jest.fn(), ... })) })` at the top of the test file
+  - Sheet `showCloseButton={false}` disables the built-in X button — use this when providing a custom close button in the content
+  - After US-017, `Portal.tsx` is fully removed — no more `#portal` DOM element; Radix (Dialog/Sheet) handles its own portal mounting
+
+---
+
 ## 2026-03-13 - US-016 — Migrate Nav SideBar from React Spring to CSS transitions
 
 - **What was implemented**: Removed all `@react-spring/web` imports (`animated`, `Transition`, `Spring`) from Nav.tsx. Replaced the React Spring `Transition` (slide animation via `marginRight: '-100%' → '0%'`) with a Tailwind `transition-transform duration-300` div toggling `translate-x-full`/`translate-x-0`. Replaced the React Spring `Spring` (backdrop fade `opacity: 0 → 0.3`) with a Tailwind `transition-opacity duration-300` div toggling `opacity-0`/`opacity-30`. Applied shadcn/ui design tokens to desktop nav links (`text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100`) and active links (`font-semibold text-zinc-900 dark:text-zinc-50 underline`). Sidebar panel updated to use `bg-white dark:bg-zinc-900 border-l border-zinc-200 dark:border-zinc-800`. Updated Nav.test.tsx: removed `@react-spring/web` mock entirely; added new "SideBar visibility toggle" test suite with 5 tests verifying CSS transition class toggling.
@@ -600,5 +629,30 @@ Migrated Tailwind CSS from v3.0.24 to v4.2.1. Replaced JS-based configuration wi
   - CSS transition approach for show/hide: always render both elements, toggle Tailwind classes via state — `translate-x-full → translate-x-0` for slide, `opacity-0 → opacity-30` for backdrop; pair with `pointer-events-none` on hidden state
   - Nav.test.tsx no longer needs `@react-spring/web` mock — the new CSS-transition-based SideBar is tested by checking `.transition-transform` and `.transition-opacity` element class names via `container.querySelector`
   - `@react-spring/web` is still used in Poster.tsx — full removal happens in US-019
+
+---
+
+## 2026-03-13 - US-018 — Replace FacetSection workaround with shadcn/ui Collapsible
+
+- **What was implemented**: Replaced the native HTML workaround implementation in `FacetSection.tsx` with shadcn/ui `Collapsible`, `CollapsibleTrigger`, and `CollapsibleContent` components (which wrap Radix Collapsible). The native implementation was a workaround for React 17 Radix compatibility issues that are now resolved with React 19 (upgraded in US-008). The new implementation maintains the same public API, auto-expand behavior on `hasActiveSelection`, and keyboard accessibility (Enter/Space toggle) via Radix. Removed `@radix-ui/react-collapsible` from package.json (it was listed as a direct dependency but never directly imported — shadcn/ui Collapsible brings it transitively via the unified `radix-ui` package). Updated FacetSection.test.tsx to verify aria-controls linking without asserting on the specific role="region" implementation (Radix handles this).
+
+- **Files changed**:
+  - `client/src/components/ui/collapsible.tsx` — NEW: shadcn/ui Collapsible component (installed via `npx shadcn@latest add collapsible`); added React import to fix JSX reference issue
+  - `client/src/components/Facets/FacetSection.tsx` — Complete rewrite using Collapsible, CollapsibleTrigger, CollapsibleContent; removed manual ID generation and event handlers; applied zinc design tokens to replace gray/slate colors
+  - `client/src/components/__tests__/FacetSection.test.tsx` — Updated single test assertion for aria-controls linking (Radix implementation detail); all 8 tests passing
+  - `client/package.json` — Removed `@radix-ui/react-collapsible` (now transitive via radix-ui unified package)
+
+- **Verification**:
+  - Typecheck: 0 errors
+  - Tests: 74 suites, 1173 tests, all passing (8 FacetSection-specific tests passing)
+  - Build: Production build completes successfully; bundle size unchanged (no new dependencies added, old one removed)
+  - Browser: Dev server loads without Collapsible-related JS errors (pre-existing API 500 errors from backend are unrelated)
+
+- **Learnings for future iterations**:
+  - shadcn/ui Collapsible (Radix) does NOT need mocking in jest tests — it works correctly in jsdom without custom mocks (unlike Radix Dialog/Sheet which need context-based state sharing)
+  - Radix Collapsible automatically manages aria-expanded and aria-controls on the trigger element — no need to manually generate IDs or ARIA attributes
+  - The native HTML workaround in FacetSection.tsx (using `useRef` to generate unique IDs) is no longer needed with React 19 + Radix Collapsible
+  - `@radix-ui/react-collapsible` as a direct dep is redundant when using shadcn/ui Collapsible — the unified `radix-ui` package provides it
+  - Color token migration: `text-gray-800 dark:text-slate-200` → `text-zinc-800 dark:text-zinc-200`; `hover:bg-gray-100 dark:hover:bg-slate-700` → `hover:bg-zinc-100 dark:hover:bg-zinc-700`; these align with shadcn/ui zinc palette
 
 ---

@@ -1,11 +1,9 @@
 /**
- * Tests for the Poster component (exported as PosterSpring) defined in
+ * Tests for the Poster component (exported as PosterCss) defined in
  * src/components/Poster.tsx.
  *
- * The component uses @react-spring/core (useSpring) and @react-spring/web
- * (animated.div) for animations. Both are mocked so that:
- *  - animated.div renders as a plain <div>
- *  - useSpring returns an empty object immediately (no animation frames needed)
+ * The component uses CSS transitions (via Tailwind `transition-all`, `opacity-*`,
+ * `blur-*` classes) for animations, with no JavaScript animation libraries.
  *
  * Tests verify:
  *  - An <img> element is rendered when a src URL is provided
@@ -29,26 +27,6 @@ import { render, screen, fireEvent } from '@testing-library/react';
 // ---------------------------------------------------------------------------
 
 jest.mock('clsx', () => (...args: unknown[]) => args.filter(Boolean).join(' '));
-
-// @react-spring/core – useSpring returns an empty style object immediately
-jest.mock('@react-spring/core', () => ({
-  useSpring: () => ({}),
-}));
-
-// @react-spring/web – animated.div is a plain div
-jest.mock('@react-spring/web', () => {
-  const React = require('react');
-  return {
-    animated: {
-      div: ({
-        style: _style,
-        ...rest
-      }: React.HTMLProps<HTMLDivElement> & { style?: object }) => (
-        <div {...rest} />
-      ),
-    },
-  };
-});
 
 // ---------------------------------------------------------------------------
 // Import component under test
@@ -263,15 +241,14 @@ describe('Poster – image load state', () => {
 });
 
 // ---------------------------------------------------------------------------
-// PosterCss component (the non-spring variant, indirectly tested)
+// PosterCss component (now the default export as Poster)
 // ---------------------------------------------------------------------------
 
 /**
- * PosterCss is not exported directly but we can test the tailwindcssAspectRatioForMediaType
- * function coverage through all mediaType paths not yet covered, and also the
- * aspectRatioForMediaType utility (lines 223-233) which is NOT exported but still
- * counted in coverage. We cover its branches indirectly by ensuring the outer
- * component renders correctly for all media types including itemMediaType.
+ * All Poster tests verify the CSS-transition-based PosterCss implementation,
+ * which uses Tailwind classes for opacity and blur animations.
+ * The aspectRatioForMediaType utility (unused but kept) is indirectly tested
+ * through aspect ratio class verification across all media types.
  */
 
 describe('Poster – additional itemMediaType aspect ratio', () => {

@@ -306,11 +306,11 @@ msgstr "Audibleの言語"
 
 #: src/components/Facets/ActiveFacetChips.tsx:76
 #: src/components/Facets/MediaTypeSection.tsx:24
-#: src/components/GridItem.tsx:79
+#: src/components/GridItem.tsx:91
 msgid "Audiobook"
 msgstr "オーディオブック"
 
-#: src/components/Nav.tsx:42
+#: src/components/Nav.tsx:41
 #: src/components/Statistics/StatisticsSegment.tsx:189
 msgid "Audiobooks"
 msgstr "オーディオブック"
@@ -334,17 +334,17 @@ msgstr "シーズンのネタバレを避ける"
 
 #: src/components/Facets/ActiveFacetChips.tsx:74
 #: src/components/Facets/MediaTypeSection.tsx:22
-#: src/components/GridItem.tsx:80
+#: src/components/GridItem.tsx:92
 msgid "Book"
 msgstr "本"
 
-#: src/components/Nav.tsx:41
+#: src/components/Nav.tsx:40
 #: src/components/Statistics/StatisticsSegment.tsx:150
 #: src/pages/import/Goodreads.tsx:65
 msgid "Books"
 msgstr "本"
 
-#: src/components/Nav.tsx:48
+#: src/components/Nav.tsx:47
 msgid "Calendar"
 msgstr "カレンダー"
 
@@ -360,7 +360,7 @@ msgid "Change password"
 msgstr "パスワードを変更"
 
 #: src/components/Facets/ActiveFacetChips.tsx:331
-#: src/components/Facets/FacetDrawer.tsx:93
+#: src/components/Facets/FacetDrawer.tsx:72
 msgid "Clear all"
 msgstr "すべてクリア"
 
@@ -466,7 +466,7 @@ msgstr "開発者"
 msgid "Director"
 msgstr "監督"
 
-#: src/components/Nav.tsx:159
+#: src/components/Nav.tsx:161
 msgid "Do you really want to logout?"
 msgstr "本当にログアウトしますか？"
 
@@ -524,7 +524,7 @@ msgstr ""
 msgid "Failed to load group. It may have been deleted."
 msgstr ""
 
-#: src/components/Facets/FacetDrawer.tsx:82
+#: src/components/Facets/FacetDrawer.tsx:61
 #: src/components/Facets/FacetMobileButton.tsx:36
 #: src/components/Facets/FacetPanel.tsx:31
 msgid "Filters"
@@ -534,7 +534,7 @@ msgstr "フィルター"
 msgid "First unwatched episode"
 msgstr "最初の未視聴エピソード"
 
-#: src/components/Nav.tsx:40
+#: src/components/Nav.tsx:39
 #: src/components/Statistics/StatisticsGenreSegment.tsx:19
 #: src/components/Statistics/StatisticsSegment.tsx:111
 msgid "Games"
@@ -571,7 +571,7 @@ msgstr "GotifyサーバーURL"
 msgid "Group name"
 msgstr ""
 
-#: src/components/Nav.tsx:51
+#: src/components/Nav.tsx:50
 msgid "Groups"
 msgstr ""
 
@@ -583,7 +583,7 @@ msgstr "未視聴シーズンの概要を非表示にする"
 msgid "Hide title of unseen episodes"
 msgstr "未視聴エピソードのタイトルを非表示にする"
 
-#: src/components/Nav.tsx:37
+#: src/components/Nav.tsx:36
 #: src/i18n/__tests__/i18n.test.ts:65
 msgid "Home"
 msgstr "ホーム"
@@ -637,7 +637,7 @@ msgstr "IGDB認証情報"
 msgid "import"
 msgstr "インポート"
 
-#: src/components/Nav.tsx:49
+#: src/components/Nav.tsx:48
 msgid "Import"
 msgstr "インポート"
 
@@ -654,7 +654,7 @@ msgstr "インポート済み"
 msgid "Importing"
 msgstr "インポート中"
 
-#: src/components/Nav.tsx:44
+#: src/components/Nav.tsx:43
 msgid "In progress"
 msgstr "進行中"
 
@@ -748,7 +748,7 @@ msgstr "{0}に聴きました"
 msgid "Listened history"
 msgstr "聴取履歴"
 
-#: src/components/Nav.tsx:50
+#: src/components/Nav.tsx:49
 msgid "Lists"
 msgstr "リスト"
 
@@ -776,7 +776,7 @@ msgstr "読み込み中"
 msgid "Login"
 msgstr "ログイン"
 
-#: src/components/Nav.tsx:164
+#: src/components/Nav.tsx:166
 #: src/i18n/__tests__/i18n.test.ts:56
 msgid "Logout"
 msgstr "ログアウト"
@@ -816,12 +816,12 @@ msgstr "最小年"
 
 #: src/components/Facets/ActiveFacetChips.tsx:70
 #: src/components/Facets/MediaTypeSection.tsx:18
-#: src/components/GridItem.tsx:81
+#: src/components/GridItem.tsx:93
 msgid "Movie"
 msgstr "映画"
 
 #: src/components/ImportSummaryTable.tsx:90
-#: src/components/Nav.tsx:39
+#: src/components/Nav.tsx:38
 #: src/components/Statistics/StatisticsGenreSegment.tsx:16
 #: src/components/Statistics/StatisticsSegment.tsx:72
 msgid "Movies"
@@ -1001,7 +1001,7 @@ msgstr "公開レビュー"
 msgid "Publisher"
 msgstr "出版社"
 
-#: src/components/Nav.tsx:46
+#: src/components/Nav.tsx:45
 msgid "Random"
 msgstr "ランダム"
 
@@ -1120,7 +1120,7 @@ msgstr "おすすめ"
 msgid "Register"
 msgstr "登録"
 
-#: src/components/GridItem.tsx:240
+#: src/components/GridItem.tsx:245
 msgid "Release <0/>"
 msgstr "リリース <0/>"
 
@@ -1131,7 +1131,7 @@ msgstr "リリース <0/>"
 msgid "Release date"
 msgstr "リリース日"
 
-#: src/components/GridItem.tsx:258
+#: src/components/GridItem.tsx:263
 msgid "Released <0/>"
 msgstr "リリース済み <0/>"
 
@@ -1141,7 +1141,7 @@ msgstr ""
 
 #. placeholder {0}: mediaItem.title
 #. placeholder {1}: season ? ' ' + formatSeasonNumber(season) : episode ? ' ' + formatEpisodeNumber(episode) : ''
-#: src/components/GridItem.tsx:125
+#: src/components/GridItem.tsx:136
 msgid "Remove \"{0}{1}\" from watchlist?"
 msgstr "\"{0}{1}\" をウォッチリストから削除しますか？"
 
@@ -1395,7 +1395,7 @@ msgstr "ソース"
 msgid "Start over"
 msgstr "最初からやり直す"
 
-#: src/components/Nav.tsx:47
+#: src/components/Nav.tsx:46
 #: src/pages/Statistics.tsx:111
 msgid "Statistics"
 msgstr "統計"
@@ -1442,8 +1442,8 @@ msgstr "トピック"
 msgid "Total runtime"
 msgstr "合計上映時間"
 
-#: src/components/GridItem.tsx:82
-#: src/components/Nav.tsx:38
+#: src/components/GridItem.tsx:94
+#: src/components/Nav.tsx:37
 #: src/components/Statistics/StatisticsGenreSegment.tsx:15
 #: src/components/Statistics/StatisticsSegment.tsx:33
 msgid "Tv"
@@ -1473,7 +1473,7 @@ msgstr "未視聴エピソード"
 msgid "Unseen episodes count"
 msgstr "未視聴エピソード数"
 
-#: src/components/Nav.tsx:43
+#: src/components/Nav.tsx:42
 #: src/pages/Home.tsx:75
 msgid "Upcoming"
 msgstr "近日公開"
@@ -1497,7 +1497,7 @@ msgstr "バージョン"
 
 #: src/components/Facets/ActiveFacetChips.tsx:78
 #: src/components/Facets/MediaTypeSection.tsx:26
-#: src/components/GridItem.tsx:83
+#: src/components/GridItem.tsx:95
 msgid "Video game"
 msgstr "ビデオゲーム"
 
@@ -1522,7 +1522,7 @@ msgstr "警告"
 msgid "Watched"
 msgstr "視聴済み"
 
-#: src/components/Nav.tsx:45
+#: src/components/Nav.tsx:44
 #: src/pages/import/TraktTv.tsx:181
 #: src/utils.ts:157
 msgid "Watchlist"

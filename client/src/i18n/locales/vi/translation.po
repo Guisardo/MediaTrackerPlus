@@ -306,11 +306,11 @@ msgstr "Ngôn ngữ Audible"
 
 #: src/components/Facets/ActiveFacetChips.tsx:76
 #: src/components/Facets/MediaTypeSection.tsx:24
-#: src/components/GridItem.tsx:79
+#: src/components/GridItem.tsx:91
 msgid "Audiobook"
 msgstr "Sách nói"
 
-#: src/components/Nav.tsx:42
+#: src/components/Nav.tsx:41
 #: src/components/Statistics/StatisticsSegment.tsx:189
 msgid "Audiobooks"
 msgstr "Sách nói"
@@ -334,17 +334,17 @@ msgstr "Tránh tiết lộ nội dung mùa"
 
 #: src/components/Facets/ActiveFacetChips.tsx:74
 #: src/components/Facets/MediaTypeSection.tsx:22
-#: src/components/GridItem.tsx:80
+#: src/components/GridItem.tsx:92
 msgid "Book"
 msgstr "Sách"
 
-#: src/components/Nav.tsx:41
+#: src/components/Nav.tsx:40
 #: src/components/Statistics/StatisticsSegment.tsx:150
 #: src/pages/import/Goodreads.tsx:65
 msgid "Books"
 msgstr "Sách"
 
-#: src/components/Nav.tsx:48
+#: src/components/Nav.tsx:47
 msgid "Calendar"
 msgstr "Lịch"
 
@@ -360,7 +360,7 @@ msgid "Change password"
 msgstr "Đổi mật khẩu"
 
 #: src/components/Facets/ActiveFacetChips.tsx:331
-#: src/components/Facets/FacetDrawer.tsx:93
+#: src/components/Facets/FacetDrawer.tsx:72
 msgid "Clear all"
 msgstr "Xóa tất cả"
 
@@ -466,7 +466,7 @@ msgstr "Nhà phát triển"
 msgid "Director"
 msgstr "Đạo diễn"
 
-#: src/components/Nav.tsx:159
+#: src/components/Nav.tsx:161
 msgid "Do you really want to logout?"
 msgstr "Bạn có thực sự muốn đăng xuất không?"
 
@@ -524,7 +524,7 @@ msgstr ""
 msgid "Failed to load group. It may have been deleted."
 msgstr ""
 
-#: src/components/Facets/FacetDrawer.tsx:82
+#: src/components/Facets/FacetDrawer.tsx:61
 #: src/components/Facets/FacetMobileButton.tsx:36
 #: src/components/Facets/FacetPanel.tsx:31
 msgid "Filters"
@@ -534,7 +534,7 @@ msgstr "Bộ lọc"
 msgid "First unwatched episode"
 msgstr "Tập chưa xem đầu tiên"
 
-#: src/components/Nav.tsx:40
+#: src/components/Nav.tsx:39
 #: src/components/Statistics/StatisticsGenreSegment.tsx:19
 #: src/components/Statistics/StatisticsSegment.tsx:111
 msgid "Games"
@@ -571,7 +571,7 @@ msgstr "URL máy chủ Gotify"
 msgid "Group name"
 msgstr ""
 
-#: src/components/Nav.tsx:51
+#: src/components/Nav.tsx:50
 msgid "Groups"
 msgstr ""
 
@@ -583,7 +583,7 @@ msgstr "Ẩn tổng quan về các mùa chưa xem"
 msgid "Hide title of unseen episodes"
 msgstr "Ẩn tiêu đề các tập chưa xem"
 
-#: src/components/Nav.tsx:37
+#: src/components/Nav.tsx:36
 #: src/i18n/__tests__/i18n.test.ts:65
 msgid "Home"
 msgstr "Trang chủ"
@@ -637,7 +637,7 @@ msgstr "Thông tin xác thực IGDB"
 msgid "import"
 msgstr "nhập"
 
-#: src/components/Nav.tsx:49
+#: src/components/Nav.tsx:48
 msgid "Import"
 msgstr "Nhập"
 
@@ -654,7 +654,7 @@ msgstr "Đã nhập"
 msgid "Importing"
 msgstr "Đang nhập"
 
-#: src/components/Nav.tsx:44
+#: src/components/Nav.tsx:43
 msgid "In progress"
 msgstr "Đang tiến hành"
 
@@ -748,7 +748,7 @@ msgstr "Đã nghe lúc {0}"
 msgid "Listened history"
 msgstr "Lịch sử đã nghe"
 
-#: src/components/Nav.tsx:50
+#: src/components/Nav.tsx:49
 msgid "Lists"
 msgstr "Danh sách"
 
@@ -776,7 +776,7 @@ msgstr "Đang tải"
 msgid "Login"
 msgstr "Đăng nhập"
 
-#: src/components/Nav.tsx:164
+#: src/components/Nav.tsx:166
 #: src/i18n/__tests__/i18n.test.ts:56
 msgid "Logout"
 msgstr "Đăng xuất"
@@ -816,12 +816,12 @@ msgstr "Năm tối thiểu"
 
 #: src/components/Facets/ActiveFacetChips.tsx:70
 #: src/components/Facets/MediaTypeSection.tsx:18
-#: src/components/GridItem.tsx:81
+#: src/components/GridItem.tsx:93
 msgid "Movie"
 msgstr "Phim"
 
 #: src/components/ImportSummaryTable.tsx:90
-#: src/components/Nav.tsx:39
+#: src/components/Nav.tsx:38
 #: src/components/Statistics/StatisticsGenreSegment.tsx:16
 #: src/components/Statistics/StatisticsSegment.tsx:72
 msgid "Movies"
@@ -1001,7 +1001,7 @@ msgstr "Đánh giá công khai"
 msgid "Publisher"
 msgstr "Nhà xuất bản"
 
-#: src/components/Nav.tsx:46
+#: src/components/Nav.tsx:45
 msgid "Random"
 msgstr "Ngẫu nhiên"
 
@@ -1120,7 +1120,7 @@ msgstr "Được đề xuất"
 msgid "Register"
 msgstr "Đăng ký"
 
-#: src/components/GridItem.tsx:240
+#: src/components/GridItem.tsx:245
 msgid "Release <0/>"
 msgstr "Phát hành <0/>"
 
@@ -1131,7 +1131,7 @@ msgstr "Phát hành <0/>"
 msgid "Release date"
 msgstr "Ngày phát hành"
 
-#: src/components/GridItem.tsx:258
+#: src/components/GridItem.tsx:263
 msgid "Released <0/>"
 msgstr "Đã phát hành <0/>"
 
@@ -1141,7 +1141,7 @@ msgstr ""
 
 #. placeholder {0}: mediaItem.title
 #. placeholder {1}: season ? ' ' + formatSeasonNumber(season) : episode ? ' ' + formatEpisodeNumber(episode) : ''
-#: src/components/GridItem.tsx:125
+#: src/components/GridItem.tsx:136
 msgid "Remove \"{0}{1}\" from watchlist?"
 msgstr "Xóa \"{0}{1}\" khỏi danh sách theo dõi?"
 
@@ -1395,7 +1395,7 @@ msgstr "Nguồn"
 msgid "Start over"
 msgstr "Bắt đầu lại"
 
-#: src/components/Nav.tsx:47
+#: src/components/Nav.tsx:46
 #: src/pages/Statistics.tsx:111
 msgid "Statistics"
 msgstr "Thống kê"
@@ -1442,8 +1442,8 @@ msgstr "Chủ đề"
 msgid "Total runtime"
 msgstr "Tổng thời gian chạy"
 
-#: src/components/GridItem.tsx:82
-#: src/components/Nav.tsx:38
+#: src/components/GridItem.tsx:94
+#: src/components/Nav.tsx:37
 #: src/components/Statistics/StatisticsGenreSegment.tsx:15
 #: src/components/Statistics/StatisticsSegment.tsx:33
 msgid "Tv"
@@ -1473,7 +1473,7 @@ msgstr "Các tập chưa xem"
 msgid "Unseen episodes count"
 msgstr "Số tập chưa xem"
 
-#: src/components/Nav.tsx:43
+#: src/components/Nav.tsx:42
 #: src/pages/Home.tsx:75
 msgid "Upcoming"
 msgstr "Sắp tới"
@@ -1497,7 +1497,7 @@ msgstr "Phiên bản"
 
 #: src/components/Facets/ActiveFacetChips.tsx:78
 #: src/components/Facets/MediaTypeSection.tsx:26
-#: src/components/GridItem.tsx:83
+#: src/components/GridItem.tsx:95
 msgid "Video game"
 msgstr "Trò chơi điện tử"
 
@@ -1522,7 +1522,7 @@ msgstr "Cảnh báo"
 msgid "Watched"
 msgstr "Đã xem"
 
-#: src/components/Nav.tsx:45
+#: src/components/Nav.tsx:44
 #: src/pages/import/TraktTv.tsx:181
 #: src/utils.ts:157
 msgid "Watchlist"

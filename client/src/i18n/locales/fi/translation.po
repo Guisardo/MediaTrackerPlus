@@ -306,11 +306,11 @@ msgstr "Audible-kieli"
 
 #: src/components/Facets/ActiveFacetChips.tsx:76
 #: src/components/Facets/MediaTypeSection.tsx:24
-#: src/components/GridItem.tsx:79
+#: src/components/GridItem.tsx:91
 msgid "Audiobook"
 msgstr "Äänikirja"
 
-#: src/components/Nav.tsx:42
+#: src/components/Nav.tsx:41
 #: src/components/Statistics/StatisticsSegment.tsx:189
 msgid "Audiobooks"
 msgstr "Äänikirjat"
@@ -334,17 +334,17 @@ msgstr "Vältä kausien spoilereita"
 
 #: src/components/Facets/ActiveFacetChips.tsx:74
 #: src/components/Facets/MediaTypeSection.tsx:22
-#: src/components/GridItem.tsx:80
+#: src/components/GridItem.tsx:92
 msgid "Book"
 msgstr "Kirja"
 
-#: src/components/Nav.tsx:41
+#: src/components/Nav.tsx:40
 #: src/components/Statistics/StatisticsSegment.tsx:150
 #: src/pages/import/Goodreads.tsx:65
 msgid "Books"
 msgstr "Kirjat"
 
-#: src/components/Nav.tsx:48
+#: src/components/Nav.tsx:47
 msgid "Calendar"
 msgstr "Kalenteri"
 
@@ -360,7 +360,7 @@ msgid "Change password"
 msgstr "Vaihda salasana"
 
 #: src/components/Facets/ActiveFacetChips.tsx:331
-#: src/components/Facets/FacetDrawer.tsx:93
+#: src/components/Facets/FacetDrawer.tsx:72
 msgid "Clear all"
 msgstr "Tyhjennä kaikki"
 
@@ -466,7 +466,7 @@ msgstr "Kehittäjä"
 msgid "Director"
 msgstr "Ohjaaja"
 
-#: src/components/Nav.tsx:159
+#: src/components/Nav.tsx:161
 msgid "Do you really want to logout?"
 msgstr "Haluatko todella kirjautua ulos?"
 
@@ -524,7 +524,7 @@ msgstr ""
 msgid "Failed to load group. It may have been deleted."
 msgstr ""
 
-#: src/components/Facets/FacetDrawer.tsx:82
+#: src/components/Facets/FacetDrawer.tsx:61
 #: src/components/Facets/FacetMobileButton.tsx:36
 #: src/components/Facets/FacetPanel.tsx:31
 msgid "Filters"
@@ -534,7 +534,7 @@ msgstr "Suodattimet"
 msgid "First unwatched episode"
 msgstr "Ensimmäinen katsomaton jakso"
 
-#: src/components/Nav.tsx:40
+#: src/components/Nav.tsx:39
 #: src/components/Statistics/StatisticsGenreSegment.tsx:19
 #: src/components/Statistics/StatisticsSegment.tsx:111
 msgid "Games"
@@ -571,7 +571,7 @@ msgstr "Gotify-palvelimen URL"
 msgid "Group name"
 msgstr ""
 
-#: src/components/Nav.tsx:51
+#: src/components/Nav.tsx:50
 msgid "Groups"
 msgstr ""
 
@@ -583,7 +583,7 @@ msgstr "Piilota katsomattomien kausien yleiskatsaus"
 msgid "Hide title of unseen episodes"
 msgstr "Piilota katsomattomien jaksojen otsikot"
 
-#: src/components/Nav.tsx:37
+#: src/components/Nav.tsx:36
 #: src/i18n/__tests__/i18n.test.ts:65
 msgid "Home"
 msgstr "Etusivu"
@@ -637,7 +637,7 @@ msgstr "IGDB-tunnukset"
 msgid "import"
 msgstr "tuo"
 
-#: src/components/Nav.tsx:49
+#: src/components/Nav.tsx:48
 msgid "Import"
 msgstr "Tuo"
 
@@ -654,7 +654,7 @@ msgstr "Tuotu"
 msgid "Importing"
 msgstr "Tuodaan"
 
-#: src/components/Nav.tsx:44
+#: src/components/Nav.tsx:43
 msgid "In progress"
 msgstr "Käynnissä"
 
@@ -748,7 +748,7 @@ msgstr "Kuunneltu {0}"
 msgid "Listened history"
 msgstr "Kuunteluhistoria"
 
-#: src/components/Nav.tsx:50
+#: src/components/Nav.tsx:49
 msgid "Lists"
 msgstr "Listat"
 
@@ -776,7 +776,7 @@ msgstr "Ladataan"
 msgid "Login"
 msgstr "Kirjaudu sisään"
 
-#: src/components/Nav.tsx:164
+#: src/components/Nav.tsx:166
 #: src/i18n/__tests__/i18n.test.ts:56
 msgid "Logout"
 msgstr "Kirjaudu ulos"
@@ -816,12 +816,12 @@ msgstr "Vähimmäisvuosi"
 
 #: src/components/Facets/ActiveFacetChips.tsx:70
 #: src/components/Facets/MediaTypeSection.tsx:18
-#: src/components/GridItem.tsx:81
+#: src/components/GridItem.tsx:93
 msgid "Movie"
 msgstr "Elokuva"
 
 #: src/components/ImportSummaryTable.tsx:90
-#: src/components/Nav.tsx:39
+#: src/components/Nav.tsx:38
 #: src/components/Statistics/StatisticsGenreSegment.tsx:16
 #: src/components/Statistics/StatisticsSegment.tsx:72
 msgid "Movies"
@@ -1001,7 +1001,7 @@ msgstr "Julkiset arvostelut"
 msgid "Publisher"
 msgstr "Julkaisija"
 
-#: src/components/Nav.tsx:46
+#: src/components/Nav.tsx:45
 msgid "Random"
 msgstr "Satunnainen"
 
@@ -1120,7 +1120,7 @@ msgstr "Suositeltu"
 msgid "Register"
 msgstr "Rekisteröidy"
 
-#: src/components/GridItem.tsx:240
+#: src/components/GridItem.tsx:245
 msgid "Release <0/>"
 msgstr "Julkaisu <0/>"
 
@@ -1131,7 +1131,7 @@ msgstr "Julkaisu <0/>"
 msgid "Release date"
 msgstr "Julkaisupäivä"
 
-#: src/components/GridItem.tsx:258
+#: src/components/GridItem.tsx:263
 msgid "Released <0/>"
 msgstr "Julkaistu <0/>"
 
@@ -1141,7 +1141,7 @@ msgstr ""
 
 #. placeholder {0}: mediaItem.title
 #. placeholder {1}: season ? ' ' + formatSeasonNumber(season) : episode ? ' ' + formatEpisodeNumber(episode) : ''
-#: src/components/GridItem.tsx:125
+#: src/components/GridItem.tsx:136
 msgid "Remove \"{0}{1}\" from watchlist?"
 msgstr "Poista \"{0}{1}\" seurantalistalta?"
 
@@ -1395,7 +1395,7 @@ msgstr "Lähde"
 msgid "Start over"
 msgstr "Aloita alusta"
 
-#: src/components/Nav.tsx:47
+#: src/components/Nav.tsx:46
 #: src/pages/Statistics.tsx:111
 msgid "Statistics"
 msgstr "Tilastot"
@@ -1442,8 +1442,8 @@ msgstr "Aihe"
 msgid "Total runtime"
 msgstr "Kokonaiskesto"
 
-#: src/components/GridItem.tsx:82
-#: src/components/Nav.tsx:38
+#: src/components/GridItem.tsx:94
+#: src/components/Nav.tsx:37
 #: src/components/Statistics/StatisticsGenreSegment.tsx:15
 #: src/components/Statistics/StatisticsSegment.tsx:33
 msgid "Tv"
@@ -1473,7 +1473,7 @@ msgstr "Katsomat jaksot"
 msgid "Unseen episodes count"
 msgstr "Katsomattomien jaksojen määrä"
 
-#: src/components/Nav.tsx:43
+#: src/components/Nav.tsx:42
 #: src/pages/Home.tsx:75
 msgid "Upcoming"
 msgstr "Tulossa"
@@ -1497,7 +1497,7 @@ msgstr "Versio"
 
 #: src/components/Facets/ActiveFacetChips.tsx:78
 #: src/components/Facets/MediaTypeSection.tsx:26
-#: src/components/GridItem.tsx:83
+#: src/components/GridItem.tsx:95
 msgid "Video game"
 msgstr "Videopeli"
 
@@ -1522,7 +1522,7 @@ msgstr "Varoitus"
 msgid "Watched"
 msgstr "Katsottu"
 
-#: src/components/Nav.tsx:45
+#: src/components/Nav.tsx:44
 #: src/pages/import/TraktTv.tsx:181
 #: src/utils.ts:157
 msgid "Watchlist"
