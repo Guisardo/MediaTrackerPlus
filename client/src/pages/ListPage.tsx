@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import { Plural, t, Trans } from '@lingui/macro';
 import { useParams, useSearchParams } from 'react-router-dom';
 
@@ -144,7 +144,7 @@ export const ListPage: FunctionComponent = () => {
           </div>
         </div>
         {data.map((listItem) => (
-          <React.Fragment key={listItem.id.toString()}>
+          <div key={listItem.id.toString()} className="w-40 mr-2 mb-2">
             <GridItem
               mediaItem={listItem.mediaItem}
               season={listItem.season}
@@ -165,7 +165,7 @@ export const ListPage: FunctionComponent = () => {
                 showNextAiring: sortBy === 'next-airing',
               }}
             />
-          </React.Fragment>
+          </div>
         ))}
 
         {showPaginationComponent && (

@@ -13,9 +13,14 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#. js-lingui-explicit-id
+#: src/__tests__/ui-stack-migration.integration.test.ts:186
+msgid "i18n/i18n.ts"
+msgstr "i18n/i18n.ts"
+
 #: src/pages/settings/Notifications.tsx:82
 msgid " User key"
-msgstr ""
+msgstr " Chiave utente"
 
 #. placeholder {0}: 1
 #. placeholder {0}: 5
@@ -29,11 +34,11 @@ msgstr "{0, plural, one {# elemento} other {# elementi}}"
 #. placeholder {0}: group.memberCount
 #: src/pages/GroupsPage.tsx:56
 msgid "{0, plural, one {# member} other {# members}}"
-msgstr ""
+msgstr "{0, plural, one {# membro} other {# membri}}"
 
 #. placeholder {0}: filteredItems.length
 #. placeholder {0}: items.length
-#: src/pages/import/TraktTv.tsx:347
+#: src/pages/import/TraktTv.tsx:342
 #: src/pages/ListPage.tsx:131
 msgid "{0, plural, one {1 item} other {# items}}"
 msgstr "{0, plural, one {1 elemento} other {# elementi}}"
@@ -46,7 +51,7 @@ msgstr "{0, plural, one {Autore} other {Autori}}"
 #. placeholder {0}: searchResult?.length
 #: src/components/PaginatedGridItems.tsx:317
 msgid "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {Found # items for query \"<1>{searchQuery}</1>\"}}"
-msgstr ""
+msgstr "{0, plural, one {Trovato # elemento per la ricerca \"<0>{searchQuery}</0>\"} other {Trovati # elementi per la ricerca \"<1>{searchQuery}</1>\"}}"
 
 #. placeholder {0}: mediaItem.genres.length
 #: src/pages/Details.tsx:299
@@ -95,7 +100,7 @@ msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
 msgstr "{0, plural, one {Visto 1 volta} other {Visto # volte}}"
 
 #. placeholder {0}: route.name
-#: src/components/Statistics/StatisticsGenreSegment.tsx:37
+#: src/components/Statistics/StatisticsGenreSegment.tsx:42
 msgid "{0}"
 msgstr "{0}"
 
@@ -125,55 +130,55 @@ msgstr "{value, plural, one {pagina} other {pagine}}"
 
 #. placeholder {0}: item.genre
 #. placeholder {1}: item.count
-#: src/components/Statistics/StatisticsGenreSegment.tsx:56
+#: src/components/Statistics/StatisticsGenreSegment.tsx:61
 msgid "<0>{0}</0> (<1>{1}</1>)"
 msgstr "<0>{0}</0> (<1>{1}</1>)"
 
 #. placeholder {0}: data.audiobook.items
 #. placeholder {1}: data.audiobook.plays
-#: src/components/Statistics/StatisticsSegment.tsx:205
+#: src/components/Statistics/StatisticsSegment.tsx:215
 msgid "<0>{0}</0> audiobooks (<1>{1}</1> plays)"
 msgstr "<0>{0}</0> audiolibri (<1>{1}</1> riproduzioni)"
 
 #. placeholder {0}: data.book.items
 #. placeholder {1}: data.book.plays
-#: src/components/Statistics/StatisticsSegment.tsx:166
+#: src/components/Statistics/StatisticsSegment.tsx:174
 msgid "<0>{0}</0> books (<1>{1}</1> reads)"
 msgstr "<0>{0}</0> libri (<1>{1}</1> letture)"
 
 #. placeholder {0}: data.tv.episodes
 #. placeholder {1}: data.tv.plays
 #. placeholder {2}: data.tv.items
-#: src/components/Statistics/StatisticsSegment.tsx:49
+#: src/components/Statistics/StatisticsSegment.tsx:51
 msgid "<0>{0}</0> episodes (<1>{1}</1> plays of <2>{2}</2> shows)"
 msgstr "<0>{0}</0> episodi (<1>{1}</1> riproduzioni di <2>{2}</2> serie)"
 
 #. placeholder {0}: data.movie.items
 #. placeholder {1}: data.movie.plays
-#: src/components/Statistics/StatisticsSegment.tsx:88
+#: src/components/Statistics/StatisticsSegment.tsx:92
 msgid "<0>{0}</0> movies (<1>{1}</1> plays)"
 msgstr "<0>{0}</0> film (<1>{1}</1> riproduzioni)"
 
 #. placeholder {0}: data.video_game.items
 #. placeholder {1}: data.video_game.plays
-#: src/components/Statistics/StatisticsSegment.tsx:127
+#: src/components/Statistics/StatisticsSegment.tsx:133
 msgid "<0>{0}</0> video games (<1>{1}</1> plays)"
 msgstr "<0>{0}</0> videogiochi (<1>{1}</1> riproduzioni)"
 
-#: src/components/Statistics/StatisticsSegment.tsx:194
+#: src/components/Statistics/StatisticsSegment.tsx:204
 msgid "<0><1/> </0>listening"
 msgstr "<0><1/> </0>in ascolto"
 
-#: src/components/Statistics/StatisticsSegment.tsx:116
+#: src/components/Statistics/StatisticsSegment.tsx:122
 msgid "<0><1/> </0>playing"
 msgstr "<0><1/> </0>in gioco"
 
-#: src/components/Statistics/StatisticsSegment.tsx:155
+#: src/components/Statistics/StatisticsSegment.tsx:163
 msgid "<0><1/> </0>reading"
 msgstr "<0><1/> </0>in lettura"
 
-#: src/components/Statistics/StatisticsSegment.tsx:38
-#: src/components/Statistics/StatisticsSegment.tsx:77
+#: src/components/Statistics/StatisticsSegment.tsx:40
+#: src/components/Statistics/StatisticsSegment.tsx:81
 msgid "<0><1/> </0>watching"
 msgstr "<0><1/> </0>in visione"
 
@@ -216,7 +221,7 @@ msgstr "Aggiungi lista"
 
 #: src/pages/GroupDetailPage.tsx:97
 msgid "Add member"
-msgstr ""
+msgstr "Aggiungi membro"
 
 #: src/pages/settings/Preferences.tsx:41
 msgid "Add recommendations to watchlist"
@@ -265,7 +270,7 @@ msgstr "Aggiungi token"
 #: src/pages/GroupDetailPage.tsx:321
 #: src/pages/GroupsPage.tsx:48
 msgid "Admin"
-msgstr ""
+msgstr "Amministratore"
 
 #: src/components/FilterBy.tsx:11
 msgid "All"
@@ -273,7 +278,7 @@ msgstr "Tutto"
 
 #: src/components/GroupSelector.tsx:150
 msgid "All Users"
-msgstr ""
+msgstr "Tutti gli utenti"
 
 #: src/pages/Statistics.tsx:33
 msgid "All Years"
@@ -311,7 +316,7 @@ msgid "Audiobook"
 msgstr "Audiolibro"
 
 #: src/components/Nav.tsx:41
-#: src/components/Statistics/StatisticsSegment.tsx:189
+#: src/components/Statistics/StatisticsSegment.tsx:199
 msgid "Audiobooks"
 msgstr "Audiolibri"
 
@@ -339,7 +344,7 @@ msgid "Book"
 msgstr "Libro"
 
 #: src/components/Nav.tsx:40
-#: src/components/Statistics/StatisticsSegment.tsx:150
+#: src/components/Statistics/StatisticsSegment.tsx:158
 #: src/pages/import/Goodreads.tsx:65
 msgid "Books"
 msgstr "Libri"
@@ -387,7 +392,7 @@ msgstr "Configurazione"
 
 #: src/components/Confirm.tsx:73
 msgid "Confirm"
-msgstr ""
+msgstr "Conferma"
 
 #: src/pages/settings/Password.tsx:41
 msgid "Confirm new password"
@@ -397,18 +402,18 @@ msgstr "Conferma nuova password"
 msgid "Confirm password"
 msgstr "Conferma password"
 
-#: src/pages/import/TraktTv.tsx:94
+#: src/pages/import/TraktTv.tsx:93
 msgid "Copy to clipboard"
 msgstr "Copia negli appunti"
 
 #: src/pages/GroupsPage.tsx:32
 msgid "Create a group to share Platform Recommended results with other users."
-msgstr ""
+msgstr "Crea un gruppo per condividere i risultati Raccomandati dalla piattaforma con altri utenti."
 
 #: src/components/AddOrEditGroupButton.tsx:66
 #: src/components/AddOrEditGroupButton.tsx:87
 msgid "Create group"
-msgstr ""
+msgstr "Crea gruppo"
 
 #: src/components/Facets/ActiveFacetChips.tsx:51
 #: src/components/Facets/ActiveFacetChips.tsx:58
@@ -435,12 +440,12 @@ msgstr "Debug"
 
 #: src/pages/GroupDetailPage.tsx:359
 msgid "Delete group"
-msgstr ""
+msgstr "Elimina gruppo"
 
 #. placeholder {0}: group?.name
 #: src/pages/GroupDetailPage.tsx:276
 msgid "Delete group \"{0}\"? This action cannot be undone."
-msgstr ""
+msgstr "Eliminare il gruppo \"{0}\"? Questa azione non può essere annullata."
 
 #: src/components/AddOrEditListButton.tsx:246
 msgid "Delete list"
@@ -507,22 +512,22 @@ msgstr "Episodi"
 msgid "Episodes page"
 msgstr "Pagina episodi"
 
-#: src/pages/import/TraktTv.tsx:144
+#: src/pages/import/TraktTv.tsx:143
 #: src/pages/LogsPage.tsx:102
 msgid "Error"
 msgstr "Errore"
 
-#: src/pages/import/TraktTv.tsx:138
+#: src/pages/import/TraktTv.tsx:137
 msgid "Exporting"
 msgstr "Esportazione in corso"
 
 #: src/pages/GroupDetailPage.tsx:90
 msgid "Failed to add member. They may already be in the group."
-msgstr ""
+msgstr "Impossibile aggiungere il membro. Potrebbe essere già nel gruppo."
 
 #: src/pages/GroupDetailPage.tsx:291
 msgid "Failed to load group. It may have been deleted."
-msgstr ""
+msgstr "Impossibile caricare il gruppo. Potrebbe essere stato eliminato."
 
 #: src/components/Facets/FacetDrawer.tsx:61
 #: src/components/Facets/FacetMobileButton.tsx:36
@@ -535,8 +540,8 @@ msgid "First unwatched episode"
 msgstr "Primo episodio non visto"
 
 #: src/components/Nav.tsx:39
-#: src/components/Statistics/StatisticsGenreSegment.tsx:19
-#: src/components/Statistics/StatisticsSegment.tsx:111
+#: src/components/Statistics/StatisticsGenreSegment.tsx:20
+#: src/components/Statistics/StatisticsSegment.tsx:117
 msgid "Games"
 msgstr "Giochi"
 
@@ -549,13 +554,13 @@ msgstr "Generale"
 msgid "Genre"
 msgstr "Genre"
 
-#: src/pages/Statistics.tsx:150
+#: src/pages/Statistics.tsx:154
 msgid "Genres"
 msgstr "Generi"
 
 #. placeholder {0}: deviceCode.verificationUrl
 #. placeholder {1}: deviceCode.userCode
-#: src/pages/import/TraktTv.tsx:67
+#: src/pages/import/TraktTv.tsx:66
 msgid "Go to <0>{0}</0> and enter following code: <1>{1}</1>"
 msgstr "Vai su <0>{0}</0> e inserisci il seguente codice: <1>{1}</1>"
 
@@ -569,11 +574,11 @@ msgstr "URL server Gotify"
 
 #: src/pages/GroupDetailPage.tsx:310
 msgid "Group name"
-msgstr ""
+msgstr "Nome del gruppo"
 
 #: src/components/Nav.tsx:50
 msgid "Groups"
-msgstr ""
+msgstr "Gruppi"
 
 #: src/pages/settings/Preferences.tsx:31
 msgid "Hide overview of unseen seasons"
@@ -645,12 +650,12 @@ msgstr "Importa"
 msgid "Import from"
 msgstr "Importa da"
 
-#: src/pages/import/TraktTv.tsx:142
+#: src/pages/import/TraktTv.tsx:141
 msgid "Imported"
 msgstr "Importato"
 
 #: src/pages/import/Goodreads.tsx:62
-#: src/pages/import/TraktTv.tsx:143
+#: src/pages/import/TraktTv.tsx:142
 msgid "Importing"
 msgstr "Importazione in corso"
 
@@ -709,27 +714,27 @@ msgid "Last seen at {0}"
 msgstr "Visto l'ultima volta il {0}"
 
 #. placeholder {0}: item.listName
-#: src/pages/import/TraktTv.tsx:325
+#: src/pages/import/TraktTv.tsx:320
 msgid "List {0} - episodes"
 msgstr "Lista {0} - episodi"
 
 #. placeholder {0}: item.listName
-#: src/pages/import/TraktTv.tsx:307
+#: src/pages/import/TraktTv.tsx:302
 msgid "List {0} - movies"
 msgstr "Lista {0} - film"
 
 #. placeholder {0}: item.listName
-#: src/pages/import/TraktTv.tsx:319
+#: src/pages/import/TraktTv.tsx:314
 msgid "List {0} - seasons"
 msgstr "Lista {0} - stagioni"
 
 #. placeholder {0}: item.listName
-#: src/pages/import/TraktTv.tsx:313
+#: src/pages/import/TraktTv.tsx:308
 msgid "List {0} - shows"
 msgstr "Lista {0} - serie"
 
 #. placeholder {0}: list.listName
-#: src/pages/import/TraktTv.tsx:223
+#: src/pages/import/TraktTv.tsx:218
 msgid "List: {0}"
 msgstr "Lista: {0}"
 
@@ -760,7 +765,7 @@ msgstr "Liste"
 #: src/pages/EpisodePage.tsx:42
 #: src/pages/GroupDetailPage.tsx:285
 #: src/pages/GroupsPage.tsx:17
-#: src/pages/import/TraktTv.tsx:117
+#: src/pages/import/TraktTv.tsx:116
 #: src/pages/ListPage.tsx:86
 #: src/pages/ListsPage.tsx:29
 #: src/pages/Login.tsx:17
@@ -804,7 +809,7 @@ msgstr "Tipo di media"
 
 #: src/pages/GroupDetailPage.tsx:328
 msgid "Members"
-msgstr ""
+msgstr "Membri"
 
 #: src/components/Facets/RatingSection.tsx:67
 msgid "Minimum rating"
@@ -822,8 +827,8 @@ msgstr "Film"
 
 #: src/components/ImportSummaryTable.tsx:90
 #: src/components/Nav.tsx:38
-#: src/components/Statistics/StatisticsGenreSegment.tsx:16
-#: src/components/Statistics/StatisticsSegment.tsx:72
+#: src/components/Statistics/StatisticsGenreSegment.tsx:17
+#: src/components/Statistics/StatisticsSegment.tsx:76
 msgid "Movies"
 msgstr "Film"
 
@@ -846,7 +851,7 @@ msgstr "Rete"
 
 #: src/components/AddOrEditGroupButton.tsx:47
 msgid "New group"
-msgstr ""
+msgstr "Nuovo gruppo"
 
 #: src/components/AddOrEditListButton.tsx:133
 msgid "New list"
@@ -879,11 +884,11 @@ msgstr "Nessuna data"
 
 #: src/pages/GroupsPage.tsx:29
 msgid "No groups yet"
-msgstr ""
+msgstr "Nessun gruppo ancora"
 
 #: src/pages/GroupDetailPage.tsx:333
 msgid "No members yet"
-msgstr ""
+msgstr "Nessun membro ancora"
 
 #: src/pages/LogsPage.tsx:68
 msgid "No more logs"
@@ -891,15 +896,15 @@ msgstr "Nessun altro registro"
 
 #: src/pages/GroupDetailPage.tsx:134
 msgid "No users found"
-msgstr ""
+msgstr "Nessun utente trovato"
 
-#: src/pages/import/TraktTv.tsx:250
+#: src/pages/import/TraktTv.tsx:245
 msgid "Not imported items"
 msgstr "Elementi non importati"
 
 #: src/pages/settings/Notifications.tsx:174
 msgid "Notification platform"
-msgstr ""
+msgstr "Piattaforma di notifica"
 
 #: src/pages/Settings.tsx:129
 msgid "Notifications"
@@ -948,7 +953,7 @@ msgstr "Piattaforma"
 #: src/components/OrderBy.tsx:24
 #: src/hooks/translations.ts:17
 msgid "Platform Recommended"
-msgstr ""
+msgstr "Consigliato dalla piattaforma"
 
 #: src/components/Facets/ActiveFacetChips.tsx:32
 #: src/components/Facets/StatusSection.tsx:39
@@ -1037,23 +1042,23 @@ msgstr "Valutato"
 msgid "Rating"
 msgstr "Valutazione"
 
-#: src/pages/import/TraktTv.tsx:207
+#: src/pages/import/TraktTv.tsx:202
 msgid "Ratings"
 msgstr "Valutazioni"
 
-#: src/pages/import/TraktTv.tsx:299
+#: src/pages/import/TraktTv.tsx:294
 msgid "Ratings - episodes"
 msgstr "Valutazioni - episodi"
 
-#: src/pages/import/TraktTv.tsx:284
+#: src/pages/import/TraktTv.tsx:279
 msgid "Ratings - movies"
 msgstr "Valutazioni - film"
 
-#: src/pages/import/TraktTv.tsx:294
+#: src/pages/import/TraktTv.tsx:289
 msgid "Ratings - seasons"
 msgstr "Valutazioni - stagioni"
 
-#: src/pages/import/TraktTv.tsx:289
+#: src/pages/import/TraktTv.tsx:284
 msgid "Ratings - shows"
 msgstr "Valutazioni - serie"
 
@@ -1137,7 +1142,7 @@ msgstr "Rilasciato <0/>"
 
 #: src/pages/GroupDetailPage.tsx:203
 msgid "Remove"
-msgstr ""
+msgstr "Rimuovi"
 
 #. placeholder {0}: mediaItem.title
 #. placeholder {1}: season ? ' ' + formatSeasonNumber(season) : episode ? ' ' + formatEpisodeNumber(episode) : ''
@@ -1148,12 +1153,12 @@ msgstr "Rimuovere \"{0}{1}\" dalla watchlist?"
 #. placeholder {0}: member.name
 #: src/pages/GroupDetailPage.tsx:201
 msgid "Remove {0}"
-msgstr ""
+msgstr "Rimuovi {0}"
 
 #. placeholder {0}: member.name
 #: src/pages/GroupDetailPage.tsx:168
 msgid "Remove {0} from this group?"
-msgstr ""
+msgstr "Rimuovere {0} da questo gruppo?"
 
 #: src/components/Facets/ActiveFacetChips.tsx:107
 msgid "Remove {dimensionLabel}: {value} filter"
@@ -1199,7 +1204,7 @@ msgstr "Recensione di <0><1>{author}</1></0> il {date}"
 #. placeholder {0}: member.name
 #: src/pages/GroupDetailPage.tsx:191
 msgid "Role for {0}"
-msgstr ""
+msgstr "Ruolo per {0}"
 
 #: src/pages/import/Goodreads.tsx:48
 msgid "RSS link"
@@ -1241,7 +1246,7 @@ msgstr "Cerca"
 
 #: src/pages/GroupDetailPage.tsx:103
 msgid "Search by username…"
-msgstr ""
+msgstr "Cerca per nome utente…"
 
 #: src/components/PaginatedGridItems.tsx:304
 msgid "Search for items or <0>import</0>"
@@ -1253,11 +1258,11 @@ msgstr "Cerca nella lista"
 
 #: src/pages/GroupDetailPage.tsx:107
 msgid "Search users to add"
-msgstr ""
+msgstr "Cerca utenti da aggiungere"
 
 #: src/pages/GroupDetailPage.tsx:112
 msgid "Searching…"
-msgstr ""
+msgstr "Ricerca in corso…"
 
 #: src/components/SelectLastSeenEpisode.tsx:83
 msgid "Season"
@@ -1273,7 +1278,7 @@ msgstr "Stagione {0}"
 msgid "Seasons"
 msgstr "Stagioni"
 
-#: src/pages/Statistics.tsx:145
+#: src/pages/Statistics.tsx:149
 msgid "Seen"
 msgstr "Visto"
 
@@ -1283,15 +1288,15 @@ msgid "Seen at {0}"
 msgstr "Visto il {0}"
 
 #: src/pages/Details.tsx:602
-#: src/pages/import/TraktTv.tsx:196
+#: src/pages/import/TraktTv.tsx:191
 msgid "Seen history"
 msgstr "Cronologia dei visti"
 
-#: src/pages/import/TraktTv.tsx:279
+#: src/pages/import/TraktTv.tsx:274
 msgid "Seen history - episodes"
 msgstr "Cronologia dei visti - episodi"
 
-#: src/pages/import/TraktTv.tsx:274
+#: src/pages/import/TraktTv.tsx:269
 msgid "Seen history - movies"
 msgstr "Cronologia dei visti - film"
 
@@ -1305,13 +1310,13 @@ msgstr "Seleziona data"
 
 #: src/pages/settings/Notifications.tsx:265
 msgid "Select priority"
-msgstr ""
+msgstr "Seleziona priorità"
 
-#: src/pages/Statistics.tsx:191
+#: src/pages/Statistics.tsx:195
 msgid "Select year"
-msgstr ""
+msgstr "Seleziona anno"
 
-#: src/pages/Statistics.tsx:203
+#: src/pages/Statistics.tsx:207
 msgid "Select Year"
 msgstr "Seleziona anno"
 
@@ -1335,7 +1340,7 @@ msgstr "Invia notifica quando la data di uscita cambia"
 msgid "Send notification when status changes"
 msgstr "Invia notifica quando lo stato cambia"
 
-#: src/App.tsx:102
+#: src/App.tsx:101
 msgid "Server error: {errorMessage}"
 msgstr "Errore del server: {errorMessage}"
 
@@ -1391,7 +1396,7 @@ msgstr "Ordine di ordinamento"
 msgid "Source"
 msgstr "Fonte"
 
-#: src/pages/import/TraktTv.tsx:111
+#: src/pages/import/TraktTv.tsx:110
 msgid "Start over"
 msgstr "Ricomincia"
 
@@ -1444,8 +1449,8 @@ msgstr "Durata totale"
 
 #: src/components/GridItem.tsx:94
 #: src/components/Nav.tsx:37
-#: src/components/Statistics/StatisticsGenreSegment.tsx:15
-#: src/components/Statistics/StatisticsSegment.tsx:33
+#: src/components/Statistics/StatisticsGenreSegment.tsx:16
+#: src/components/Statistics/StatisticsSegment.tsx:35
 msgid "Tv"
 msgstr "TV"
 
@@ -1454,7 +1459,7 @@ msgstr "TV"
 msgid "TV Show"
 msgstr "Serie TV"
 
-#: src/pages/import/TraktTv.tsx:139
+#: src/pages/import/TraktTv.tsx:138
 msgid "Uninitialized"
 msgstr "Non inizializzato"
 
@@ -1482,7 +1487,7 @@ msgstr "In arrivo"
 msgid "Update metadata"
 msgstr "Aggiorna metadati"
 
-#: src/pages/import/TraktTv.tsx:140
+#: src/pages/import/TraktTv.tsx:139
 msgid "Updating metadata"
 msgstr "Aggiornamento metadati in corso"
 
@@ -1506,9 +1511,9 @@ msgstr "Videogioco"
 #: src/pages/GroupDetailPage.tsx:321
 #: src/pages/GroupsPage.tsx:50
 msgid "Viewer"
-msgstr ""
+msgstr "Spettatore"
 
-#: src/pages/import/TraktTv.tsx:141
+#: src/pages/import/TraktTv.tsx:140
 msgid "Waiting for authentication"
 msgstr "In attesa di autenticazione"
 
@@ -1523,24 +1528,24 @@ msgid "Watched"
 msgstr "Visto"
 
 #: src/components/Nav.tsx:44
-#: src/pages/import/TraktTv.tsx:181
+#: src/pages/import/TraktTv.tsx:176
 #: src/utils.ts:157
 msgid "Watchlist"
 msgstr "Lista di controllo"
 
-#: src/pages/import/TraktTv.tsx:269
+#: src/pages/import/TraktTv.tsx:264
 msgid "Watchlist - episodes"
 msgstr "Lista di controllo - episodi"
 
-#: src/pages/import/TraktTv.tsx:254
+#: src/pages/import/TraktTv.tsx:249
 msgid "Watchlist - movies"
 msgstr "Lista di controllo - film"
 
-#: src/pages/import/TraktTv.tsx:264
+#: src/pages/import/TraktTv.tsx:259
 msgid "Watchlist - season"
 msgstr "Lista di controllo - stagione"
 
-#: src/pages/import/TraktTv.tsx:259
+#: src/pages/import/TraktTv.tsx:254
 msgid "Watchlist - shows"
 msgstr "Lista di controllo - serie"
 
@@ -1590,4 +1595,4 @@ msgstr "Sì"
 
 #: src/pages/GroupDetailPage.tsx:319
 msgid "Your role:"
-msgstr ""
+msgstr "Il tuo ruolo:"

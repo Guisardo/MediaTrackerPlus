@@ -13,9 +13,14 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#. js-lingui-explicit-id
+#: src/__tests__/ui-stack-migration.integration.test.ts:186
+msgid "i18n/i18n.ts"
+msgstr "i18n/i18n.ts"
+
 #: src/pages/settings/Notifications.tsx:82
 msgid " User key"
-msgstr ""
+msgstr " Gebruikerssleutel"
 
 #. placeholder {0}: 1
 #. placeholder {0}: 5
@@ -29,11 +34,11 @@ msgstr "{0, plural, one {# item} other {# items}}"
 #. placeholder {0}: group.memberCount
 #: src/pages/GroupsPage.tsx:56
 msgid "{0, plural, one {# member} other {# members}}"
-msgstr ""
+msgstr "{0, plural, one {# lid} other {# leden}}"
 
 #. placeholder {0}: filteredItems.length
 #. placeholder {0}: items.length
-#: src/pages/import/TraktTv.tsx:347
+#: src/pages/import/TraktTv.tsx:342
 #: src/pages/ListPage.tsx:131
 msgid "{0, plural, one {1 item} other {# items}}"
 msgstr "{0, plural, one {1 item} other {# items}}"
@@ -46,7 +51,7 @@ msgstr "{0, plural, one {Auteur} other {Auteurs}}"
 #. placeholder {0}: searchResult?.length
 #: src/components/PaginatedGridItems.tsx:317
 msgid "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {Found # items for query \"<1>{searchQuery}</1>\"}}"
-msgstr ""
+msgstr "{0, plural, one {# item gevonden voor zoekopdracht \"<0>{searchQuery}</0>\"} other {# items gevonden voor zoekopdracht \"<1>{searchQuery}</1>\"}}"
 
 #. placeholder {0}: mediaItem.genres.length
 #: src/pages/Details.tsx:299
@@ -95,7 +100,7 @@ msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
 msgstr "{0, plural, one {1 keer bekeken} other {# keren bekeken}}"
 
 #. placeholder {0}: route.name
-#: src/components/Statistics/StatisticsGenreSegment.tsx:37
+#: src/components/Statistics/StatisticsGenreSegment.tsx:42
 msgid "{0}"
 msgstr "{0}"
 
@@ -125,55 +130,55 @@ msgstr "{value, plural, one {pagina} other {pagina's}}"
 
 #. placeholder {0}: item.genre
 #. placeholder {1}: item.count
-#: src/components/Statistics/StatisticsGenreSegment.tsx:56
+#: src/components/Statistics/StatisticsGenreSegment.tsx:61
 msgid "<0>{0}</0> (<1>{1}</1>)"
 msgstr "<0>{0}</0> (<1>{1}</1>)"
 
 #. placeholder {0}: data.audiobook.items
 #. placeholder {1}: data.audiobook.plays
-#: src/components/Statistics/StatisticsSegment.tsx:205
+#: src/components/Statistics/StatisticsSegment.tsx:215
 msgid "<0>{0}</0> audiobooks (<1>{1}</1> plays)"
 msgstr "<0>{0}</0> audioboek (<1>{1}</1> spelen)"
 
 #. placeholder {0}: data.book.items
 #. placeholder {1}: data.book.plays
-#: src/components/Statistics/StatisticsSegment.tsx:166
+#: src/components/Statistics/StatisticsSegment.tsx:174
 msgid "<0>{0}</0> books (<1>{1}</1> reads)"
 msgstr "<0>{0}</0> boek (<1>{1}</1> lezen)"
 
 #. placeholder {0}: data.tv.episodes
 #. placeholder {1}: data.tv.plays
 #. placeholder {2}: data.tv.items
-#: src/components/Statistics/StatisticsSegment.tsx:49
+#: src/components/Statistics/StatisticsSegment.tsx:51
 msgid "<0>{0}</0> episodes (<1>{1}</1> plays of <2>{2}</2> shows)"
 msgstr "<0>{0}</0> afleveringen (<1>{1}</1> afspelen van <2>{2}</2> shows)"
 
 #. placeholder {0}: data.movie.items
 #. placeholder {1}: data.movie.plays
-#: src/components/Statistics/StatisticsSegment.tsx:88
+#: src/components/Statistics/StatisticsSegment.tsx:92
 msgid "<0>{0}</0> movies (<1>{1}</1> plays)"
 msgstr "<0>{0}</0> films (<1>{1}</1> afgespeeld)"
 
 #. placeholder {0}: data.video_game.items
 #. placeholder {1}: data.video_game.plays
-#: src/components/Statistics/StatisticsSegment.tsx:127
+#: src/components/Statistics/StatisticsSegment.tsx:133
 msgid "<0>{0}</0> video games (<1>{1}</1> plays)"
 msgstr "<0>{0}</0> videospellen (<1>{1}</1> afgespeeld)"
 
-#: src/components/Statistics/StatisticsSegment.tsx:194
+#: src/components/Statistics/StatisticsSegment.tsx:204
 msgid "<0><1/> </0>listening"
 msgstr "<0><1/></0>luisteren"
 
-#: src/components/Statistics/StatisticsSegment.tsx:116
+#: src/components/Statistics/StatisticsSegment.tsx:122
 msgid "<0><1/> </0>playing"
 msgstr "<0><1/></0>afspelen"
 
-#: src/components/Statistics/StatisticsSegment.tsx:155
+#: src/components/Statistics/StatisticsSegment.tsx:163
 msgid "<0><1/> </0>reading"
 msgstr "<0><1/></0>lezen"
 
-#: src/components/Statistics/StatisticsSegment.tsx:38
-#: src/components/Statistics/StatisticsSegment.tsx:77
+#: src/components/Statistics/StatisticsSegment.tsx:40
+#: src/components/Statistics/StatisticsSegment.tsx:81
 msgid "<0><1/> </0>watching"
 msgstr "<0><1/></0>kijken"
 
@@ -216,7 +221,7 @@ msgstr "Lijst toevoegen"
 
 #: src/pages/GroupDetailPage.tsx:97
 msgid "Add member"
-msgstr ""
+msgstr "Lid toevoegen"
 
 #: src/pages/settings/Preferences.tsx:41
 msgid "Add recommendations to watchlist"
@@ -265,7 +270,7 @@ msgstr "Token toevoegen"
 #: src/pages/GroupDetailPage.tsx:321
 #: src/pages/GroupsPage.tsx:48
 msgid "Admin"
-msgstr ""
+msgstr "Beheerder"
 
 #: src/components/FilterBy.tsx:11
 msgid "All"
@@ -273,7 +278,7 @@ msgstr "Alles"
 
 #: src/components/GroupSelector.tsx:150
 msgid "All Users"
-msgstr ""
+msgstr "Alle gebruikers"
 
 #: src/pages/Statistics.tsx:33
 msgid "All Years"
@@ -311,7 +316,7 @@ msgid "Audiobook"
 msgstr "Audioboek"
 
 #: src/components/Nav.tsx:41
-#: src/components/Statistics/StatisticsSegment.tsx:189
+#: src/components/Statistics/StatisticsSegment.tsx:199
 msgid "Audiobooks"
 msgstr "Audioboeken"
 
@@ -339,7 +344,7 @@ msgid "Book"
 msgstr "Boek"
 
 #: src/components/Nav.tsx:40
-#: src/components/Statistics/StatisticsSegment.tsx:150
+#: src/components/Statistics/StatisticsSegment.tsx:158
 #: src/pages/import/Goodreads.tsx:65
 msgid "Books"
 msgstr "Boeken"
@@ -387,7 +392,7 @@ msgstr "Configuratie"
 
 #: src/components/Confirm.tsx:73
 msgid "Confirm"
-msgstr ""
+msgstr "Bevestigen"
 
 #: src/pages/settings/Password.tsx:41
 msgid "Confirm new password"
@@ -397,18 +402,18 @@ msgstr "Nieuw wachtwoord bevestigen"
 msgid "Confirm password"
 msgstr "Bevestig wachtwoord"
 
-#: src/pages/import/TraktTv.tsx:94
+#: src/pages/import/TraktTv.tsx:93
 msgid "Copy to clipboard"
 msgstr "Kopieer naar klembord"
 
 #: src/pages/GroupsPage.tsx:32
 msgid "Create a group to share Platform Recommended results with other users."
-msgstr ""
+msgstr "Maak een groep aan om door het Platform Aanbevolen resultaten te delen met andere gebruikers."
 
 #: src/components/AddOrEditGroupButton.tsx:66
 #: src/components/AddOrEditGroupButton.tsx:87
 msgid "Create group"
-msgstr ""
+msgstr "Groep aanmaken"
 
 #: src/components/Facets/ActiveFacetChips.tsx:51
 #: src/components/Facets/ActiveFacetChips.tsx:58
@@ -435,12 +440,12 @@ msgstr "Debuggen"
 
 #: src/pages/GroupDetailPage.tsx:359
 msgid "Delete group"
-msgstr ""
+msgstr "Groep verwijderen"
 
 #. placeholder {0}: group?.name
 #: src/pages/GroupDetailPage.tsx:276
 msgid "Delete group \"{0}\"? This action cannot be undone."
-msgstr ""
+msgstr "Groep \"{0}\" verwijderen? Deze actie kan niet ongedaan worden gemaakt."
 
 #: src/components/AddOrEditListButton.tsx:246
 msgid "Delete list"
@@ -507,22 +512,22 @@ msgstr "Afleveringen"
 msgid "Episodes page"
 msgstr "Afleveringen pagina"
 
-#: src/pages/import/TraktTv.tsx:144
+#: src/pages/import/TraktTv.tsx:143
 #: src/pages/LogsPage.tsx:102
 msgid "Error"
 msgstr "Foutmelding"
 
-#: src/pages/import/TraktTv.tsx:138
+#: src/pages/import/TraktTv.tsx:137
 msgid "Exporting"
 msgstr "Exporteren"
 
 #: src/pages/GroupDetailPage.tsx:90
 msgid "Failed to add member. They may already be in the group."
-msgstr ""
+msgstr "Kon lid niet toevoegen. Ze zijn mogelijk al in de groep."
 
 #: src/pages/GroupDetailPage.tsx:291
 msgid "Failed to load group. It may have been deleted."
-msgstr ""
+msgstr "Kon groep niet laden. Deze is mogelijk verwijderd."
 
 #: src/components/Facets/FacetDrawer.tsx:61
 #: src/components/Facets/FacetMobileButton.tsx:36
@@ -535,8 +540,8 @@ msgid "First unwatched episode"
 msgstr "Eerste onbekeken aflevering"
 
 #: src/components/Nav.tsx:39
-#: src/components/Statistics/StatisticsGenreSegment.tsx:19
-#: src/components/Statistics/StatisticsSegment.tsx:111
+#: src/components/Statistics/StatisticsGenreSegment.tsx:20
+#: src/components/Statistics/StatisticsSegment.tsx:117
 msgid "Games"
 msgstr "Spellen"
 
@@ -549,13 +554,13 @@ msgstr "Algemeen"
 msgid "Genre"
 msgstr "Genre"
 
-#: src/pages/Statistics.tsx:150
+#: src/pages/Statistics.tsx:154
 msgid "Genres"
 msgstr "Genres"
 
 #. placeholder {0}: deviceCode.verificationUrl
 #. placeholder {1}: deviceCode.userCode
-#: src/pages/import/TraktTv.tsx:67
+#: src/pages/import/TraktTv.tsx:66
 msgid "Go to <0>{0}</0> and enter following code: <1>{1}</1>"
 msgstr "Ga naar <0>{0}</0> en voer de volgende code in: <1>{1}</1>"
 
@@ -569,11 +574,11 @@ msgstr "Gotify server url"
 
 #: src/pages/GroupDetailPage.tsx:310
 msgid "Group name"
-msgstr ""
+msgstr "Groepsnaam"
 
 #: src/components/Nav.tsx:50
 msgid "Groups"
-msgstr ""
+msgstr "Groepen"
 
 #: src/pages/settings/Preferences.tsx:31
 msgid "Hide overview of unseen seasons"
@@ -645,12 +650,12 @@ msgstr "Importeren"
 msgid "Import from"
 msgstr "Importeren van"
 
-#: src/pages/import/TraktTv.tsx:142
+#: src/pages/import/TraktTv.tsx:141
 msgid "Imported"
 msgstr "Geïmporteerd"
 
 #: src/pages/import/Goodreads.tsx:62
-#: src/pages/import/TraktTv.tsx:143
+#: src/pages/import/TraktTv.tsx:142
 msgid "Importing"
 msgstr "Aan het importeren"
 
@@ -709,27 +714,27 @@ msgid "Last seen at {0}"
 msgstr "Laatst gezien op {0}"
 
 #. placeholder {0}: item.listName
-#: src/pages/import/TraktTv.tsx:325
+#: src/pages/import/TraktTv.tsx:320
 msgid "List {0} - episodes"
 msgstr "Lijst {0} - afleveringen"
 
 #. placeholder {0}: item.listName
-#: src/pages/import/TraktTv.tsx:307
+#: src/pages/import/TraktTv.tsx:302
 msgid "List {0} - movies"
 msgstr "Lijst {0} - films"
 
 #. placeholder {0}: item.listName
-#: src/pages/import/TraktTv.tsx:319
+#: src/pages/import/TraktTv.tsx:314
 msgid "List {0} - seasons"
 msgstr "Lijst {0} - seizoen"
 
 #. placeholder {0}: item.listName
-#: src/pages/import/TraktTv.tsx:313
+#: src/pages/import/TraktTv.tsx:308
 msgid "List {0} - shows"
 msgstr "Lijst {0} - shows"
 
 #. placeholder {0}: list.listName
-#: src/pages/import/TraktTv.tsx:223
+#: src/pages/import/TraktTv.tsx:218
 msgid "List: {0}"
 msgstr "Lijst: {0}"
 
@@ -760,7 +765,7 @@ msgstr "Lijsten"
 #: src/pages/EpisodePage.tsx:42
 #: src/pages/GroupDetailPage.tsx:285
 #: src/pages/GroupsPage.tsx:17
-#: src/pages/import/TraktTv.tsx:117
+#: src/pages/import/TraktTv.tsx:116
 #: src/pages/ListPage.tsx:86
 #: src/pages/ListsPage.tsx:29
 #: src/pages/Login.tsx:17
@@ -804,7 +809,7 @@ msgstr "Mediatype"
 
 #: src/pages/GroupDetailPage.tsx:328
 msgid "Members"
-msgstr ""
+msgstr "Leden"
 
 #: src/components/Facets/RatingSection.tsx:67
 msgid "Minimum rating"
@@ -822,8 +827,8 @@ msgstr "Film"
 
 #: src/components/ImportSummaryTable.tsx:90
 #: src/components/Nav.tsx:38
-#: src/components/Statistics/StatisticsGenreSegment.tsx:16
-#: src/components/Statistics/StatisticsSegment.tsx:72
+#: src/components/Statistics/StatisticsGenreSegment.tsx:17
+#: src/components/Statistics/StatisticsSegment.tsx:76
 msgid "Movies"
 msgstr "Films"
 
@@ -846,7 +851,7 @@ msgstr "Netwerk"
 
 #: src/components/AddOrEditGroupButton.tsx:47
 msgid "New group"
-msgstr ""
+msgstr "Nieuwe groep"
 
 #: src/components/AddOrEditListButton.tsx:133
 msgid "New list"
@@ -879,11 +884,11 @@ msgstr "Geen datum"
 
 #: src/pages/GroupsPage.tsx:29
 msgid "No groups yet"
-msgstr ""
+msgstr "Nog geen groepen"
 
 #: src/pages/GroupDetailPage.tsx:333
 msgid "No members yet"
-msgstr ""
+msgstr "Nog geen leden"
 
 #: src/pages/LogsPage.tsx:68
 msgid "No more logs"
@@ -891,15 +896,15 @@ msgstr "Geen logs meer"
 
 #: src/pages/GroupDetailPage.tsx:134
 msgid "No users found"
-msgstr ""
+msgstr "Geen gebruikers gevonden"
 
-#: src/pages/import/TraktTv.tsx:250
+#: src/pages/import/TraktTv.tsx:245
 msgid "Not imported items"
 msgstr "Niet geïmporteerde items"
 
 #: src/pages/settings/Notifications.tsx:174
 msgid "Notification platform"
-msgstr ""
+msgstr "Notificatieplatform"
 
 #: src/pages/Settings.tsx:129
 msgid "Notifications"
@@ -948,7 +953,7 @@ msgstr "Platform"
 #: src/components/OrderBy.tsx:24
 #: src/hooks/translations.ts:17
 msgid "Platform Recommended"
-msgstr ""
+msgstr "Platform Aanbevolen"
 
 #: src/components/Facets/ActiveFacetChips.tsx:32
 #: src/components/Facets/StatusSection.tsx:39
@@ -1037,23 +1042,23 @@ msgstr "Beoordeeld"
 msgid "Rating"
 msgstr "Beoordeling"
 
-#: src/pages/import/TraktTv.tsx:207
+#: src/pages/import/TraktTv.tsx:202
 msgid "Ratings"
 msgstr "Waarderingen"
 
-#: src/pages/import/TraktTv.tsx:299
+#: src/pages/import/TraktTv.tsx:294
 msgid "Ratings - episodes"
 msgstr "Beoordelingen - afleveringen"
 
-#: src/pages/import/TraktTv.tsx:284
+#: src/pages/import/TraktTv.tsx:279
 msgid "Ratings - movies"
 msgstr "Beoordelingen - films"
 
-#: src/pages/import/TraktTv.tsx:294
+#: src/pages/import/TraktTv.tsx:289
 msgid "Ratings - seasons"
 msgstr "Beoordelingen - seizoenen"
 
-#: src/pages/import/TraktTv.tsx:289
+#: src/pages/import/TraktTv.tsx:284
 msgid "Ratings - shows"
 msgstr "Beoordelingen - series"
 
@@ -1137,7 +1142,7 @@ msgstr "Uitgebracht <0/>"
 
 #: src/pages/GroupDetailPage.tsx:203
 msgid "Remove"
-msgstr ""
+msgstr "Verwijderen"
 
 #. placeholder {0}: mediaItem.title
 #. placeholder {1}: season ? ' ' + formatSeasonNumber(season) : episode ? ' ' + formatEpisodeNumber(episode) : ''
@@ -1148,12 +1153,12 @@ msgstr "\"{0}{1}\" van de volglijst verwijderen?"
 #. placeholder {0}: member.name
 #: src/pages/GroupDetailPage.tsx:201
 msgid "Remove {0}"
-msgstr ""
+msgstr "Verwijder {0}"
 
 #. placeholder {0}: member.name
 #: src/pages/GroupDetailPage.tsx:168
 msgid "Remove {0} from this group?"
-msgstr ""
+msgstr "{0} uit deze groep verwijderen?"
 
 #: src/components/Facets/ActiveFacetChips.tsx:107
 msgid "Remove {dimensionLabel}: {value} filter"
@@ -1199,7 +1204,7 @@ msgstr "Beoordeling door <0><1>{author}</1></0> op {date}"
 #. placeholder {0}: member.name
 #: src/pages/GroupDetailPage.tsx:191
 msgid "Role for {0}"
-msgstr ""
+msgstr "Rol voor {0}"
 
 #: src/pages/import/Goodreads.tsx:48
 msgid "RSS link"
@@ -1241,7 +1246,7 @@ msgstr "Zoeken"
 
 #: src/pages/GroupDetailPage.tsx:103
 msgid "Search by username…"
-msgstr ""
+msgstr "Zoeken op gebruikersnaam…"
 
 #: src/components/PaginatedGridItems.tsx:304
 msgid "Search for items or <0>import</0>"
@@ -1253,11 +1258,11 @@ msgstr "Zoek in lijst"
 
 #: src/pages/GroupDetailPage.tsx:107
 msgid "Search users to add"
-msgstr ""
+msgstr "Zoek gebruikers om toe te voegen"
 
 #: src/pages/GroupDetailPage.tsx:112
 msgid "Searching…"
-msgstr ""
+msgstr "Zoeken…"
 
 #: src/components/SelectLastSeenEpisode.tsx:83
 msgid "Season"
@@ -1273,7 +1278,7 @@ msgstr "Seizoen {0}"
 msgid "Seasons"
 msgstr "Seizoenen"
 
-#: src/pages/Statistics.tsx:145
+#: src/pages/Statistics.tsx:149
 msgid "Seen"
 msgstr "Gezien"
 
@@ -1283,15 +1288,15 @@ msgid "Seen at {0}"
 msgstr "Gezien op {0}"
 
 #: src/pages/Details.tsx:602
-#: src/pages/import/TraktTv.tsx:196
+#: src/pages/import/TraktTv.tsx:191
 msgid "Seen history"
 msgstr "Gezien geschiedenis"
 
-#: src/pages/import/TraktTv.tsx:279
+#: src/pages/import/TraktTv.tsx:274
 msgid "Seen history - episodes"
 msgstr "Gezien geschiedenis - afleveringen"
 
-#: src/pages/import/TraktTv.tsx:274
+#: src/pages/import/TraktTv.tsx:269
 msgid "Seen history - movies"
 msgstr "Gezien geschiedenis - films"
 
@@ -1305,13 +1310,13 @@ msgstr "Datum selecteren"
 
 #: src/pages/settings/Notifications.tsx:265
 msgid "Select priority"
-msgstr ""
+msgstr "Prioriteit selecteren"
 
-#: src/pages/Statistics.tsx:191
+#: src/pages/Statistics.tsx:195
 msgid "Select year"
-msgstr ""
+msgstr "Jaar selecteren"
 
-#: src/pages/Statistics.tsx:203
+#: src/pages/Statistics.tsx:207
 msgid "Select Year"
 msgstr "Selecteer jaar"
 
@@ -1335,7 +1340,7 @@ msgstr "Stuur een notificatie wanneer de releasedatum verandert"
 msgid "Send notification when status changes"
 msgstr "Stuur een notificatie wanneer de status verandert"
 
-#: src/App.tsx:102
+#: src/App.tsx:101
 msgid "Server error: {errorMessage}"
 msgstr "Serverfout: {errorMessage}"
 
@@ -1391,7 +1396,7 @@ msgstr "Sorteervolgorde"
 msgid "Source"
 msgstr "Bron"
 
-#: src/pages/import/TraktTv.tsx:111
+#: src/pages/import/TraktTv.tsx:110
 msgid "Start over"
 msgstr "Opnieuw beginnen"
 
@@ -1444,8 +1449,8 @@ msgstr "Totale speeltijd"
 
 #: src/components/GridItem.tsx:94
 #: src/components/Nav.tsx:37
-#: src/components/Statistics/StatisticsGenreSegment.tsx:15
-#: src/components/Statistics/StatisticsSegment.tsx:33
+#: src/components/Statistics/StatisticsGenreSegment.tsx:16
+#: src/components/Statistics/StatisticsSegment.tsx:35
 msgid "Tv"
 msgstr "Tv"
 
@@ -1454,7 +1459,7 @@ msgstr "Tv"
 msgid "TV Show"
 msgstr "TV-serie"
 
-#: src/pages/import/TraktTv.tsx:139
+#: src/pages/import/TraktTv.tsx:138
 msgid "Uninitialized"
 msgstr "Niet geïnitialiseerd"
 
@@ -1482,7 +1487,7 @@ msgstr "Aankomend"
 msgid "Update metadata"
 msgstr "Metadata bewerken"
 
-#: src/pages/import/TraktTv.tsx:140
+#: src/pages/import/TraktTv.tsx:139
 msgid "Updating metadata"
 msgstr "Metadata bewerken"
 
@@ -1506,9 +1511,9 @@ msgstr "Videospel"
 #: src/pages/GroupDetailPage.tsx:321
 #: src/pages/GroupsPage.tsx:50
 msgid "Viewer"
-msgstr ""
+msgstr "Kijker"
 
-#: src/pages/import/TraktTv.tsx:141
+#: src/pages/import/TraktTv.tsx:140
 msgid "Waiting for authentication"
 msgstr "Wachten op authenticatie"
 
@@ -1523,24 +1528,24 @@ msgid "Watched"
 msgstr "Bekeken"
 
 #: src/components/Nav.tsx:44
-#: src/pages/import/TraktTv.tsx:181
+#: src/pages/import/TraktTv.tsx:176
 #: src/utils.ts:157
 msgid "Watchlist"
 msgstr "Kijklijst"
 
-#: src/pages/import/TraktTv.tsx:269
+#: src/pages/import/TraktTv.tsx:264
 msgid "Watchlist - episodes"
 msgstr "Kijklijst - Afleveringen"
 
-#: src/pages/import/TraktTv.tsx:254
+#: src/pages/import/TraktTv.tsx:249
 msgid "Watchlist - movies"
 msgstr "Kijklijst - films"
 
-#: src/pages/import/TraktTv.tsx:264
+#: src/pages/import/TraktTv.tsx:259
 msgid "Watchlist - season"
 msgstr "Kijklijst - Seizoen"
 
-#: src/pages/import/TraktTv.tsx:259
+#: src/pages/import/TraktTv.tsx:254
 msgid "Watchlist - shows"
 msgstr "Kijklijst - series"
 
@@ -1590,4 +1595,4 @@ msgstr "Ja"
 
 #: src/pages/GroupDetailPage.tsx:319
 msgid "Your role:"
-msgstr ""
+msgstr "Uw rol:"

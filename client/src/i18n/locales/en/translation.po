@@ -13,6 +13,11 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#. js-lingui-explicit-id
+#: src/__tests__/ui-stack-migration.integration.test.ts:186
+msgid "i18n/i18n.ts"
+msgstr "i18n/i18n.ts"
+
 #: src/pages/settings/Notifications.tsx:82
 msgid " User key"
 msgstr " User key"
@@ -33,7 +38,7 @@ msgstr "{0, plural, one {# member} other {# members}}"
 
 #. placeholder {0}: filteredItems.length
 #. placeholder {0}: items.length
-#: src/pages/import/TraktTv.tsx:347
+#: src/pages/import/TraktTv.tsx:342
 #: src/pages/ListPage.tsx:131
 msgid "{0, plural, one {1 item} other {# items}}"
 msgstr "{0, plural, one {1 item} other {# items}}"
@@ -95,7 +100,7 @@ msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
 msgstr "{0, plural, one {Seen 1 time} other {Seen # times}}"
 
 #. placeholder {0}: route.name
-#: src/components/Statistics/StatisticsGenreSegment.tsx:37
+#: src/components/Statistics/StatisticsGenreSegment.tsx:42
 msgid "{0}"
 msgstr "{0}"
 
@@ -125,55 +130,55 @@ msgstr "{value, plural, one {page} other {pages}}"
 
 #. placeholder {0}: item.genre
 #. placeholder {1}: item.count
-#: src/components/Statistics/StatisticsGenreSegment.tsx:56
+#: src/components/Statistics/StatisticsGenreSegment.tsx:61
 msgid "<0>{0}</0> (<1>{1}</1>)"
 msgstr "<0>{0}</0> (<1>{1}</1>)"
 
 #. placeholder {0}: data.audiobook.items
 #. placeholder {1}: data.audiobook.plays
-#: src/components/Statistics/StatisticsSegment.tsx:205
+#: src/components/Statistics/StatisticsSegment.tsx:215
 msgid "<0>{0}</0> audiobooks (<1>{1}</1> plays)"
 msgstr "<0>{0}</0> audiobooks (<1>{1}</1> plays)"
 
 #. placeholder {0}: data.book.items
 #. placeholder {1}: data.book.plays
-#: src/components/Statistics/StatisticsSegment.tsx:166
+#: src/components/Statistics/StatisticsSegment.tsx:174
 msgid "<0>{0}</0> books (<1>{1}</1> reads)"
 msgstr "<0>{0}</0> books (<1>{1}</1> reads)"
 
 #. placeholder {0}: data.tv.episodes
 #. placeholder {1}: data.tv.plays
 #. placeholder {2}: data.tv.items
-#: src/components/Statistics/StatisticsSegment.tsx:49
+#: src/components/Statistics/StatisticsSegment.tsx:51
 msgid "<0>{0}</0> episodes (<1>{1}</1> plays of <2>{2}</2> shows)"
 msgstr "<0>{0}</0> episodes (<1>{1}</1> plays of <2>{2}</2> shows)"
 
 #. placeholder {0}: data.movie.items
 #. placeholder {1}: data.movie.plays
-#: src/components/Statistics/StatisticsSegment.tsx:88
+#: src/components/Statistics/StatisticsSegment.tsx:92
 msgid "<0>{0}</0> movies (<1>{1}</1> plays)"
 msgstr "<0>{0}</0> movies (<1>{1}</1> plays)"
 
 #. placeholder {0}: data.video_game.items
 #. placeholder {1}: data.video_game.plays
-#: src/components/Statistics/StatisticsSegment.tsx:127
+#: src/components/Statistics/StatisticsSegment.tsx:133
 msgid "<0>{0}</0> video games (<1>{1}</1> plays)"
 msgstr "<0>{0}</0> video games (<1>{1}</1> plays)"
 
-#: src/components/Statistics/StatisticsSegment.tsx:194
+#: src/components/Statistics/StatisticsSegment.tsx:204
 msgid "<0><1/> </0>listening"
 msgstr "<0><1/> </0>listening"
 
-#: src/components/Statistics/StatisticsSegment.tsx:116
+#: src/components/Statistics/StatisticsSegment.tsx:122
 msgid "<0><1/> </0>playing"
 msgstr "<0><1/> </0>playing"
 
-#: src/components/Statistics/StatisticsSegment.tsx:155
+#: src/components/Statistics/StatisticsSegment.tsx:163
 msgid "<0><1/> </0>reading"
 msgstr "<0><1/> </0>reading"
 
-#: src/components/Statistics/StatisticsSegment.tsx:38
-#: src/components/Statistics/StatisticsSegment.tsx:77
+#: src/components/Statistics/StatisticsSegment.tsx:40
+#: src/components/Statistics/StatisticsSegment.tsx:81
 msgid "<0><1/> </0>watching"
 msgstr "<0><1/> </0>watching"
 
@@ -311,7 +316,7 @@ msgid "Audiobook"
 msgstr "Audiobook"
 
 #: src/components/Nav.tsx:41
-#: src/components/Statistics/StatisticsSegment.tsx:189
+#: src/components/Statistics/StatisticsSegment.tsx:199
 msgid "Audiobooks"
 msgstr "Audiobooks"
 
@@ -339,7 +344,7 @@ msgid "Book"
 msgstr "Book"
 
 #: src/components/Nav.tsx:40
-#: src/components/Statistics/StatisticsSegment.tsx:150
+#: src/components/Statistics/StatisticsSegment.tsx:158
 #: src/pages/import/Goodreads.tsx:65
 msgid "Books"
 msgstr "Books"
@@ -397,7 +402,7 @@ msgstr "Confirm new password"
 msgid "Confirm password"
 msgstr "Confirm password"
 
-#: src/pages/import/TraktTv.tsx:94
+#: src/pages/import/TraktTv.tsx:93
 msgid "Copy to clipboard"
 msgstr "Copy to clipboard"
 
@@ -507,12 +512,12 @@ msgstr "Episodes"
 msgid "Episodes page"
 msgstr "Episodes page"
 
-#: src/pages/import/TraktTv.tsx:144
+#: src/pages/import/TraktTv.tsx:143
 #: src/pages/LogsPage.tsx:102
 msgid "Error"
 msgstr "Error"
 
-#: src/pages/import/TraktTv.tsx:138
+#: src/pages/import/TraktTv.tsx:137
 msgid "Exporting"
 msgstr "Exporting"
 
@@ -535,8 +540,8 @@ msgid "First unwatched episode"
 msgstr "First unwatched episode"
 
 #: src/components/Nav.tsx:39
-#: src/components/Statistics/StatisticsGenreSegment.tsx:19
-#: src/components/Statistics/StatisticsSegment.tsx:111
+#: src/components/Statistics/StatisticsGenreSegment.tsx:20
+#: src/components/Statistics/StatisticsSegment.tsx:117
 msgid "Games"
 msgstr "Games"
 
@@ -549,13 +554,13 @@ msgstr "General"
 msgid "Genre"
 msgstr "Genre"
 
-#: src/pages/Statistics.tsx:150
+#: src/pages/Statistics.tsx:154
 msgid "Genres"
 msgstr "Genres"
 
 #. placeholder {0}: deviceCode.verificationUrl
 #. placeholder {1}: deviceCode.userCode
-#: src/pages/import/TraktTv.tsx:67
+#: src/pages/import/TraktTv.tsx:66
 msgid "Go to <0>{0}</0> and enter following code: <1>{1}</1>"
 msgstr "Go to <0>{0}</0> and enter following code: <1>{1}</1>"
 
@@ -645,12 +650,12 @@ msgstr "Import"
 msgid "Import from"
 msgstr "Import from"
 
-#: src/pages/import/TraktTv.tsx:142
+#: src/pages/import/TraktTv.tsx:141
 msgid "Imported"
 msgstr "Imported"
 
 #: src/pages/import/Goodreads.tsx:62
-#: src/pages/import/TraktTv.tsx:143
+#: src/pages/import/TraktTv.tsx:142
 msgid "Importing"
 msgstr "Importing"
 
@@ -709,27 +714,27 @@ msgid "Last seen at {0}"
 msgstr "Last seen at {0}"
 
 #. placeholder {0}: item.listName
-#: src/pages/import/TraktTv.tsx:325
+#: src/pages/import/TraktTv.tsx:320
 msgid "List {0} - episodes"
 msgstr "List {0} - episodes"
 
 #. placeholder {0}: item.listName
-#: src/pages/import/TraktTv.tsx:307
+#: src/pages/import/TraktTv.tsx:302
 msgid "List {0} - movies"
 msgstr "List {0} - movies"
 
 #. placeholder {0}: item.listName
-#: src/pages/import/TraktTv.tsx:319
+#: src/pages/import/TraktTv.tsx:314
 msgid "List {0} - seasons"
 msgstr "List {0} - seasons"
 
 #. placeholder {0}: item.listName
-#: src/pages/import/TraktTv.tsx:313
+#: src/pages/import/TraktTv.tsx:308
 msgid "List {0} - shows"
 msgstr "List {0} - shows"
 
 #. placeholder {0}: list.listName
-#: src/pages/import/TraktTv.tsx:223
+#: src/pages/import/TraktTv.tsx:218
 msgid "List: {0}"
 msgstr "List: {0}"
 
@@ -760,7 +765,7 @@ msgstr "Lists"
 #: src/pages/EpisodePage.tsx:42
 #: src/pages/GroupDetailPage.tsx:285
 #: src/pages/GroupsPage.tsx:17
-#: src/pages/import/TraktTv.tsx:117
+#: src/pages/import/TraktTv.tsx:116
 #: src/pages/ListPage.tsx:86
 #: src/pages/ListsPage.tsx:29
 #: src/pages/Login.tsx:17
@@ -822,8 +827,8 @@ msgstr "Movie"
 
 #: src/components/ImportSummaryTable.tsx:90
 #: src/components/Nav.tsx:38
-#: src/components/Statistics/StatisticsGenreSegment.tsx:16
-#: src/components/Statistics/StatisticsSegment.tsx:72
+#: src/components/Statistics/StatisticsGenreSegment.tsx:17
+#: src/components/Statistics/StatisticsSegment.tsx:76
 msgid "Movies"
 msgstr "Movies"
 
@@ -893,7 +898,7 @@ msgstr "No more logs"
 msgid "No users found"
 msgstr "No users found"
 
-#: src/pages/import/TraktTv.tsx:250
+#: src/pages/import/TraktTv.tsx:245
 msgid "Not imported items"
 msgstr "Not imported items"
 
@@ -1037,23 +1042,23 @@ msgstr "Rated"
 msgid "Rating"
 msgstr "Rating"
 
-#: src/pages/import/TraktTv.tsx:207
+#: src/pages/import/TraktTv.tsx:202
 msgid "Ratings"
 msgstr "Ratings"
 
-#: src/pages/import/TraktTv.tsx:299
+#: src/pages/import/TraktTv.tsx:294
 msgid "Ratings - episodes"
 msgstr "Ratings - episodes"
 
-#: src/pages/import/TraktTv.tsx:284
+#: src/pages/import/TraktTv.tsx:279
 msgid "Ratings - movies"
 msgstr "Ratings - movies"
 
-#: src/pages/import/TraktTv.tsx:294
+#: src/pages/import/TraktTv.tsx:289
 msgid "Ratings - seasons"
 msgstr "Ratings - seasons"
 
-#: src/pages/import/TraktTv.tsx:289
+#: src/pages/import/TraktTv.tsx:284
 msgid "Ratings - shows"
 msgstr "Ratings - shows"
 
@@ -1273,7 +1278,7 @@ msgstr "Season {0}"
 msgid "Seasons"
 msgstr "Seasons"
 
-#: src/pages/Statistics.tsx:145
+#: src/pages/Statistics.tsx:149
 msgid "Seen"
 msgstr "Seen"
 
@@ -1283,15 +1288,15 @@ msgid "Seen at {0}"
 msgstr "Seen at {0}"
 
 #: src/pages/Details.tsx:602
-#: src/pages/import/TraktTv.tsx:196
+#: src/pages/import/TraktTv.tsx:191
 msgid "Seen history"
 msgstr "Seen history"
 
-#: src/pages/import/TraktTv.tsx:279
+#: src/pages/import/TraktTv.tsx:274
 msgid "Seen history - episodes"
 msgstr "Seen history - episodes"
 
-#: src/pages/import/TraktTv.tsx:274
+#: src/pages/import/TraktTv.tsx:269
 msgid "Seen history - movies"
 msgstr "Seen history - movies"
 
@@ -1307,11 +1312,11 @@ msgstr "Select date"
 msgid "Select priority"
 msgstr "Select priority"
 
-#: src/pages/Statistics.tsx:191
+#: src/pages/Statistics.tsx:195
 msgid "Select year"
 msgstr "Select year"
 
-#: src/pages/Statistics.tsx:203
+#: src/pages/Statistics.tsx:207
 msgid "Select Year"
 msgstr "Select Year"
 
@@ -1335,7 +1340,7 @@ msgstr "Send notification when release date changes"
 msgid "Send notification when status changes"
 msgstr "Send notification when status changes"
 
-#: src/App.tsx:102
+#: src/App.tsx:101
 msgid "Server error: {errorMessage}"
 msgstr "Server error: {errorMessage}"
 
@@ -1391,7 +1396,7 @@ msgstr "Sort order"
 msgid "Source"
 msgstr "Source"
 
-#: src/pages/import/TraktTv.tsx:111
+#: src/pages/import/TraktTv.tsx:110
 msgid "Start over"
 msgstr "Start over"
 
@@ -1444,8 +1449,8 @@ msgstr "Total runtime"
 
 #: src/components/GridItem.tsx:94
 #: src/components/Nav.tsx:37
-#: src/components/Statistics/StatisticsGenreSegment.tsx:15
-#: src/components/Statistics/StatisticsSegment.tsx:33
+#: src/components/Statistics/StatisticsGenreSegment.tsx:16
+#: src/components/Statistics/StatisticsSegment.tsx:35
 msgid "Tv"
 msgstr "Tv"
 
@@ -1454,7 +1459,7 @@ msgstr "Tv"
 msgid "TV Show"
 msgstr "TV Show"
 
-#: src/pages/import/TraktTv.tsx:139
+#: src/pages/import/TraktTv.tsx:138
 msgid "Uninitialized"
 msgstr "Uninitialized"
 
@@ -1482,7 +1487,7 @@ msgstr "Upcoming"
 msgid "Update metadata"
 msgstr "Update metadata"
 
-#: src/pages/import/TraktTv.tsx:140
+#: src/pages/import/TraktTv.tsx:139
 msgid "Updating metadata"
 msgstr "Updating metadata"
 
@@ -1508,7 +1513,7 @@ msgstr "Video game"
 msgid "Viewer"
 msgstr "Viewer"
 
-#: src/pages/import/TraktTv.tsx:141
+#: src/pages/import/TraktTv.tsx:140
 msgid "Waiting for authentication"
 msgstr "Waiting for authentication"
 
@@ -1523,24 +1528,24 @@ msgid "Watched"
 msgstr "Watched"
 
 #: src/components/Nav.tsx:44
-#: src/pages/import/TraktTv.tsx:181
+#: src/pages/import/TraktTv.tsx:176
 #: src/utils.ts:157
 msgid "Watchlist"
 msgstr "Watchlist"
 
-#: src/pages/import/TraktTv.tsx:269
+#: src/pages/import/TraktTv.tsx:264
 msgid "Watchlist - episodes"
 msgstr "Watchlist - episodes"
 
-#: src/pages/import/TraktTv.tsx:254
+#: src/pages/import/TraktTv.tsx:249
 msgid "Watchlist - movies"
 msgstr "Watchlist - movies"
 
-#: src/pages/import/TraktTv.tsx:264
+#: src/pages/import/TraktTv.tsx:259
 msgid "Watchlist - season"
 msgstr "Watchlist - season"
 
-#: src/pages/import/TraktTv.tsx:259
+#: src/pages/import/TraktTv.tsx:254
 msgid "Watchlist - shows"
 msgstr "Watchlist - shows"
 

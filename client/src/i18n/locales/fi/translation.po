@@ -13,9 +13,14 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#. js-lingui-explicit-id
+#: src/__tests__/ui-stack-migration.integration.test.ts:186
+msgid "i18n/i18n.ts"
+msgstr "i18n/i18n.ts"
+
 #: src/pages/settings/Notifications.tsx:82
 msgid " User key"
-msgstr ""
+msgstr " Käyttäjäavain"
 
 #. placeholder {0}: 1
 #. placeholder {0}: 5
@@ -29,11 +34,11 @@ msgstr "{0, plural, one {# kohde} other {# kohdetta}}"
 #. placeholder {0}: group.memberCount
 #: src/pages/GroupsPage.tsx:56
 msgid "{0, plural, one {# member} other {# members}}"
-msgstr ""
+msgstr "{0, plural, one {# jäsen} other {# jäsentä}}"
 
 #. placeholder {0}: filteredItems.length
 #. placeholder {0}: items.length
-#: src/pages/import/TraktTv.tsx:347
+#: src/pages/import/TraktTv.tsx:342
 #: src/pages/ListPage.tsx:131
 msgid "{0, plural, one {1 item} other {# items}}"
 msgstr "{0, plural, one {1 kohde} other {# kohdetta}}"
@@ -46,7 +51,7 @@ msgstr "{0, plural, one {Tekijä} other {Tekijät}}"
 #. placeholder {0}: searchResult?.length
 #: src/components/PaginatedGridItems.tsx:317
 msgid "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {Found # items for query \"<1>{searchQuery}</1>\"}}"
-msgstr ""
+msgstr "{0, plural, one {Löydettiin # kohde kyselylle \"<0>{searchQuery}</0>\"} other {Löydettiin # kohdetta kyselylle \"<1>{searchQuery}</1>\"}}"
 
 #. placeholder {0}: mediaItem.genres.length
 #: src/pages/Details.tsx:299
@@ -95,7 +100,7 @@ msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
 msgstr "{0, plural, one {Katsottu 1 kerran} other {Katsottu # kertaa}}"
 
 #. placeholder {0}: route.name
-#: src/components/Statistics/StatisticsGenreSegment.tsx:37
+#: src/components/Statistics/StatisticsGenreSegment.tsx:42
 msgid "{0}"
 msgstr "{0}"
 
@@ -125,55 +130,55 @@ msgstr "{value, plural, one {sivu} other {sivua}}"
 
 #. placeholder {0}: item.genre
 #. placeholder {1}: item.count
-#: src/components/Statistics/StatisticsGenreSegment.tsx:56
+#: src/components/Statistics/StatisticsGenreSegment.tsx:61
 msgid "<0>{0}</0> (<1>{1}</1>)"
 msgstr "<0>{0}</0> (<1>{1}</1>)"
 
 #. placeholder {0}: data.audiobook.items
 #. placeholder {1}: data.audiobook.plays
-#: src/components/Statistics/StatisticsSegment.tsx:205
+#: src/components/Statistics/StatisticsSegment.tsx:215
 msgid "<0>{0}</0> audiobooks (<1>{1}</1> plays)"
 msgstr "<0>{0}</0> äänikirjaa (<1>{1}</1> toistoa)"
 
 #. placeholder {0}: data.book.items
 #. placeholder {1}: data.book.plays
-#: src/components/Statistics/StatisticsSegment.tsx:166
+#: src/components/Statistics/StatisticsSegment.tsx:174
 msgid "<0>{0}</0> books (<1>{1}</1> reads)"
 msgstr "<0>{0}</0> kirjaa (<1>{1}</1> lukukertaa)"
 
 #. placeholder {0}: data.tv.episodes
 #. placeholder {1}: data.tv.plays
 #. placeholder {2}: data.tv.items
-#: src/components/Statistics/StatisticsSegment.tsx:49
+#: src/components/Statistics/StatisticsSegment.tsx:51
 msgid "<0>{0}</0> episodes (<1>{1}</1> plays of <2>{2}</2> shows)"
 msgstr "<0>{0}</0> jaksoa (<1>{1}</1> toistoa, <2>{2}</2> sarjaa)"
 
 #. placeholder {0}: data.movie.items
 #. placeholder {1}: data.movie.plays
-#: src/components/Statistics/StatisticsSegment.tsx:88
+#: src/components/Statistics/StatisticsSegment.tsx:92
 msgid "<0>{0}</0> movies (<1>{1}</1> plays)"
 msgstr "<0>{0}</0> elokuvaa (<1>{1}</1> toistoa)"
 
 #. placeholder {0}: data.video_game.items
 #. placeholder {1}: data.video_game.plays
-#: src/components/Statistics/StatisticsSegment.tsx:127
+#: src/components/Statistics/StatisticsSegment.tsx:133
 msgid "<0>{0}</0> video games (<1>{1}</1> plays)"
 msgstr "<0>{0}</0> videopeliä (<1>{1}</1> pelikertaa)"
 
-#: src/components/Statistics/StatisticsSegment.tsx:194
+#: src/components/Statistics/StatisticsSegment.tsx:204
 msgid "<0><1/> </0>listening"
 msgstr "<0><1/> </0>kuuntelee"
 
-#: src/components/Statistics/StatisticsSegment.tsx:116
+#: src/components/Statistics/StatisticsSegment.tsx:122
 msgid "<0><1/> </0>playing"
 msgstr "<0><1/> </0>pelaa"
 
-#: src/components/Statistics/StatisticsSegment.tsx:155
+#: src/components/Statistics/StatisticsSegment.tsx:163
 msgid "<0><1/> </0>reading"
 msgstr "<0><1/> </0>lukee"
 
-#: src/components/Statistics/StatisticsSegment.tsx:38
-#: src/components/Statistics/StatisticsSegment.tsx:77
+#: src/components/Statistics/StatisticsSegment.tsx:40
+#: src/components/Statistics/StatisticsSegment.tsx:81
 msgid "<0><1/> </0>watching"
 msgstr "<0><1/> </0>katsoo"
 
@@ -216,7 +221,7 @@ msgstr "Lisää lista"
 
 #: src/pages/GroupDetailPage.tsx:97
 msgid "Add member"
-msgstr ""
+msgstr "Lisää jäsen"
 
 #: src/pages/settings/Preferences.tsx:41
 msgid "Add recommendations to watchlist"
@@ -265,7 +270,7 @@ msgstr "Lisää tunnus"
 #: src/pages/GroupDetailPage.tsx:321
 #: src/pages/GroupsPage.tsx:48
 msgid "Admin"
-msgstr ""
+msgstr "Ylläpitäjä"
 
 #: src/components/FilterBy.tsx:11
 msgid "All"
@@ -273,7 +278,7 @@ msgstr "Kaikki"
 
 #: src/components/GroupSelector.tsx:150
 msgid "All Users"
-msgstr ""
+msgstr "Kaikki käyttäjät"
 
 #: src/pages/Statistics.tsx:33
 msgid "All Years"
@@ -311,7 +316,7 @@ msgid "Audiobook"
 msgstr "Äänikirja"
 
 #: src/components/Nav.tsx:41
-#: src/components/Statistics/StatisticsSegment.tsx:189
+#: src/components/Statistics/StatisticsSegment.tsx:199
 msgid "Audiobooks"
 msgstr "Äänikirjat"
 
@@ -339,7 +344,7 @@ msgid "Book"
 msgstr "Kirja"
 
 #: src/components/Nav.tsx:40
-#: src/components/Statistics/StatisticsSegment.tsx:150
+#: src/components/Statistics/StatisticsSegment.tsx:158
 #: src/pages/import/Goodreads.tsx:65
 msgid "Books"
 msgstr "Kirjat"
@@ -387,7 +392,7 @@ msgstr "Asetukset"
 
 #: src/components/Confirm.tsx:73
 msgid "Confirm"
-msgstr ""
+msgstr "Vahvista"
 
 #: src/pages/settings/Password.tsx:41
 msgid "Confirm new password"
@@ -397,18 +402,18 @@ msgstr "Vahvista uusi salasana"
 msgid "Confirm password"
 msgstr "Vahvista salasana"
 
-#: src/pages/import/TraktTv.tsx:94
+#: src/pages/import/TraktTv.tsx:93
 msgid "Copy to clipboard"
 msgstr "Kopioi leikepöydälle"
 
 #: src/pages/GroupsPage.tsx:32
 msgid "Create a group to share Platform Recommended results with other users."
-msgstr ""
+msgstr "Luo ryhmä jakaaksesi alustan suosittelemia tuloksia muille käyttäjille."
 
 #: src/components/AddOrEditGroupButton.tsx:66
 #: src/components/AddOrEditGroupButton.tsx:87
 msgid "Create group"
-msgstr ""
+msgstr "Luo ryhmä"
 
 #: src/components/Facets/ActiveFacetChips.tsx:51
 #: src/components/Facets/ActiveFacetChips.tsx:58
@@ -435,12 +440,12 @@ msgstr "Virheenkorjaus"
 
 #: src/pages/GroupDetailPage.tsx:359
 msgid "Delete group"
-msgstr ""
+msgstr "Poista ryhmä"
 
 #. placeholder {0}: group?.name
 #: src/pages/GroupDetailPage.tsx:276
 msgid "Delete group \"{0}\"? This action cannot be undone."
-msgstr ""
+msgstr "Poistetaanko ryhmä \"{0}\"? Tätä toimintoa ei voi kumota."
 
 #: src/components/AddOrEditListButton.tsx:246
 msgid "Delete list"
@@ -507,22 +512,22 @@ msgstr "Jaksot"
 msgid "Episodes page"
 msgstr "Jaksot-sivu"
 
-#: src/pages/import/TraktTv.tsx:144
+#: src/pages/import/TraktTv.tsx:143
 #: src/pages/LogsPage.tsx:102
 msgid "Error"
 msgstr "Virhe"
 
-#: src/pages/import/TraktTv.tsx:138
+#: src/pages/import/TraktTv.tsx:137
 msgid "Exporting"
 msgstr "Viedään"
 
 #: src/pages/GroupDetailPage.tsx:90
 msgid "Failed to add member. They may already be in the group."
-msgstr ""
+msgstr "Jäsenen lisääminen epäonnistui. Hän saattaa olla jo ryhmässä."
 
 #: src/pages/GroupDetailPage.tsx:291
 msgid "Failed to load group. It may have been deleted."
-msgstr ""
+msgstr "Ryhmän lataaminen epäonnistui. Se on ehkä poistettu."
 
 #: src/components/Facets/FacetDrawer.tsx:61
 #: src/components/Facets/FacetMobileButton.tsx:36
@@ -535,8 +540,8 @@ msgid "First unwatched episode"
 msgstr "Ensimmäinen katsomaton jakso"
 
 #: src/components/Nav.tsx:39
-#: src/components/Statistics/StatisticsGenreSegment.tsx:19
-#: src/components/Statistics/StatisticsSegment.tsx:111
+#: src/components/Statistics/StatisticsGenreSegment.tsx:20
+#: src/components/Statistics/StatisticsSegment.tsx:117
 msgid "Games"
 msgstr "Pelit"
 
@@ -549,13 +554,13 @@ msgstr "Yleiset"
 msgid "Genre"
 msgstr "Genre"
 
-#: src/pages/Statistics.tsx:150
+#: src/pages/Statistics.tsx:154
 msgid "Genres"
 msgstr "Genret"
 
 #. placeholder {0}: deviceCode.verificationUrl
 #. placeholder {1}: deviceCode.userCode
-#: src/pages/import/TraktTv.tsx:67
+#: src/pages/import/TraktTv.tsx:66
 msgid "Go to <0>{0}</0> and enter following code: <1>{1}</1>"
 msgstr "Mene osoitteeseen <0>{0}</0> ja syötä seuraava koodi: <1>{1}</1>"
 
@@ -569,11 +574,11 @@ msgstr "Gotify-palvelimen URL"
 
 #: src/pages/GroupDetailPage.tsx:310
 msgid "Group name"
-msgstr ""
+msgstr "Ryhmän nimi"
 
 #: src/components/Nav.tsx:50
 msgid "Groups"
-msgstr ""
+msgstr "Ryhmät"
 
 #: src/pages/settings/Preferences.tsx:31
 msgid "Hide overview of unseen seasons"
@@ -645,12 +650,12 @@ msgstr "Tuo"
 msgid "Import from"
 msgstr "Tuo kohteesta"
 
-#: src/pages/import/TraktTv.tsx:142
+#: src/pages/import/TraktTv.tsx:141
 msgid "Imported"
 msgstr "Tuotu"
 
 #: src/pages/import/Goodreads.tsx:62
-#: src/pages/import/TraktTv.tsx:143
+#: src/pages/import/TraktTv.tsx:142
 msgid "Importing"
 msgstr "Tuodaan"
 
@@ -709,27 +714,27 @@ msgid "Last seen at {0}"
 msgstr "Katsottu viimeksi {0}"
 
 #. placeholder {0}: item.listName
-#: src/pages/import/TraktTv.tsx:325
+#: src/pages/import/TraktTv.tsx:320
 msgid "List {0} - episodes"
 msgstr "Lista {0} – jaksot"
 
 #. placeholder {0}: item.listName
-#: src/pages/import/TraktTv.tsx:307
+#: src/pages/import/TraktTv.tsx:302
 msgid "List {0} - movies"
 msgstr "Lista {0} – elokuvat"
 
 #. placeholder {0}: item.listName
-#: src/pages/import/TraktTv.tsx:319
+#: src/pages/import/TraktTv.tsx:314
 msgid "List {0} - seasons"
 msgstr "Lista {0} – kaudet"
 
 #. placeholder {0}: item.listName
-#: src/pages/import/TraktTv.tsx:313
+#: src/pages/import/TraktTv.tsx:308
 msgid "List {0} - shows"
 msgstr "Lista {0} – sarjat"
 
 #. placeholder {0}: list.listName
-#: src/pages/import/TraktTv.tsx:223
+#: src/pages/import/TraktTv.tsx:218
 msgid "List: {0}"
 msgstr "Lista: {0}"
 
@@ -760,7 +765,7 @@ msgstr "Listat"
 #: src/pages/EpisodePage.tsx:42
 #: src/pages/GroupDetailPage.tsx:285
 #: src/pages/GroupsPage.tsx:17
-#: src/pages/import/TraktTv.tsx:117
+#: src/pages/import/TraktTv.tsx:116
 #: src/pages/ListPage.tsx:86
 #: src/pages/ListsPage.tsx:29
 #: src/pages/Login.tsx:17
@@ -804,7 +809,7 @@ msgstr "Mediatyyppi"
 
 #: src/pages/GroupDetailPage.tsx:328
 msgid "Members"
-msgstr ""
+msgstr "Jäsenet"
 
 #: src/components/Facets/RatingSection.tsx:67
 msgid "Minimum rating"
@@ -822,8 +827,8 @@ msgstr "Elokuva"
 
 #: src/components/ImportSummaryTable.tsx:90
 #: src/components/Nav.tsx:38
-#: src/components/Statistics/StatisticsGenreSegment.tsx:16
-#: src/components/Statistics/StatisticsSegment.tsx:72
+#: src/components/Statistics/StatisticsGenreSegment.tsx:17
+#: src/components/Statistics/StatisticsSegment.tsx:76
 msgid "Movies"
 msgstr "Elokuvat"
 
@@ -846,7 +851,7 @@ msgstr "Verkosto"
 
 #: src/components/AddOrEditGroupButton.tsx:47
 msgid "New group"
-msgstr ""
+msgstr "Uusi ryhmä"
 
 #: src/components/AddOrEditListButton.tsx:133
 msgid "New list"
@@ -879,11 +884,11 @@ msgstr "Ei päivämäärää"
 
 #: src/pages/GroupsPage.tsx:29
 msgid "No groups yet"
-msgstr ""
+msgstr "Ei ryhmiä vielä"
 
 #: src/pages/GroupDetailPage.tsx:333
 msgid "No members yet"
-msgstr ""
+msgstr "Ei jäseniä vielä"
 
 #: src/pages/LogsPage.tsx:68
 msgid "No more logs"
@@ -891,15 +896,15 @@ msgstr "Ei lisää lokeja"
 
 #: src/pages/GroupDetailPage.tsx:134
 msgid "No users found"
-msgstr ""
+msgstr "Käyttäjiä ei löytynyt"
 
-#: src/pages/import/TraktTv.tsx:250
+#: src/pages/import/TraktTv.tsx:245
 msgid "Not imported items"
 msgstr "Tuomatta jääneet kohteet"
 
 #: src/pages/settings/Notifications.tsx:174
 msgid "Notification platform"
-msgstr ""
+msgstr "Ilmoitusalusta"
 
 #: src/pages/Settings.tsx:129
 msgid "Notifications"
@@ -948,7 +953,7 @@ msgstr "Alusta"
 #: src/components/OrderBy.tsx:24
 #: src/hooks/translations.ts:17
 msgid "Platform Recommended"
-msgstr ""
+msgstr "Alustan suosittelema"
 
 #: src/components/Facets/ActiveFacetChips.tsx:32
 #: src/components/Facets/StatusSection.tsx:39
@@ -1037,23 +1042,23 @@ msgstr "Arvosteltu"
 msgid "Rating"
 msgstr "Arvosana"
 
-#: src/pages/import/TraktTv.tsx:207
+#: src/pages/import/TraktTv.tsx:202
 msgid "Ratings"
 msgstr "Arvosanat"
 
-#: src/pages/import/TraktTv.tsx:299
+#: src/pages/import/TraktTv.tsx:294
 msgid "Ratings - episodes"
 msgstr "Arvosanat – jaksot"
 
-#: src/pages/import/TraktTv.tsx:284
+#: src/pages/import/TraktTv.tsx:279
 msgid "Ratings - movies"
 msgstr "Arvosanat – elokuvat"
 
-#: src/pages/import/TraktTv.tsx:294
+#: src/pages/import/TraktTv.tsx:289
 msgid "Ratings - seasons"
 msgstr "Arvosanat – kaudet"
 
-#: src/pages/import/TraktTv.tsx:289
+#: src/pages/import/TraktTv.tsx:284
 msgid "Ratings - shows"
 msgstr "Arvosanat – sarjat"
 
@@ -1137,7 +1142,7 @@ msgstr "Julkaistu <0/>"
 
 #: src/pages/GroupDetailPage.tsx:203
 msgid "Remove"
-msgstr ""
+msgstr "Poista"
 
 #. placeholder {0}: mediaItem.title
 #. placeholder {1}: season ? ' ' + formatSeasonNumber(season) : episode ? ' ' + formatEpisodeNumber(episode) : ''
@@ -1148,12 +1153,12 @@ msgstr "Poista \"{0}{1}\" seurantalistalta?"
 #. placeholder {0}: member.name
 #: src/pages/GroupDetailPage.tsx:201
 msgid "Remove {0}"
-msgstr ""
+msgstr "Poista {0}"
 
 #. placeholder {0}: member.name
 #: src/pages/GroupDetailPage.tsx:168
 msgid "Remove {0} from this group?"
-msgstr ""
+msgstr "Poistetaanko {0} tästä ryhmästä?"
 
 #: src/components/Facets/ActiveFacetChips.tsx:107
 msgid "Remove {dimensionLabel}: {value} filter"
@@ -1199,7 +1204,7 @@ msgstr "Arvostelu: <0><1>{author}</1></0>, päivämäärä: {date}"
 #. placeholder {0}: member.name
 #: src/pages/GroupDetailPage.tsx:191
 msgid "Role for {0}"
-msgstr ""
+msgstr "Rooli käyttäjälle {0}"
 
 #: src/pages/import/Goodreads.tsx:48
 msgid "RSS link"
@@ -1241,7 +1246,7 @@ msgstr "Hae"
 
 #: src/pages/GroupDetailPage.tsx:103
 msgid "Search by username…"
-msgstr ""
+msgstr "Hae käyttäjänimen mukaan…"
 
 #: src/components/PaginatedGridItems.tsx:304
 msgid "Search for items or <0>import</0>"
@@ -1253,11 +1258,11 @@ msgstr "Hae listalta"
 
 #: src/pages/GroupDetailPage.tsx:107
 msgid "Search users to add"
-msgstr ""
+msgstr "Hae käyttäjiä lisättäväksi"
 
 #: src/pages/GroupDetailPage.tsx:112
 msgid "Searching…"
-msgstr ""
+msgstr "Haetaan…"
 
 #: src/components/SelectLastSeenEpisode.tsx:83
 msgid "Season"
@@ -1273,7 +1278,7 @@ msgstr "Kausi {0}"
 msgid "Seasons"
 msgstr "Kaudet"
 
-#: src/pages/Statistics.tsx:145
+#: src/pages/Statistics.tsx:149
 msgid "Seen"
 msgstr "Katsottu"
 
@@ -1283,15 +1288,15 @@ msgid "Seen at {0}"
 msgstr "Katsottu {0}"
 
 #: src/pages/Details.tsx:602
-#: src/pages/import/TraktTv.tsx:196
+#: src/pages/import/TraktTv.tsx:191
 msgid "Seen history"
 msgstr "Katseluhistoria"
 
-#: src/pages/import/TraktTv.tsx:279
+#: src/pages/import/TraktTv.tsx:274
 msgid "Seen history - episodes"
 msgstr "Katseluhistoria – jaksot"
 
-#: src/pages/import/TraktTv.tsx:274
+#: src/pages/import/TraktTv.tsx:269
 msgid "Seen history - movies"
 msgstr "Katseluhistoria – elokuvat"
 
@@ -1305,13 +1310,13 @@ msgstr "Valitse päivämäärä"
 
 #: src/pages/settings/Notifications.tsx:265
 msgid "Select priority"
-msgstr ""
+msgstr "Valitse prioriteetti"
 
-#: src/pages/Statistics.tsx:191
+#: src/pages/Statistics.tsx:195
 msgid "Select year"
-msgstr ""
+msgstr "Valitse vuosi"
 
-#: src/pages/Statistics.tsx:203
+#: src/pages/Statistics.tsx:207
 msgid "Select Year"
 msgstr "Valitse vuosi"
 
@@ -1335,7 +1340,7 @@ msgstr "Lähetä ilmoitus, kun julkaisupäivä muuttuu"
 msgid "Send notification when status changes"
 msgstr "Lähetä ilmoitus, kun tila muuttuu"
 
-#: src/App.tsx:102
+#: src/App.tsx:101
 msgid "Server error: {errorMessage}"
 msgstr "Palvelinvirhe: {errorMessage}"
 
@@ -1391,7 +1396,7 @@ msgstr "Järjestys"
 msgid "Source"
 msgstr "Lähde"
 
-#: src/pages/import/TraktTv.tsx:111
+#: src/pages/import/TraktTv.tsx:110
 msgid "Start over"
 msgstr "Aloita alusta"
 
@@ -1444,8 +1449,8 @@ msgstr "Kokonaiskesto"
 
 #: src/components/GridItem.tsx:94
 #: src/components/Nav.tsx:37
-#: src/components/Statistics/StatisticsGenreSegment.tsx:15
-#: src/components/Statistics/StatisticsSegment.tsx:33
+#: src/components/Statistics/StatisticsGenreSegment.tsx:16
+#: src/components/Statistics/StatisticsSegment.tsx:35
 msgid "Tv"
 msgstr "TV"
 
@@ -1454,7 +1459,7 @@ msgstr "TV"
 msgid "TV Show"
 msgstr "TV-sarja"
 
-#: src/pages/import/TraktTv.tsx:139
+#: src/pages/import/TraktTv.tsx:138
 msgid "Uninitialized"
 msgstr "Alustamaton"
 
@@ -1482,7 +1487,7 @@ msgstr "Tulossa"
 msgid "Update metadata"
 msgstr "Päivitä metatiedot"
 
-#: src/pages/import/TraktTv.tsx:140
+#: src/pages/import/TraktTv.tsx:139
 msgid "Updating metadata"
 msgstr "Päivitetään metatietoja"
 
@@ -1506,9 +1511,9 @@ msgstr "Videopeli"
 #: src/pages/GroupDetailPage.tsx:321
 #: src/pages/GroupsPage.tsx:50
 msgid "Viewer"
-msgstr ""
+msgstr "Katsoja"
 
-#: src/pages/import/TraktTv.tsx:141
+#: src/pages/import/TraktTv.tsx:140
 msgid "Waiting for authentication"
 msgstr "Odotetaan todennusta"
 
@@ -1523,24 +1528,24 @@ msgid "Watched"
 msgstr "Katsottu"
 
 #: src/components/Nav.tsx:44
-#: src/pages/import/TraktTv.tsx:181
+#: src/pages/import/TraktTv.tsx:176
 #: src/utils.ts:157
 msgid "Watchlist"
 msgstr "Seurantalista"
 
-#: src/pages/import/TraktTv.tsx:269
+#: src/pages/import/TraktTv.tsx:264
 msgid "Watchlist - episodes"
 msgstr "Seurantalista – jaksot"
 
-#: src/pages/import/TraktTv.tsx:254
+#: src/pages/import/TraktTv.tsx:249
 msgid "Watchlist - movies"
 msgstr "Seurantalista – elokuvat"
 
-#: src/pages/import/TraktTv.tsx:264
+#: src/pages/import/TraktTv.tsx:259
 msgid "Watchlist - season"
 msgstr "Seurantalista – kausi"
 
-#: src/pages/import/TraktTv.tsx:259
+#: src/pages/import/TraktTv.tsx:254
 msgid "Watchlist - shows"
 msgstr "Seurantalista – sarjat"
 
@@ -1590,4 +1595,4 @@ msgstr "Kyllä"
 
 #: src/pages/GroupDetailPage.tsx:319
 msgid "Your role:"
-msgstr ""
+msgstr "Roolisi:"

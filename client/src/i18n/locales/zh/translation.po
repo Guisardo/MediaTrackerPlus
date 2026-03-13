@@ -13,9 +13,14 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#. js-lingui-explicit-id
+#: src/__tests__/ui-stack-migration.integration.test.ts:186
+msgid "i18n/i18n.ts"
+msgstr "i18n/i18n.ts"
+
 #: src/pages/settings/Notifications.tsx:82
 msgid " User key"
-msgstr ""
+msgstr " 用户密钥"
 
 #. placeholder {0}: 1
 #. placeholder {0}: 5
@@ -29,11 +34,11 @@ msgstr "{0, plural, other {# 项}}"
 #. placeholder {0}: group.memberCount
 #: src/pages/GroupsPage.tsx:56
 msgid "{0, plural, one {# member} other {# members}}"
-msgstr ""
+msgstr "{0, plural, one {# 位成员} other {# 位成员}}"
 
 #. placeholder {0}: filteredItems.length
 #. placeholder {0}: items.length
-#: src/pages/import/TraktTv.tsx:347
+#: src/pages/import/TraktTv.tsx:342
 #: src/pages/ListPage.tsx:131
 msgid "{0, plural, one {1 item} other {# items}}"
 msgstr "{0, plural, other {# 项}}"
@@ -46,7 +51,7 @@ msgstr "{0, plural, other {作者}}"
 #. placeholder {0}: searchResult?.length
 #: src/components/PaginatedGridItems.tsx:317
 msgid "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {Found # items for query \"<1>{searchQuery}</1>\"}}"
-msgstr ""
+msgstr "{0, plural, one {在查询「<0>{searchQuery}</0>」中找到 # 个项目} other {在查询「<1>{searchQuery}</1>」中找到 # 个项目}}"
 
 #. placeholder {0}: mediaItem.genres.length
 #: src/pages/Details.tsx:299
@@ -95,7 +100,7 @@ msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
 msgstr "{0, plural, other {已观看 # 次}}"
 
 #. placeholder {0}: route.name
-#: src/components/Statistics/StatisticsGenreSegment.tsx:37
+#: src/components/Statistics/StatisticsGenreSegment.tsx:42
 msgid "{0}"
 msgstr "{0}"
 
@@ -125,55 +130,55 @@ msgstr "{value, plural, other {页}}"
 
 #. placeholder {0}: item.genre
 #. placeholder {1}: item.count
-#: src/components/Statistics/StatisticsGenreSegment.tsx:56
+#: src/components/Statistics/StatisticsGenreSegment.tsx:61
 msgid "<0>{0}</0> (<1>{1}</1>)"
 msgstr "<0>{0}</0> (<1>{1}</1>)"
 
 #. placeholder {0}: data.audiobook.items
 #. placeholder {1}: data.audiobook.plays
-#: src/components/Statistics/StatisticsSegment.tsx:205
+#: src/components/Statistics/StatisticsSegment.tsx:215
 msgid "<0>{0}</0> audiobooks (<1>{1}</1> plays)"
 msgstr "<0>{0}</0> 本有声书 (<1>{1}</1> 次播放)"
 
 #. placeholder {0}: data.book.items
 #. placeholder {1}: data.book.plays
-#: src/components/Statistics/StatisticsSegment.tsx:166
+#: src/components/Statistics/StatisticsSegment.tsx:174
 msgid "<0>{0}</0> books (<1>{1}</1> reads)"
 msgstr "<0>{0}</0> 本书 (<1>{1}</1> 次阅读)"
 
 #. placeholder {0}: data.tv.episodes
 #. placeholder {1}: data.tv.plays
 #. placeholder {2}: data.tv.items
-#: src/components/Statistics/StatisticsSegment.tsx:49
+#: src/components/Statistics/StatisticsSegment.tsx:51
 msgid "<0>{0}</0> episodes (<1>{1}</1> plays of <2>{2}</2> shows)"
 msgstr "<0>{0}</0> 集 (<2>{2}</2> 部剧的 <1>{1}</1> 次播放)"
 
 #. placeholder {0}: data.movie.items
 #. placeholder {1}: data.movie.plays
-#: src/components/Statistics/StatisticsSegment.tsx:88
+#: src/components/Statistics/StatisticsSegment.tsx:92
 msgid "<0>{0}</0> movies (<1>{1}</1> plays)"
 msgstr "<0>{0}</0> 部电影 (<1>{1}</1> 次观看)"
 
 #. placeholder {0}: data.video_game.items
 #. placeholder {1}: data.video_game.plays
-#: src/components/Statistics/StatisticsSegment.tsx:127
+#: src/components/Statistics/StatisticsSegment.tsx:133
 msgid "<0>{0}</0> video games (<1>{1}</1> plays)"
 msgstr "<0>{0}</0> 款视频游戏 (<1>{1}</1> 次游玩)"
 
-#: src/components/Statistics/StatisticsSegment.tsx:194
+#: src/components/Statistics/StatisticsSegment.tsx:204
 msgid "<0><1/> </0>listening"
 msgstr "<0><1/> </0>正在收听"
 
-#: src/components/Statistics/StatisticsSegment.tsx:116
+#: src/components/Statistics/StatisticsSegment.tsx:122
 msgid "<0><1/> </0>playing"
 msgstr "<0><1/> </0>正在游玩"
 
-#: src/components/Statistics/StatisticsSegment.tsx:155
+#: src/components/Statistics/StatisticsSegment.tsx:163
 msgid "<0><1/> </0>reading"
 msgstr "<0><1/> </0>正在阅读"
 
-#: src/components/Statistics/StatisticsSegment.tsx:38
-#: src/components/Statistics/StatisticsSegment.tsx:77
+#: src/components/Statistics/StatisticsSegment.tsx:40
+#: src/components/Statistics/StatisticsSegment.tsx:81
 msgid "<0><1/> </0>watching"
 msgstr "<0><1/> </0>正在观看"
 
@@ -216,7 +221,7 @@ msgstr "添加列表"
 
 #: src/pages/GroupDetailPage.tsx:97
 msgid "Add member"
-msgstr ""
+msgstr "添加成员"
 
 #: src/pages/settings/Preferences.tsx:41
 msgid "Add recommendations to watchlist"
@@ -265,7 +270,7 @@ msgstr "添加令牌"
 #: src/pages/GroupDetailPage.tsx:321
 #: src/pages/GroupsPage.tsx:48
 msgid "Admin"
-msgstr ""
+msgstr "管理员"
 
 #: src/components/FilterBy.tsx:11
 msgid "All"
@@ -273,7 +278,7 @@ msgstr "全部"
 
 #: src/components/GroupSelector.tsx:150
 msgid "All Users"
-msgstr ""
+msgstr "所有用户"
 
 #: src/pages/Statistics.tsx:33
 msgid "All Years"
@@ -311,7 +316,7 @@ msgid "Audiobook"
 msgstr "有声书"
 
 #: src/components/Nav.tsx:41
-#: src/components/Statistics/StatisticsSegment.tsx:189
+#: src/components/Statistics/StatisticsSegment.tsx:199
 msgid "Audiobooks"
 msgstr "有声书"
 
@@ -339,7 +344,7 @@ msgid "Book"
 msgstr "书籍"
 
 #: src/components/Nav.tsx:40
-#: src/components/Statistics/StatisticsSegment.tsx:150
+#: src/components/Statistics/StatisticsSegment.tsx:158
 #: src/pages/import/Goodreads.tsx:65
 msgid "Books"
 msgstr "书籍"
@@ -387,7 +392,7 @@ msgstr "配置"
 
 #: src/components/Confirm.tsx:73
 msgid "Confirm"
-msgstr ""
+msgstr "确认"
 
 #: src/pages/settings/Password.tsx:41
 msgid "Confirm new password"
@@ -397,18 +402,18 @@ msgstr "确认新密码"
 msgid "Confirm password"
 msgstr "确认密码"
 
-#: src/pages/import/TraktTv.tsx:94
+#: src/pages/import/TraktTv.tsx:93
 msgid "Copy to clipboard"
 msgstr "复制到剪贴板"
 
 #: src/pages/GroupsPage.tsx:32
 msgid "Create a group to share Platform Recommended results with other users."
-msgstr ""
+msgstr "创建一个群组，与其他用户共享平台推荐结果。"
 
 #: src/components/AddOrEditGroupButton.tsx:66
 #: src/components/AddOrEditGroupButton.tsx:87
 msgid "Create group"
-msgstr ""
+msgstr "创建群组"
 
 #: src/components/Facets/ActiveFacetChips.tsx:51
 #: src/components/Facets/ActiveFacetChips.tsx:58
@@ -435,12 +440,12 @@ msgstr "调试"
 
 #: src/pages/GroupDetailPage.tsx:359
 msgid "Delete group"
-msgstr ""
+msgstr "删除群组"
 
 #. placeholder {0}: group?.name
 #: src/pages/GroupDetailPage.tsx:276
 msgid "Delete group \"{0}\"? This action cannot be undone."
-msgstr ""
+msgstr "删除群组「{0}」？此操作无法撤销。"
 
 #: src/components/AddOrEditListButton.tsx:246
 msgid "Delete list"
@@ -507,22 +512,22 @@ msgstr "剧集"
 msgid "Episodes page"
 msgstr "剧集页面"
 
-#: src/pages/import/TraktTv.tsx:144
+#: src/pages/import/TraktTv.tsx:143
 #: src/pages/LogsPage.tsx:102
 msgid "Error"
 msgstr "错误"
 
-#: src/pages/import/TraktTv.tsx:138
+#: src/pages/import/TraktTv.tsx:137
 msgid "Exporting"
 msgstr "导出中"
 
 #: src/pages/GroupDetailPage.tsx:90
 msgid "Failed to add member. They may already be in the group."
-msgstr ""
+msgstr "添加成员失败。他们可能已经在该群组中。"
 
 #: src/pages/GroupDetailPage.tsx:291
 msgid "Failed to load group. It may have been deleted."
-msgstr ""
+msgstr "加载群组失败。群组可能已被删除。"
 
 #: src/components/Facets/FacetDrawer.tsx:61
 #: src/components/Facets/FacetMobileButton.tsx:36
@@ -535,8 +540,8 @@ msgid "First unwatched episode"
 msgstr "第一个未观看的剧集"
 
 #: src/components/Nav.tsx:39
-#: src/components/Statistics/StatisticsGenreSegment.tsx:19
-#: src/components/Statistics/StatisticsSegment.tsx:111
+#: src/components/Statistics/StatisticsGenreSegment.tsx:20
+#: src/components/Statistics/StatisticsSegment.tsx:117
 msgid "Games"
 msgstr "游戏"
 
@@ -549,13 +554,13 @@ msgstr "常规"
 msgid "Genre"
 msgstr "Genre"
 
-#: src/pages/Statistics.tsx:150
+#: src/pages/Statistics.tsx:154
 msgid "Genres"
 msgstr "类型"
 
 #. placeholder {0}: deviceCode.verificationUrl
 #. placeholder {1}: deviceCode.userCode
-#: src/pages/import/TraktTv.tsx:67
+#: src/pages/import/TraktTv.tsx:66
 msgid "Go to <0>{0}</0> and enter following code: <1>{1}</1>"
 msgstr "前往 <0>{0}</0> 并输入以下代码: <1>{1}</1>"
 
@@ -569,11 +574,11 @@ msgstr "Gotify服务器URL"
 
 #: src/pages/GroupDetailPage.tsx:310
 msgid "Group name"
-msgstr ""
+msgstr "群组名称"
 
 #: src/components/Nav.tsx:50
 msgid "Groups"
-msgstr ""
+msgstr "群组"
 
 #: src/pages/settings/Preferences.tsx:31
 msgid "Hide overview of unseen seasons"
@@ -645,12 +650,12 @@ msgstr "导入"
 msgid "Import from"
 msgstr "导入来源"
 
-#: src/pages/import/TraktTv.tsx:142
+#: src/pages/import/TraktTv.tsx:141
 msgid "Imported"
 msgstr "已导入"
 
 #: src/pages/import/Goodreads.tsx:62
-#: src/pages/import/TraktTv.tsx:143
+#: src/pages/import/TraktTv.tsx:142
 msgid "Importing"
 msgstr "导入中"
 
@@ -709,27 +714,27 @@ msgid "Last seen at {0}"
 msgstr "最近观看于 {0}"
 
 #. placeholder {0}: item.listName
-#: src/pages/import/TraktTv.tsx:325
+#: src/pages/import/TraktTv.tsx:320
 msgid "List {0} - episodes"
 msgstr "列表 {0} - 剧集"
 
 #. placeholder {0}: item.listName
-#: src/pages/import/TraktTv.tsx:307
+#: src/pages/import/TraktTv.tsx:302
 msgid "List {0} - movies"
 msgstr "列表 {0} - 电影"
 
 #. placeholder {0}: item.listName
-#: src/pages/import/TraktTv.tsx:319
+#: src/pages/import/TraktTv.tsx:314
 msgid "List {0} - seasons"
 msgstr "列表 {0} - 季度"
 
 #. placeholder {0}: item.listName
-#: src/pages/import/TraktTv.tsx:313
+#: src/pages/import/TraktTv.tsx:308
 msgid "List {0} - shows"
 msgstr "列表 {0} - 电视剧"
 
 #. placeholder {0}: list.listName
-#: src/pages/import/TraktTv.tsx:223
+#: src/pages/import/TraktTv.tsx:218
 msgid "List: {0}"
 msgstr "列表: {0}"
 
@@ -760,7 +765,7 @@ msgstr "列表"
 #: src/pages/EpisodePage.tsx:42
 #: src/pages/GroupDetailPage.tsx:285
 #: src/pages/GroupsPage.tsx:17
-#: src/pages/import/TraktTv.tsx:117
+#: src/pages/import/TraktTv.tsx:116
 #: src/pages/ListPage.tsx:86
 #: src/pages/ListsPage.tsx:29
 #: src/pages/Login.tsx:17
@@ -804,7 +809,7 @@ msgstr "媒体类型"
 
 #: src/pages/GroupDetailPage.tsx:328
 msgid "Members"
-msgstr ""
+msgstr "成员"
 
 #: src/components/Facets/RatingSection.tsx:67
 msgid "Minimum rating"
@@ -822,8 +827,8 @@ msgstr "电影"
 
 #: src/components/ImportSummaryTable.tsx:90
 #: src/components/Nav.tsx:38
-#: src/components/Statistics/StatisticsGenreSegment.tsx:16
-#: src/components/Statistics/StatisticsSegment.tsx:72
+#: src/components/Statistics/StatisticsGenreSegment.tsx:17
+#: src/components/Statistics/StatisticsSegment.tsx:76
 msgid "Movies"
 msgstr "电影"
 
@@ -846,7 +851,7 @@ msgstr "网络"
 
 #: src/components/AddOrEditGroupButton.tsx:47
 msgid "New group"
-msgstr ""
+msgstr "新建群组"
 
 #: src/components/AddOrEditListButton.tsx:133
 msgid "New list"
@@ -879,11 +884,11 @@ msgstr "无日期"
 
 #: src/pages/GroupsPage.tsx:29
 msgid "No groups yet"
-msgstr ""
+msgstr "暂无群组"
 
 #: src/pages/GroupDetailPage.tsx:333
 msgid "No members yet"
-msgstr ""
+msgstr "暂无成员"
 
 #: src/pages/LogsPage.tsx:68
 msgid "No more logs"
@@ -891,15 +896,15 @@ msgstr "没有更多日志"
 
 #: src/pages/GroupDetailPage.tsx:134
 msgid "No users found"
-msgstr ""
+msgstr "未找到用户"
 
-#: src/pages/import/TraktTv.tsx:250
+#: src/pages/import/TraktTv.tsx:245
 msgid "Not imported items"
 msgstr "未导入的内容"
 
 #: src/pages/settings/Notifications.tsx:174
 msgid "Notification platform"
-msgstr ""
+msgstr "通知平台"
 
 #: src/pages/Settings.tsx:129
 msgid "Notifications"
@@ -948,7 +953,7 @@ msgstr "平台"
 #: src/components/OrderBy.tsx:24
 #: src/hooks/translations.ts:17
 msgid "Platform Recommended"
-msgstr ""
+msgstr "平台推荐"
 
 #: src/components/Facets/ActiveFacetChips.tsx:32
 #: src/components/Facets/StatusSection.tsx:39
@@ -1037,23 +1042,23 @@ msgstr "已评分"
 msgid "Rating"
 msgstr "评分"
 
-#: src/pages/import/TraktTv.tsx:207
+#: src/pages/import/TraktTv.tsx:202
 msgid "Ratings"
 msgstr "评分"
 
-#: src/pages/import/TraktTv.tsx:299
+#: src/pages/import/TraktTv.tsx:294
 msgid "Ratings - episodes"
 msgstr "评分 - 剧集"
 
-#: src/pages/import/TraktTv.tsx:284
+#: src/pages/import/TraktTv.tsx:279
 msgid "Ratings - movies"
 msgstr "评分 - 电影"
 
-#: src/pages/import/TraktTv.tsx:294
+#: src/pages/import/TraktTv.tsx:289
 msgid "Ratings - seasons"
 msgstr "评分 - 季度"
 
-#: src/pages/import/TraktTv.tsx:289
+#: src/pages/import/TraktTv.tsx:284
 msgid "Ratings - shows"
 msgstr "评分 - 电视剧"
 
@@ -1137,7 +1142,7 @@ msgstr "已发布 <0/>"
 
 #: src/pages/GroupDetailPage.tsx:203
 msgid "Remove"
-msgstr ""
+msgstr "移除"
 
 #. placeholder {0}: mediaItem.title
 #. placeholder {1}: season ? ' ' + formatSeasonNumber(season) : episode ? ' ' + formatEpisodeNumber(episode) : ''
@@ -1148,12 +1153,12 @@ msgstr "从追踪列表中移除 \"{0}{1}\"？"
 #. placeholder {0}: member.name
 #: src/pages/GroupDetailPage.tsx:201
 msgid "Remove {0}"
-msgstr ""
+msgstr "移除 {0}"
 
 #. placeholder {0}: member.name
 #: src/pages/GroupDetailPage.tsx:168
 msgid "Remove {0} from this group?"
-msgstr ""
+msgstr "从该群组移除 {0}？"
 
 #: src/components/Facets/ActiveFacetChips.tsx:107
 msgid "Remove {dimensionLabel}: {value} filter"
@@ -1199,7 +1204,7 @@ msgstr "<0><1>{author}</1></0> 于 {date} 的评价"
 #. placeholder {0}: member.name
 #: src/pages/GroupDetailPage.tsx:191
 msgid "Role for {0}"
-msgstr ""
+msgstr "{0} 的角色"
 
 #: src/pages/import/Goodreads.tsx:48
 msgid "RSS link"
@@ -1241,7 +1246,7 @@ msgstr "搜索"
 
 #: src/pages/GroupDetailPage.tsx:103
 msgid "Search by username…"
-msgstr ""
+msgstr "按用户名搜索…"
 
 #: src/components/PaginatedGridItems.tsx:304
 msgid "Search for items or <0>import</0>"
@@ -1253,11 +1258,11 @@ msgstr "搜索列表"
 
 #: src/pages/GroupDetailPage.tsx:107
 msgid "Search users to add"
-msgstr ""
+msgstr "搜索要添加的用户"
 
 #: src/pages/GroupDetailPage.tsx:112
 msgid "Searching…"
-msgstr ""
+msgstr "搜索中…"
 
 #: src/components/SelectLastSeenEpisode.tsx:83
 msgid "Season"
@@ -1273,7 +1278,7 @@ msgstr "第 {0} 季"
 msgid "Seasons"
 msgstr "季度"
 
-#: src/pages/Statistics.tsx:145
+#: src/pages/Statistics.tsx:149
 msgid "Seen"
 msgstr "已观看"
 
@@ -1283,15 +1288,15 @@ msgid "Seen at {0}"
 msgstr "观看于 {0}"
 
 #: src/pages/Details.tsx:602
-#: src/pages/import/TraktTv.tsx:196
+#: src/pages/import/TraktTv.tsx:191
 msgid "Seen history"
 msgstr "观看历史"
 
-#: src/pages/import/TraktTv.tsx:279
+#: src/pages/import/TraktTv.tsx:274
 msgid "Seen history - episodes"
 msgstr "观看历史 - 剧集"
 
-#: src/pages/import/TraktTv.tsx:274
+#: src/pages/import/TraktTv.tsx:269
 msgid "Seen history - movies"
 msgstr "观看历史 - 电影"
 
@@ -1305,13 +1310,13 @@ msgstr "选择日期"
 
 #: src/pages/settings/Notifications.tsx:265
 msgid "Select priority"
-msgstr ""
+msgstr "选择优先级"
 
-#: src/pages/Statistics.tsx:191
+#: src/pages/Statistics.tsx:195
 msgid "Select year"
-msgstr ""
+msgstr "选择年份"
 
-#: src/pages/Statistics.tsx:203
+#: src/pages/Statistics.tsx:207
 msgid "Select Year"
 msgstr "选择年份"
 
@@ -1335,7 +1340,7 @@ msgstr "发布日期变更时发送通知"
 msgid "Send notification when status changes"
 msgstr "状态变更时发送通知"
 
-#: src/App.tsx:102
+#: src/App.tsx:101
 msgid "Server error: {errorMessage}"
 msgstr "服务器错误: {errorMessage}"
 
@@ -1391,7 +1396,7 @@ msgstr "排序顺序"
 msgid "Source"
 msgstr "来源"
 
-#: src/pages/import/TraktTv.tsx:111
+#: src/pages/import/TraktTv.tsx:110
 msgid "Start over"
 msgstr "重新开始"
 
@@ -1444,8 +1449,8 @@ msgstr "总片长"
 
 #: src/components/GridItem.tsx:94
 #: src/components/Nav.tsx:37
-#: src/components/Statistics/StatisticsGenreSegment.tsx:15
-#: src/components/Statistics/StatisticsSegment.tsx:33
+#: src/components/Statistics/StatisticsGenreSegment.tsx:16
+#: src/components/Statistics/StatisticsSegment.tsx:35
 msgid "Tv"
 msgstr "电视"
 
@@ -1454,7 +1459,7 @@ msgstr "电视"
 msgid "TV Show"
 msgstr "电视节目"
 
-#: src/pages/import/TraktTv.tsx:139
+#: src/pages/import/TraktTv.tsx:138
 msgid "Uninitialized"
 msgstr "未初始化"
 
@@ -1482,7 +1487,7 @@ msgstr "即将推出"
 msgid "Update metadata"
 msgstr "更新元数据"
 
-#: src/pages/import/TraktTv.tsx:140
+#: src/pages/import/TraktTv.tsx:139
 msgid "Updating metadata"
 msgstr "正在更新元数据"
 
@@ -1506,9 +1511,9 @@ msgstr "视频游戏"
 #: src/pages/GroupDetailPage.tsx:321
 #: src/pages/GroupsPage.tsx:50
 msgid "Viewer"
-msgstr ""
+msgstr "观看者"
 
-#: src/pages/import/TraktTv.tsx:141
+#: src/pages/import/TraktTv.tsx:140
 msgid "Waiting for authentication"
 msgstr "等待认证"
 
@@ -1523,24 +1528,24 @@ msgid "Watched"
 msgstr "已观看"
 
 #: src/components/Nav.tsx:44
-#: src/pages/import/TraktTv.tsx:181
+#: src/pages/import/TraktTv.tsx:176
 #: src/utils.ts:157
 msgid "Watchlist"
 msgstr "观看清单"
 
-#: src/pages/import/TraktTv.tsx:269
+#: src/pages/import/TraktTv.tsx:264
 msgid "Watchlist - episodes"
 msgstr "观看清单 - 剧集"
 
-#: src/pages/import/TraktTv.tsx:254
+#: src/pages/import/TraktTv.tsx:249
 msgid "Watchlist - movies"
 msgstr "观看清单 - 电影"
 
-#: src/pages/import/TraktTv.tsx:264
+#: src/pages/import/TraktTv.tsx:259
 msgid "Watchlist - season"
 msgstr "观看清单 - 季度"
 
-#: src/pages/import/TraktTv.tsx:259
+#: src/pages/import/TraktTv.tsx:254
 msgid "Watchlist - shows"
 msgstr "观看清单 - 电视剧"
 
@@ -1590,4 +1595,4 @@ msgstr "是"
 
 #: src/pages/GroupDetailPage.tsx:319
 msgid "Your role:"
-msgstr ""
+msgstr "您的角色："

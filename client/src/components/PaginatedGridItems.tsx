@@ -387,16 +387,17 @@ export const PaginatedGridItems: FunctionComponent<{
           ) : (
             <>
               {(searchQuery ? searchResult : items)?.map((mediaItem) => (
-                <GridItem
-                  key={mediaItem.id}
-                  mediaType={args.mediaType}
-                  mediaItem={mediaItem}
-                  appearance={{
-                    ...gridItemAppearance,
-                    showAddToWatchlistAndMarkAsSeenButtons:
-                      Boolean(searchQuery),
-                  }}
-                />
+                <div key={mediaItem.id} className="w-40 mr-2 mb-2">
+                  <GridItem
+                    mediaType={args.mediaType}
+                    mediaItem={mediaItem}
+                    appearance={{
+                      ...gridItemAppearance,
+                      showAddToWatchlistAndMarkAsSeenButtons:
+                        Boolean(searchQuery),
+                    }}
+                  />
+                </div>
               ))}
               <div className="footer">
                 {!searchQuery && items && !isLoadingItems && numberOfPages > 1 && (
