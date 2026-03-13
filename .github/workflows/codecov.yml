@@ -27,6 +27,8 @@ jobs:
         run: npm run build:routes --prefix server
       - name: Backend test coverage
         run: npm run test:coverage --prefix server
+      - name: Compile Lingui catalogs
+        run: npm run lingui:compile --prefix client
       - name: Frontend test coverage
         run: npm run test:coverage --prefix client
       - name: Upload backend coverage to Codecov
