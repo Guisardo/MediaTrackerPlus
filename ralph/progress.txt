@@ -34,8 +34,36 @@ Started: Thu Mar 12 13:27:30 -03 2026
 - Modal.tsx uses shadcn/ui Dialog (Radix) — no more @react-spring/web or Portal; public API unchanged (openModal, openModalRef, children(closeModal), onClosed, onBeforeClosed)
 - Confirm.tsx uses shadcn/ui Dialog directly — `await Confirm(msg)` imperative API preserved; appends to document.body (Radix handles its own portal)
 - For Radix Dialog test mocks: propagate `open` from Root to Content via `__open` prop using `React.cloneElement`; Content returns null when `!__open`
+- For Radix Select test mocks: use a `React.createContext` (no type argument in jest.mock factory) to share `value`/`onChange` between Root, Value, and Item — do NOT use cloneElement prop propagation for Select (too fragile with nested children)
 - `radix-ui` v1.4+ is the unified import package (not individual `@radix-ui/react-dialog` packages)
 - `#portal` div still needed by FacetDrawer.tsx — will be removed in US-017 when FacetDrawer migrates to Sheet
+- shadcn Select does NOT participate in native FormData; lift controlled value to component state and merge manually in onSubmit
+- shadcn/ui Slider supports dual-thumb via `value={[min, max]}` array; `onValueChange` fires during drag, `onValueCommit` fires on release
+- Mock shadcn/ui Slider in tests with two `<input type="range">` elements (Radix Slider doesn't work in jsdom)
+- `@radix-ui/react-slider` was in package.json but NOT imported in source — removing it is safe after installing shadcn Slider (which brings it transitively via radix-ui)
+
+---
+
+## 2026-03-12 - US-013 — Replace FacetRangeSlider with shadcn/ui Slider
+
+- **What was implemented**: Replaced the native dual `<input type="range">` implementation in `FacetRangeSlider.tsx` with the shadcn/ui `<Slider>` component (which wraps `@radix-ui/react-slider`). The Radix Slider natively supports dual-thumb mode via `value={[min, max]}`. Removed the `@radix-ui/react-slider` standalone package from `package.json` (it was listed as a dependency but never directly imported in source). Updated the test file to mock `@/components/ui/slider` since Radix doesn't work in jsdom, preserving all 9 test scenarios. Updated input border/bg colors to use zinc design tokens.
+
+- **Files changed**:
+  - `client/src/components/ui/slider.tsx` — NEW: shadcn/ui Slider component (installed via `npx shadcn@latest add slider`)
+  - `client/src/components/Facets/FacetRangeSlider.tsx` — Rewritten to use shadcn/ui Slider
+  - `client/src/components/__tests__/FacetRangeSlider.test.tsx` — Updated with Slider mock; 9 tests passing
+  - `client/package.json` — Removed `@radix-ui/react-slider`, added Slider deps transitively
+  - `client/package-lock.json` — Updated
+
+- **Verification**:
+  - Typecheck: 0 errors
+  - Tests: 75 suites, 1173 tests, all passing
+  - Browser: Frontend loads without slider-related JS errors; backend API errors are pre-existing
+
+- **Learnings for future iterations:**
+  - shadcn/ui Slider supports dual-thumb via `value={[min, max]}` array prop — `onValueChange` fires on every value change during drag, `onValueCommit` fires once on pointer release (equivalent to `onMouseUp`/`onTouchEnd`)
+  - Mock `@/components/ui/slider` in tests with two `<input type="range">` elements since Radix Slider doesn't render in jsdom
+  - `@radix-ui/react-slider` as a standalone dep is unnecessary when using shadcn/ui Slider — the `radix-ui` unified package provides it transitively
 
 ---
 
@@ -478,3 +506,28 @@ Migrated Tailwind CSS from v3.0.24 to v4.2.1. Replaced JS-based configuration wi
 
 ---
 
+
+---
+
+## 2026-03-12 - US-012
+
+- **What was implemented**: Replaced all native `<select>` elements with shadcn/ui `Select`, `SelectTrigger`, `SelectContent`, `SelectItem` pattern across 5 files: `Configuration.tsx` (3 selects), `Notifications.tsx` (3 selects — platform, gotify priority, ntfy priority), `SelectLastSeenEpisode.tsx` (season + episode), `AddOrEditListButton.tsx` (privacy + sort-by + sort-order), `Statistics.tsx` (YearSelector).
+
+- **Files changed**:
+  - `client/src/components/ui/select.tsx` (new — installed via shadcn CLI)
+  - `client/src/pages/settings/Configuration.tsx`
+  - `client/src/pages/settings/Notifications.tsx`
+  - `client/src/components/SelectLastSeenEpisode.tsx`
+  - `client/src/components/AddOrEditListButton.tsx`
+  - `client/src/pages/Statistics.tsx`
+  - `client/src/components/__tests__/SelectLastSeenEpisode.test.tsx` (updated)
+  - `client/src/pages/__tests__/YearSelector.test.tsx` (new — 8 tests)
+  - `client/src/pages/__tests__/SettingsConfigurationPage.test.tsx` (new — 5 tests)
+
+- **Learnings for future iterations:**
+  - Radix Select (via `radix-ui` package) does NOT work in jsdom without mocking — use a context-based mock of `radix-ui` (similar to Dialog mocks in Confirm.test.tsx) with a `React.createContext` to share `value`/`onChange` between Root, Value, and Item; this is the established pattern in this codebase.
+  - Radix Select does NOT participate in native `FormData` — when migrating `<select name="...">` inside a form that uses `new FormData()`, lift the controlled value into component state and merge it manually in the `onSubmit` handler. Using hidden `<input type="hidden">` with React-controlled value doesn't work because React-controlled inputs ignore `input.value = x` assignments.
+  - `React.createContext<Type>()` inside `jest.mock()` factory fails TypeScript (`TS2347: Untyped function calls may not accept type arguments`) because `require('react')` returns `any`; remove the type argument to fix.
+  - `getByLabelText(/Privacy/i)` works with `aria-labelledby` — a `<label id="foo">` + `aria-labelledby="foo"` on the trigger button allows `getByLabelText` to resolve to the combobox, no need for `htmlFor`.
+  - `radix-ui` v1.4+ exports all primitives under namespaces: `import { Select as SelectPrimitive } from 'radix-ui'`.
+  - shadcn Select `SelectItem` requires a non-empty `value` string — use `""` (empty string) for a blank/placeholder option and handle it in `onValueChange`.
