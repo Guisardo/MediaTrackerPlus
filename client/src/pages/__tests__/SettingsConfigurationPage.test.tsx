@@ -19,7 +19,8 @@ import userEvent from '@testing-library/user-event';
 // ---------------------------------------------------------------------------
 jest.mock('radix-ui', () => {
   const React = require('react');
-  const SelectContext = React.createContext({ value: '', onChange: (_: string) => {} });
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  const SelectContext = React.createContext({ value: '', onChange: (_: string): void => {} });
 
   const Root = ({ children, value, onValueChange, defaultValue }: any) => {
     const [internalValue, setInternalValue] = React.useState(value ?? defaultValue ?? '');
