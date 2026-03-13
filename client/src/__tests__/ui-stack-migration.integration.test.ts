@@ -369,7 +369,7 @@ describe('Integration: TanStack Query v5', () => {
 
   it('keepPreviousData returns previous data when called', () => {
     const prev = { items: [1, 2] };
-    const result = (keepPreviousData as Function)(prev, {} as any);
+    const result = (keepPreviousData as (prevData: unknown, query: unknown) => unknown)(prev, {});
     expect(result).toBe(prev);
   });
 

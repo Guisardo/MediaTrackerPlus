@@ -76,12 +76,12 @@ describe('keepPreviousData sentinel', () => {
   it('returns the previous data when called with (previousData, query)', () => {
     const previous = { items: [1, 2, 3] };
     // In v5, keepPreviousData is (previousData, query) => previousData
-    const result = (keepPreviousData as Function)(previous, {} as any);
+    const result = (keepPreviousData as (prevData: unknown, query: unknown) => unknown)(previous, {});
     expect(result).toBe(previous);
   });
 
   it('returns undefined when there is no previous data', () => {
-    const result = (keepPreviousData as Function)(undefined, {} as any);
+    const result = (keepPreviousData as (prevData: unknown, query: unknown) => unknown)(undefined, {});
     expect(result).toBeUndefined();
   });
 });

@@ -65,6 +65,10 @@ jobs:
           node-version: 22
           cache: 'npm'
       - run: npm ci
+      - name: Generate API client
+        run: npm run build:routes --prefix server
+      - name: Compile Lingui catalogs
+        run: npm run lingui:compile --prefix client
       - name: Run frontend tests
         run: npm run test --prefix client
 
@@ -83,6 +87,8 @@ jobs:
         run: npm run build:routes --prefix server
       - name: Backend test coverage
         run: npm run test:coverage --prefix server
+      - name: Compile Lingui catalogs
+        run: npm run lingui:compile --prefix client
       - name: Frontend test coverage
         run: npm run test:coverage --prefix client
       - name: Upload backend coverage artifact

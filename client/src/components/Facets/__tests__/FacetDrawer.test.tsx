@@ -34,10 +34,12 @@ jest.mock('@lingui/react', () => ({
  */
 jest.mock('@/components/ui/sheet', () => {
   const React = require('react');
-  const SheetContext = React.createContext({ open: false, onOpenChange: (_: boolean) => {} });
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  const SheetContext = React.createContext({ open: false, onOpenChange: (_: boolean): void => {} });
 
   const Sheet = ({ open, onOpenChange, children }: any) =>
-    React.createElement(SheetContext.Provider, { value: { open: !!open, onOpenChange: onOpenChange || (() => {}) } }, children);
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    React.createElement(SheetContext.Provider, { value: { open: !!open, onOpenChange: onOpenChange || ((): void => {}) } }, children);
 
   const SheetContent = ({ children, side, className, showCloseButton }: any) => {
     const { open, onOpenChange } = React.useContext(SheetContext);
