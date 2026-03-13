@@ -1,23 +1,23 @@
-import React, { FunctionComponent, useEffect } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Trans } from '@lingui/macro';
 
-import { Portal } from 'src/components/Portal';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
 import { UseFacetsResult } from 'src/hooks/facets';
 
 /**
- * FacetDrawer renders the full FacetPanel content inside a bottom sheet drawer
- * on screens < 1024px.  It is mounted via Portal so it sits above all other
- * content in the DOM tree.
+ * FacetDrawer renders the full FacetPanel content inside a shadcn/ui Sheet.
  *
- * The drawer has:
- *   - position:fixed bottom:0 left:0 right:0 with high z-index
- *   - A draggable-looking handle bar at the top for visual affordance
- *   - A Close button in the header row
- *   - A semi-transparent backdrop that closes the drawer on tap
- *   - An overflow-y:auto scrollable content area for long facet lists
+ * On desktop (≥1024px) the Sheet slides in from the right.
+ * On mobile (< 1024px) the Sheet slides in from the bottom.
  *
- * No animated transitions are required for this story (functional-only;
- * animation is deferred to a later enhancement).
+ * The Sheet component provides its own built-in overlay, portal, focus trapping,
+ * Escape key handling, and close animation — replacing the custom Portal
+ * implementation used in the previous version.
  */
 export const FacetDrawer: FunctionComponent<{
   isOpen: boolean;
@@ -27,60 +27,39 @@ export const FacetDrawer: FunctionComponent<{
 }> = ({ isOpen, onClose, facets, children }) => {
   const { activeFacetCount, clearAllFacets } = facets;
 
-  // Prevent body scroll while the drawer is open.
+  // Determine sheet side based on viewport width.
+  const [side, setSide] = useState<'right' | 'bottom'>('bottom');
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isOpen]);
-
-  // Close on Escape key.
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
-
-  if (!isOpen) {
-    return null;
-  }
+    const mq = window.matchMedia('(min-width: 1024px)');
+    const update = () => setSide(mq.matches ? 'right' : 'bottom');
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
 
   return (
-    <Portal>
-      {/* Backdrop — tapping closes the drawer */}
-      <div
-        className="fixed inset-0 z-40 bg-black bg-opacity-40"
-        aria-hidden="true"
-        onClick={onClose}
-      />
-
-      {/* Bottom sheet drawer */}
-      <div
-        className="fixed bottom-0 left-0 right-0 z-50 flex flex-col max-h-[80vh] rounded-t-xl bg-white dark:bg-slate-800 shadow-xl"
-        role="dialog"
-        aria-modal="true"
-        aria-label="Filters"
+    <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <SheetContent
+        side={side}
+        showCloseButton={false}
+        className={
+          side === 'bottom'
+            ? 'max-h-[80vh] rounded-t-xl bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800'
+            : 'bg-white dark:bg-zinc-900 border-l border-zinc-200 dark:border-zinc-800 w-80'
+        }
       >
-        {/* Visual drag handle */}
-        <div className="flex justify-center pt-2 pb-1">
-          <div className="w-10 h-1 rounded-full bg-gray-300 dark:bg-slate-600" />
-        </div>
+        {/* Visual drag handle — visible on mobile (bottom sheet) only */}
+        {side === 'bottom' && (
+          <div className="flex justify-center pt-2 pb-1">
+            <div className="w-10 h-1 rounded-full bg-zinc-300 dark:bg-zinc-600" />
+          </div>
+        )}
 
         {/* Drawer header */}
-        <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 dark:border-slate-700">
-          <span className="text-sm font-semibold text-gray-800 dark:text-slate-200">
+        <SheetHeader className="flex-row items-center justify-between px-4 py-2 border-b border-zinc-200 dark:border-zinc-800 gap-0">
+          <SheetTitle className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
             <Trans>Filters</Trans>
-          </span>
+          </SheetTitle>
           <div className="flex items-center gap-3">
             {activeFacetCount > 0 && (
               <button
@@ -96,7 +75,7 @@ export const FacetDrawer: FunctionComponent<{
             <button
               type="button"
               onClick={onClose}
-              className="flex items-center justify-center w-7 h-7 rounded text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              className="flex items-center justify-center w-7 h-7 rounded text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
               aria-label="Close filters"
             >
               <span className="material-icons text-base" aria-hidden="true">
@@ -104,11 +83,11 @@ export const FacetDrawer: FunctionComponent<{
               </span>
             </button>
           </div>
-        </div>
+        </SheetHeader>
 
         {/* Scrollable content area — same accordion sections as desktop sidebar */}
         <div className="flex-1 overflow-y-auto py-1">{children}</div>
-      </div>
-    </Portal>
+      </SheetContent>
+    </Sheet>
   );
 };
