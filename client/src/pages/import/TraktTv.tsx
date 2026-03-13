@@ -1,6 +1,5 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useSpring, animated } from 'react-spring';
 import { Plural, t, Trans } from '@lingui/macro';
 
 import { mediaTrackerApi } from 'src/api/api';
@@ -149,17 +148,13 @@ const ProgressBarComponent: FunctionComponent<{ progress: number }> = (
 ) => {
   const progress = props.progress * 100;
 
-  const style = useSpring({
-    background: `linear-gradient(to right, blue ${progress}%, transparent 0%)`,
-    from: { background: 'linear-gradient(to right, blue 0%, transparent 0%)' },
-  });
-
   return (
-    <animated.div
-      // @ts-expect-error react-spring types incompatible with @types/react v19
-      className="block h-4 border rounded w-80 bg-grad"
-      style={style}
-    ></animated.div>
+    <div
+      className="block h-4 border rounded w-80 transition-all duration-300"
+      style={{
+        background: `linear-gradient(to right, blue ${progress}%, transparent 0%)`,
+      }}
+    ></div>
   );
 };
 

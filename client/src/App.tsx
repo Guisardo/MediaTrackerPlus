@@ -19,7 +19,6 @@ import { useFonts } from 'src/hooks/fonts';
 import './styles/materialIcons.css';
 import './styles/fonts/robotoCondensed.css';
 import './styles/fullcalendar.css';
-import './styles/main.scss';
 import './styles/tailwind.css';
 
 setupI18n();
