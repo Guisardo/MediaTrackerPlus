@@ -3,6 +3,65 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { FacetRangeSlider } from '../Facets/FacetRangeSlider';
 
+// Mock shadcn/ui Slider (which wraps @radix-ui/react-slider — doesn't work in jsdom).
+// The mock renders two hidden inputs so tests can drive slider values programmatically,
+// and a visible slider role element for role queries.
+jest.mock('@/components/ui/slider', () => ({
+  Slider: ({
+    min,
+    max,
+    step,
+    value,
+    onValueChange,
+    onValueCommit,
+    'aria-label': ariaLabel,
+  }: {
+    min: number;
+    max: number;
+    step: number;
+    value: [number, number];
+    onValueChange: (v: number[]) => void;
+    onValueCommit: (v: number[]) => void;
+    'aria-label'?: string;
+  }) => (
+    <div data-testid="slider-root" role="group" aria-label={ariaLabel}>
+      {/* Two range inputs representing the two thumbs */}
+      <input
+        type="range"
+        data-testid="slider-thumb-min"
+        aria-label="min thumb"
+        min={min}
+        max={max}
+        step={step}
+        value={value[0]}
+        onChange={(e) => {
+          const next: [number, number] = [parseFloat(e.target.value), value[1]];
+          onValueChange(next);
+        }}
+        onMouseUp={(e) => {
+          onValueCommit([parseFloat((e.target as HTMLInputElement).value), value[1]]);
+        }}
+      />
+      <input
+        type="range"
+        data-testid="slider-thumb-max"
+        aria-label="max thumb"
+        min={min}
+        max={max}
+        step={step}
+        value={value[1]}
+        onChange={(e) => {
+          const next: [number, number] = [value[0], parseFloat(e.target.value)];
+          onValueChange(next);
+        }}
+        onMouseUp={(e) => {
+          onValueCommit([value[0], parseFloat((e.target as HTMLInputElement).value)]);
+        }}
+      />
+    </div>
+  ),
+}));
+
 describe('FacetRangeSlider', () => {
   const defaultProps = {
     min: 2000,
@@ -20,21 +79,20 @@ describe('FacetRangeSlider', () => {
     jest.clearAllMocks();
   });
 
-  it('renders two range inputs and two numeric inputs', () => {
+  it('renders the slider component and two numeric inputs', () => {
     render(<FacetRangeSlider {...defaultProps} />);
 
-    const rangeInputs = screen.getAllByRole('slider');
-    expect(rangeInputs).toHaveLength(2);
+    expect(screen.getByTestId('slider-root')).toBeInTheDocument();
 
     const numberInputs = screen.getAllByRole('spinbutton');
     expect(numberInputs).toHaveLength(2);
   });
 
-  it('renders with accessible labels', () => {
+  it('renders with accessible labels on numeric inputs', () => {
     render(<FacetRangeSlider {...defaultProps} />);
 
-    expect(screen.getAllByLabelText('Minimum year')).toHaveLength(2); // range + number
-    expect(screen.getAllByLabelText('Maximum year')).toHaveLength(2);
+    expect(screen.getByLabelText('Minimum year')).toBeInTheDocument();
+    expect(screen.getByLabelText('Maximum year')).toBeInTheDocument();
   });
 
   it('defaults to min/max when valueMin/valueMax are null', () => {
@@ -67,7 +125,7 @@ describe('FacetRangeSlider', () => {
       />
     );
 
-    const minInput = screen.getAllByRole('spinbutton')[0];
+    const minInput = screen.getByLabelText('Minimum year');
     await user.clear(minInput);
     await user.type(minInput, '2000');
     fireEvent.blur(minInput);
@@ -82,7 +140,7 @@ describe('FacetRangeSlider', () => {
       <FacetRangeSlider {...defaultProps} valueMin={2010} valueMax={2020} />
     );
 
-    const minInput = screen.getAllByRole('spinbutton')[0];
+    const minInput = screen.getByLabelText('Minimum year');
     await user.clear(minInput);
     await user.type(minInput, 'abc');
     fireEvent.blur(minInput);
@@ -105,15 +163,23 @@ describe('FacetRangeSlider', () => {
     expect(numberInputs[1]).toHaveValue(2023);
   });
 
-  it('renders the active range fill between thumbs', () => {
-    const { container } = render(
-      <FacetRangeSlider {...defaultProps} valueMin={2005} valueMax={2020} />
+  it('calls onCommit with null bounds when slider released at extremes', () => {
+    const onCommit = jest.fn();
+    render(
+      <FacetRangeSlider
+        {...defaultProps}
+        onCommit={onCommit}
+        valueMin={2000}
+        valueMax={2025}
+      />
     );
 
-    // The active fill div should have a left offset and width based on the range
-    const rangeFill = container.querySelector('.bg-blue-500');
-    expect(rangeFill).toBeInTheDocument();
-    expect(rangeFill).toHaveStyle({ left: '20%', width: '60%' });
+    const minThumb = screen.getByTestId('slider-thumb-min');
+    fireEvent.change(minThumb, { target: { value: '2000' } });
+    fireEvent.mouseUp(minThumb, { target: { value: '2000' } });
+
+    // Both at extremes → both null
+    expect(onCommit).toHaveBeenCalledWith(null, null);
   });
 
   it('supports decimal places for rating-style usage', () => {
