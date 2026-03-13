@@ -5,6 +5,7 @@ import { I18nProvider } from '@lingui/react';
 import { i18n } from '@lingui/core';
 
 import { Modal } from 'src/components/Modal';
+import { Button } from 'src/components/ui/button';
 
 export const Confirm = async (message: string) => {
   const portal = document.getElementById('portal');
@@ -47,12 +48,12 @@ const ModalBody: FunctionComponent<{
     <div className="flex flex-col p-3">
       <div className="mb-2 text-xl">{message}</div>
       <div className="flex">
-        <div className="btn" onClick={() => resolve(true)}>
+        <Button variant="outline" onClick={() => resolve(true)}>
           <Trans>Yes</Trans>
-        </div>
-        <div className="ml-auto btn" onClick={() => resolve(false)}>
+        </Button>
+        <Button variant="outline" className="ml-auto" onClick={() => resolve(false)}>
           <Trans>No</Trans>
-        </div>
+        </Button>
       </div>
     </div>
   );

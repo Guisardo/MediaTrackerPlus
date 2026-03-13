@@ -4,6 +4,7 @@ import { useConfiguration } from 'src/api/configuration';
 import { CheckboxWithTitleAndDescription } from 'src/components/Checkbox';
 import { SettingsSegment } from 'src/components/SettingsSegment';
 import { AudibleCountryCode, ServerLang, TmdbLang } from 'mediatracker-api';
+import { Button } from 'src/components/ui/button';
 
 export const SettingsConfigurationPage: FunctionComponent = () => {
   const { configuration, update, isLoading } = useConfiguration();
@@ -138,9 +139,9 @@ const IGDBcredentialsComponent: FunctionComponent = () => {
           />
         </label>
 
-        <button className="block mt-2 btn">
+        <Button variant="outline" className="block mt-2">
           <Trans>Save</Trans>
-        </button>
+        </Button>
       </form>
     </SettingsSegment>
   );

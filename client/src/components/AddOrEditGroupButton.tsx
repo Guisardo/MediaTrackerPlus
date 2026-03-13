@@ -3,6 +3,7 @@ import { Trans } from '@lingui/macro';
 
 import { useCreateGroup, useUserGroups } from 'src/api/groups';
 import { Modal } from 'src/components/Modal';
+import { Button } from 'src/components/ui/button';
 
 /**
  * Modal form body for creating a new group.
@@ -61,13 +62,13 @@ const AddGroupModal: FunctionComponent<{ closeModal: () => void }> = (
       </label>
 
       <div className="flex flex-row mt-4">
-        <button className="btn-blue" type="submit">
+        <Button variant="default" type="submit">
           <Trans>Create group</Trans>
-        </button>
+        </Button>
 
-        <div className="ml-auto btn" onClick={() => closeModal()}>
+        <Button variant="outline" className="ml-auto" onClick={() => closeModal()}>
           <Trans>Close</Trans>
-        </div>
+        </Button>
       </div>
     </form>
   );
@@ -82,9 +83,9 @@ export const AddGroupButton: FunctionComponent = () => {
   return (
     <Modal
       openModal={(openModal) => (
-        <button className="btn" onClick={() => openModal()}>
+        <Button variant="outline" onClick={() => openModal()}>
           <Trans>Create group</Trans>
-        </button>
+        </Button>
       )}
     >
       {(closeModal) => <AddGroupModal closeModal={closeModal} />}

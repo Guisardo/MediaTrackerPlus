@@ -9,6 +9,7 @@ import {
   ValidationErrorLogEntry,
 } from 'mediatracker-api';
 import { CheckboxWithTitleAndDescription } from 'src/components/Checkbox';
+import { Button } from 'src/components/ui/button';
 
 export const LogsPage: FunctionComponent = () => {
   const { levels, SelectLogLevelsComponent } = useSelectLogLevels();
@@ -57,8 +58,8 @@ export const LogsPage: FunctionComponent = () => {
           </div>
         ))}
       <div className="flex justify-center mt-2">
-        <button
-          className="btn"
+        <Button
+          variant="outline"
           onClick={() =>
             fetchNextPage().then(
               (data) =>
@@ -70,7 +71,7 @@ export const LogsPage: FunctionComponent = () => {
           disabled={isFetchingNextPage}
         >
           Load more
-        </button>
+        </Button>
       </div>
     </>
   );

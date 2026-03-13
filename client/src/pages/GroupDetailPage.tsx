@@ -19,6 +19,7 @@ import {
   useUpdateGroupMemberRole,
 } from 'src/api/groups';
 import { Confirm } from 'src/components/Confirm';
+import { Button } from 'src/components/ui/button';
 
 // ---------------------------------------------------------------------------
 // AddMemberPanel – admin-only panel for searching and adding members
@@ -193,13 +194,14 @@ const MemberRow: FunctionComponent<{
             <option value="viewer">{t`Viewer`}</option>
           </select>
 
-          <button
-            className="btn-red text-xs"
+          <Button
+            variant="destructive"
+            size="sm"
             onClick={handleRemove}
             aria-label={t`Remove ${member.name}`}
           >
             <Trans>Remove</Trans>
-          </button>
+          </Button>
         </>
       ) : (
         <div className="text-sm text-gray-500 dark:text-gray-400">
@@ -353,9 +355,9 @@ export const GroupDetailPage: FunctionComponent = () => {
       {/* Delete group button — admin only, at the bottom */}
       {isAdmin && (
         <div className="mt-8 pt-4 border-t border-zinc-200 dark:border-zinc-700">
-          <button className="btn-red" onClick={handleDeleteGroup}>
+          <Button variant="destructive" onClick={handleDeleteGroup}>
             <Trans>Delete group</Trans>
-          </button>
+          </Button>
         </div>
       )}
     </div>

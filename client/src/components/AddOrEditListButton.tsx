@@ -14,6 +14,7 @@ import {
 import { listDescription, listName } from 'src/utils';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Confirm } from 'src/components/Confirm';
+import { Button } from 'src/components/ui/button';
 
 const AddOrEditListButton: FunctionComponent<{
   list?: {
@@ -31,9 +32,9 @@ const AddOrEditListButton: FunctionComponent<{
   return (
     <Modal
       openModal={(openModal) => (
-        <button className="btn" onClick={() => openModal()}>
+        <Button variant="outline" onClick={() => openModal()}>
           {list ? <Trans>Edit list</Trans> : <Trans>Add list</Trans>}
-        </button>
+        </Button>
       )}
     >
       {(closeModal) => (
@@ -192,13 +193,14 @@ const AddOrEditListModal: FunctionComponent<{
       </label>
 
       <div className="flex flex-row mt-4">
-        <button className="btn-blue">
+        <Button variant="default">
           {edit ? <Trans>Save list</Trans> : <Trans>Add list</Trans>}
-        </button>
+        </Button>
 
         {edit && !list?.isWatchlist && (
-          <div
-            className="ml-2 btn-red"
+          <Button
+            variant="destructive"
+            className="ml-2"
             onClick={async () => {
               if (
                 await Confirm(
@@ -220,12 +222,12 @@ const AddOrEditListModal: FunctionComponent<{
             }}
           >
             <Trans>Delete list</Trans>
-          </div>
+          </Button>
         )}
 
-        <div className="ml-auto btn" onClick={() => closeModal()}>
+        <Button variant="outline" className="ml-auto" onClick={() => closeModal()}>
           Close
-        </div>
+        </Button>
       </div>
     </form>
   );

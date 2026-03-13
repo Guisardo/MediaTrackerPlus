@@ -11,6 +11,7 @@ import {
 } from 'mediatracker-api';
 import { TvImportSummaryTable } from 'src/components/ImportSummaryTable';
 import { queryClient } from 'src/App';
+import { Button } from 'src/components/ui/button';
 
 const useTraktTvImport = () => {
   const [_state, setState] = useState<ImportState>();
@@ -78,8 +79,10 @@ export const TraktTvImportPage: FunctionComponent = () => {
                 </div>
                 {navigator.clipboard && (
                   <div>
-                    <div
-                      className="mt-2 text-sm btn"
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="mt-2"
                       onClick={async () => {
                         try {
                           navigator.clipboard.writeText(deviceCode.userCode);
@@ -89,7 +92,7 @@ export const TraktTvImportPage: FunctionComponent = () => {
                       }}
                     >
                       <Trans>Copy to clipboard</Trans>
-                    </div>
+                    </Button>
                   </div>
                 )}
               </div>
@@ -104,9 +107,9 @@ export const TraktTvImportPage: FunctionComponent = () => {
 
             {state.state === 'imported' && (
               <>
-                <div className="mt-2 btn" onClick={() => startOver()}>
+                <Button variant="outline" className="mt-2" onClick={() => startOver()}>
                   <Trans>Start over</Trans>
-                </div>
+                </Button>
               </>
             )}
           </>

@@ -3,6 +3,7 @@ import { t, Trans } from '@lingui/macro';
 import { mediaTrackerApi } from 'src/api/api';
 import { useMutation } from '@tanstack/react-query';
 import { ImportSummaryTable } from 'src/components/ImportSummaryTable';
+import { Button } from 'src/components/ui/button';
 
 const useGoodreadsImport = () => {
   const importMutation = useMutation({ mutationFn: (data: { url: string }) => mediaTrackerApi.importGoodreads.import(data) });
@@ -52,9 +53,9 @@ export const GoodreadsImportPage: FunctionComponent = () => {
               className="block w-96"
             />
           </label>
-          <button className="my-4 text-lg btn" disabled={loading}>
+          <Button variant="outline" className="my-4 text-lg" disabled={loading}>
             <Trans>import</Trans>
-          </button>
+          </Button>
           <img src="/image/goodreads_import.png" />
         </form>
       )}

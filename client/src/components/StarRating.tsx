@@ -8,6 +8,7 @@ import { Modal, useOpenModalRef } from 'src/components/Modal';
 import { SelectSeenDate } from 'src/components/SelectSeenDate';
 import { formatEpisodeNumber, formatSeasonNumber } from 'src/utils';
 import { queryClient } from 'src/App';
+import { Button } from 'src/components/ui/button';
 
 export const StarRating: FunctionComponent<
   | { mediaItem: MediaItemItemsResponse }
@@ -163,12 +164,12 @@ const StarRatingModal: FunctionComponent<
           onChange={(e) => setReview(e.currentTarget.value)}
         />
         <div className="flex w-full">
-          <button className="btn-blue">
+          <Button variant="default">
             <Trans>Save review</Trans>
-          </button>
-          <div className="ml-auto btn-red" onClick={() => _closeModal()}>
+          </Button>
+          <Button variant="destructive" className="ml-auto" onClick={() => _closeModal()}>
             <Trans>Cancel</Trans>
-          </div>
+          </Button>
         </div>
       </form>
     </div>

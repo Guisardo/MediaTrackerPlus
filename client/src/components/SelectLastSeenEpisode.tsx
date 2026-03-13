@@ -6,6 +6,7 @@ import { Modal } from 'src/components/Modal';
 import { SelectSeenDateComponent } from 'src/components/SelectSeenDate';
 import { MediaItemItemsResponse, TvSeason } from 'mediatracker-api';
 import { formatSeasonNumber } from 'src/utils';
+import { Button } from 'src/components/ui/button';
 
 export const SelectLastSeenEpisode: FunctionComponent<{
   tvShow: MediaItemItemsResponse;
@@ -113,9 +114,9 @@ export const SelectLastSeenEpisode: FunctionComponent<{
               closeOnEscape={true}
               onBeforeClosed={() => closeModal(true)}
               openModal={(onClick) => (
-                <div className="btn-blue" onClick={onClick}>
+                <Button variant="default" onClick={onClick}>
                   <Trans>Select</Trans>
-                </div>
+                </Button>
               )}
             >
               {(closeModal) => (
@@ -137,9 +138,9 @@ export const SelectLastSeenEpisode: FunctionComponent<{
               )}
             </Modal>
 
-            <div className="btn-red" onClick={() => closeModal()}>
+            <Button variant="destructive" onClick={() => closeModal()}>
               <Trans>Cancel</Trans>
-            </div>
+            </Button>
           </div>
         </>
       )}

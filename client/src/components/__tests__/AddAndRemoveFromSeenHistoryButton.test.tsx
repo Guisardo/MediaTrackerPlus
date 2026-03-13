@@ -255,8 +255,8 @@ describe('AddToSeenHistoryButton', () => {
           useSeasonAndEpisodeNumber: true,
         })
       );
-      // The button div should be rendered (label contains ICU placeholders in test env)
-      expect(container.querySelector('.btn-blue')).toBeInTheDocument();
+      // The trigger should be a <button> element (shadcn/ui Button)
+      expect(container.querySelector('button')).toBeInTheDocument();
     });
 
     it('renders a button element when useSeasonAndEpisodeNumber=true and episode provided', () => {
@@ -269,7 +269,7 @@ describe('AddToSeenHistoryButton', () => {
           useSeasonAndEpisodeNumber: true,
         })
       );
-      expect(container.querySelector('.btn-blue')).toBeInTheDocument();
+      expect(container.querySelector('button')).toBeInTheDocument();
     });
   });
 

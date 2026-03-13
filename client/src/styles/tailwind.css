@@ -199,40 +199,4 @@
   @apply text-blue-800 underline dark:text-blue-400;
 }
 
-@utility btn {
-  display: inline-block;
-  padding: 2px 16px;
-  border-radius: 4px;
-  border-width: 1px;
-  cursor: pointer;
-  transition: all 150ms;
-  user-select: none;
-  text-align: center;
-  @apply border-current hover:shadow shadow-current hover:shadow-current disabled:shadow-none disabled:cursor-auto dark:disabled:bg-gray-500 disabled:bg-gray-300;
-}
 
-@utility btn-red {
-  display: inline-block;
-  padding: 2px 16px;
-  border-radius: 4px;
-  border-width: 1px;
-  cursor: pointer;
-  transition: all 150ms;
-  user-select: none;
-  text-align: center;
-  @apply border-current hover:shadow shadow-current hover:shadow-current disabled:shadow-none disabled:cursor-auto dark:disabled:bg-gray-500 disabled:bg-gray-300;
-  @apply text-red-700 dark:text-red-500;
-}
-
-@utility btn-blue {
-  display: inline-block;
-  padding: 2px 16px;
-  border-radius: 4px;
-  border-width: 1px;
-  cursor: pointer;
-  transition: all 150ms;
-  user-select: none;
-  text-align: center;
-  @apply border-current hover:shadow shadow-current hover:shadow-current disabled:shadow-none disabled:cursor-auto dark:disabled:bg-gray-500 disabled:bg-gray-300;
-  @apply text-blue-800 dark:text-blue-300;
-}

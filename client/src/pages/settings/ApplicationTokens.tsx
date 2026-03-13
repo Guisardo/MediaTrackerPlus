@@ -1,6 +1,7 @@
 import React, { FunctionComponent, useState } from 'react';
 import { Trans } from '@lingui/macro';
 import { useTokens } from 'src/api/token';
+import { Button } from 'src/components/ui/button';
 
 export const SettingsApplicationTokensPage: FunctionComponent = () => {
   const { tokens, addToken, removeToken } = useTokens();
@@ -26,9 +27,9 @@ export const SettingsApplicationTokensPage: FunctionComponent = () => {
           className="block"
           required
         />
-        <button className="mt-2 btn">
+        <Button variant="outline" className="mt-2">
           <Trans>Add token</Trans>
-        </button>
+        </Button>
       </form>
 
       <div className="my-4 border-t"></div>
@@ -41,12 +42,13 @@ export const SettingsApplicationTokensPage: FunctionComponent = () => {
                 <div className="inline-block mr-2">{newTokens[token]}</div>
               </>
             )}
-            <button
-              className="mt-2 btn"
+            <Button
+              variant="outline"
+              className="mt-2"
               onClick={() => removeToken({ description: token })}
             >
               <Trans>Remove token</Trans>
-            </button>
+            </Button>
           </div>
         ))}
     </>

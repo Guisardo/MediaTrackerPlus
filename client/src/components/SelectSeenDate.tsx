@@ -4,6 +4,7 @@ import { Trans } from '@lingui/macro';
 
 import { markAsSeen } from 'src/api/details';
 import { SelectLastSeenEpisode } from 'src/components/SelectLastSeenEpisode';
+import { Button } from 'src/components/ui/button';
 
 import {
   LastSeenAt,
@@ -101,24 +102,27 @@ export const SelectSeenDateComponent: FunctionComponent<{
       </div>
 
       <div className="flex flex-col">
-        <div
-          className="m-2 btn"
+        <Button
+          variant="outline"
+          className="m-2"
           onClick={() => onSelected({ date: new Date() })}
         >
           <Trans>Now</Trans>
-        </div>
-        <div
-          className="m-2 btn"
+        </Button>
+        <Button
+          variant="outline"
+          className="m-2"
           onClick={() => onSelected({ seenAt: 'release_date' })}
         >
           <Trans>At release date</Trans>
-        </div>
-        <div
-          className="m-2 btn"
+        </Button>
+        <Button
+          variant="outline"
+          className="m-2"
           onClick={() => onSelected({ seenAt: 'unknown' })}
         >
           <Trans>I do not remember</Trans>
-        </div>
+        </Button>
         <form
           className="flex flex-wrap mx-2 my-1 mb-2"
           onSubmit={(e) => {
@@ -152,13 +156,13 @@ export const SelectSeenDateComponent: FunctionComponent<{
             ref={timeInputRef}
             defaultValue={'00:00'}
           />
-          <button className="flex-grow mt-1 btn">
+          <Button variant="outline" className="flex-grow mt-1">
             <Trans>Select date</Trans>
-          </button>
+          </Button>
         </form>
-        <div className="m-2 btn-red" onClick={() => closeModal()}>
+        <Button variant="destructive" className="m-2" onClick={() => closeModal()}>
           <Trans>Cancel</Trans>
-        </div>
+        </Button>
       </div>
     </div>
   );

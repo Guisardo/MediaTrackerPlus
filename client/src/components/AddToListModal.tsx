@@ -8,6 +8,7 @@ import { useUser } from 'src/api/user';
 import { Modal } from 'src/components/Modal';
 import { formatEpisodeNumber, formatSeasonNumber, listName } from 'src/utils';
 import { AddListButton } from 'src/components/AddOrEditListButton';
+import { Button } from 'src/components/ui/button';
 
 export const AddToListModal: FunctionComponent<{
   mediaItemId: number;
@@ -100,9 +101,9 @@ export const AddToListModal: FunctionComponent<{
       <div className="flex mt-2">
         <AddListButton />
 
-        <div onClick={() => closeModal()} className="ml-auto btn-red">
+        <Button variant="destructive" className="ml-auto" onClick={() => closeModal()}>
           <Trans>Close</Trans>
-        </div>
+        </Button>
       </div>
     </div>
   );
@@ -135,7 +136,7 @@ export const AddToListButtonWithModal: FunctionComponent<{
     <Modal
       openModal={(openModal) => (
         <>
-          <div className="text-sm btn-blue" onClick={() => openModal()}>
+          <Button variant="default" size="sm" onClick={() => openModal()}>
             {listsWithItem?.length === 0 ? (
               <>
                 {episodeId ? (
@@ -153,7 +154,7 @@ export const AddToListButtonWithModal: FunctionComponent<{
                 other="Listed on # lists"
               />
             )}
-          </div>
+          </Button>
         </>
       )}
     >

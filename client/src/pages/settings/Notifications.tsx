@@ -5,6 +5,7 @@ import { useNotificationPlatformsCredentials } from 'src/api/notificationPlatfor
 import { useUser } from 'src/api/user';
 import { CheckboxWithTitleAndDescription } from 'src/components/Checkbox';
 import { SettingsSegment } from 'src/components/SettingsSegment';
+import { Button } from 'src/components/ui/button';
 
 export const SettingsNotificationsPage: FunctionComponent = () => {
   const { user, updateUser } = useUser();
@@ -224,9 +225,9 @@ const NotificationPlatformsCredentials: FunctionComponent<{
         >
           {props.children}
 
-          <button className="mt-2 btn">
+          <Button variant="outline" className="mt-2">
             <Trans>Save</Trans>
-          </button>
+          </Button>
         </form>
       </SettingsSegment>
     </div>
