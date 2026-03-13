@@ -34,7 +34,7 @@ export const LogsPage: FunctionComponent = () => {
         ?.flatMap((value) => value)
         ?.map((log) => (
           <div key={log.id} className="text-md">
-            <span className="text-sm text-slate-400 dark:text-slate-500">
+            <span className="text-sm text-zinc-400 dark:text-zinc-500">
               {new Date(log.timestamp).toLocaleString()}{' '}
             </span>
             <span

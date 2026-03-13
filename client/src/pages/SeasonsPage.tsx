@@ -265,7 +265,7 @@ const SeasonComponent: FunctionComponent<{
           <div
             key={episode.id}
             className={clsx({
-              'border-b border-gray-600/30 dark:border-neutral-300/30':
+              'border-b border-zinc-600/30 dark:border-zinc-300/30':
                 index !== season.episodes.length - 1,
             })}
           >

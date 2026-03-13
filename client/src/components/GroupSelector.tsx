@@ -135,7 +135,7 @@ export const useGroupSelectorComponent = (args: {
 
         {showMenu && (
           <ul
-            className="absolute right-0 z-10 transition-all rounded shadow-lg shadow-black bg-zinc-100 dark:bg-gray-900"
+            className="absolute right-0 z-10 transition-all rounded shadow-lg shadow-black bg-zinc-100 dark:bg-zinc-900"
             onClick={(e) => e.stopPropagation()}
           >
             {/* "All Users" option */}
@@ -143,7 +143,7 @@ export const useGroupSelectorComponent = (args: {
               key="all-users"
               className={clsx(
                 'px-2 py-1 rounded hover:bg-red-700 whitespace-nowrap',
-                selectedGroupId === undefined && 'dark:bg-slate-700 bg-zinc-300'
+                selectedGroupId === undefined && 'dark:bg-zinc-700 bg-zinc-300'
               )}
               onClick={() => selectGroup(undefined)}
             >
@@ -156,7 +156,7 @@ export const useGroupSelectorComponent = (args: {
                 key={group.id}
                 className={clsx(
                   'px-2 py-1 rounded hover:bg-red-700 whitespace-nowrap',
-                  selectedGroupId === group.id && 'dark:bg-slate-700 bg-zinc-300'
+                  selectedGroupId === group.id && 'dark:bg-zinc-700 bg-zinc-300'
                 )}
                 onClick={() => selectGroup(group.id)}
               >

@@ -45,7 +45,7 @@ const PosterCss: FunctionComponent<{
       )}
       <div
         className={clsx(
-          'absolute top-0 left-0 flex items-center transition-all duration-300 w-full h-full text-gray-900 rounded overflow-clip bg-amber-800',
+          'absolute top-0 left-0 flex items-center transition-all duration-300 w-full h-full text-zinc-900 rounded overflow-clip bg-amber-800',
           (src ? imageLoaded : !imageLoaded)
             ? 'opacity-0 blur-2xl text-sm'
             : 'opacity-100 text-9xl'

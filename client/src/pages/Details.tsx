@@ -308,7 +308,7 @@ export const DetailsPage: FunctionComponent = () => {
                   <span className="italic">{genre}</span>
 
                   {index < mediaItem.genres.length - 1 && (
-                    <span className="mx-1 text-gray-600">|</span>
+                    <span className="mx-1 text-zinc-600">|</span>
                   )}
                 </span>
               ))}

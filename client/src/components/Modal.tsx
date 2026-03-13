@@ -126,7 +126,7 @@ export const Modal = <ReturnType,>(props: {
           }}
           className="max-w-fit p-0 border-0 bg-transparent shadow-none"
         >
-          <div className="rounded-lg bg-zinc-100 dark:bg-gray-900">
+          <div className="rounded-lg bg-zinc-100 dark:bg-zinc-900">
             {props.children(closeModal)}
           </div>
         </DialogContent>

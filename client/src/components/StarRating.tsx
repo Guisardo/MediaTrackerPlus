@@ -116,7 +116,7 @@ const StarRatingModal: FunctionComponent<
         {episode && <> {formatEpisodeNumber(episode)}</>}
       </div>
 
-      <span className="flex px-1 m-auto cursor-pointer w-min dark:text-slate-200">
+      <span className="flex px-1 m-auto cursor-pointer w-min dark:text-zinc-200">
         {new Array(5).fill(null).map((value, index) => {
           return (
             <span
@@ -208,7 +208,7 @@ export const BadgeRating: FunctionComponent<
         openModal={(openModal) => (
           <>
             <span
-              className="flex w-min px-0.5 bg-gray-400 rounded shadow-lg cursor-pointer text-lg relative text-black select-none"
+              className="flex w-min px-0.5 bg-zinc-400 rounded shadow-lg cursor-pointer text-lg relative text-black select-none"
               onClick={() => openModal()}
             >
               <span

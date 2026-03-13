@@ -209,7 +209,7 @@ const SideBar: FunctionComponent<{
       {/* Backdrop overlay – fades in/out via CSS transition */}
       <div
         className={clsx(
-          'fixed top-0 bottom-0 left-0 right-0 z-10 w-full h-full bg-gray-500 transition-opacity duration-300',
+          'fixed top-0 bottom-0 left-0 right-0 z-10 w-full h-full bg-zinc-500 transition-opacity duration-300',
           showSidebar ? 'opacity-30 pointer-events-auto' : 'opacity-0 pointer-events-none'
         )}
         onClick={() => hideSidebar()}

@@ -108,17 +108,17 @@ const AddMemberPanel: FunctionComponent<{
         />
 
         {isSearching && (
-          <div className="text-xs text-gray-500 mt-1">
+          <div className="text-xs text-zinc-500 mt-1">
             <Trans>Searching…</Trans>
           </div>
         )}
 
         {results.length > 0 && (
-          <div className="absolute z-10 left-0 right-0 mt-1 rounded border border-zinc-300 dark:border-zinc-700 bg-zinc-100 dark:bg-gray-900 shadow-md">
+          <div className="absolute z-10 left-0 right-0 mt-1 rounded border border-zinc-300 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-900 shadow-md">
             {results.map((user) => (
               <div
                 key={user.id}
-                className="px-3 py-2 cursor-pointer hover:bg-zinc-200 dark:hover:bg-gray-800 text-sm"
+                className="px-3 py-2 cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-800 text-sm"
                 onClick={() => handleAddMember(user)}
                 role="option"
                 aria-selected={false}
@@ -130,7 +130,7 @@ const AddMemberPanel: FunctionComponent<{
         )}
 
         {!isSearching && query.trim() && results.length === 0 && (
-          <div className="text-xs text-gray-500 mt-1">
+          <div className="text-xs text-zinc-500 mt-1">
             <Trans>No users found</Trans>
           </div>
         )}
@@ -204,7 +204,7 @@ const MemberRow: FunctionComponent<{
           </Button>
         </>
       ) : (
-        <div className="text-sm text-gray-500 dark:text-gray-400">
+        <div className="text-sm text-zinc-500 dark:text-zinc-400">
           {member.role === 'admin' ? <Trans>Admin</Trans> : <Trans>Viewer</Trans>}
         </div>
       )}
@@ -315,7 +315,7 @@ export const GroupDetailPage: FunctionComponent = () => {
       </div>
 
       {/* Current user's role */}
-      <div className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+      <div className="text-sm text-zinc-500 dark:text-zinc-400 mb-4">
         <Trans>Your role:</Trans>{' '}
         <span className="font-medium">
           {isAdmin ? <Trans>Admin</Trans> : <Trans>Viewer</Trans>}
@@ -329,7 +329,7 @@ export const GroupDetailPage: FunctionComponent = () => {
         </div>
 
         {group.members.length === 0 ? (
-          <div className="text-sm text-gray-500 dark:text-gray-400">
+          <div className="text-sm text-zinc-500 dark:text-zinc-400">
             <Trans>No members yet</Trans>
           </div>
         ) : (

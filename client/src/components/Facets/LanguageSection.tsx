@@ -106,7 +106,7 @@ const LanguageSectionInner: FunctionComponent<{
                 <li key={option.value} className="flex items-center justify-between">
                   <label
                     htmlFor={inputId}
-                    className="flex items-center gap-2 cursor-pointer text-sm text-gray-800 dark:text-slate-200 select-none min-w-0 flex-1"
+                    className="flex items-center gap-2 cursor-pointer text-sm text-zinc-800 dark:text-zinc-200 select-none min-w-0 flex-1"
                   >
                     <input
                       id={inputId}
@@ -118,7 +118,7 @@ const LanguageSectionInner: FunctionComponent<{
                     <span className="truncate">{option.displayLabel}</span>
                   </label>
                   <span
-                    className="ml-2 flex-shrink-0 text-xs text-gray-500 dark:text-slate-400 tabular-nums"
+                    className="ml-2 flex-shrink-0 text-xs text-zinc-500 dark:text-zinc-400 tabular-nums"
                     aria-hidden="true"
                   >
                     {option.count}

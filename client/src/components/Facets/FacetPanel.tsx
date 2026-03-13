@@ -21,13 +21,13 @@ export const FacetPanel: FunctionComponent<{
 
   return (
     <aside
-      className="hidden lg:flex flex-col w-60 flex-shrink-0 mr-4 border border-gray-200 dark:border-slate-700 rounded bg-white dark:bg-slate-800"
+      className="hidden lg:flex flex-col w-60 flex-shrink-0 mr-4 border border-zinc-200 dark:border-zinc-700 rounded bg-white dark:bg-zinc-800"
       aria-label="Filters"
     >
       {/* Header row — only visible when filters are active */}
       {activeFacetCount > 0 && (
-        <div className="flex items-center justify-between px-3 py-2 border-b border-gray-200 dark:border-slate-700">
-          <span className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wide">
+        <div className="flex items-center justify-between px-3 py-2 border-b border-zinc-200 dark:border-zinc-700">
+          <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
             <Trans>Filters</Trans>
           </span>
           <button
