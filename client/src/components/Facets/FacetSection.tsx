@@ -1,19 +1,18 @@
-import React, { FunctionComponent, useCallback, useRef, useState, useEffect } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
 
 /**
  * FacetSection wraps an individual facet dimension in a collapsible accordion
  * section with keyboard navigation and correct ARIA roles.
  *
- * Uses native HTML elements and React state. Will be replaced with shadcn/ui
- * Collapsible in US-018.
- *
- * The section starts collapsed by default but auto-expands when hasActiveSelection
- * is true so users can see which filters are currently active.
+ * Uses shadcn/ui Collapsible (Radix) for accessibility, animation, and focus
+ * trapping. The section starts collapsed by default but auto-expands when
+ * hasActiveSelection is true so users can see which filters are currently active.
  *
  * Accessibility:
- *   - The trigger button uses aria-expanded and aria-controls.
- *   - The content region uses role="region" and aria-labelledby.
- *   - Keyboard: Enter/Space toggles the section (native button behaviour).
+ *   - The trigger button automatically gets aria-expanded and aria-controls.
+ *   - The content region is managed by Radix Collapsible with proper ARIA.
+ *   - Keyboard: Enter/Space toggles the section (Radix handles this).
  */
 export const FacetSection: FunctionComponent<{
   title: string;
@@ -21,9 +20,6 @@ export const FacetSection: FunctionComponent<{
   children: React.ReactNode;
 }> = ({ title, hasActiveSelection = false, children }) => {
   const [open, setOpen] = useState(hasActiveSelection);
-  const idRef = useRef<string>(`facet-section-${Math.random().toString(36).slice(2, 8)}`);
-  const triggerId = `${idRef.current}-trigger`;
-  const contentId = `${idRef.current}-content`;
 
   // Auto-expand when a selection becomes active (e.g. restored from URL on page load).
   useEffect(() => {
@@ -32,20 +28,9 @@ export const FacetSection: FunctionComponent<{
     }
   }, [hasActiveSelection]);
 
-  const handleToggle = useCallback(() => {
-    setOpen((prev) => !prev);
-  }, []);
-
   return (
-    <div data-state={open ? 'open' : 'closed'}>
-      <button
-        id={triggerId}
-        type="button"
-        onClick={handleToggle}
-        aria-expanded={open}
-        aria-controls={contentId}
-        className="flex items-center justify-between w-full py-2 px-3 text-sm font-medium text-left text-gray-800 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-700 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-      >
+    <Collapsible open={open} onOpenChange={setOpen}>
+      <CollapsibleTrigger className="flex items-center justify-between w-full py-2 px-3 text-sm font-medium text-left text-zinc-800 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">
         <span>{title}</span>
         {/* Chevron rotates 180° when expanded — pure CSS, no JS animation */}
         <span
@@ -55,16 +40,11 @@ export const FacetSection: FunctionComponent<{
         >
           expand_more
         </span>
-      </button>
+      </CollapsibleTrigger>
 
-      <div
-        id={contentId}
-        role="region"
-        aria-labelledby={triggerId}
-        hidden={!open}
-      >
-        {open && <div className="px-3 pb-3">{children}</div>}
-      </div>
-    </div>
+      <CollapsibleContent className="px-3 pb-3">
+        {children}
+      </CollapsibleContent>
+    </Collapsible>
   );
 };
