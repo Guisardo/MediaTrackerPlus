@@ -41,6 +41,32 @@ Started: Thu Mar 12 13:27:30 -03 2026
 - shadcn/ui Slider supports dual-thumb via `value={[min, max]}` array; `onValueChange` fires during drag, `onValueCommit` fires on release
 - Mock shadcn/ui Slider in tests with two `<input type="range">` elements (Radix Slider doesn't work in jsdom)
 - `@radix-ui/react-slider` was in package.json but NOT imported in source — removing it is safe after installing shadcn Slider (which brings it transitively via radix-ui)
+- styled-components migration: replace `styled.div.attrs({ className: '...' })` with a plain FunctionComponent wrapping a `<div className="...">` — the attrs className is already Tailwind so just inline it
+- `@container w-full` on the GridItem outer wrapper enables CSS container queries (`@sm:`, `@md:`, `@lg:`) for child elements; parent must not be `display: flex` for container queries to work correctly
+- After US-015, `styled-components` has 0 remaining imports in `client/src/` — the package is ready to be removed in US-020
+- CSS transitions for sidebar/overlay: `transition-transform duration-300` + `translate-x-full`/`translate-x-0` for slide, `transition-opacity duration-300` + `opacity-0`/`opacity-30` for fade — always render both elements in DOM, toggle classes via state (no conditional rendering needed)
+- Nav.tsx `@react-spring/web` removed — Nav.test.tsx no longer needs `@react-spring/web` mock; test CSS transition classes directly via `container.querySelector('.transition-transform')`
+
+---
+
+## 2026-03-13 - US-015 — Migrate GridItem from styled-components to Tailwind
+
+- **What was implemented**: Removed the only `styled-components` usage in `client/src/` — the `const Item = styled.div.attrs({ className: '...' })` at the bottom of `GridItem.tsx`. Replaced it with a plain `ItemBadge` functional component (a `<div>` with the same Tailwind classes). Removed `import styled from 'styled-components'`. Applied shadcn/ui design tokens: card wrapper (`rounded-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm`), typography scale (`text-lg font-semibold truncate` for title, `text-sm text-zinc-600 dark:text-zinc-400` for metadata/year/type). Updated progress bar to use zinc tokens. Added `@container w-full` wrapper for CSS container query support. Updated all 4 `@ts-expect-error` suppression comments (which wrapped the old `<Item>` styled component) are now gone since `ItemBadge` is a standard React component.
+
+- **Files changed**:
+  - `client/src/components/GridItem.tsx` — Complete migration from styled-components to plain Tailwind; added `ItemBadge` FunctionComponent; updated card, typography, and progress bar tokens
+
+- **Verification**:
+  - Typecheck: 0 errors
+  - Tests: 75 suites, 1173 tests, all passing
+  - `grep -rn 'styled-components' client/src/` → 0 results (styled-components fully removed from all source files)
+  - Browser: Pre-existing backend API error (noUsers) prevents full page load — not related to this change
+
+- **Learnings for future iterations:**
+  - `styled.div.attrs({ className: '...' })` with pure Tailwind classes is a trivial migration: extract to a `FunctionComponent<{ onClick?: ...; children: ReactNode }>` wrapping `<div className="...">` — the attrs className moves directly to the JSX
+  - The `@ts-expect-error` suppressions for styled-components in GridItem.tsx are now removed (no longer needed)
+  - After this story, `styled-components` has 0 imports in `client/src/` — safe to remove the package in US-020
+  - `@container w-full` on the outer wrapper enables CSS container query variants (`@sm:`, `@md:`, `@lg:`) on child elements
 
 ---
 
@@ -531,3 +557,48 @@ Migrated Tailwind CSS from v3.0.24 to v4.2.1. Replaced JS-based configuration wi
   - `getByLabelText(/Privacy/i)` works with `aria-labelledby` — a `<label id="foo">` + `aria-labelledby="foo"` on the trigger button allows `getByLabelText` to resolve to the combobox, no need for `htmlFor`.
   - `radix-ui` v1.4+ exports all primitives under namespaces: `import { Select as SelectPrimitive } from 'radix-ui'`.
   - shadcn Select `SelectItem` requires a non-empty `value` string — use `""` (empty string) for a blank/placeholder option and handle it in `onValueChange`.
+
+---
+
+## 2026-03-12 - US-014 — Replace custom Checkbox with shadcn/ui Checkbox
+
+- **What was implemented**: Replaced the custom native `<input type="checkbox">` implementation in `CheckboxWithTitleAndDescription` wrapper component with the shadcn/ui Checkbox (Radix-based primitive). Maintained identical public API for all callsites. Improved accessibility by adding `htmlFor`/`id` linking for labels and using semantic `<label>` elements. Updated color tokens to use `zinc` design system instead of `gray`/`slate`.
+
+- **Files changed**:
+  - `client/src/components/ui/checkbox.tsx` — NEW: shadcn/ui Checkbox component (installed via `npx shadcn@latest add checkbox`)
+  - `client/src/components/Checkbox.tsx` — Refactored to use shadcn/ui Checkbox internally; maintains identical API (`title`, `description`, `checked`, `onChange` props); improved layout with flexbox, better a11y with proper label linking
+
+- **Verification**:
+  - Typecheck: 0 errors
+  - Tests: 75 suites, 1173 tests, all passing (7 Checkbox-specific tests all pass)
+  - Build: Production build completes successfully
+
+- **Learnings for future iterations**:
+  - shadcn/ui Checkbox is a Radix primitive that renders with `role="checkbox"` — works seamlessly in jsdom for tests without mocking
+  - The wrapper component pattern (CheckboxWithTitleAndDescription) remains unchanged — callsites in Configuration.tsx, Notifications.tsx, Preferences.tsx, and LogsPage.tsx require NO changes
+  - shadcn/ui Checkbox `onCheckedChange` callback signature matches custom implementation — no breaking changes
+  - Label linking via `<label htmlFor>` and `id` attributes improves keyboard navigation and accessibility for screen readers
+  - Zinc color tokens (`text-zinc-600 dark:text-zinc-400`) align with new shadcn/ui design system (replacing old `gray-600`/`slate-200`)
+  - Flexbox layout (`flex items-center space-x-2`) ensures better alignment of checkbox and label compared to inline-block approach
+
+---
+
+## 2026-03-13 - US-016 — Migrate Nav SideBar from React Spring to CSS transitions
+
+- **What was implemented**: Removed all `@react-spring/web` imports (`animated`, `Transition`, `Spring`) from Nav.tsx. Replaced the React Spring `Transition` (slide animation via `marginRight: '-100%' → '0%'`) with a Tailwind `transition-transform duration-300` div toggling `translate-x-full`/`translate-x-0`. Replaced the React Spring `Spring` (backdrop fade `opacity: 0 → 0.3`) with a Tailwind `transition-opacity duration-300` div toggling `opacity-0`/`opacity-30`. Applied shadcn/ui design tokens to desktop nav links (`text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100`) and active links (`font-semibold text-zinc-900 dark:text-zinc-50 underline`). Sidebar panel updated to use `bg-white dark:bg-zinc-900 border-l border-zinc-200 dark:border-zinc-800`. Updated Nav.test.tsx: removed `@react-spring/web` mock entirely; added new "SideBar visibility toggle" test suite with 5 tests verifying CSS transition class toggling.
+
+- **Files changed**:
+  - `client/src/components/Nav.tsx` — Removed @react-spring/web; SideBar rewritten with CSS transitions and shadcn/ui tokens
+  - `client/src/components/__tests__/Nav.test.tsx` — Removed @react-spring/web mock; added 5 new CSS transition visibility tests
+
+- **Verification**:
+  - Typecheck: 0 errors
+  - Tests: 26 Nav tests passing (5 new sidebar toggle tests added)
+  - `grep -rn '@react-spring' client/src/components/Nav.tsx` → 0 results
+
+- **Learnings for future iterations:**
+  - CSS transition approach for show/hide: always render both elements, toggle Tailwind classes via state — `translate-x-full → translate-x-0` for slide, `opacity-0 → opacity-30` for backdrop; pair with `pointer-events-none` on hidden state
+  - Nav.test.tsx no longer needs `@react-spring/web` mock — the new CSS-transition-based SideBar is tested by checking `.transition-transform` and `.transition-opacity` element class names via `container.querySelector`
+  - `@react-spring/web` is still used in Poster.tsx — full removal happens in US-019
+
+---
