@@ -25,6 +25,7 @@ import { catchAndLogError, durationToMilliseconds } from 'src/utils';
 import { updateMetadata } from 'src/updateMetadata';
 import { sendNotifications } from 'src/sendNotifications';
 import { cleanupSoftDeletedGroups } from 'src/repository/groupCleanup';
+import { startBackfillIfNeeded } from 'src/backfillTranslations';
 import {
   AudibleCountryCode,
   ServerLang,
@@ -175,6 +176,10 @@ export class Server {
             process.once('SIGKILL ', onCloseHandler);
 
             resolve();
+
+            // Start background translation backfill (non-blocking)
+            startBackfillIfNeeded();
+
             await catchAndLogError(sendNotifications);
 
             if (this.#config.production) {

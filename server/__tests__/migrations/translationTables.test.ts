@@ -302,6 +302,11 @@ describe('translationTables migration', () => {
   test('unique constraint on (mediaItemId, language) is enforced', async () => {
     const mediaItemId = InitialData.mediaItem.id;
 
+    // Clean up any leftover rows from prior tests in the full suite
+    await Database.knex('mediaItemTranslation')
+      .where({ mediaItemId, language: 'es' })
+      .del();
+
     // Insert first translation
     await Database.knex('mediaItemTranslation').insert({
       mediaItemId,

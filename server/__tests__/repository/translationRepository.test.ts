@@ -26,6 +26,11 @@ describe('translationRepository', () => {
   beforeAll(async () => {
     await runMigrations();
 
+    // Clean up any leftover data from prior test suites (runInBand DB isolation)
+    await Database.knex('mediaItemTranslation').del();
+    await Database.knex('mediaItem').del();
+    await Database.knex('user').del();
+
     // Seed prerequisite rows: user and a mediaItem (tv show from Data)
     await Database.knex('user').insert(Data.user);
     await Database.knex('mediaItem').insert(Data.tvShow);
