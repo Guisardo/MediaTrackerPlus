@@ -11,6 +11,7 @@ export const request = (
     pathParams?: Record<string, unknown>;
     requestQuery?: Record<string, unknown>;
     requestBody?: Record<string, unknown>;
+    requestHeaders?: Record<string, string>;
   }
 ) => {
   return new Promise<{
@@ -65,9 +66,10 @@ export const request = (
     const result = handler(
       {
         user: args.userId,
-        params: args.pathParams,
-        query: args.requestQuery,
-        body: args.requestBody,
+        params: args.pathParams ?? {},
+        query: args.requestQuery ?? {},
+        body: args.requestBody ?? {},
+        headers: args.requestHeaders ?? {},
       } as unknown as Express.Request,
       res as unknown as Express.Response,
       ((err?: unknown) => {

@@ -5,10 +5,35 @@ import { MediaItemItemsResponse, MediaType } from 'src/entity/mediaItem';
 import { findMediaItemByExternalId } from 'src/metadata/findByExternalId';
 import { metadataProviders } from 'src/metadata/metadataProviders';
 import { mediaItemRepository } from 'src/repository/mediaItem';
+import { resolveLocale } from 'src/localeResolver';
+import { getMetadataLanguages } from 'src/metadataLanguages';
 
 const IMDB_ID_PATTERN = /^tt\d{7,8}$/i;
 
 const isImdbId = (query: string): boolean => IMDB_ID_PATTERN.test(query.trim());
+
+/**
+ * Resolves the language to use for metadata overlay, implementing three-tier fallback:
+ * 1. Exact locale match from Accept-Language header against METADATA_LANGUAGES
+ * 2. First language in METADATA_LANGUAGES as fallback when no exact match
+ * 3. null when METADATA_LANGUAGES is empty (no translations configured)
+ */
+function resolveMetadataLanguage(
+  acceptLanguageHeader: string | undefined
+): string | null {
+  const availableLanguages = getMetadataLanguages();
+  if (availableLanguages.length === 0) {
+    return null;
+  }
+
+  const exactMatch = resolveLocale(acceptLanguageHeader, availableLanguages);
+  if (exactMatch) {
+    return exactMatch;
+  }
+
+  // Tier 2 fallback: use first configured language
+  return availableLanguages[0];
+}
 
 /**
  * @openapi_tags Search
@@ -34,6 +59,8 @@ export class SearchController {
       return;
     }
 
+    const language = resolveMetadataLanguage(req.headers['accept-language']);
+
     if (isImdbId(query) && (mediaType === 'movie' || mediaType === 'tv')) {
       const mediaItem = await findMediaItemByExternalId({
         id: { imdbId: query.trim().toLowerCase() },
@@ -48,6 +75,7 @@ export class SearchController {
       const existingItemsDetails = await mediaItemRepository.items({
         userId: userId,
         mediaItemIds: [mediaItem.id],
+        language: language,
       });
 
       res.send(existingItemsDetails);
@@ -69,6 +97,7 @@ export class SearchController {
     const existingItemsDetails = await mediaItemRepository.items({
       userId: userId,
       mediaItemIds: result.map((item) => item.id),
+      language: language,
     });
 
     res.send(existingItemsDetails);

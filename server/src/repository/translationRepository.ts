@@ -1,5 +1,102 @@
 import { Database } from 'src/dbconfig';
 
+export interface MediaItemTranslation {
+  id: number;
+  mediaItemId: number;
+  language: string;
+  title: string | null;
+  overview: string | null;
+  genres: string | null;
+}
+
+export interface SeasonTranslation {
+  id: number;
+  seasonId: number;
+  language: string;
+  title: string | null;
+  description: string | null;
+}
+
+export interface EpisodeTranslation {
+  id: number;
+  episodeId: number;
+  language: string;
+  title: string | null;
+  description: string | null;
+}
+
+/**
+ * Fetches media item translations for a list of media item IDs and a specific language.
+ * Returns a map from mediaItemId to translation row.
+ */
+export const getMediaItemTranslations = async (
+  mediaItemIds: number[],
+  language: string
+): Promise<Map<number, MediaItemTranslation>> => {
+  if (mediaItemIds.length === 0) {
+    return new Map();
+  }
+
+  const rows = await Database.knex<MediaItemTranslation>('mediaItemTranslation')
+    .whereIn('mediaItemId', mediaItemIds)
+    .where('language', language)
+    .select('*');
+
+  const map = new Map<number, MediaItemTranslation>();
+  for (const row of rows) {
+    map.set(row.mediaItemId, row);
+  }
+  return map;
+};
+
+/**
+ * Fetches season translations for a list of season IDs and a specific language.
+ * Returns a map from seasonId to translation row.
+ */
+export const getSeasonTranslations = async (
+  seasonIds: number[],
+  language: string
+): Promise<Map<number, SeasonTranslation>> => {
+  if (seasonIds.length === 0) {
+    return new Map();
+  }
+
+  const rows = await Database.knex<SeasonTranslation>('seasonTranslation')
+    .whereIn('seasonId', seasonIds)
+    .where('language', language)
+    .select('*');
+
+  const map = new Map<number, SeasonTranslation>();
+  for (const row of rows) {
+    map.set(row.seasonId, row);
+  }
+  return map;
+};
+
+/**
+ * Fetches episode translations for a list of episode IDs and a specific language.
+ * Returns a map from episodeId to translation row.
+ */
+export const getEpisodeTranslations = async (
+  episodeIds: number[],
+  language: string
+): Promise<Map<number, EpisodeTranslation>> => {
+  if (episodeIds.length === 0) {
+    return new Map();
+  }
+
+  const rows = await Database.knex<EpisodeTranslation>('episodeTranslation')
+    .whereIn('episodeId', episodeIds)
+    .where('language', language)
+    .select('*');
+
+  const map = new Map<number, EpisodeTranslation>();
+  for (const row of rows) {
+    map.set(row.episodeId, row);
+  }
+  return map;
+};
+
 export interface MediaItemTranslationData {
   title?: string | null;
   overview?: string | null;
