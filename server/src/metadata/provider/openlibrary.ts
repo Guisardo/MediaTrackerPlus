@@ -57,6 +57,10 @@ export class OpenLibrary extends MetadataProvider {
     numberOfPages?: number;
     externalPosterUrl?: string;
   }): Promise<MediaItemForProvider> {
+    logger.debug(
+      `OpenLibrary: no language filter, storing primary language only`
+    );
+
     const res = await axios.get<DetailsResponse>(
       `https://openlibrary.org${args.openlibraryId}.json`
     );

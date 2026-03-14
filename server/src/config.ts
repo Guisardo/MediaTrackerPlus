@@ -74,6 +74,16 @@ export class Config {
   static readonly AUDIBLE_LANG =
     process.env.AUDIBLE_LANG?.toLowerCase() as AudibleCountryCode;
 
+  static readonly METADATA_LANGUAGES: string[] | null = process.env
+    .METADATA_LANGUAGES
+    ? process.env.METADATA_LANGUAGES.split(',')
+        .map((code) => code.trim().toLowerCase())
+        .filter((code) => code.length > 0)
+    : null;
+
+  static readonly AUDIBLE_LANG_MAP: string | null =
+    process.env.AUDIBLE_LANG_MAP || null;
+
   static validate() {
     if (this.SERVER_LANG && !serverLang.includes(this.SERVER_LANG)) {
       throw new Error(

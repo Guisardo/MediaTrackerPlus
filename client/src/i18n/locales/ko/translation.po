@@ -44,7 +44,7 @@ msgid "{0, plural, one {1 item} other {# items}}"
 msgstr "{0, plural, one {1 항목} other {# 항목}}"
 
 #. placeholder {0}: mediaItem.authors.length
-#: src/pages/Details.tsx:339
+#: src/pages/Details.tsx:350
 msgid "{0, plural, one {Author} other {Authors}}"
 msgstr "{0, plural, one {작가} other {작가}}"
 
@@ -54,7 +54,7 @@ msgid "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {
 msgstr "{0, plural, one {\"<0>{searchQuery}</0>\" 검색에서 # 개의 항목을 찾았습니다} other {\"<1>{searchQuery}</1>\" 검색에서 # 개의 항목을 찾았습니다}}"
 
 #. placeholder {0}: mediaItem.genres.length
-#: src/pages/Details.tsx:299
+#: src/pages/Details.tsx:310
 msgid "{0, plural, one {Genre} other {Genres}}"
 msgstr "{0, plural, one {장르} other {장르}}"
 
@@ -64,36 +64,36 @@ msgid "{0, plural, one {Listed on 1 list} other {Listed on # lists}}"
 msgstr "{0, plural, one {목록 1개에 등록됨} other {목록 #개에 등록됨}}"
 
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:565
+#: src/pages/Details.tsx:576
 #: src/pages/SeenHistory.tsx:43
 msgid "{0, plural, one {Listened 1 time} other {Listened # times}}"
 msgstr "{0, plural, one {1번 감상} other {#번 감상}}"
 
 #. placeholder {0}: mediaItem.narrators.length
-#: src/pages/Details.tsx:353
+#: src/pages/Details.tsx:364
 msgid "{0, plural, one {Narrator} other {Narrators}}"
 msgstr "{0, plural, one {내레이터} other {내레이터}}"
 
 #. placeholder {0}: mediaItem.platform.length
-#: src/pages/Details.tsx:267
+#: src/pages/Details.tsx:278
 msgid "{0, plural, one {Platform} other {platforms}}"
 msgstr "{0, plural, one {운영체제} other {운영체제}}"
 
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:589
+#: src/pages/Details.tsx:600
 #: src/pages/SeenHistory.tsx:67
 msgid "{0, plural, one {Played 1 time} other {Played # times}}"
 msgstr "{0, plural, one {1번 플레이} other {#번 플레이}}"
 
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:573
+#: src/pages/Details.tsx:584
 #: src/pages/SeenHistory.tsx:51
 msgid "{0, plural, one {Read 1 time} other {Read # times}}"
 msgstr "{0, plural, one {1번 감상} other {#번 감상}}"
 
 #. placeholder {0}: episode.seenHistory.length
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:581
+#: src/pages/Details.tsx:592
 #: src/pages/SeasonsPage.tsx:87
 #: src/pages/SeenHistory.tsx:59
 msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
@@ -257,7 +257,7 @@ msgstr "감상 기록에 추가"
 msgid "Add to seen history"
 msgstr "시청 기록에 추가"
 
-#: src/pages/Details.tsx:646
+#: src/pages/Details.tsx:657
 msgid "Add to watchlist"
 msgstr "관심 목록에 추가"
 
@@ -504,11 +504,11 @@ msgid "Episode {0} {1}"
 msgstr "에피소드 {0} {1}"
 
 #: src/components/ImportSummaryTable.tsx:93
-#: src/pages/Details.tsx:383
+#: src/pages/Details.tsx:394
 msgid "Episodes"
 msgstr "에피소드"
 
-#: src/pages/Details.tsx:449
+#: src/pages/Details.tsx:460
 msgid "Episodes page"
 msgstr "에피소드 페이지"
 
@@ -535,7 +535,7 @@ msgstr "그룹을 불러오는 데 실패했습니다. 삭제되었을 수 있�
 msgid "Filters"
 msgstr "필터"
 
-#: src/pages/Details.tsx:528
+#: src/pages/Details.tsx:539
 msgid "First unwatched episode"
 msgstr "다음 에피소드"
 
@@ -597,19 +597,19 @@ msgstr "홈"
 msgid "Http"
 msgstr "HTTP"
 
-#: src/pages/Details.tsx:471
+#: src/pages/Details.tsx:482
 msgid "I am listening it"
 msgstr "감상 중으로 설정"
 
-#: src/pages/Details.tsx:472
+#: src/pages/Details.tsx:483
 msgid "I am playing it"
 msgstr "플레이 중으로 설정"
 
-#: src/pages/Details.tsx:470
+#: src/pages/Details.tsx:481
 msgid "I am reading it"
 msgstr "감상 중으로 설정"
 
-#: src/pages/Details.tsx:469
+#: src/pages/Details.tsx:480
 msgid "I am watching it"
 msgstr "시청 중으로 설정"
 
@@ -618,19 +618,19 @@ msgstr "시청 중으로 설정"
 msgid "I do not remember"
 msgstr "기억 나지 않습니다"
 
-#: src/pages/Details.tsx:492
+#: src/pages/Details.tsx:503
 msgid "I finished listening it"
 msgstr "감상 완료로 설정"
 
-#: src/pages/Details.tsx:495
+#: src/pages/Details.tsx:506
 msgid "I finished playing it"
 msgstr "플레이 완료로 설정"
 
-#: src/pages/Details.tsx:490
+#: src/pages/Details.tsx:501
 msgid "I finished reading it"
 msgstr "감상 완료로 설정"
 
-#: src/pages/Details.tsx:489
+#: src/pages/Details.tsx:500
 msgid "I finished watching it"
 msgstr "시청 완료로 설정"
 
@@ -681,7 +681,7 @@ msgstr "Key"
 
 #: src/components/Facets/ActiveFacetChips.tsx:235
 #: src/components/Facets/LanguageSection.tsx:95
-#: src/pages/Details.tsx:330
+#: src/pages/Details.tsx:341
 msgid "Language"
 msgstr "언어"
 
@@ -690,17 +690,17 @@ msgid "Last airing"
 msgstr "마지막 방송"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:537
+#: src/pages/Details.tsx:548
 msgid "Last listened at {0}"
 msgstr "{0} 마지막으로 감상"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:555
+#: src/pages/Details.tsx:566
 msgid "Last played at {0}"
 msgstr "{0} 마지막으로 플레이"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:543
+#: src/pages/Details.tsx:554
 msgid "Last read at {0}"
 msgstr "{0} 마지막으로 감상"
 
@@ -709,7 +709,7 @@ msgid "Last seen"
 msgstr "최근 시청일"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:549
+#: src/pages/Details.tsx:560
 msgid "Last seen at {0}"
 msgstr "{0} 마지막으로 시청"
 
@@ -749,7 +749,7 @@ msgstr "감상함"
 msgid "Listened at {0}"
 msgstr "{0} 감상"
 
-#: src/pages/Details.tsx:597
+#: src/pages/Details.tsx:608
 msgid "Listened history"
 msgstr "감상 기록"
 
@@ -761,7 +761,7 @@ msgstr "목록"
 #: src/components/PaginatedGridItems.tsx:384
 #: src/components/SelectLastSeenEpisode.tsx:67
 #: src/pages/Calendar.tsx:61
-#: src/pages/Details.tsx:205
+#: src/pages/Details.tsx:208
 #: src/pages/EpisodePage.tsx:42
 #: src/pages/GroupDetailPage.tsx:285
 #: src/pages/GroupsPage.tsx:17
@@ -845,7 +845,7 @@ msgstr "내 평점"
 msgid "Name"
 msgstr "이름"
 
-#: src/pages/Details.tsx:281
+#: src/pages/Details.tsx:292
 msgid "Network"
 msgstr "네트워크"
 
@@ -866,7 +866,7 @@ msgstr "새 비밀번호"
 msgid "Next airing"
 msgstr "다음 방송"
 
-#: src/pages/Details.tsx:515
+#: src/pages/Details.tsx:526
 msgid "Next episode"
 msgstr "다음 에피소드"
 
@@ -918,7 +918,7 @@ msgstr "지금"
 msgid "Number of episodes"
 msgstr "에피소드 수"
 
-#: src/pages/Details.tsx:366
+#: src/pages/Details.tsx:377
 msgid "Number of pages"
 msgstr "페이지 수"
 
@@ -928,7 +928,7 @@ msgstr "페이지 수"
 msgid "On watchlist"
 msgstr "관심 목록에 있음"
 
-#: src/pages/Details.tsx:321
+#: src/pages/Details.tsx:332
 msgid "Overview"
 msgstr "개요"
 
@@ -966,7 +966,7 @@ msgstr "플레이 함"
 msgid "Played at {0}"
 msgstr "{0} 플레이"
 
-#: src/pages/Details.tsx:605
+#: src/pages/Details.tsx:616
 msgid "Played history"
 msgstr "플레이 기록"
 
@@ -989,7 +989,7 @@ msgid "Private"
 msgstr "비공개"
 
 #: src/components/OrderBy.tsx:22
-#: src/pages/Details.tsx:500
+#: src/pages/Details.tsx:511
 msgid "Progress"
 msgstr "진행 상황"
 
@@ -1074,7 +1074,7 @@ msgstr "읽음"
 msgid "Read at {0}"
 msgstr "{0} 감상"
 
-#: src/pages/Details.tsx:599
+#: src/pages/Details.tsx:610
 msgid "Read history"
 msgstr "감상 기록"
 
@@ -1131,7 +1131,7 @@ msgstr "<0/>에 출시"
 
 #: src/components/OrderBy.tsx:15
 #: src/hooks/translations.ts:12
-#: src/pages/Details.tsx:232
+#: src/pages/Details.tsx:243
 #: src/pages/EpisodePage.tsx:80
 msgid "Release date"
 msgstr "출시일"
@@ -1185,7 +1185,7 @@ msgstr "감상 기록에서 제거"
 msgid "Remove from seen history"
 msgstr "시청 기록에서 제거"
 
-#: src/pages/Details.tsx:670
+#: src/pages/Details.tsx:681
 msgid "Remove from watchlist"
 msgstr "관심 목록에서 제거"
 
@@ -1197,7 +1197,7 @@ msgstr "시청 기록에서 시즌 제거"
 msgid "Remove token"
 msgstr "토큰 제거"
 
-#: src/pages/Details.tsx:65
+#: src/pages/Details.tsx:67
 msgid "Review by <0><1>{author}</1></0> at {date}"
 msgstr "<0><1>{author}</1></0> 의 리뷰, {date}"
 
@@ -1211,7 +1211,7 @@ msgid "RSS link"
 msgstr "RSS 링크"
 
 #: src/hooks/translations.ts:13
-#: src/pages/Details.tsx:243
+#: src/pages/Details.tsx:254
 #: src/pages/EpisodePage.tsx:71
 msgid "Runtime"
 msgstr "러닝타임"
@@ -1274,7 +1274,7 @@ msgid "Season {0}"
 msgstr "시즌 {0}"
 
 #: src/components/ImportSummaryTable.tsx:92
-#: src/pages/Details.tsx:376
+#: src/pages/Details.tsx:387
 msgid "Seasons"
 msgstr "시즌"
 
@@ -1287,7 +1287,7 @@ msgstr "시청 완료"
 msgid "Seen at {0}"
 msgstr "{0} 시청"
 
-#: src/pages/Details.tsx:602
+#: src/pages/Details.tsx:613
 #: src/pages/import/TraktTv.tsx:191
 msgid "Seen history"
 msgstr "시청 기록"
@@ -1358,7 +1358,7 @@ msgid "Set"
 msgstr "설정"
 
 #: src/components/SetProgress.tsx:61
-#: src/pages/Details.tsx:705
+#: src/pages/Details.tsx:716
 msgid "Set progress"
 msgstr "진행율 설정"
 
@@ -1392,7 +1392,7 @@ msgstr "정렬"
 msgid "Sort order"
 msgstr "정렬 순서"
 
-#: src/pages/Details.tsx:401
+#: src/pages/Details.tsx:412
 msgid "Source"
 msgstr "출처"
 
@@ -1408,7 +1408,7 @@ msgstr "통계"
 #: src/components/Facets/ActiveFacetChips.tsx:293
 #: src/components/Facets/StatusSection.tsx:116
 #: src/components/OrderBy.tsx:16
-#: src/pages/Details.tsx:290
+#: src/pages/Details.tsx:301
 msgid "Status"
 msgstr "상태"
 
@@ -1443,7 +1443,7 @@ msgstr "읽을 목록"
 msgid "Topic"
 msgstr "Topic"
 
-#: src/pages/Details.tsx:254
+#: src/pages/Details.tsx:265
 msgid "Total runtime"
 msgstr "전체 러닝타임"
 
@@ -1470,7 +1470,7 @@ msgstr "초기화되지 않음"
 msgid "Unrated"
 msgstr "평가 안 함"
 
-#: src/pages/Details.tsx:391
+#: src/pages/Details.tsx:402
 msgid "Unseen episodes"
 msgstr "시청하지 않은 에피소드"
 
@@ -1483,7 +1483,7 @@ msgstr "시청하지 않은 에피소드 수"
 msgid "Upcoming"
 msgstr "출시 예정"
 
-#: src/pages/Details.tsx:691
+#: src/pages/Details.tsx:702
 msgid "Update metadata"
 msgstr "메타데이터 업데이트"
 
@@ -1580,7 +1580,7 @@ msgstr "\"{0}\"을(를) 언제 읽으셨습니까?"
 msgid "When did you see \"{0}\"?"
 msgstr "\"{0}\"을(를) 언제 보셨습니까?"
 
-#: src/pages/Details.tsx:125
+#: src/pages/Details.tsx:127
 msgid "Where to watch"
 msgstr "보는 곳"
 

@@ -26,6 +26,7 @@ export type TvEpisode = {
   tvdbId?: number;
   traktId?: number;
   onWatchlist?: boolean;
+  metadataLanguage?: string | null;
 };
 
 export const tvEpisodeColumns = <const>[
