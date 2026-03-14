@@ -1,4 +1,6 @@
+import { i18n } from '@lingui/core';
 import { Api as MediaTracker, RequestError } from 'mediatracker-api';
+
 export class FetchError extends Error {
   readonly status: number;
   readonly statusText?: string;
@@ -26,7 +28,13 @@ export class MediaTrackerError extends Error {
 
 export const mediaTrackerApi = new MediaTracker({
   customFetch: async (input, init) => {
-    const res = await fetch(input, init);
+    const headers = new Headers(init?.headers);
+    headers.set('Accept-Language', i18n.locale);
+
+    const res = await fetch(input, {
+      ...init,
+      headers,
+    });
 
     if (!res.ok) {
       throw new FetchError({
