@@ -24,6 +24,8 @@ import {
   FormattedNotification,
   formatNotification,
 } from 'src/notifications/notificationFormatter';
+import { getMetadataLanguages } from 'src/metadataLanguages';
+import { upsertMediaItemTranslation } from 'src/repository/translationRepository';
 
 const getItemsToDelete = (
   oldMediaItem: MediaItemBaseWithSeasons,
@@ -368,6 +370,43 @@ export const updateMediaItem = async (
 
       if (!oldMediaItem.needsDetails) {
         await sendNotifications(oldMediaItem, updatedMediaItem);
+      }
+    }
+
+    // Upsert translations for all configured languages (movie-level only for US-003)
+    if (metadataProvider.localizedDetails != null && updatedMediaItem) {
+      const languages = getMetadataLanguages();
+
+      // Upsert the first language's data from the base details() response
+      if (languages.length > 0) {
+        const firstLanguage = languages[0];
+        await upsertMediaItemTranslation(oldMediaItem.id, firstLanguage, {
+          title: newMediaItem.title ?? null,
+          overview: newMediaItem.overview ?? null,
+          genres: newMediaItem.genres ?? null,
+        });
+      }
+
+      // Fetch and upsert localized details for each configured language
+      for (const language of languages) {
+        try {
+          const localizedData = await metadataProvider.localizedDetails(
+            oldMediaItem,
+            language
+          );
+          if (localizedData) {
+            await upsertMediaItemTranslation(oldMediaItem.id, language, {
+              title: localizedData.title ?? null,
+              overview: localizedData.overview ?? null,
+              genres: localizedData.genres ?? null,
+            });
+          }
+        } catch (error) {
+          logger.error(
+            `Failed to fetch localized details for mediaItem ${oldMediaItem.id} in language ${language}: ${error}`,
+            { err: error }
+          );
+        }
       }
     }
 

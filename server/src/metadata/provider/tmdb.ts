@@ -167,6 +167,33 @@ export class TMDbMovie extends TMDb {
     return this.fetchTmdbSimilar(ids.tmdbId, 'movie');
   }
 
+  async localizedDetails(
+    ids: ExternalIds,
+    language: string
+  ): Promise<MediaItemForProvider> {
+    const res = await axios.get<TMDbApi.MovieDetailsResponse>(
+      `https://api.themoviedb.org/3/movie/${ids.tmdbId}`,
+      {
+        params: {
+          api_key: TMDB_API_KEY,
+          language: language,
+        },
+      }
+    );
+
+    const movie = this.mapMovie(res.data);
+
+    // Localized details must NOT set originalTitle — preserve base details() responsibility
+    delete movie.originalTitle;
+
+    // Convert empty strings to null
+    if (movie.title === '') movie.title = null;
+    if (movie.overview === '') movie.overview = null;
+    if (movie.genres != null && movie.genres.length === 0) movie.genres = null;
+
+    return movie;
+  }
+
   async findByImdbId(imdbId: string): Promise<MediaItemForProvider> {
     const res = await axios.get(`https://api.themoviedb.org/3/find/${imdbId}`, {
       params: {

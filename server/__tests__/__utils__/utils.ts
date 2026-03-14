@@ -23,8 +23,11 @@ export const clearDatabase = async () => {
     .dropTableIfExists('progress')
     .dropTableIfExists('seen')
     .dropTableIfExists('user')
+    .dropTableIfExists('episodeTranslation')
     .dropTableIfExists('episode')
+    .dropTableIfExists('seasonTranslation')
     .dropTableIfExists('season')
+    .dropTableIfExists('mediaItemTranslation')
     .dropTableIfExists('mediaItem')
     .dropTableIfExists('knex_migrations');
 

@@ -31,4 +31,17 @@ export abstract class MetadataProvider<Name extends string = string> {
    * @param ids ExternalIds
    */
   similar?(ids: ExternalIds): Promise<SimilarItem[]>;
+
+  /**
+   * Fetch localized metadata for a specific language.
+   * Returns a MediaItemForProvider with localized title, overview, and genres.
+   * Does NOT set originalTitle — that remains the responsibility of details().
+   * Optional — providers that do not support localized metadata omit this method.
+   * @param ids ExternalIds
+   * @param language BCP 47 language tag (e.g., 'en', 'es', 'pt-BR')
+   */
+  localizedDetails?(
+    ids: ExternalIds,
+    language: string
+  ): Promise<MediaItemForProvider>;
 }
