@@ -155,3 +155,23 @@ export function getAudibleLangMap(): Map<string, string> {
 export function _resetAudibleLangMapCache(): void {
   _audibleLangMapCache = null;
 }
+
+/**
+ * Maps IGDB region IDs to ISO 639-1 language code arrays.
+ * Region 8 (worldwide) uses 'all' as a sentinel value to indicate all configured languages.
+ *
+ * IGDB region IDs:
+ * 1 = europe, 2 = north_america, 3 = australia, 4 = new_zealand,
+ * 5 = japan, 6 = china, 7 = asia, 8 = worldwide, 9 = korea
+ */
+export const IGDB_REGION_MAP: Readonly<Record<number, readonly string[] | 'all'>> = {
+  1: ['de', 'fr', 'es', 'it', 'nl', 'pl', 'pt'],
+  2: ['en'],
+  3: ['en'],
+  4: ['en'],
+  5: ['ja'],
+  6: ['zh'],
+  7: ['ko', 'zh'],
+  8: 'all',
+  9: ['ko'],
+};

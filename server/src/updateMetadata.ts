@@ -24,7 +24,7 @@ import {
   FormattedNotification,
   formatNotification,
 } from 'src/notifications/notificationFormatter';
-import { getMetadataLanguages } from 'src/metadataLanguages';
+import { getMetadataLanguages, IGDB_REGION_MAP } from 'src/metadataLanguages';
 import {
   upsertMediaItemTranslation,
   upsertSeasonTranslation,
@@ -498,6 +498,41 @@ export const updateMediaItem = async (
             { err: error }
           );
         }
+      }
+    }
+
+    // IGDB game localizations: single fetch per item, map regions to ISO codes
+    if (metadataProvider.fetchGameLocalizations != null && updatedMediaItem) {
+      try {
+        const localizations = await metadataProvider.fetchGameLocalizations(oldMediaItem);
+        const languages = getMetadataLanguages();
+
+        for (const localization of localizations) {
+          const regionLanguages = IGDB_REGION_MAP[localization.regionId];
+
+          if (regionLanguages === undefined) {
+            continue;
+          }
+
+          // Determine which ISO codes to store for this localization
+          const targetLanguages: string[] =
+            regionLanguages === 'all'
+              ? languages
+              : regionLanguages.filter((lang) => languages.includes(lang));
+
+          for (const lang of targetLanguages) {
+            await upsertMediaItemTranslation(oldMediaItem.id, lang, {
+              title: localization.name || null,
+              overview: null,
+              genres: null,
+            });
+          }
+        }
+      } catch (error) {
+        logger.error(
+          `Failed to fetch game localizations for mediaItem ${oldMediaItem.id}: ${error}`,
+          { err: error }
+        );
       }
     }
 
