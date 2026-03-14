@@ -44,7 +44,7 @@ msgid "{0, plural, one {1 item} other {# items}}"
 msgstr "{0, plural, one {1 ставка} few {# ставке} many {# ставки} other {# ставке}}"
 
 #. placeholder {0}: mediaItem.authors.length
-#: src/pages/Details.tsx:339
+#: src/pages/Details.tsx:350
 msgid "{0, plural, one {Author} other {Authors}}"
 msgstr "{0, plural, one {Аутор} few {Аутори} many {Аутора} other {Аутори}}"
 
@@ -54,7 +54,7 @@ msgid "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {
 msgstr "{0, plural, one {Пронађена # ставка за упит \"<0>{searchQuery}</0>\"} other {Пронађено # ставки за упит \"<1>{searchQuery}</1>\"}}"
 
 #. placeholder {0}: mediaItem.genres.length
-#: src/pages/Details.tsx:299
+#: src/pages/Details.tsx:310
 msgid "{0, plural, one {Genre} other {Genres}}"
 msgstr "{0, plural, one {Жанр} few {Жанрови} many {Жанрова} other {Жанрови}}"
 
@@ -64,36 +64,36 @@ msgid "{0, plural, one {Listed on 1 list} other {Listed on # lists}}"
 msgstr "{0, plural, one {На 1 листи} few {На # листе} many {На # листи} other {На # листе}}"
 
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:565
+#: src/pages/Details.tsx:576
 #: src/pages/SeenHistory.tsx:43
 msgid "{0, plural, one {Listened 1 time} other {Listened # times}}"
 msgstr "{0, plural, one {Одслушано 1 пут} few {Одслушано # пута} many {Одслушано # пута} other {Одслушано # пута}}"
 
 #. placeholder {0}: mediaItem.narrators.length
-#: src/pages/Details.tsx:353
+#: src/pages/Details.tsx:364
 msgid "{0, plural, one {Narrator} other {Narrators}}"
 msgstr "{0, plural, one {Приповедач} few {Приповедачи} many {Приповедача} other {Приповедачи}}"
 
 #. placeholder {0}: mediaItem.platform.length
-#: src/pages/Details.tsx:267
+#: src/pages/Details.tsx:278
 msgid "{0, plural, one {Platform} other {platforms}}"
 msgstr "{0, plural, one {Платформа} few {Платформе} many {Платформи} other {Платформе}}"
 
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:589
+#: src/pages/Details.tsx:600
 #: src/pages/SeenHistory.tsx:67
 msgid "{0, plural, one {Played 1 time} other {Played # times}}"
 msgstr "{0, plural, one {Одиграно 1 пут} few {Одиграно # пута} many {Одиграно # пута} other {Одиграно # пута}}"
 
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:573
+#: src/pages/Details.tsx:584
 #: src/pages/SeenHistory.tsx:51
 msgid "{0, plural, one {Read 1 time} other {Read # times}}"
 msgstr "{0, plural, one {Прочитано 1 пут} few {Прочитано # пута} many {Прочитано # пута} other {Прочитано # пута}}"
 
 #. placeholder {0}: episode.seenHistory.length
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:581
+#: src/pages/Details.tsx:592
 #: src/pages/SeasonsPage.tsx:87
 #: src/pages/SeenHistory.tsx:59
 msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
@@ -257,7 +257,7 @@ msgstr "Додај у историју читања"
 msgid "Add to seen history"
 msgstr "Додај у историју гледања"
 
-#: src/pages/Details.tsx:646
+#: src/pages/Details.tsx:657
 msgid "Add to watchlist"
 msgstr "Додај на листу за гледање"
 
@@ -504,11 +504,11 @@ msgid "Episode {0} {1}"
 msgstr "Епизода {0} {1}"
 
 #: src/components/ImportSummaryTable.tsx:93
-#: src/pages/Details.tsx:383
+#: src/pages/Details.tsx:394
 msgid "Episodes"
 msgstr "Епизоде"
 
-#: src/pages/Details.tsx:449
+#: src/pages/Details.tsx:460
 msgid "Episodes page"
 msgstr "Страница епизода"
 
@@ -535,7 +535,7 @@ msgstr "Учитавање групе није успело. Можда је и�
 msgid "Filters"
 msgstr "Филтери"
 
-#: src/pages/Details.tsx:528
+#: src/pages/Details.tsx:539
 msgid "First unwatched episode"
 msgstr "Прва негледана епизода"
 
@@ -597,19 +597,19 @@ msgstr "Почетна"
 msgid "Http"
 msgstr "Http"
 
-#: src/pages/Details.tsx:471
+#: src/pages/Details.tsx:482
 msgid "I am listening it"
 msgstr "Слушам то"
 
-#: src/pages/Details.tsx:472
+#: src/pages/Details.tsx:483
 msgid "I am playing it"
 msgstr "Играм то"
 
-#: src/pages/Details.tsx:470
+#: src/pages/Details.tsx:481
 msgid "I am reading it"
 msgstr "Читам то"
 
-#: src/pages/Details.tsx:469
+#: src/pages/Details.tsx:480
 msgid "I am watching it"
 msgstr "Гледам то"
 
@@ -618,19 +618,19 @@ msgstr "Гледам то"
 msgid "I do not remember"
 msgstr "Не сећам се"
 
-#: src/pages/Details.tsx:492
+#: src/pages/Details.tsx:503
 msgid "I finished listening it"
 msgstr "Одслушао/ла сам то"
 
-#: src/pages/Details.tsx:495
+#: src/pages/Details.tsx:506
 msgid "I finished playing it"
 msgstr "Одиграо/ла сам то"
 
-#: src/pages/Details.tsx:490
+#: src/pages/Details.tsx:501
 msgid "I finished reading it"
 msgstr "Прочитао/ла сам то"
 
-#: src/pages/Details.tsx:489
+#: src/pages/Details.tsx:500
 msgid "I finished watching it"
 msgstr "Одгледао/ла сам то"
 
@@ -681,7 +681,7 @@ msgstr "Кључ"
 
 #: src/components/Facets/ActiveFacetChips.tsx:235
 #: src/components/Facets/LanguageSection.tsx:95
-#: src/pages/Details.tsx:330
+#: src/pages/Details.tsx:341
 msgid "Language"
 msgstr "Језик"
 
@@ -690,17 +690,17 @@ msgid "Last airing"
 msgstr "Последње емитовање"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:537
+#: src/pages/Details.tsx:548
 msgid "Last listened at {0}"
 msgstr "Последње слушање: {0}"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:555
+#: src/pages/Details.tsx:566
 msgid "Last played at {0}"
 msgstr "Последња игра: {0}"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:543
+#: src/pages/Details.tsx:554
 msgid "Last read at {0}"
 msgstr "Последње читање: {0}"
 
@@ -709,7 +709,7 @@ msgid "Last seen"
 msgstr "Последње гледање"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:549
+#: src/pages/Details.tsx:560
 msgid "Last seen at {0}"
 msgstr "Последње гледање: {0}"
 
@@ -749,7 +749,7 @@ msgstr "Одслушано"
 msgid "Listened at {0}"
 msgstr "Одслушано: {0}"
 
-#: src/pages/Details.tsx:597
+#: src/pages/Details.tsx:608
 msgid "Listened history"
 msgstr "Историја слушања"
 
@@ -761,7 +761,7 @@ msgstr "Листе"
 #: src/components/PaginatedGridItems.tsx:384
 #: src/components/SelectLastSeenEpisode.tsx:67
 #: src/pages/Calendar.tsx:61
-#: src/pages/Details.tsx:205
+#: src/pages/Details.tsx:208
 #: src/pages/EpisodePage.tsx:42
 #: src/pages/GroupDetailPage.tsx:285
 #: src/pages/GroupsPage.tsx:17
@@ -845,7 +845,7 @@ msgstr "Моја оцена"
 msgid "Name"
 msgstr "Назив"
 
-#: src/pages/Details.tsx:281
+#: src/pages/Details.tsx:292
 msgid "Network"
 msgstr "Мрежа"
 
@@ -866,7 +866,7 @@ msgstr "Нова лозинка"
 msgid "Next airing"
 msgstr "Следеће емитовање"
 
-#: src/pages/Details.tsx:515
+#: src/pages/Details.tsx:526
 msgid "Next episode"
 msgstr "Следећа епизода"
 
@@ -918,7 +918,7 @@ msgstr "Сада"
 msgid "Number of episodes"
 msgstr "Број епизода"
 
-#: src/pages/Details.tsx:366
+#: src/pages/Details.tsx:377
 msgid "Number of pages"
 msgstr "Број страница"
 
@@ -928,7 +928,7 @@ msgstr "Број страница"
 msgid "On watchlist"
 msgstr "На листи за гледање"
 
-#: src/pages/Details.tsx:321
+#: src/pages/Details.tsx:332
 msgid "Overview"
 msgstr "Преглед"
 
@@ -966,7 +966,7 @@ msgstr "Одиграно"
 msgid "Played at {0}"
 msgstr "Одиграно: {0}"
 
-#: src/pages/Details.tsx:605
+#: src/pages/Details.tsx:616
 msgid "Played history"
 msgstr "Историја играња"
 
@@ -989,7 +989,7 @@ msgid "Private"
 msgstr "Приватно"
 
 #: src/components/OrderBy.tsx:22
-#: src/pages/Details.tsx:500
+#: src/pages/Details.tsx:511
 msgid "Progress"
 msgstr "Напредак"
 
@@ -1074,7 +1074,7 @@ msgstr "Прочитано"
 msgid "Read at {0}"
 msgstr "Прочитано: {0}"
 
-#: src/pages/Details.tsx:599
+#: src/pages/Details.tsx:610
 msgid "Read history"
 msgstr "Историја читања"
 
@@ -1131,7 +1131,7 @@ msgstr "Издавање <0/>"
 
 #: src/components/OrderBy.tsx:15
 #: src/hooks/translations.ts:12
-#: src/pages/Details.tsx:232
+#: src/pages/Details.tsx:243
 #: src/pages/EpisodePage.tsx:80
 msgid "Release date"
 msgstr "Датум издавања"
@@ -1185,7 +1185,7 @@ msgstr "Уклони из историје читања"
 msgid "Remove from seen history"
 msgstr "Уклони из историје гледања"
 
-#: src/pages/Details.tsx:670
+#: src/pages/Details.tsx:681
 msgid "Remove from watchlist"
 msgstr "Уклони са листе за гледање"
 
@@ -1197,7 +1197,7 @@ msgstr "Уклони сезону из историје гледања"
 msgid "Remove token"
 msgstr "Уклони токен"
 
-#: src/pages/Details.tsx:65
+#: src/pages/Details.tsx:67
 msgid "Review by <0><1>{author}</1></0> at {date}"
 msgstr "Рецензија од <0><1>{author}</1></0> — {date}"
 
@@ -1211,7 +1211,7 @@ msgid "RSS link"
 msgstr "RSS веза"
 
 #: src/hooks/translations.ts:13
-#: src/pages/Details.tsx:243
+#: src/pages/Details.tsx:254
 #: src/pages/EpisodePage.tsx:71
 msgid "Runtime"
 msgstr "Трајање"
@@ -1274,7 +1274,7 @@ msgid "Season {0}"
 msgstr "Сезона {0}"
 
 #: src/components/ImportSummaryTable.tsx:92
-#: src/pages/Details.tsx:376
+#: src/pages/Details.tsx:387
 msgid "Seasons"
 msgstr "Сезоне"
 
@@ -1287,7 +1287,7 @@ msgstr "Одгледано"
 msgid "Seen at {0}"
 msgstr "Одгледано: {0}"
 
-#: src/pages/Details.tsx:602
+#: src/pages/Details.tsx:613
 #: src/pages/import/TraktTv.tsx:191
 msgid "Seen history"
 msgstr "Историја гледања"
@@ -1358,7 +1358,7 @@ msgid "Set"
 msgstr "Постави"
 
 #: src/components/SetProgress.tsx:61
-#: src/pages/Details.tsx:705
+#: src/pages/Details.tsx:716
 msgid "Set progress"
 msgstr "Постави напредак"
 
@@ -1392,7 +1392,7 @@ msgstr "Сортирај по"
 msgid "Sort order"
 msgstr "Редослед сортирања"
 
-#: src/pages/Details.tsx:401
+#: src/pages/Details.tsx:412
 msgid "Source"
 msgstr "Извор"
 
@@ -1408,7 +1408,7 @@ msgstr "Статистика"
 #: src/components/Facets/ActiveFacetChips.tsx:293
 #: src/components/Facets/StatusSection.tsx:116
 #: src/components/OrderBy.tsx:16
-#: src/pages/Details.tsx:290
+#: src/pages/Details.tsx:301
 msgid "Status"
 msgstr "Статус"
 
@@ -1443,7 +1443,7 @@ msgstr "За читање"
 msgid "Topic"
 msgstr "Тема"
 
-#: src/pages/Details.tsx:254
+#: src/pages/Details.tsx:265
 msgid "Total runtime"
 msgstr "Укупно трајање"
 
@@ -1470,7 +1470,7 @@ msgstr "Неиницијализовано"
 msgid "Unrated"
 msgstr "Без оцене"
 
-#: src/pages/Details.tsx:391
+#: src/pages/Details.tsx:402
 msgid "Unseen episodes"
 msgstr "Невиђене епизоде"
 
@@ -1483,7 +1483,7 @@ msgstr "Број невиђених епизода"
 msgid "Upcoming"
 msgstr "Предстојећи"
 
-#: src/pages/Details.tsx:691
+#: src/pages/Details.tsx:702
 msgid "Update metadata"
 msgstr "Ажурирај метаподатке"
 
@@ -1580,7 +1580,7 @@ msgstr "Када сте читали \"{0}\"?"
 msgid "When did you see \"{0}\"?"
 msgstr "Када сте гледали \"{0}\"?"
 
-#: src/pages/Details.tsx:125
+#: src/pages/Details.tsx:127
 msgid "Where to watch"
 msgstr "Где гледати"
 

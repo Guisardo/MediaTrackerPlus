@@ -44,7 +44,7 @@ msgid "{0, plural, one {1 item} other {# items}}"
 msgstr "{0, plural, other {# öğe}}"
 
 #. placeholder {0}: mediaItem.authors.length
-#: src/pages/Details.tsx:339
+#: src/pages/Details.tsx:350
 msgid "{0, plural, one {Author} other {Authors}}"
 msgstr "{0, plural, other {Yazar}}"
 
@@ -54,7 +54,7 @@ msgid "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {
 msgstr "{0, plural, one {\"<0>{searchQuery}</0>\" sorgusu için # öğe bulundu} other {\"<1>{searchQuery}</1>\" sorgusu için # öğe bulundu}}"
 
 #. placeholder {0}: mediaItem.genres.length
-#: src/pages/Details.tsx:299
+#: src/pages/Details.tsx:310
 msgid "{0, plural, one {Genre} other {Genres}}"
 msgstr "{0, plural, other {Tür}}"
 
@@ -64,36 +64,36 @@ msgid "{0, plural, one {Listed on 1 list} other {Listed on # lists}}"
 msgstr "{0, plural, other {# listede yer alıyor}}"
 
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:565
+#: src/pages/Details.tsx:576
 #: src/pages/SeenHistory.tsx:43
 msgid "{0, plural, one {Listened 1 time} other {Listened # times}}"
 msgstr "{0, plural, other {# kez dinlendi}}"
 
 #. placeholder {0}: mediaItem.narrators.length
-#: src/pages/Details.tsx:353
+#: src/pages/Details.tsx:364
 msgid "{0, plural, one {Narrator} other {Narrators}}"
 msgstr "{0, plural, other {Anlatıcı}}"
 
 #. placeholder {0}: mediaItem.platform.length
-#: src/pages/Details.tsx:267
+#: src/pages/Details.tsx:278
 msgid "{0, plural, one {Platform} other {platforms}}"
 msgstr "{0, plural, other {platform}}"
 
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:589
+#: src/pages/Details.tsx:600
 #: src/pages/SeenHistory.tsx:67
 msgid "{0, plural, one {Played 1 time} other {Played # times}}"
 msgstr "{0, plural, other {# kez oynanıldı}}"
 
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:573
+#: src/pages/Details.tsx:584
 #: src/pages/SeenHistory.tsx:51
 msgid "{0, plural, one {Read 1 time} other {Read # times}}"
 msgstr "{0, plural, other {# kez okundu}}"
 
 #. placeholder {0}: episode.seenHistory.length
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:581
+#: src/pages/Details.tsx:592
 #: src/pages/SeasonsPage.tsx:87
 #: src/pages/SeenHistory.tsx:59
 msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
@@ -257,7 +257,7 @@ msgstr "Okunmuş geçmişine ekle"
 msgid "Add to seen history"
 msgstr "İzlenmiş geçmişine ekle"
 
-#: src/pages/Details.tsx:646
+#: src/pages/Details.tsx:657
 msgid "Add to watchlist"
 msgstr "İzleme listesine ekle"
 
@@ -504,11 +504,11 @@ msgid "Episode {0} {1}"
 msgstr "Bölüm {0} {1}"
 
 #: src/components/ImportSummaryTable.tsx:93
-#: src/pages/Details.tsx:383
+#: src/pages/Details.tsx:394
 msgid "Episodes"
 msgstr "Bölümler"
 
-#: src/pages/Details.tsx:449
+#: src/pages/Details.tsx:460
 msgid "Episodes page"
 msgstr "Bölümler sayfası"
 
@@ -535,7 +535,7 @@ msgstr "Grup yüklenemedi. Silinmiş olabilir."
 msgid "Filters"
 msgstr "Filtreler"
 
-#: src/pages/Details.tsx:528
+#: src/pages/Details.tsx:539
 msgid "First unwatched episode"
 msgstr "İlk izlenmemiş bölüm"
 
@@ -597,19 +597,19 @@ msgstr "Ana Sayfa"
 msgid "Http"
 msgstr "Http"
 
-#: src/pages/Details.tsx:471
+#: src/pages/Details.tsx:482
 msgid "I am listening it"
 msgstr "Dinliyorum"
 
-#: src/pages/Details.tsx:472
+#: src/pages/Details.tsx:483
 msgid "I am playing it"
 msgstr "Oynuyorum"
 
-#: src/pages/Details.tsx:470
+#: src/pages/Details.tsx:481
 msgid "I am reading it"
 msgstr "Okuyorum"
 
-#: src/pages/Details.tsx:469
+#: src/pages/Details.tsx:480
 msgid "I am watching it"
 msgstr "İzliyorum"
 
@@ -618,19 +618,19 @@ msgstr "İzliyorum"
 msgid "I do not remember"
 msgstr "Hatırlamıyorum"
 
-#: src/pages/Details.tsx:492
+#: src/pages/Details.tsx:503
 msgid "I finished listening it"
 msgstr "Dinlemeyi bitirdim"
 
-#: src/pages/Details.tsx:495
+#: src/pages/Details.tsx:506
 msgid "I finished playing it"
 msgstr "Oynamayı bitirdim"
 
-#: src/pages/Details.tsx:490
+#: src/pages/Details.tsx:501
 msgid "I finished reading it"
 msgstr "Okumayı bitirdim"
 
-#: src/pages/Details.tsx:489
+#: src/pages/Details.tsx:500
 msgid "I finished watching it"
 msgstr "İzlemeyi bitirdim"
 
@@ -681,7 +681,7 @@ msgstr "Anahtar"
 
 #: src/components/Facets/ActiveFacetChips.tsx:235
 #: src/components/Facets/LanguageSection.tsx:95
-#: src/pages/Details.tsx:330
+#: src/pages/Details.tsx:341
 msgid "Language"
 msgstr "Dil"
 
@@ -690,17 +690,17 @@ msgid "Last airing"
 msgstr "Son yayın"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:537
+#: src/pages/Details.tsx:548
 msgid "Last listened at {0}"
 msgstr "Son dinlenme: {0}"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:555
+#: src/pages/Details.tsx:566
 msgid "Last played at {0}"
 msgstr "Son oynama: {0}"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:543
+#: src/pages/Details.tsx:554
 msgid "Last read at {0}"
 msgstr "Son okuma: {0}"
 
@@ -709,7 +709,7 @@ msgid "Last seen"
 msgstr "Son izlenme"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:549
+#: src/pages/Details.tsx:560
 msgid "Last seen at {0}"
 msgstr "Son izlenme: {0}"
 
@@ -749,7 +749,7 @@ msgstr "Dinlendi"
 msgid "Listened at {0}"
 msgstr "{0} tarihinde dinlendi"
 
-#: src/pages/Details.tsx:597
+#: src/pages/Details.tsx:608
 msgid "Listened history"
 msgstr "Dinlenmiş geçmişi"
 
@@ -761,7 +761,7 @@ msgstr "Listeler"
 #: src/components/PaginatedGridItems.tsx:384
 #: src/components/SelectLastSeenEpisode.tsx:67
 #: src/pages/Calendar.tsx:61
-#: src/pages/Details.tsx:205
+#: src/pages/Details.tsx:208
 #: src/pages/EpisodePage.tsx:42
 #: src/pages/GroupDetailPage.tsx:285
 #: src/pages/GroupsPage.tsx:17
@@ -845,7 +845,7 @@ msgstr "Benim puanım"
 msgid "Name"
 msgstr "Ad"
 
-#: src/pages/Details.tsx:281
+#: src/pages/Details.tsx:292
 msgid "Network"
 msgstr "Ağ"
 
@@ -866,7 +866,7 @@ msgstr "Yeni şifre"
 msgid "Next airing"
 msgstr "Sonraki yayın"
 
-#: src/pages/Details.tsx:515
+#: src/pages/Details.tsx:526
 msgid "Next episode"
 msgstr "Sonraki bölüm"
 
@@ -918,7 +918,7 @@ msgstr "Şimdi"
 msgid "Number of episodes"
 msgstr "Bölüm sayısı"
 
-#: src/pages/Details.tsx:366
+#: src/pages/Details.tsx:377
 msgid "Number of pages"
 msgstr "Sayfa sayısı"
 
@@ -928,7 +928,7 @@ msgstr "Sayfa sayısı"
 msgid "On watchlist"
 msgstr "İzleme listesinde"
 
-#: src/pages/Details.tsx:321
+#: src/pages/Details.tsx:332
 msgid "Overview"
 msgstr "Genel bakış"
 
@@ -966,7 +966,7 @@ msgstr "Oynanıldı"
 msgid "Played at {0}"
 msgstr "{0} tarihinde oynanıldı"
 
-#: src/pages/Details.tsx:605
+#: src/pages/Details.tsx:616
 msgid "Played history"
 msgstr "Oynanmış geçmişi"
 
@@ -989,7 +989,7 @@ msgid "Private"
 msgstr "Özel"
 
 #: src/components/OrderBy.tsx:22
-#: src/pages/Details.tsx:500
+#: src/pages/Details.tsx:511
 msgid "Progress"
 msgstr "İlerleme"
 
@@ -1074,7 +1074,7 @@ msgstr "Okundu"
 msgid "Read at {0}"
 msgstr "{0} tarihinde okundu"
 
-#: src/pages/Details.tsx:599
+#: src/pages/Details.tsx:610
 msgid "Read history"
 msgstr "Okunmuş geçmişi"
 
@@ -1131,7 +1131,7 @@ msgstr "Yayın <0/>"
 
 #: src/components/OrderBy.tsx:15
 #: src/hooks/translations.ts:12
-#: src/pages/Details.tsx:232
+#: src/pages/Details.tsx:243
 #: src/pages/EpisodePage.tsx:80
 msgid "Release date"
 msgstr "Yayın tarihi"
@@ -1185,7 +1185,7 @@ msgstr "Okunmuş geçmişinden kaldır"
 msgid "Remove from seen history"
 msgstr "İzlenmiş geçmişinden kaldır"
 
-#: src/pages/Details.tsx:670
+#: src/pages/Details.tsx:681
 msgid "Remove from watchlist"
 msgstr "İzleme listesinden kaldır"
 
@@ -1197,7 +1197,7 @@ msgstr "Sezonu izlenmiş geçmişinden kaldır"
 msgid "Remove token"
 msgstr "Jetonu kaldır"
 
-#: src/pages/Details.tsx:65
+#: src/pages/Details.tsx:67
 msgid "Review by <0><1>{author}</1></0> at {date}"
 msgstr "<0><1>{author}</1></0> tarafından {date} tarihinde yazılan inceleme"
 
@@ -1211,7 +1211,7 @@ msgid "RSS link"
 msgstr "RSS bağlantısı"
 
 #: src/hooks/translations.ts:13
-#: src/pages/Details.tsx:243
+#: src/pages/Details.tsx:254
 #: src/pages/EpisodePage.tsx:71
 msgid "Runtime"
 msgstr "Süre"
@@ -1274,7 +1274,7 @@ msgid "Season {0}"
 msgstr "Sezon {0}"
 
 #: src/components/ImportSummaryTable.tsx:92
-#: src/pages/Details.tsx:376
+#: src/pages/Details.tsx:387
 msgid "Seasons"
 msgstr "Sezonlar"
 
@@ -1287,7 +1287,7 @@ msgstr "İzlendi"
 msgid "Seen at {0}"
 msgstr "{0} tarihinde izlendi"
 
-#: src/pages/Details.tsx:602
+#: src/pages/Details.tsx:613
 #: src/pages/import/TraktTv.tsx:191
 msgid "Seen history"
 msgstr "İzlenmiş geçmişi"
@@ -1358,7 +1358,7 @@ msgid "Set"
 msgstr "Ayarla"
 
 #: src/components/SetProgress.tsx:61
-#: src/pages/Details.tsx:705
+#: src/pages/Details.tsx:716
 msgid "Set progress"
 msgstr "İlerlemeyi ayarla"
 
@@ -1392,7 +1392,7 @@ msgstr "Sırala"
 msgid "Sort order"
 msgstr "Sıralama düzeni"
 
-#: src/pages/Details.tsx:401
+#: src/pages/Details.tsx:412
 msgid "Source"
 msgstr "Kaynak"
 
@@ -1408,7 +1408,7 @@ msgstr "İstatistikler"
 #: src/components/Facets/ActiveFacetChips.tsx:293
 #: src/components/Facets/StatusSection.tsx:116
 #: src/components/OrderBy.tsx:16
-#: src/pages/Details.tsx:290
+#: src/pages/Details.tsx:301
 msgid "Status"
 msgstr "Durum"
 
@@ -1443,7 +1443,7 @@ msgstr "Okunacak"
 msgid "Topic"
 msgstr "Konu"
 
-#: src/pages/Details.tsx:254
+#: src/pages/Details.tsx:265
 msgid "Total runtime"
 msgstr "Toplam süre"
 
@@ -1470,7 +1470,7 @@ msgstr "Başlatılmamış"
 msgid "Unrated"
 msgstr "Puansız"
 
-#: src/pages/Details.tsx:391
+#: src/pages/Details.tsx:402
 msgid "Unseen episodes"
 msgstr "İzlenmemiş bölümler"
 
@@ -1483,7 +1483,7 @@ msgstr "İzlenmemiş bölüm sayısı"
 msgid "Upcoming"
 msgstr "Yaklaşan"
 
-#: src/pages/Details.tsx:691
+#: src/pages/Details.tsx:702
 msgid "Update metadata"
 msgstr "Meta veriyi güncelle"
 
@@ -1580,7 +1580,7 @@ msgstr "\"{0}\" adlı eseri ne zaman okudunuz?"
 msgid "When did you see \"{0}\"?"
 msgstr "\"{0}\" adlı içeriği ne zaman izlediniz?"
 
-#: src/pages/Details.tsx:125
+#: src/pages/Details.tsx:127
 msgid "Where to watch"
 msgstr "Nerede izlenir"
 

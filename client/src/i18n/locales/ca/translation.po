@@ -44,7 +44,7 @@ msgid "{0, plural, one {1 item} other {# items}}"
 msgstr "{0, plural, one {1 element} other {# elements}}"
 
 #. placeholder {0}: mediaItem.authors.length
-#: src/pages/Details.tsx:339
+#: src/pages/Details.tsx:350
 msgid "{0, plural, one {Author} other {Authors}}"
 msgstr "{0, plural, one {Autor} other {Autors}}"
 
@@ -54,7 +54,7 @@ msgid "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {
 msgstr "{0, plural, one {S'ha trobat # element per a la consulta \"<0>{searchQuery}</0>\"} other {S'han trobat # elements per a la consulta \"<1>{searchQuery}</1>\"}}"
 
 #. placeholder {0}: mediaItem.genres.length
-#: src/pages/Details.tsx:299
+#: src/pages/Details.tsx:310
 msgid "{0, plural, one {Genre} other {Genres}}"
 msgstr "{0, plural, one {Gènere} other {Gèneres}}"
 
@@ -64,36 +64,36 @@ msgid "{0, plural, one {Listed on 1 list} other {Listed on # lists}}"
 msgstr "{0, plural, one {A 1 llista} other {A # llistes}}"
 
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:565
+#: src/pages/Details.tsx:576
 #: src/pages/SeenHistory.tsx:43
 msgid "{0, plural, one {Listened 1 time} other {Listened # times}}"
 msgstr "{0, plural, one {Escoltat 1 vegada} other {Escoltat # vegades}}"
 
 #. placeholder {0}: mediaItem.narrators.length
-#: src/pages/Details.tsx:353
+#: src/pages/Details.tsx:364
 msgid "{0, plural, one {Narrator} other {Narrators}}"
 msgstr "{0, plural, one {Narrador} other {Narradors}}"
 
 #. placeholder {0}: mediaItem.platform.length
-#: src/pages/Details.tsx:267
+#: src/pages/Details.tsx:278
 msgid "{0, plural, one {Platform} other {platforms}}"
 msgstr "{0, plural, one {Plataforma} other {plataformes}}"
 
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:589
+#: src/pages/Details.tsx:600
 #: src/pages/SeenHistory.tsx:67
 msgid "{0, plural, one {Played 1 time} other {Played # times}}"
 msgstr "{0, plural, one {Jugat 1 vegada} other {Jugat # vegades}}"
 
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:573
+#: src/pages/Details.tsx:584
 #: src/pages/SeenHistory.tsx:51
 msgid "{0, plural, one {Read 1 time} other {Read # times}}"
 msgstr "{0, plural, one {Llegit 1 vegada} other {Llegit # vegades}}"
 
 #. placeholder {0}: episode.seenHistory.length
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:581
+#: src/pages/Details.tsx:592
 #: src/pages/SeasonsPage.tsx:87
 #: src/pages/SeenHistory.tsx:59
 msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
@@ -257,7 +257,7 @@ msgstr "Afegeix a l'historial de llegits"
 msgid "Add to seen history"
 msgstr "Afegeix a l'historial de vistos"
 
-#: src/pages/Details.tsx:646
+#: src/pages/Details.tsx:657
 msgid "Add to watchlist"
 msgstr "Afegeix a la llista de seguiment"
 
@@ -504,11 +504,11 @@ msgid "Episode {0} {1}"
 msgstr "Episodi {0} {1}"
 
 #: src/components/ImportSummaryTable.tsx:93
-#: src/pages/Details.tsx:383
+#: src/pages/Details.tsx:394
 msgid "Episodes"
 msgstr "Episodis"
 
-#: src/pages/Details.tsx:449
+#: src/pages/Details.tsx:460
 msgid "Episodes page"
 msgstr "Pàgina d'episodis"
 
@@ -535,7 +535,7 @@ msgstr "Error en carregar el grup. Pot ser que hagi estat eliminat."
 msgid "Filters"
 msgstr "Filtres"
 
-#: src/pages/Details.tsx:528
+#: src/pages/Details.tsx:539
 msgid "First unwatched episode"
 msgstr "Primer episodi no vist"
 
@@ -597,19 +597,19 @@ msgstr "Inici"
 msgid "Http"
 msgstr "Http"
 
-#: src/pages/Details.tsx:471
+#: src/pages/Details.tsx:482
 msgid "I am listening it"
 msgstr "L'estic escoltant"
 
-#: src/pages/Details.tsx:472
+#: src/pages/Details.tsx:483
 msgid "I am playing it"
 msgstr "Ho estic jugant"
 
-#: src/pages/Details.tsx:470
+#: src/pages/Details.tsx:481
 msgid "I am reading it"
 msgstr "Ho estic llegint"
 
-#: src/pages/Details.tsx:469
+#: src/pages/Details.tsx:480
 msgid "I am watching it"
 msgstr "Ho estic veient"
 
@@ -618,19 +618,19 @@ msgstr "Ho estic veient"
 msgid "I do not remember"
 msgstr "No ho recordo"
 
-#: src/pages/Details.tsx:492
+#: src/pages/Details.tsx:503
 msgid "I finished listening it"
 msgstr "He acabat d'escoltar-lo"
 
-#: src/pages/Details.tsx:495
+#: src/pages/Details.tsx:506
 msgid "I finished playing it"
 msgstr "He acabat de jugar-ho"
 
-#: src/pages/Details.tsx:490
+#: src/pages/Details.tsx:501
 msgid "I finished reading it"
 msgstr "He acabat de llegir-ho"
 
-#: src/pages/Details.tsx:489
+#: src/pages/Details.tsx:500
 msgid "I finished watching it"
 msgstr "He acabat de veure-ho"
 
@@ -681,7 +681,7 @@ msgstr "Clau"
 
 #: src/components/Facets/ActiveFacetChips.tsx:235
 #: src/components/Facets/LanguageSection.tsx:95
-#: src/pages/Details.tsx:330
+#: src/pages/Details.tsx:341
 msgid "Language"
 msgstr "Idioma"
 
@@ -690,17 +690,17 @@ msgid "Last airing"
 msgstr "Última emissió"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:537
+#: src/pages/Details.tsx:548
 msgid "Last listened at {0}"
 msgstr "Últim cop escoltat el {0}"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:555
+#: src/pages/Details.tsx:566
 msgid "Last played at {0}"
 msgstr "Últim cop jugat el {0}"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:543
+#: src/pages/Details.tsx:554
 msgid "Last read at {0}"
 msgstr "Últim cop llegit el {0}"
 
@@ -709,7 +709,7 @@ msgid "Last seen"
 msgstr "Últim vist"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:549
+#: src/pages/Details.tsx:560
 msgid "Last seen at {0}"
 msgstr "Últim cop vist el {0}"
 
@@ -749,7 +749,7 @@ msgstr "Escoltat"
 msgid "Listened at {0}"
 msgstr "Escoltat el {0}"
 
-#: src/pages/Details.tsx:597
+#: src/pages/Details.tsx:608
 msgid "Listened history"
 msgstr "Historial d'escoltats"
 
@@ -761,7 +761,7 @@ msgstr "Llistes"
 #: src/components/PaginatedGridItems.tsx:384
 #: src/components/SelectLastSeenEpisode.tsx:67
 #: src/pages/Calendar.tsx:61
-#: src/pages/Details.tsx:205
+#: src/pages/Details.tsx:208
 #: src/pages/EpisodePage.tsx:42
 #: src/pages/GroupDetailPage.tsx:285
 #: src/pages/GroupsPage.tsx:17
@@ -845,7 +845,7 @@ msgstr "La meva valoració"
 msgid "Name"
 msgstr "Nom"
 
-#: src/pages/Details.tsx:281
+#: src/pages/Details.tsx:292
 msgid "Network"
 msgstr "Xarxa"
 
@@ -866,7 +866,7 @@ msgstr "Nova contrasenya"
 msgid "Next airing"
 msgstr "Propera emissió"
 
-#: src/pages/Details.tsx:515
+#: src/pages/Details.tsx:526
 msgid "Next episode"
 msgstr "Proper episodi"
 
@@ -918,7 +918,7 @@ msgstr "Ara"
 msgid "Number of episodes"
 msgstr "Nombre d'episodis"
 
-#: src/pages/Details.tsx:366
+#: src/pages/Details.tsx:377
 msgid "Number of pages"
 msgstr "Nombre de pàgines"
 
@@ -928,7 +928,7 @@ msgstr "Nombre de pàgines"
 msgid "On watchlist"
 msgstr "A la llista de seguiment"
 
-#: src/pages/Details.tsx:321
+#: src/pages/Details.tsx:332
 msgid "Overview"
 msgstr "Resum"
 
@@ -966,7 +966,7 @@ msgstr "Jugat"
 msgid "Played at {0}"
 msgstr "Jugat el {0}"
 
-#: src/pages/Details.tsx:605
+#: src/pages/Details.tsx:616
 msgid "Played history"
 msgstr "Historial de jugats"
 
@@ -989,7 +989,7 @@ msgid "Private"
 msgstr "Privat"
 
 #: src/components/OrderBy.tsx:22
-#: src/pages/Details.tsx:500
+#: src/pages/Details.tsx:511
 msgid "Progress"
 msgstr "Progrés"
 
@@ -1074,7 +1074,7 @@ msgstr "Llegit"
 msgid "Read at {0}"
 msgstr "Llegit el {0}"
 
-#: src/pages/Details.tsx:599
+#: src/pages/Details.tsx:610
 msgid "Read history"
 msgstr "Historial de llegits"
 
@@ -1131,7 +1131,7 @@ msgstr "Llançament <0/>"
 
 #: src/components/OrderBy.tsx:15
 #: src/hooks/translations.ts:12
-#: src/pages/Details.tsx:232
+#: src/pages/Details.tsx:243
 #: src/pages/EpisodePage.tsx:80
 msgid "Release date"
 msgstr "Data de llançament"
@@ -1185,7 +1185,7 @@ msgstr "Elimina de l'historial de llegits"
 msgid "Remove from seen history"
 msgstr "Elimina de l'historial de vistos"
 
-#: src/pages/Details.tsx:670
+#: src/pages/Details.tsx:681
 msgid "Remove from watchlist"
 msgstr "Elimina de la llista de seguiment"
 
@@ -1197,7 +1197,7 @@ msgstr "Elimina temporada de l'historial de vistos"
 msgid "Remove token"
 msgstr "Elimina token"
 
-#: src/pages/Details.tsx:65
+#: src/pages/Details.tsx:67
 msgid "Review by <0><1>{author}</1></0> at {date}"
 msgstr "Ressenya de <0><1>{author}</1></0> el {date}"
 
@@ -1211,7 +1211,7 @@ msgid "RSS link"
 msgstr "Enllaç RSS"
 
 #: src/hooks/translations.ts:13
-#: src/pages/Details.tsx:243
+#: src/pages/Details.tsx:254
 #: src/pages/EpisodePage.tsx:71
 msgid "Runtime"
 msgstr "Durada"
@@ -1274,7 +1274,7 @@ msgid "Season {0}"
 msgstr "Temporada {0}"
 
 #: src/components/ImportSummaryTable.tsx:92
-#: src/pages/Details.tsx:376
+#: src/pages/Details.tsx:387
 msgid "Seasons"
 msgstr "Temporades"
 
@@ -1287,7 +1287,7 @@ msgstr "Vist"
 msgid "Seen at {0}"
 msgstr "Vist el {0}"
 
-#: src/pages/Details.tsx:602
+#: src/pages/Details.tsx:613
 #: src/pages/import/TraktTv.tsx:191
 msgid "Seen history"
 msgstr "Historial de vistos"
@@ -1358,7 +1358,7 @@ msgid "Set"
 msgstr "Estableix"
 
 #: src/components/SetProgress.tsx:61
-#: src/pages/Details.tsx:705
+#: src/pages/Details.tsx:716
 msgid "Set progress"
 msgstr "Estableix progrés"
 
@@ -1392,7 +1392,7 @@ msgstr "Ordena per"
 msgid "Sort order"
 msgstr "Ordre d'ordenació"
 
-#: src/pages/Details.tsx:401
+#: src/pages/Details.tsx:412
 msgid "Source"
 msgstr "Font"
 
@@ -1408,7 +1408,7 @@ msgstr "Estadístiques"
 #: src/components/Facets/ActiveFacetChips.tsx:293
 #: src/components/Facets/StatusSection.tsx:116
 #: src/components/OrderBy.tsx:16
-#: src/pages/Details.tsx:290
+#: src/pages/Details.tsx:301
 msgid "Status"
 msgstr "Estat"
 
@@ -1443,7 +1443,7 @@ msgstr "Per llegir"
 msgid "Topic"
 msgstr "Tema"
 
-#: src/pages/Details.tsx:254
+#: src/pages/Details.tsx:265
 msgid "Total runtime"
 msgstr "Durada total"
 
@@ -1470,7 +1470,7 @@ msgstr "No inicialitzat"
 msgid "Unrated"
 msgstr "Sense valorar"
 
-#: src/pages/Details.tsx:391
+#: src/pages/Details.tsx:402
 msgid "Unseen episodes"
 msgstr "Episodis no vistos"
 
@@ -1483,7 +1483,7 @@ msgstr "Recompte d'episodis no vistos"
 msgid "Upcoming"
 msgstr "Pròximament"
 
-#: src/pages/Details.tsx:691
+#: src/pages/Details.tsx:702
 msgid "Update metadata"
 msgstr "Actualitza metadades"
 
@@ -1580,7 +1580,7 @@ msgstr "Quan vau llegir \"{0}\"?"
 msgid "When did you see \"{0}\"?"
 msgstr "Quan vau veure \"{0}\"?"
 
-#: src/pages/Details.tsx:125
+#: src/pages/Details.tsx:127
 msgid "Where to watch"
 msgstr "On veure-ho"
 
