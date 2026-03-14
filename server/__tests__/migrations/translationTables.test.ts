@@ -310,7 +310,7 @@ describe('translationTables migration', () => {
     });
 
     // Attempt to insert duplicate (should fail without onConflict merge)
-    expect(
+    await expect(
       Database.knex('mediaItemTranslation').insert({
         mediaItemId,
         language: 'es',

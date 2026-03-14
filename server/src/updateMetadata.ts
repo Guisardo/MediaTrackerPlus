@@ -25,7 +25,11 @@ import {
   formatNotification,
 } from 'src/notifications/notificationFormatter';
 import { getMetadataLanguages } from 'src/metadataLanguages';
-import { upsertMediaItemTranslation } from 'src/repository/translationRepository';
+import {
+  upsertMediaItemTranslation,
+  upsertSeasonTranslation,
+  upsertEpisodeTranslation,
+} from 'src/repository/translationRepository';
 
 const getItemsToDelete = (
   oldMediaItem: MediaItemBaseWithSeasons,
@@ -373,9 +377,36 @@ export const updateMediaItem = async (
       }
     }
 
-    // Upsert translations for all configured languages (movie-level only for US-003)
+    // Upsert translations for all configured languages
     if (metadataProvider.localizedDetails != null && updatedMediaItem) {
       const languages = getMetadataLanguages();
+
+      // Build season/episode ID lookup maps from the merged updatedMediaItem (has DB IDs)
+      const seasonIdByNumber = new Map<number, number>();
+      const episodeIdBySeasonAndEpisode = new Map<string, number>();
+
+      if (
+        updatedMediaItem.mediaType === 'tv' &&
+        updatedMediaItem.seasons
+      ) {
+        // After margeTvShow(), seasons are TvSeason[] with DB IDs resolved
+        const tvSeasons = updatedMediaItem.seasons as TvSeason[];
+        for (const season of tvSeasons) {
+          if (season.id != null) {
+            seasonIdByNumber.set(season.seasonNumber, season.id);
+          }
+          if (season.episodes) {
+            for (const episode of season.episodes) {
+              if (episode.id != null) {
+                episodeIdBySeasonAndEpisode.set(
+                  `${episode.seasonNumber}:${episode.episodeNumber}`,
+                  episode.id
+                );
+              }
+            }
+          }
+        }
+      }
 
       // Upsert the first language's data from the base details() response
       if (languages.length > 0) {
@@ -385,6 +416,36 @@ export const updateMediaItem = async (
           overview: newMediaItem.overview ?? null,
           genres: newMediaItem.genres ?? null,
         });
+
+        // Upsert first language's season/episode translations from base details()
+        if (
+          updatedMediaItem.mediaType === 'tv' &&
+          newMediaItem.seasons
+        ) {
+          for (const season of newMediaItem.seasons) {
+            const seasonId = seasonIdByNumber.get(season.seasonNumber);
+            if (seasonId != null) {
+              await upsertSeasonTranslation(seasonId, firstLanguage, {
+                title: season.title ?? null,
+                description: season.description ?? null,
+              });
+            }
+
+            if (season.episodes) {
+              for (const episode of season.episodes) {
+                const episodeId = episodeIdBySeasonAndEpisode.get(
+                  `${episode.seasonNumber}:${episode.episodeNumber}`
+                );
+                if (episodeId != null) {
+                  await upsertEpisodeTranslation(episodeId, firstLanguage, {
+                    title: episode.title ?? null,
+                    description: episode.description ?? null,
+                  });
+                }
+              }
+            }
+          }
+        }
       }
 
       // Fetch and upsert localized details for each configured language
@@ -400,6 +461,36 @@ export const updateMediaItem = async (
               overview: localizedData.overview ?? null,
               genres: localizedData.genres ?? null,
             });
+
+            // Upsert season/episode translations for TV shows
+            if (
+              updatedMediaItem.mediaType === 'tv' &&
+              localizedData.seasons
+            ) {
+              for (const season of localizedData.seasons) {
+                const seasonId = seasonIdByNumber.get(season.seasonNumber);
+                if (seasonId != null) {
+                  await upsertSeasonTranslation(seasonId, language, {
+                    title: season.title ?? null,
+                    description: season.description ?? null,
+                  });
+                }
+
+                if (season.episodes) {
+                  for (const episode of season.episodes) {
+                    const episodeId = episodeIdBySeasonAndEpisode.get(
+                      `${episode.seasonNumber}:${episode.episodeNumber}`
+                    );
+                    if (episodeId != null) {
+                      await upsertEpisodeTranslation(episodeId, language, {
+                        title: episode.title ?? null,
+                        description: episode.description ?? null,
+                      });
+                    }
+                  }
+                }
+              }
+            }
           }
         } catch (error) {
           logger.error(
