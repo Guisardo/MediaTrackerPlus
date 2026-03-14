@@ -2,6 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import clsx from 'clsx';
 import { Plural, Trans } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
 import { parseISO } from 'date-fns';
 
 import {
@@ -14,6 +15,7 @@ import {
 } from 'mediatracker-api';
 import { SelectSeenDate } from 'src/components/SelectSeenDate';
 import { BadgeRating } from 'src/components/StarRating';
+import { MetadataLocaleBadge } from 'src/components/MetadataLocaleBadge';
 import {
   canMetadataBeUpdated,
   formatEpisodeNumber,
@@ -198,6 +200,7 @@ const ExternalLinks: FunctionComponent<{
 export const DetailsPage: FunctionComponent = () => {
   const { mediaItemId } = useParams();
   const { mediaItem, isLoading, error } = useDetails(Number(mediaItemId));
+  const { i18n } = useLingui();
 
   if (isLoading) {
     return (
@@ -224,6 +227,14 @@ export const DetailsPage: FunctionComponent = () => {
         <div className="md:ml-4">
           <div className="mt-2 text-4xl font-bold md:mt-0">
             {mediaItem.title}
+            {mediaItem.metadataLanguage && (
+              <div className="mt-1">
+                <MetadataLocaleBadge
+                  metadataLanguage={mediaItem.metadataLanguage}
+                  userLocale={i18n.locale}
+                />
+              </div>
+            )}
           </div>
 
           {mediaItem.releaseDate && (

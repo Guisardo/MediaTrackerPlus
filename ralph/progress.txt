@@ -16,6 +16,9 @@ Started: Fri Mar 13 23:08:58 -03 2026
 - Season-level API failures in localizedDetails: catch per-season, set episodes to `[]`, log error, continue with remaining seasons
 - `upsertSeasonTranslation` and `upsertEpisodeTranslation` follow exact same pattern as `upsertMediaItemTranslation` (async functions, not class-based)
 - Translation loop in updateMediaItem: first-language data from base `details()` + localized data for each language from `localizedDetails()` — both movie-level AND season/episode level for TV
+- IGDB private `get(endpoint, query)` helper handles token refresh + RequestQueue automatically — reuse it for all IGDB API calls
+- Mock RequestQueue in tests as: `{ request: jest.fn((fn) => fn()) }` to execute the callback immediately
+- IGDB_REGION_MAP region 8 (worldwide) uses sentinel 'all' — replace with `getMetadataLanguages()` in updateMetadata.ts loop
 ---
 
 ## 2026-03-13 - US-001
@@ -82,4 +85,78 @@ Started: Fri Mar 13 23:08:58 -03 2026
   - Per-season API failure handling: catch errors per-season in localizedDetails(), set episodes to empty array, log error with context (season number, tmdbId, language), continue with remaining seasons
   - Test mock pattern for multi-call methods: chain `.mockResolvedValueOnce()` for sequential API calls (1 TV show + N season responses)
   - Full test suite: 110 suites, 1416 tests (43 new tests added)
+---
+## 2026-03-14 - US-005
+- Implemented Audible, IGDB, and OpenLibrary best-effort translations
+- Files changed:
+  - server/src/metadata/provider/audible.ts: Added localizedDetails() method — uses getAudibleLangMap() to resolve language to Audible country code, fetches from matching domain; returns null when no mapping exists
+  - server/src/metadata/provider/igdb.ts: Added fetchGameLocalizations() method — single POST /v4/game_localizations with `where game = {igdbId}`; returns [{regionId, name}] filtered array; logs DEBUG message about no description
+  - server/src/metadata/provider/openlibrary.ts: Added DEBUG log in details() noting no language filter applied
+  - server/src/metadata/metadataProvider.ts: Added optional fetchGameLocalizations?() method to MetadataProvider abstract class
+  - server/src/metadataLanguages.ts: Added IGDB_REGION_MAP constant mapping region IDs 1-9 to ISO code arrays (region 8 = 'all' sentinel)
+  - server/src/updateMetadata.ts: Added IGDB game localizations loop after localizedDetails loop; maps region -> ISO codes via IGDB_REGION_MAP, intersects with METADATA_LANGUAGES, upserts title-only rows
+  - server/__tests__/metadata/audibleLocalizedDetails.test.ts: 16 unit tests (domain per language, BCP 47 extraction, no-mapping returns null, error handling)
+  - server/__tests__/metadata/igdbFetchGameLocalizations.test.ts: 18 unit tests (API call, result mapping, filtering, empty results, IGDB_REGION_MAP coverage for all 9 regions)
+  - server/__tests__/metadata/openlibraryPrimaryLanguage.test.ts: 4 unit tests (debug log emitted, correct data returned, no localizedDetails method)
+- **Learnings for future iterations:**
+  - Audible countryCode is a string key used in the `this.languages` map — AudibleCountryCode is imported from `src/entity/configuration`
+  - IGDB `fetchGameLocalizations` uses the same `this.get(endpoint, query)` private helper as all other IGDB queries — the `get()` method handles token refresh and RequestQueue automatically
+  - IGDB region IDs in `game_localizations` response: the `region` field is a numeric ID (1-9) — map via IGDB_REGION_MAP
+  - For region 8 (worldwide), use `getMetadataLanguages()` as the target language list — the sentinel 'all' means apply to every configured language
+  - RequestQueue mock pattern: jest.mock 'src/requestQueue' as `{ request: jest.fn((fn) => fn()) }` to execute the callback immediately in tests
+  - IGDB token refresh check: the `refreshToken()` guard checks `this.tokenAcquiredAt + expires_in > now()` — in tests, mock the Twitch POST to return a future-expiring token
+  - Full test suite: 113 suites, 1450 tests (34 new tests added)
+---
+## 2026-03-14 - US-006
+- Implemented Serve localized metadata via API for media items using Accept-Language header
+- Files changed:
+  - server/src/localeResolver.ts: New module exporting resolveLocale() — uses `accept` npm package for RFC 9110 Accept-Language parsing, normalizes matched value to lowercase, verifies against availableLanguages list (case-insensitive) to return canonical form
+  - server/src/repository/translationRepository.ts: Added getMediaItemTranslations(), getSeasonTranslations(), getEpisodeTranslations() batch fetch functions returning Map<id, translation> — used for per-request batch SELECT instead of per-row JOINs
+  - server/src/entity/mediaItem.ts: Added metadataLanguage?: string | null to both MediaItemDetailsResponse and MediaItemItemsResponse types
+  - server/src/knex/queries/details.ts: Added language?: string | null param; after building base response, batch-fetches mediaItemTranslation and overlays title/overview/genres; also overlays season and episode translations via batch fetches; metadataLanguage defaults to null
+  - server/src/knex/queries/items.ts: Added applyTranslationOverlay() helper that batch-fetches translations for all item IDs and overlays fields; modified getItemsKnex() to accept language arg and call overlay; metadataLanguage set per item (null when no translation)
+  - server/src/repository/mediaItem.ts: Added language?: string | null to GetItemsArgs type and mediaItemRepository.details() params
+  - server/src/controllers/item.ts: Added resolveMetadataLanguage() helper implementing three-tier fallback (exact → first language → null); reads Accept-Language header and passes resolved language to repository
+  - server/src/controllers/items.ts: Added resolveMetadataLanguage() helper and Accept-Language resolution to getPaginated, get, and getRandom methods
+  - server/src/controllers/search.ts: Added resolveMetadataLanguage() helper and Accept-Language resolution to both IMDB-ID and normal search paths
+  - server/__tests__/__utils__/request.ts: Added requestHeaders?: Record<string, string> to args; defaulted all req properties (params, query, body, headers) to {} to prevent destructuring errors
+  - server/__tests__/localeResolver.test.ts: 13 unit tests (exact match, BCP 47, quality values, no match, undefined header, wildcard, case-insensitivity, complex headers)
+  - server/__tests__/controllers/localeResolution.test.ts: 10 integration tests covering all three fallback tiers for MediaItemController.details, ItemsController.get, ItemsController.getPaginated
+- **Learnings for future iterations:**
+  - `accept` npm package returns header value as-is (not lowercased) — always normalize via `matched.toLowerCase()` then find the canonical form from `availableLanguages` using case-insensitive compare
+  - resolveMetadataLanguage() three-tier fallback pattern: `resolveLocale()` for exact match → `availableLanguages[0]` for tier 2 → null when `availableLanguages.length === 0`
+  - Translation overlay is done post-query (batch fetch then merge) rather than SQL JOIN — avoids modifying complex query builders and satisfies batch SELECT acceptance criterion
+  - When using request() test helper, always pass `requestHeaders` for Accept-Language; the helper now defaults all req properties to `{}` so undefined is safe
+  - Test isolation for Config: mutate `(Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES` in beforeEach/afterEach + call `_resetMetadataLanguagesCache()` to prevent cross-test contamination
+  - Pre-existing flaky test: `translationTables.test.ts` unique constraint test intermittently fails in full suite (race condition with DB isolation) — not caused by US-006 changes; verified by running full suite before changes (10 failures) vs after (1 failure, same test)
+  - Full test suite: 115 suites, 1473 tests (1 failure pre-existing, 23 new tests added)
+---
+## 2026-03-14 - US-007
+- Implemented Serve localized season and episode data via API
+- Files changed:
+  - server/src/entity/tvseason.ts: Added `metadataLanguage?: string | null` to TvSeason type
+  - server/src/entity/tvepisode.ts: Added `metadataLanguage?: string | null` to TvEpisode type
+  - server/src/knex/queries/details.ts: Updated season/episode translation overlay to set `metadataLanguage` on each season and episode (language when translation found, null otherwise); also sets `metadataLanguage: null` on episodes without translations within the same season
+  - server/__tests__/controllers/seasonEpisodeLocaleResolution.test.ts: 10 integration tests covering all three fallback tiers for both seasons and episodes
+- **Learnings for future iterations:**
+  - The season/episode translation overlay was already implemented in details.ts as part of US-006 (batch SELECT, map-based lookup) — US-007 only needed to add the `metadataLanguage` field to entity types and set it in the overlay
+  - When the resolved language is the tier-2 fallback (first configured language), the `metadataLanguage` field on each season/episode reflects that fallback language (not the requested locale)
+  - Episodes without translations get `metadataLanguage: null` even if sibling episodes in the same season have translations
+  - Test parallelism: when running a single test file in isolation with Jest, the Database singleton can conflict with other test suites; use `--runInBand` for isolated test runs or rely on the full suite (which handles DB isolation correctly via `clearDatabase` + `runMigrations`)
+  - Full test suite: 116 suites, 1483 tests (10 new tests added)
+---
+
+## 2026-03-14 - US-008
+- Implemented Frontend sends user locale on all media requests via Accept-Language header
+- Files changed:
+  - client/src/api/api.ts: Added i18n import; modified customFetch to inject Accept-Language header with current i18n.locale; preserves existing headers via Headers API
+  - client/src/api/__tests__/api.test.ts: Added mock for @lingui/core; added 3 new test cases verifying Accept-Language header injection
+- **Learnings for future iterations:**
+  - Frontend API client architecture: uses custom `customFetch` wrapper around native `fetch` API; the MediaTracker API client (auto-generated from swagger) merges headers via HttpClient.mergeRequestParams()
+  - All API calls go through the single `mediaTrackerApi.customFetch` function — this is the ideal injection point for global headers
+  - i18n.locale is a getter property from @lingui/core — dynamically reads the current locale at request time (not cached)
+  - Headers API: `new Headers(init?.headers)` safely clones existing headers; `.set()` replaces a header value
+  - Client tests mock the @lingui/core module at import time; mediatracker-api is also mocked to prevent real API calls during tests
+  - Header injection is transparent to all query functions — no changes needed to individual API callers
+  - Full test suite: 75 suites, 1285 tests (3 new tests added)
 ---
