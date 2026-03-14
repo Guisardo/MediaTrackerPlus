@@ -28,3 +28,57 @@ export const upsertMediaItemTranslation = async (
     .onConflict(['mediaItemId', 'language'])
     .merge();
 };
+
+export interface SeasonTranslationData {
+  title?: string | null;
+  description?: string | null;
+}
+
+/**
+ * Upserts a translation row for a season.
+ * Uses onConflict(['seasonId', 'language']).merge() to update existing rows.
+ */
+export const upsertSeasonTranslation = async (
+  seasonId: number,
+  language: string,
+  data: SeasonTranslationData
+): Promise<void> => {
+  const row: Record<string, unknown> = {
+    seasonId,
+    language,
+    title: data.title ?? null,
+    description: data.description ?? null,
+  };
+
+  await Database.knex('seasonTranslation')
+    .insert(row)
+    .onConflict(['seasonId', 'language'])
+    .merge();
+};
+
+export interface EpisodeTranslationData {
+  title?: string | null;
+  description?: string | null;
+}
+
+/**
+ * Upserts a translation row for an episode.
+ * Uses onConflict(['episodeId', 'language']).merge() to update existing rows.
+ */
+export const upsertEpisodeTranslation = async (
+  episodeId: number,
+  language: string,
+  data: EpisodeTranslationData
+): Promise<void> => {
+  const row: Record<string, unknown> = {
+    episodeId,
+    language,
+    title: data.title ?? null,
+    description: data.description ?? null,
+  };
+
+  await Database.knex('episodeTranslation')
+    .insert(row)
+    .onConflict(['episodeId', 'language'])
+    .merge();
+};
