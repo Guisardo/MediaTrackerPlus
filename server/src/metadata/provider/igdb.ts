@@ -31,6 +31,38 @@ export class IGDB extends MetadataProvider {
     return result ? this.mapGame(result) : null;
   }
 
+  async fetchGameLocalizations(
+    ids: ExternalIds
+  ): Promise<Array<{ regionId: number; name: string }>> {
+    if (!ids.igdbId) {
+      logger.warn(
+        `IGDB.fetchGameLocalizations: no igdbId provided — returning empty results`
+      );
+      return [];
+    }
+
+    const query = `fields name, region; where game = ${ids.igdbId};`;
+    const results = (await this.get('game_localizations', query)) as IgdbGameLocalization[];
+
+    if (!results || results.length === 0) {
+      logger.debug(
+        `IGDB.fetchGameLocalizations: no localizations found for igdbId=${ids.igdbId}`
+      );
+      return [];
+    }
+
+    logger.debug(
+      `IGDB: no localized description available, storing title only`
+    );
+
+    return results
+      .filter((loc) => loc.region != null && loc.name)
+      .map((loc) => ({
+        regionId: loc.region,
+        name: loc.name,
+      }));
+  }
+
   async similar(ids: ExternalIds): Promise<SimilarItem[]> {
     if (!ids.igdbId) {
       logger.warn(`IGDB.similar: no igdbId provided — returning empty results`);
@@ -225,6 +257,12 @@ export class IGDB extends MetadataProvider {
     timeBetweenRequests: 250,
   });
 
+}
+
+interface IgdbGameLocalization {
+  id: number;
+  name: string;
+  region: number;
 }
 
 interface IgdbGameSimilar {

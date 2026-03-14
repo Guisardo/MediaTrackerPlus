@@ -44,4 +44,16 @@ export abstract class MetadataProvider<Name extends string = string> {
     ids: ExternalIds,
     language: string
   ): Promise<MediaItemForProvider>;
+
+  /**
+   * Fetch all regional game localizations in a single API call.
+   * Returns an array of localization entries with a regionId and localized name.
+   * Used for providers (e.g., IGDB) that expose regional title variants via a
+   * dedicated endpoint rather than per-language detail fetches.
+   * Optional — only implemented by providers that have a localization endpoint.
+   * @param ids ExternalIds
+   */
+  fetchGameLocalizations?(
+    ids: ExternalIds
+  ): Promise<Array<{ regionId: number; name: string }>>;
 }
