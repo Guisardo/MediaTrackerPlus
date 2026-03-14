@@ -24,6 +24,7 @@ export type TvSeason = {
   totalRuntime?: number;
   lastSeenAt?: number;
   unseenEpisodesCount?: number;
+  metadataLanguage?: string | null;
 };
 
 export const tvSeasonColumns = <const>[
