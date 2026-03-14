@@ -294,7 +294,7 @@ export const getDetailsKnex = async (params: {
         ? seasonTranslationMap.get(season.id)
         : undefined;
 
-      const updatedSeason = { ...season };
+      const updatedSeason = { ...season, metadataLanguage: null as string | null };
       if (seasonTranslation) {
         if (seasonTranslation.title != null) {
           updatedSeason.title = seasonTranslation.title;
@@ -302,6 +302,7 @@ export const getDetailsKnex = async (params: {
         if (seasonTranslation.description != null) {
           updatedSeason.description = seasonTranslation.description;
         }
+        updatedSeason.metadataLanguage = language;
       }
 
       if (updatedSeason.episodes) {
@@ -311,16 +312,17 @@ export const getDetailsKnex = async (params: {
             : undefined;
 
           if (!episodeTranslation) {
-            return episode;
+            return { ...episode, metadataLanguage: null as string | null };
           }
 
-          const updatedEpisode = { ...episode };
+          const updatedEpisode = { ...episode, metadataLanguage: null as string | null };
           if (episodeTranslation.title != null) {
             updatedEpisode.title = episodeTranslation.title;
           }
           if (episodeTranslation.description != null) {
             updatedEpisode.description = episodeTranslation.description;
           }
+          updatedEpisode.metadataLanguage = language;
           return updatedEpisode;
         });
       }
