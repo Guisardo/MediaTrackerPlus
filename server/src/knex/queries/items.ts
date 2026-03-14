@@ -15,10 +15,58 @@ import knex, { Knex } from 'knex';
 import { List, listItemColumns } from 'src/entity/list';
 import { Progress } from 'src/entity/progress';
 import { splitCreatorField } from 'src/utils/normalizeCreators';
+import { getMediaItemTranslations } from 'src/repository/translationRepository';
+
+/**
+ * Applies translation overlay to a list of mapped items for a given language.
+ * Modifies title, overview, and genres fields where a translation exists.
+ * Sets metadataLanguage to the language code when a translation is found.
+ */
+const applyTranslationOverlay = async (
+  items: MediaItemItemsResponse[],
+  language: string
+): Promise<MediaItemItemsResponse[]> => {
+  const ids = items
+    .map((item) => item.id)
+    .filter((id): id is number => id != null);
+
+  if (ids.length === 0) {
+    return items;
+  }
+
+  const translationMap = await getMediaItemTranslations(ids, language);
+
+  return items.map((item) => {
+    if (item.id == null) {
+      return { ...item, metadataLanguage: null };
+    }
+
+    const translation = translationMap.get(item.id);
+    if (!translation) {
+      return { ...item, metadataLanguage: null };
+    }
+
+    const updated = { ...item, metadataLanguage: language };
+    if (translation.title != null) {
+      updated.title = translation.title;
+    }
+    if (translation.overview != null) {
+      updated.overview = translation.overview;
+    }
+    if (translation.genres != null) {
+      try {
+        updated.genres = JSON.parse(translation.genres);
+      } catch {
+        updated.genres = translation.genres.split(',');
+      }
+    }
+    return updated;
+  });
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getItemsKnex = async (args: any): Promise<any> => {
-  const { page } = args;
+  const { page, language } = args;
   const { sqlQuery, sqlCountQuery, sqlPaginationQuery } = await getItemsKnexSql(
     args
   );
@@ -41,7 +89,11 @@ export const getItemsKnex = async (args: any): Promise<any> => {
       throw new Error('Invalid page number');
     }
 
-    const data = res.map(mapRawResult);
+    let data = res.map(mapRawResult);
+
+    if (language) {
+      data = await applyTranslationOverlay(data, language);
+    }
 
     return {
       from: from,
@@ -53,7 +105,13 @@ export const getItemsKnex = async (args: any): Promise<any> => {
     };
   } else {
     const res = await sqlQuery;
-    return res.map(mapRawResult);
+    let items = res.map(mapRawResult);
+
+    if (language) {
+      items = await applyTranslationOverlay(items, language);
+    }
+
+    return items;
   }
 };
 

@@ -165,6 +165,13 @@ export type GetItemsArgs = {
    * global mediaItem.platformRating. Ignored for all other sort modes.
    */
   groupId?: number;
+
+  /**
+   * @description When provided, overlays localized metadata (title, overview, genres)
+   * from the mediaItemTranslation table for the given language code.
+   * Sets metadataLanguage on each result indicating which language was applied.
+   */
+  language?: string | null;
 };
 
 export type FacetQueryArgs = {
@@ -276,7 +283,11 @@ class MediaItemRepository extends repository<MediaItemBase>({
     return getFacetsKnex(args);
   }
 
-  public async details(params: { mediaItemId: number; userId: number }) {
+  public async details(params: {
+    mediaItemId: number;
+    userId: number;
+    language?: string | null;
+  }) {
     return getDetailsKnex(params);
   }
 

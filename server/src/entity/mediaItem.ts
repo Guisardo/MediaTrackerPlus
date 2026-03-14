@@ -102,6 +102,7 @@ export type MediaItemDetailsResponse = Omit<
   progress?: number;
   totalRuntime?: number;
   lists: List[];
+  metadataLanguage?: string | null;
 };
 
 export type MediaItemItemsResponse = Omit<MediaItemBase, 'lockedAt'> & {
@@ -127,6 +128,7 @@ export type MediaItemItemsResponse = Omit<MediaItemBase, 'lockedAt'> & {
   totalRuntime?: number;
   estimatedRating?: number | null;
   platformSeen?: boolean;
+  metadataLanguage?: string | null;
 };
 
 export const mediaItemColumns = <const>[
