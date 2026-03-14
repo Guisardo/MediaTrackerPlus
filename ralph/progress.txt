@@ -19,6 +19,10 @@ Started: Fri Mar 13 23:08:58 -03 2026
 - IGDB private `get(endpoint, query)` helper handles token refresh + RequestQueue automatically — reuse it for all IGDB API calls
 - Mock RequestQueue in tests as: `{ request: jest.fn((fn) => fn()) }` to execute the callback immediately
 - IGDB_REGION_MAP region 8 (worldwide) uses sentinel 'all' — replace with `getMetadataLanguages()` in updateMetadata.ts loop
+- Backfill translations uses `createLock()` for its own lock (separate from updateMetadata lock) — `lockedBackfill` prevents concurrent backfill runs
+- `startBackfillIfNeeded()` entry point uses `setImmediate()` to avoid blocking server startup — called in `Server.listen()` after resolve()
+- `mediaItemRepository.seasonsWithEpisodes(mediaItem)` returns seasons with episodes for building season/episode ID lookup maps during backfill
+- Test DB isolation: when tests fail with "UNIQUE constraint failed" in `--runInBand` mode, clean up prior data in `beforeAll` before seeding (e.g., `await Database.knex('user').del()`)
 ---
 
 ## 2026-03-13 - US-001
@@ -159,4 +163,43 @@ Started: Fri Mar 13 23:08:58 -03 2026
   - Client tests mock the @lingui/core module at import time; mediatracker-api is also mocked to prevent real API calls during tests
   - Header injection is transparent to all query functions — no changes needed to individual API callers
   - Full test suite: 75 suites, 1285 tests (3 new tests added)
+---
+
+## 2026-03-14 - US-009
+- Implemented Display locale badge and fallback indicator on media detail page
+- Files changed:
+  - client/src/components/ui/badge.tsx: New shadcn/ui Badge component with CVA variants (default, secondary, destructive, outline)
+  - client/src/utils/locale.ts: New utility module with getLanguageDisplayName() and getLanguageDisplayNameInLocale() using native Intl.DisplayNames API with fallback to uppercase codes
+  - client/src/components/MetadataLocaleBadge.tsx: New component that renders language badge when metadata locale matches user locale, or fallback indicator when different, or nothing when metadataLanguage is null
+  - client/src/pages/Details.tsx: Added useLingui() hook import and call; integrated MetadataLocaleBadge rendering after title with i18n.locale
+  - rest-api/index.ts: Regenerated via npm run build:routes to include metadataLanguage field in MediaItemDetailsResponse type
+  - client/src/components/__tests__/MetadataLocaleBadge.test.tsx: 18 unit tests covering exact match, fallback indicators, BCP 47 tags, base language matching (pt vs pt-BR), case-insensitivity, accessibility
+  - client/src/utils/__tests__/locale.test.ts: 15 unit tests covering simple language codes, BCP 47 tags, fallback behavior, various display locales (en, fr, es, pt, ja, zh)
+- **Learnings for future iterations:**
+  - Badge component: follow shadcn/ui CVA pattern with forwardRef for all UI components; `variant="secondary"` provides muted styling suitable for informational badges
+  - Locale display names: use native browser Intl.DisplayNames API for zero-bundle-size solution; always provide fallback to uppercase code for unsupported browsers/codes
+  - Language matching: normalize locale codes to lowercase and split on `-` to extract base language code; base matching (e.g., pt-BR matches pt) is better UX than exact matching
+  - MetadataLocaleBadge logic: three tiers - exact/base match → show badge, no match → show fallback text, null → render nothing
+  - i18n.locale from useLingui() is a getter that reads current locale dynamically (not cached), making it safe for locale switching without page reload
+  - When Details.tsx adds new render elements, Lingui auto-extracts message strings and updates all locale .po files (just line numbers change for existing strings)
+  - API type generation: npm run build:routes regenerates rest-api/index.ts from server openapi.json; must run after server type changes are committed
+  - Full test suite: 77 suites, 1321 tests (33 new tests added); all passing
+---
+
+## 2026-03-14 - US-010
+- Implemented Background backfill translations on initial deployment and when METADATA_LANGUAGES changes
+- Files changed:
+  - server/src/backfillTranslations.ts: New module with detectBackfillNeeded() (initial deployment + incremental language detection), backfillItemTranslations() (per-item localized details + IGDB game localizations), runBackfill() (batch orchestrator with 50-item batches and 35s inter-batch delay), lockedBackfill (createLock wrapper), startBackfillIfNeeded() (setImmediate entry point)
+  - server/src/server.ts: Added import and call to startBackfillIfNeeded() in Server.listen() after resolve() — non-blocking background execution
+  - server/__tests__/backfillTranslations.test.ts: 27 comprehensive tests covering detectBackfillNeeded (empty DB, initial deployment, incremental language addition, all languages present), backfillItemTranslations (movies, TV shows with seasons/episodes, IGDB game localizations, worldwide region, error handling, BCP 47 tags), runBackfill (batch processing, empty languages, error resilience, ID ordering), startBackfillIfNeeded (non-blocking), language removal retention, initial deployment scenario, BCP 47 tag handling
+  - server/__tests__/migrations/translationTables.test.ts: Fixed pre-existing flaky unique constraint test — added cleanup of leftover rows before insert to ensure test isolation in full suite runs
+  - server/__tests__/repository/translationRepository.test.ts: Fixed pre-existing DB isolation issue — added cleanup of user/mediaItem rows in beforeAll to prevent UNIQUE constraint failures when running with --runInBand
+- **Learnings for future iterations:**
+  - `createLock()` from `src/lock.ts` wraps an async function with a simple boolean lock preventing concurrent execution — use it for any background process that shouldn't run in parallel
+  - `setImmediate()` defers execution to the next event loop iteration, ensuring the server startup (resolve()) completes before the backfill starts
+  - `mediaItemRepository.seasonsWithEpisodes(mediaItem)` returns seasons with nested episodes — needed for building season/episode ID lookup Maps during backfill
+  - jest.mock() factory functions MUST use jest.fn() inline — importing the mock via the module after jest.mock() gives access to the mock function for `.mockReturnValue()` calls in tests
+  - Test DB isolation with `--runInBand`: clean up data from prior suites in `beforeAll` before seeding (delete user/mediaItem rows) to prevent UNIQUE constraint collisions
+  - `season` table has NOT NULL constraint on `numberOfEpisodes` — always include it when inserting test season data (default to 0)
+  - Full test suite: 117 suites, 1510 tests (27 new backfill tests + 2 pre-existing test fixes); all passing
 ---
