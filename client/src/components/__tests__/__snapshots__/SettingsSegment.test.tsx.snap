@@ -24,6 +24,8 @@ exports[`SettingsSegment matches a stable snapshot for the linked (href) case 1`
   <a
     class="mb-2 text-lg font-semibold underline block"
     href="/docs"
+    rel="noopener noreferrer"
+    target="_blank"
   >
     Linked Snapshot
   </a>
