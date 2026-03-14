@@ -141,6 +141,8 @@ const IGDBcredentialsComponent: FunctionComponent = () => {
         <a
           href="https://api-docs.igdb.com/#account-creation"
           className="block mb-2 underline"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           <Trans>API keys can be acquired here</Trans>
         </a>

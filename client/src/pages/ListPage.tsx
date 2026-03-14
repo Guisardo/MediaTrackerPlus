@@ -107,7 +107,7 @@ export const ListPage: FunctionComponent = () => {
 
           {list.traktId && (
             <div className="py-4">
-              <a href={`https://trakt.tv/lists/${list.traktId}`}>
+              <a href={`https://trakt.tv/lists/${list.traktId}`} target="_blank" rel="noopener noreferrer">
                 <img
                   src={
                     darkMode ? 'logo/trakt-white.svg' : 'logo/trakt-black.svg'

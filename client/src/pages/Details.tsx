@@ -100,7 +100,7 @@ const IconWithLink: FunctionComponent<{
   whiteLogo?: boolean;
 }> = (props) => {
   return (
-    <a href={props.href} className="flex mr-2">
+    <a href={props.href} className="flex mr-2" target="_blank" rel="noopener noreferrer">
       <img
         src={props.src}
         className={clsx(props.whiteLogo && 'invert dark:invert-0')}
@@ -121,6 +121,8 @@ const WhereToWatchComponent: FunctionComponent<{
         href={`https://www.themoviedb.org/${
           isTvShow(mediaItem) ? 'tv' : 'movie'
         }/${mediaItem.tmdbId}/watch`}
+        target="_blank"
+        rel="noopener noreferrer"
       >
         <Trans>Where to watch</Trans>
       </a>
