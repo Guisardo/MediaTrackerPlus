@@ -10,7 +10,7 @@ export const SettingsSegment: FunctionComponent<{
   return (
     <div className="rounded-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm p-6">
       {href ? (
-        <a className="mb-2 text-lg font-semibold underline block" href={href}>
+        <a className="mb-2 text-lg font-semibold underline block" href={href} target="_blank" rel="noopener noreferrer">
           {title}
         </a>
       ) : (

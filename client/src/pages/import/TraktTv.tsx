@@ -343,7 +343,7 @@ const NotImportedItemsSubList: FunctionComponent<{
           </div>
 
           {items?.map((item) => (
-            <a key={item.title} href={item.url} className="block">
+            <a key={item.title} href={item.url} className="block" target="_blank" rel="noopener noreferrer">
               {item.title}
             </a>
           ))}
