@@ -203,3 +203,20 @@ Started: Fri Mar 13 23:08:58 -03 2026
   - `season` table has NOT NULL constraint on `numberOfEpisodes` — always include it when inserting test season data (default to 0)
   - Full test suite: 117 suites, 1510 tests (27 new backfill tests + 2 pre-existing test fixes); all passing
 ---
+
+## 2026-03-14 - US-011
+- Implemented Integration tests for Multi-Language Metadata feature
+- Files changed:
+  - server/__tests__/integration/multilanguageMetadata.integration.test.ts: 48 comprehensive integration tests covering all 14 functional requirements (FR-1 through FR-14) — METADATA_LANGUAGES config and fallback, invalid code handling, translation table schema verification, TMDB movie translation pipeline, other provider import (IGDB/Audible), API locale resolution with three-tier fallback (media items, seasons, episodes, lists, paginated), background backfill detection (initial deployment + incremental), AUDIBLE_LANG_MAP config, originalTitle immutability, resolveLocale negotiation
+  - client/src/__tests__/multilanguageMetadata.integration.test.tsx: 13 frontend integration tests covering FR-10 (Accept-Language header injection) and FR-11 (MetadataLocaleBadge rendering — exact match badge, fallback indicator, null renders nothing, BCP 47 base matching)
+- **Learnings for future iterations:**
+  - SQLite test parallelism: when running ALL server tests concurrently, SQLite file locking causes "migration table is already locked" and "database is locked" errors across test files — this is pre-existing and unrelated to new tests; each test file passes in isolation
+  - `clearDatabase()` in `server/__tests__/__utils__/utils.ts` calls `Database.knex.destroy()` — only ONE describe block per test file should call `clearDatabase()` in `afterAll`; multiple calls cause subsequent blocks to get `undefined` knex
+  - The `accept` npm package for RFC 9110 language negotiation requires exact tag match — regional tags like `es-419` or `es-MX` do NOT match base language `es`; only exact tags match (e.g., `es-419` matches available `es-419`)
+  - listItem table has no unique constraint on `(listId, mediaItemId)` — cannot use `onConflict().ignore()`; use delete-then-insert pattern instead
+  - `getAudibleLangMap()` falls back to default map (6 entries) when ALL entries are invalid — it does NOT return an empty map
+  - jest.mock() for Config should NOT be used in integration tests that need real DB access — instead, use the cast-to-mutable pattern `(Config as unknown as { field: type }).field = value` to override specific fields
+  - Frontend tests use `jest.isolateModules()` (sync) not `jest.isolateModulesAsync()` (not available in this Jest version)
+  - All 48 backend tests + 13 frontend tests pass; typecheck passes for both server and client
+  - Full test suite: 78 client suites (1334 tests), all passing; server integration test: 48 tests passing
+---
