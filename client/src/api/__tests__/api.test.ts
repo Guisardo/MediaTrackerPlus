@@ -374,6 +374,7 @@ describe('ClientApiFetchLogger', () => {
   });
 });
 
+<<<<<<< HEAD
 // ---------------------------------------------------------------------------
 // Accept-Language Header Injection
 // ---------------------------------------------------------------------------
@@ -431,5 +432,4 @@ describe('customFetch Accept-Language header injection', () => {
     expect(lingui.locale).toBe('en');
   });
 });
-
 export {};
