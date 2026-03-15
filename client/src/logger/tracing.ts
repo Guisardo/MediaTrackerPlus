@@ -1,10 +1,46 @@
 const SENSITIVE_KEY_PATTERN =
   /pass(word)?|token|secret|authorization|cookie|session|credential|api[-_]?key/i;
+const SENSITIVE_QUERY_KEYS = new Set([
+  'code',
+  'token',
+  'access_token',
+  'refresh_token',
+  'id_token',
+]);
 const MAX_DEPTH = 3;
 const MAX_ARRAY_ITEMS = 5;
 const MAX_OBJECT_KEYS = 10;
 const MAX_STRING_LENGTH = 120;
 const SENSITIVE_VALUE_KEYS = new Set(['body']);
+
+const isSensitiveKey = (key: string) =>
+  SENSITIVE_KEY_PATTERN.test(key) || SENSITIVE_QUERY_KEYS.has(key.toLowerCase());
+
+const sanitizeUrl = (value: string) => {
+  if (!value.includes('?')) {
+    return value;
+  }
+
+  try {
+    const url = value.startsWith('http://') || value.startsWith('https://')
+      ? new URL(value)
+      : new URL(value, 'https://mediatracker.local');
+
+    Array.from(url.searchParams.keys()).forEach((key) => {
+      if (isSensitiveKey(key)) {
+        url.searchParams.set(key, '[redacted]');
+      }
+    });
+
+    if (value.startsWith('http://') || value.startsWith('https://')) {
+      return url.toString();
+    }
+
+    return `${url.pathname}${url.search}${url.hash}`;
+  } catch {
+    return value;
+  }
+};
 
 const truncate = (value: string) => {
   if (value.length <= MAX_STRING_LENGTH) {
@@ -24,7 +60,7 @@ const summarizeValue = (
   }
 
   if (typeof value === 'string') {
-    return truncate(value);
+    return truncate(sanitizeUrl(value));
   }
 
   if (
@@ -51,7 +87,7 @@ const summarizeValue = (
     return {
       type: 'Request',
       method: value.method,
-      url: value.url,
+      url: sanitizeUrl(value.url),
     };
   }
 
@@ -59,7 +95,7 @@ const summarizeValue = (
     return Object.fromEntries(
       Array.from(value.entries()).map(([key, entryValue]) => [
         key,
-        SENSITIVE_KEY_PATTERN.test(key) ? '[redacted]' : truncate(entryValue),
+        isSensitiveKey(key) ? '[redacted]' : truncate(entryValue),
       ])
     );
   }
@@ -93,7 +129,7 @@ const summarizeValue = (
     const objectValue = value as Record<string, unknown>;
     const keys = Object.keys(objectValue);
     const summarizedEntries = keys.slice(0, MAX_OBJECT_KEYS).map((key) => {
-      if (SENSITIVE_KEY_PATTERN.test(key) || SENSITIVE_VALUE_KEYS.has(key)) {
+      if (isSensitiveKey(key) || SENSITIVE_VALUE_KEYS.has(key)) {
         return [key, '[redacted]'];
       }
 

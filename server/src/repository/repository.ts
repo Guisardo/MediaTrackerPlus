@@ -300,7 +300,11 @@ export const repository = <T extends object>(args: {
     'updateWhere',
     'updateOrCreate',
   ].forEach((methodName) =>
-    applyMethodDecorator(Repository.prototype, methodName, traceMethod())
+    applyMethodDecorator(
+      Repository.prototype,
+      methodName,
+      traceMethod({ includeResult: false })
+    )
   );
 
   return Repository;

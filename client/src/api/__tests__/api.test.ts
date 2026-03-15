@@ -355,6 +355,34 @@ describe('ClientApiFetchLogger', () => {
     );
   });
 
+  it('redacts sensitive query parameters from logged request URLs', async () => {
+    const debugSpy = jest.spyOn(console, 'debug').mockImplementation(jest.fn());
+    const response = {
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+    } as Response;
+
+    global.fetch = jest.fn().mockResolvedValue(response);
+
+    await clientApiFetchLogger.execute(
+      '/api/oauth/callback?code=top-secret&token=abc123&state=ok'
+    );
+
+    expect(debugSpy).toHaveBeenCalledWith(
+      '[MediaTracker] client.api.fetch started',
+      expect.objectContaining({
+        args: {
+          type: 'array',
+          length: 1,
+          sample: [
+            '/api/oauth/callback?code=%5Bredacted%5D&token=%5Bredacted%5D&state=ok',
+          ],
+        },
+      })
+    );
+  });
+
   it('does not log in production mode', async () => {
     process.env.NODE_ENV = 'production';
 
