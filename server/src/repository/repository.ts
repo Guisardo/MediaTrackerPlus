@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { Database } from 'src/dbconfig';
+import { applyMethodDecorator, traceMethod } from 'src/logger/tracing';
 
 export const omitUndefinedValues = <T extends object>(value: Partial<T>) =>
   _.pickBy(value, (v) => v !== undefined) as Partial<T>;
@@ -21,7 +22,7 @@ export const repository = <T extends object>(args: {
     uniqueBy,
   } = args;
 
-  return class Repository {
+  class Repository {
     public readonly tableName = tableName;
     public readonly columnNames = columnNames;
     public readonly primaryColumnName = primaryColumnName;
@@ -283,5 +284,24 @@ export const repository = <T extends object>(args: {
         }
       });
     }
-  };
+  }
+
+  [
+    'count',
+    'find',
+    'findOne',
+    'delete',
+    'deleteManyById',
+    'create',
+    'createUnique',
+    'createMany',
+    'createManyUnique',
+    'update',
+    'updateWhere',
+    'updateOrCreate',
+  ].forEach((methodName) =>
+    applyMethodDecorator(Repository.prototype, methodName, traceMethod())
+  );
+
+  return Repository;
 };

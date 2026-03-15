@@ -1,5 +1,6 @@
 import { i18n } from '@lingui/core';
 import { Api as MediaTracker, RequestError } from 'mediatracker-api';
+import { applyMethodDecorator, traceAsyncMethod } from 'src/logger/tracing';
 
 export class FetchError extends Error {
   readonly status: number;
@@ -26,8 +27,8 @@ export class MediaTrackerError extends Error {
   }
 }
 
-export const mediaTrackerApi = new MediaTracker({
-  customFetch: async (input, init) => {
+export class ClientApiFetchLogger {
+  async execute(input: RequestInfo | URL, init?: RequestInit) {
     const headers = new Headers(init?.headers);
     headers.set('Accept-Language', i18n.locale);
 
@@ -45,7 +46,22 @@ export const mediaTrackerApi = new MediaTracker({
     }
 
     return res;
-  },
+  }
+}
+
+applyMethodDecorator(
+  ClientApiFetchLogger.prototype,
+  'execute',
+  traceAsyncMethod({
+    includeResult: true,
+    label: 'client.api.fetch',
+  })
+);
+
+export const clientApiFetchLogger = new ClientApiFetchLogger();
+
+export const mediaTrackerApi = new MediaTracker({
+  customFetch: (input, init) => clientApiFetchLogger.execute(input, init),
 });
 
 export const unwrapError = async <T>(
