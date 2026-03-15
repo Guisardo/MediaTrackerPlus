@@ -1,0 +1,4 @@
+interface:
+  display_name: "Frontend Developer"
+  short_description: "MediaTrackerPlus frontend UI and styling helper"
+  default_prompt: "Use $frontend-developer to implement or refactor MediaTrackerPlus client UI work."

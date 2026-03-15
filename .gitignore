@@ -73,8 +73,6 @@ bower_components
 *.launch
 .settings/
 *.sublime-workspace
-/.claude/
-/.codex/
 
 # IDE - VSCode
 .vscode/*

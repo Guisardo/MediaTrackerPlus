@@ -1,0 +1,4 @@
+interface:
+  display_name: "Documenter"
+  short_description: "MediaTrackerPlus documentation cleanup helper"
+  default_prompt: "Use $documenter to normalize, reorganize, or reindex MediaTrackerPlus documentation."

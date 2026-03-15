@@ -1,0 +1,4 @@
+interface:
+  display_name: "Software Architect"
+  short_description: "MediaTrackerPlus architecture planning helper"
+  default_prompt: "Use $software-architect to design or review MediaTrackerPlus architecture."

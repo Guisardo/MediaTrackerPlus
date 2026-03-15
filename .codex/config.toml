@@ -1,0 +1,35 @@
+[agents]
+max_threads = 6
+max_depth = 1
+
+[agents.frontend_developer]
+description = "Frontend specialist for MediaTrackerPlus client UI work, styling migrations, responsiveness, dark mode, and i18n."
+config_file = "agents/frontend-developer.toml"
+
+[agents.backend_developer]
+description = "Backend specialist for MediaTrackerPlus server APIs, repositories, migrations, auth, and metadata providers."
+config_file = "agents/backend-developer.toml"
+
+[agents.documenter]
+description = "Documentation specialist for MediaTrackerPlus README cleanup, normalization, organization, and reindexing."
+config_file = "agents/documenter.toml"
+
+[agents.software_architect]
+description = "Architecture specialist for MediaTrackerPlus system design, ADRs, cross-cutting concerns, and layering reviews."
+config_file = "agents/software-architect.toml"
+
+[[skills.config]]
+path = ".codex/skills/frontend-developer/SKILL.md"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/backend-developer/SKILL.md"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/documenter/SKILL.md"
+enabled = true
+
+[[skills.config]]
+path = ".codex/skills/software-architect/SKILL.md"
+enabled = true

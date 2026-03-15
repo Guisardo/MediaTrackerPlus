@@ -1,0 +1,4 @@
+interface:
+  display_name: "Backend Developer"
+  short_description: "MediaTrackerPlus backend API and data helper"
+  default_prompt: "Use $backend-developer to implement or debug MediaTrackerPlus server work."
