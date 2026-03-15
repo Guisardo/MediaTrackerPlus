@@ -37,16 +37,16 @@ describe('createServer', () => {
       return mockHttpServer;
     }) as http.Server['close'];
 
-    jest.spyOn(app, 'listen').mockImplementation(
-      (
-        _port: number,
-        _hostname: string,
-        listeningListener?: () => void
-      ) => {
+    jest
+      .spyOn(app, 'listen')
+      .mockImplementation((...args: unknown[]) => {
+        const listeningListener = args.find(
+          (arg): arg is () => void => typeof arg === 'function'
+        );
+
         process.nextTick(() => listeningListener?.());
         return mockHttpServer;
-      }
-    );
+      });
 
     await server.listen();
     await server.close();
