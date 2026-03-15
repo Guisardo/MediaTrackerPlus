@@ -44,7 +44,7 @@ msgid "{0, plural, one {1 item} other {# items}}"
 msgstr "{0, plural, one {1 elem} other {# elem}}"
 
 #. placeholder {0}: mediaItem.authors.length
-#: src/pages/Details.tsx:339
+#: src/pages/Details.tsx:350
 msgid "{0, plural, one {Author} other {Authors}}"
 msgstr "{0, plural, one {Szerző} other {Szerzők}}"
 
@@ -54,7 +54,7 @@ msgid "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {
 msgstr "{0, plural, one {# elem találtatott a(z) \"<0>{searchQuery}</0>\" keresésre} other {# elem találtatott a(z) \"<1>{searchQuery}</1>\" keresésre}}"
 
 #. placeholder {0}: mediaItem.genres.length
-#: src/pages/Details.tsx:299
+#: src/pages/Details.tsx:310
 msgid "{0, plural, one {Genre} other {Genres}}"
 msgstr "{0, plural, one {Műfaj} other {Műfajok}}"
 
@@ -64,36 +64,36 @@ msgid "{0, plural, one {Listed on 1 list} other {Listed on # lists}}"
 msgstr "{0, plural, one {1 listán szerepel} other {# listán szerepel}}"
 
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:565
+#: src/pages/Details.tsx:576
 #: src/pages/SeenHistory.tsx:43
 msgid "{0, plural, one {Listened 1 time} other {Listened # times}}"
 msgstr "{0, plural, one {1-szer meghallgatva} other {#-szor meghallgatva}}"
 
 #. placeholder {0}: mediaItem.narrators.length
-#: src/pages/Details.tsx:353
+#: src/pages/Details.tsx:364
 msgid "{0, plural, one {Narrator} other {Narrators}}"
 msgstr "{0, plural, one {Narrátor} other {Narrátorok}}"
 
 #. placeholder {0}: mediaItem.platform.length
-#: src/pages/Details.tsx:267
+#: src/pages/Details.tsx:278
 msgid "{0, plural, one {Platform} other {platforms}}"
 msgstr "{0, plural, one {Platform} other {Platformok}}"
 
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:589
+#: src/pages/Details.tsx:600
 #: src/pages/SeenHistory.tsx:67
 msgid "{0, plural, one {Played 1 time} other {Played # times}}"
 msgstr "{0, plural, one {1-szer lejátszva} other {#-szor lejátszva}}"
 
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:573
+#: src/pages/Details.tsx:584
 #: src/pages/SeenHistory.tsx:51
 msgid "{0, plural, one {Read 1 time} other {Read # times}}"
 msgstr "{0, plural, one {1-szer elolvasva} other {#-szor elolvasva}}"
 
 #. placeholder {0}: episode.seenHistory.length
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:581
+#: src/pages/Details.tsx:592
 #: src/pages/SeasonsPage.tsx:87
 #: src/pages/SeenHistory.tsx:59
 msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
@@ -257,7 +257,7 @@ msgstr "Hozzáadás az olvasási előzményekhez"
 msgid "Add to seen history"
 msgstr "Hozzáadás a megtekintési előzményekhez"
 
-#: src/pages/Details.tsx:646
+#: src/pages/Details.tsx:657
 msgid "Add to watchlist"
 msgstr "Hozzáadás a figyelőlistához"
 
@@ -504,11 +504,11 @@ msgid "Episode {0} {1}"
 msgstr "{0}. epizód {1}"
 
 #: src/components/ImportSummaryTable.tsx:93
-#: src/pages/Details.tsx:383
+#: src/pages/Details.tsx:394
 msgid "Episodes"
 msgstr "Epizódok"
 
-#: src/pages/Details.tsx:449
+#: src/pages/Details.tsx:460
 msgid "Episodes page"
 msgstr "Epizódok oldal"
 
@@ -535,7 +535,7 @@ msgstr "Nem sikerült betölteni a csoportot. Lehet, hogy törölték."
 msgid "Filters"
 msgstr "Szűrők"
 
-#: src/pages/Details.tsx:528
+#: src/pages/Details.tsx:539
 msgid "First unwatched episode"
 msgstr "Első meg nem tekintett epizód"
 
@@ -590,6 +590,7 @@ msgstr "Meg nem tekintett epizódok címének elrejtése"
 
 #: src/components/Nav.tsx:36
 #: src/i18n/__tests__/i18n.test.ts:65
+#: src/i18n/__tests__/i18n.test.ts:111
 msgid "Home"
 msgstr "Főoldal"
 
@@ -597,19 +598,19 @@ msgstr "Főoldal"
 msgid "Http"
 msgstr "Http"
 
-#: src/pages/Details.tsx:471
+#: src/pages/Details.tsx:482
 msgid "I am listening it"
 msgstr "Hallgatom"
 
-#: src/pages/Details.tsx:472
+#: src/pages/Details.tsx:483
 msgid "I am playing it"
 msgstr "Játszom vele"
 
-#: src/pages/Details.tsx:470
+#: src/pages/Details.tsx:481
 msgid "I am reading it"
 msgstr "Olvasom"
 
-#: src/pages/Details.tsx:469
+#: src/pages/Details.tsx:480
 msgid "I am watching it"
 msgstr "Nézem"
 
@@ -618,19 +619,19 @@ msgstr "Nézem"
 msgid "I do not remember"
 msgstr "Nem emlékszem"
 
-#: src/pages/Details.tsx:492
+#: src/pages/Details.tsx:503
 msgid "I finished listening it"
 msgstr "Befejeztem a hallgatást"
 
-#: src/pages/Details.tsx:495
+#: src/pages/Details.tsx:506
 msgid "I finished playing it"
 msgstr "Befejeztem a játékot"
 
-#: src/pages/Details.tsx:490
+#: src/pages/Details.tsx:501
 msgid "I finished reading it"
 msgstr "Befejeztem az olvasást"
 
-#: src/pages/Details.tsx:489
+#: src/pages/Details.tsx:500
 msgid "I finished watching it"
 msgstr "Befejeztem a megtekintést"
 
@@ -681,7 +682,7 @@ msgstr "Kulcs"
 
 #: src/components/Facets/ActiveFacetChips.tsx:235
 #: src/components/Facets/LanguageSection.tsx:95
-#: src/pages/Details.tsx:330
+#: src/pages/Details.tsx:341
 msgid "Language"
 msgstr "Nyelv"
 
@@ -690,17 +691,17 @@ msgid "Last airing"
 msgstr "Utolsó adás"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:537
+#: src/pages/Details.tsx:548
 msgid "Last listened at {0}"
 msgstr "Utoljára hallgatva: {0}"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:555
+#: src/pages/Details.tsx:566
 msgid "Last played at {0}"
 msgstr "Utoljára játszva: {0}"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:543
+#: src/pages/Details.tsx:554
 msgid "Last read at {0}"
 msgstr "Utoljára olvasva: {0}"
 
@@ -709,7 +710,7 @@ msgid "Last seen"
 msgstr "Utoljára megtekintve"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:549
+#: src/pages/Details.tsx:560
 msgid "Last seen at {0}"
 msgstr "Utoljára megtekintve: {0}"
 
@@ -749,7 +750,7 @@ msgstr "Meghallgatva"
 msgid "Listened at {0}"
 msgstr "Meghallgatva: {0}"
 
-#: src/pages/Details.tsx:597
+#: src/pages/Details.tsx:608
 msgid "Listened history"
 msgstr "Hallgatási előzmények"
 
@@ -761,7 +762,7 @@ msgstr "Listák"
 #: src/components/PaginatedGridItems.tsx:384
 #: src/components/SelectLastSeenEpisode.tsx:67
 #: src/pages/Calendar.tsx:61
-#: src/pages/Details.tsx:205
+#: src/pages/Details.tsx:208
 #: src/pages/EpisodePage.tsx:42
 #: src/pages/GroupDetailPage.tsx:285
 #: src/pages/GroupsPage.tsx:17
@@ -845,7 +846,7 @@ msgstr "Saját értékelésem"
 msgid "Name"
 msgstr "Név"
 
-#: src/pages/Details.tsx:281
+#: src/pages/Details.tsx:292
 msgid "Network"
 msgstr "Hálózat"
 
@@ -866,7 +867,7 @@ msgstr "Új jelszó"
 msgid "Next airing"
 msgstr "Következő adás"
 
-#: src/pages/Details.tsx:515
+#: src/pages/Details.tsx:526
 msgid "Next episode"
 msgstr "Következő epizód"
 
@@ -918,7 +919,7 @@ msgstr "Most"
 msgid "Number of episodes"
 msgstr "Epizódok száma"
 
-#: src/pages/Details.tsx:366
+#: src/pages/Details.tsx:377
 msgid "Number of pages"
 msgstr "Oldalak száma"
 
@@ -928,7 +929,7 @@ msgstr "Oldalak száma"
 msgid "On watchlist"
 msgstr "Figyelőlistán"
 
-#: src/pages/Details.tsx:321
+#: src/pages/Details.tsx:332
 msgid "Overview"
 msgstr "Áttekintés"
 
@@ -966,7 +967,7 @@ msgstr "Lejátszva"
 msgid "Played at {0}"
 msgstr "Lejátszva: {0}"
 
-#: src/pages/Details.tsx:605
+#: src/pages/Details.tsx:616
 msgid "Played history"
 msgstr "Játékelőzmények"
 
@@ -989,7 +990,7 @@ msgid "Private"
 msgstr "Privát"
 
 #: src/components/OrderBy.tsx:22
-#: src/pages/Details.tsx:500
+#: src/pages/Details.tsx:511
 msgid "Progress"
 msgstr "Előrehaladás"
 
@@ -1074,7 +1075,7 @@ msgstr "Elolvasva"
 msgid "Read at {0}"
 msgstr "Elolvasva: {0}"
 
-#: src/pages/Details.tsx:599
+#: src/pages/Details.tsx:610
 msgid "Read history"
 msgstr "Olvasási előzmények"
 
@@ -1131,7 +1132,7 @@ msgstr "Megjelenés <0/>"
 
 #: src/components/OrderBy.tsx:15
 #: src/hooks/translations.ts:12
-#: src/pages/Details.tsx:232
+#: src/pages/Details.tsx:243
 #: src/pages/EpisodePage.tsx:80
 msgid "Release date"
 msgstr "Megjelenési dátum"
@@ -1185,7 +1186,7 @@ msgstr "Eltávolítás az olvasási előzményekből"
 msgid "Remove from seen history"
 msgstr "Eltávolítás a megtekintési előzményekből"
 
-#: src/pages/Details.tsx:670
+#: src/pages/Details.tsx:681
 msgid "Remove from watchlist"
 msgstr "Eltávolítás a figyelőlistáról"
 
@@ -1197,7 +1198,7 @@ msgstr "Évad eltávolítása a megtekintési előzményekből"
 msgid "Remove token"
 msgstr "Token eltávolítása"
 
-#: src/pages/Details.tsx:65
+#: src/pages/Details.tsx:67
 msgid "Review by <0><1>{author}</1></0> at {date}"
 msgstr "Értékelés: <0><1>{author}</1></0>, dátum: {date}"
 
@@ -1211,7 +1212,7 @@ msgid "RSS link"
 msgstr "RSS hivatkozás"
 
 #: src/hooks/translations.ts:13
-#: src/pages/Details.tsx:243
+#: src/pages/Details.tsx:254
 #: src/pages/EpisodePage.tsx:71
 msgid "Runtime"
 msgstr "Játékidő"
@@ -1274,7 +1275,7 @@ msgid "Season {0}"
 msgstr "{0}. évad"
 
 #: src/components/ImportSummaryTable.tsx:92
-#: src/pages/Details.tsx:376
+#: src/pages/Details.tsx:387
 msgid "Seasons"
 msgstr "Évadok"
 
@@ -1287,7 +1288,7 @@ msgstr "Megtekintve"
 msgid "Seen at {0}"
 msgstr "Megtekintve: {0}"
 
-#: src/pages/Details.tsx:602
+#: src/pages/Details.tsx:613
 #: src/pages/import/TraktTv.tsx:191
 msgid "Seen history"
 msgstr "Megtekintési előzmények"
@@ -1358,7 +1359,7 @@ msgid "Set"
 msgstr "Beállítás"
 
 #: src/components/SetProgress.tsx:61
-#: src/pages/Details.tsx:705
+#: src/pages/Details.tsx:716
 msgid "Set progress"
 msgstr "Előrehaladás beállítása"
 
@@ -1392,7 +1393,7 @@ msgstr "Rendezés"
 msgid "Sort order"
 msgstr "Rendezési sorrend"
 
-#: src/pages/Details.tsx:401
+#: src/pages/Details.tsx:412
 msgid "Source"
 msgstr "Forrás"
 
@@ -1408,7 +1409,7 @@ msgstr "Statisztikák"
 #: src/components/Facets/ActiveFacetChips.tsx:293
 #: src/components/Facets/StatusSection.tsx:116
 #: src/components/OrderBy.tsx:16
-#: src/pages/Details.tsx:290
+#: src/pages/Details.tsx:301
 msgid "Status"
 msgstr "Állapot"
 
@@ -1443,7 +1444,7 @@ msgstr "Olvasandó"
 msgid "Topic"
 msgstr "Téma"
 
-#: src/pages/Details.tsx:254
+#: src/pages/Details.tsx:265
 msgid "Total runtime"
 msgstr "Teljes játékidő"
 
@@ -1470,7 +1471,7 @@ msgstr "Nem inicializált"
 msgid "Unrated"
 msgstr "Értékelés nélkül"
 
-#: src/pages/Details.tsx:391
+#: src/pages/Details.tsx:402
 msgid "Unseen episodes"
 msgstr "Meg nem tekintett epizódok"
 
@@ -1483,7 +1484,7 @@ msgstr "Meg nem tekintett epizódok száma"
 msgid "Upcoming"
 msgstr "Közelgő"
 
-#: src/pages/Details.tsx:691
+#: src/pages/Details.tsx:702
 msgid "Update metadata"
 msgstr "Metaadatok frissítése"
 
@@ -1580,7 +1581,7 @@ msgstr "Mikor olvastad a(z) \"{0}\" című művet?"
 msgid "When did you see \"{0}\"?"
 msgstr "Mikor láttad a(z) \"{0}\" című tartalmat?"
 
-#: src/pages/Details.tsx:125
+#: src/pages/Details.tsx:127
 msgid "Where to watch"
 msgstr "Hol nézhető"
 

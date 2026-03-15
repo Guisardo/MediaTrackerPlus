@@ -10,12 +10,18 @@ import { Database } from 'src/dbconfig';
 import { List } from 'src/entity/list';
 import { Progress } from 'src/entity/progress';
 import { splitCreatorField } from 'src/utils/normalizeCreators';
+import {
+  getMediaItemTranslations,
+  getSeasonTranslations,
+  getEpisodeTranslations,
+} from 'src/repository/translationRepository';
 
 export const getDetailsKnex = async (params: {
   mediaItemId: number;
   userId: number;
+  language?: string | null;
 }): Promise<MediaItemDetailsResponse> => {
-  const { mediaItemId, userId } = params;
+  const { mediaItemId, userId, language } = params;
 
   const {
     mediaItem,
@@ -196,7 +202,7 @@ export const getDetailsKnex = async (params: {
     0
   );
 
-  return {
+  const baseResponse: MediaItemDetailsResponse = {
     ...mediaItem,
     platform: mediaItem.platform
       ? JSON.parse(mediaItem.platform as unknown as string)
@@ -232,7 +238,100 @@ export const getDetailsKnex = async (params: {
     backdrop: mediaItem.backdropId ? `/img/${mediaItem.backdropId}` : null,
     lists: mediaItemLists.map(mapList),
     totalRuntime: totalRuntime || undefined,
+    metadataLanguage: null,
   };
+
+  if (!language) {
+    return baseResponse;
+  }
+
+  // Fetch translation for the resolved language
+  const translationMap = await getMediaItemTranslations([mediaItemId], language);
+  const translation = translationMap.get(mediaItemId);
+
+  if (translation) {
+    if (translation.title != null) {
+      baseResponse.title = translation.title;
+    }
+    if (translation.overview != null) {
+      baseResponse.overview = translation.overview;
+    }
+    if (translation.genres != null) {
+      try {
+        baseResponse.genres = JSON.parse(translation.genres);
+      } catch {
+        // If genres is not JSON (e.g., stored as CSV string), parse as CSV
+        baseResponse.genres = translation.genres.split(',');
+      }
+    }
+    baseResponse.metadataLanguage = language;
+  }
+
+  // Overlay season and episode translations if TV show
+  if (baseResponse.seasons && baseResponse.seasons.length > 0) {
+    const seasonIds = baseResponse.seasons
+      .map((s) => s.id)
+      .filter((id): id is number => id != null);
+
+    const allEpisodeIds: number[] = [];
+    for (const season of baseResponse.seasons) {
+      if (season.episodes) {
+        for (const ep of season.episodes) {
+          if (ep.id != null) {
+            allEpisodeIds.push(ep.id);
+          }
+        }
+      }
+    }
+
+    const [seasonTranslationMap, episodeTranslationMap] = await Promise.all([
+      getSeasonTranslations(seasonIds, language),
+      getEpisodeTranslations(allEpisodeIds, language),
+    ]);
+
+    baseResponse.seasons = baseResponse.seasons.map((season) => {
+      const seasonTranslation = season.id != null
+        ? seasonTranslationMap.get(season.id)
+        : undefined;
+
+      const updatedSeason = { ...season, metadataLanguage: null as string | null };
+      if (seasonTranslation) {
+        if (seasonTranslation.title != null) {
+          updatedSeason.title = seasonTranslation.title;
+        }
+        if (seasonTranslation.description != null) {
+          updatedSeason.description = seasonTranslation.description;
+        }
+        updatedSeason.metadataLanguage = language;
+      }
+
+      if (updatedSeason.episodes) {
+        updatedSeason.episodes = updatedSeason.episodes.map((episode) => {
+          const episodeTranslation = episode.id != null
+            ? episodeTranslationMap.get(episode.id)
+            : undefined;
+
+          if (!episodeTranslation) {
+            return { ...episode, metadataLanguage: null as string | null };
+          }
+
+          const updatedEpisode = { ...episode, metadataLanguage: null as string | null };
+          if (episodeTranslation.title != null) {
+            updatedEpisode.title = episodeTranslation.title;
+          }
+          if (episodeTranslation.description != null) {
+            updatedEpisode.description = episodeTranslation.description;
+          }
+          updatedEpisode.metadataLanguage = language;
+          return updatedEpisode;
+        });
+      }
+
+      return updatedSeason;
+    });
+  }
+
+  return baseResponse;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

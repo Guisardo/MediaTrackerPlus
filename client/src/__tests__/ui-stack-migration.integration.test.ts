@@ -7,7 +7,7 @@
  *   1. Vite 6 build pipeline (output, compression, assets)
  *   2. React 19 rendering (createRoot, no deprecated APIs)
  *   3. TanStack Query v5 (object-form API, keepPreviousData, error envelope)
- *   4. Lingui v5 (28 locales, PO format, Intl.PluralRules)
+ *   4. Lingui v5 (29 locales, PO format, Intl.PluralRules)
  *   5. Tailwind v4 (CSS-first config, dark mode, custom variants)
  *   6. shadcn/ui components (Button, Dialog, Select, Slider, Checkbox, Collapsible, Sheet, Card)
  *   7. Modal/Confirm migration (no ReactDOM.render, Dialog-based)
@@ -418,12 +418,12 @@ describe('Integration: TanStack Query v5', () => {
 
 describe('Integration: Lingui v5', () => {
   const LOCALES = [
-    'af', 'ar', 'ca', 'cs', 'da', 'de', 'el', 'en', 'es', 'fi',
+    'af', 'ar', 'ca', 'cs', 'da', 'de', 'el', 'en', 'es', 'es-419', 'fi',
     'fr', 'he', 'hu', 'it', 'ja', 'ko', 'nl', 'no', 'pl', 'pt',
     'ro', 'ru', 'sr', 'sv', 'tr', 'uk', 'vi', 'zh',
   ];
 
-  it('28 locale directories exist', () => {
+  it('29 locale directories exist', () => {
     const localesDir = path.resolve(SRC_ROOT, 'i18n', 'locales');
     const dirs = fs
       .readdirSync(localesDir, { withFileTypes: true })

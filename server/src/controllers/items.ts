@@ -9,14 +9,39 @@ import { MediaItemItemsResponse } from 'src/entity/mediaItem';
 import { FacetsResponse } from 'src/knex/queries/items';
 import { Database } from 'src/dbconfig';
 import { UserGroupMember } from 'src/entity/userGroup';
+import { resolveLocale } from 'src/localeResolver';
+import { getMetadataLanguages } from 'src/metadataLanguages';
 
 export type GetItemsRequest = Omit<
   GetItemsArgs,
-  'userId' | 'mediaType' | 'mediaItemIds'
+  'userId' | 'mediaType' | 'mediaItemIds' | 'language'
 > &
   Partial<Pick<GetItemsArgs, 'mediaType'>>;
 
 export type GetFacetsRequest = Omit<FacetQueryArgs, 'userId'>;
+
+/**
+ * Resolves the language to use for metadata overlay, implementing three-tier fallback:
+ * 1. Exact locale match from Accept-Language header against METADATA_LANGUAGES
+ * 2. First language in METADATA_LANGUAGES as fallback when no exact match
+ * 3. null when METADATA_LANGUAGES is empty (no translations configured)
+ */
+function resolveMetadataLanguage(
+  acceptLanguageHeader: string | undefined
+): string | null {
+  const availableLanguages = getMetadataLanguages();
+  if (availableLanguages.length === 0) {
+    return null;
+  }
+
+  const exactMatch = resolveLocale(acceptLanguageHeader, availableLanguages);
+  if (exactMatch) {
+    return exactMatch;
+  }
+
+  // Tier 2 fallback: use first configured language
+  return availableLanguages[0];
+}
 
 /**
  * Validates the groupId for a given userId.
@@ -125,6 +150,8 @@ export class ItemsController {
       return;
     }
 
+    const language = resolveMetadataLanguage(req.headers['accept-language']);
+
     const result = await mediaItemRepository.items({
       userId: userId,
       mediaType: mediaType,
@@ -152,6 +179,7 @@ export class ItemsController {
       ratingMax: ratingMax,
       status: status,
       groupId: membershipResult.resolvedGroupId,
+      language: language,
     });
 
     res.json(result);
@@ -274,6 +302,8 @@ export class ItemsController {
       return;
     }
 
+    const language = resolveMetadataLanguage(req.headers['accept-language']);
+
     const result = await mediaItemRepository.items({
       userId: userId,
       mediaType: mediaType,
@@ -288,6 +318,7 @@ export class ItemsController {
       onlyWithoutUserRating: onlyWithoutUserRating,
       onlyWithProgress: onlyWithProgress,
       groupId: membershipResult.resolvedGroupId,
+      language: language,
     });
 
     res.json(result);
@@ -334,6 +365,8 @@ export class ItemsController {
       return;
     }
 
+    const language = resolveMetadataLanguage(req.headers['accept-language']);
+
     const result = await mediaItemRepository.items({
       userId: userId,
       mediaType: mediaType,
@@ -349,6 +382,7 @@ export class ItemsController {
       onlyWithProgress: onlyWithProgress,
       selectRandom: selectRandom,
       groupId: membershipResult.resolvedGroupId,
+      language: language,
     });
 
     res.json(result);

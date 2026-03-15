@@ -44,7 +44,7 @@ msgid "{0, plural, one {1 item} other {# items}}"
 msgstr "{0, plural, one {1 položka} few {# položky} many {# položek} other {# položek}}"
 
 #. placeholder {0}: mediaItem.authors.length
-#: src/pages/Details.tsx:339
+#: src/pages/Details.tsx:350
 msgid "{0, plural, one {Author} other {Authors}}"
 msgstr "{0, plural, one {Autor} few {Autoři} many {Autorů} other {Autorů}}"
 
@@ -54,7 +54,7 @@ msgid "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {
 msgstr "{0, plural, one {Nalezena # položka pro dotaz \"<0>{searchQuery}</0>\"} other {Nalezeno # položek pro dotaz \"<1>{searchQuery}</1>\"}}"
 
 #. placeholder {0}: mediaItem.genres.length
-#: src/pages/Details.tsx:299
+#: src/pages/Details.tsx:310
 msgid "{0, plural, one {Genre} other {Genres}}"
 msgstr "{0, plural, one {Žánr} few {Žánry} many {Žánrů} other {Žánrů}}"
 
@@ -64,36 +64,36 @@ msgid "{0, plural, one {Listed on 1 list} other {Listed on # lists}}"
 msgstr "{0, plural, one {Na 1 seznamu} few {Na # seznamech} many {Na # seznamech} other {Na # seznamech}}"
 
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:565
+#: src/pages/Details.tsx:576
 #: src/pages/SeenHistory.tsx:43
 msgid "{0, plural, one {Listened 1 time} other {Listened # times}}"
 msgstr "{0, plural, one {Posloucháno 1krát} few {Posloucháno #krát} many {Posloucháno #krát} other {Posloucháno #krát}}"
 
 #. placeholder {0}: mediaItem.narrators.length
-#: src/pages/Details.tsx:353
+#: src/pages/Details.tsx:364
 msgid "{0, plural, one {Narrator} other {Narrators}}"
 msgstr "{0, plural, one {Vypravěč} few {Vypravěči} many {Vypravěčů} other {Vypravěčů}}"
 
 #. placeholder {0}: mediaItem.platform.length
-#: src/pages/Details.tsx:267
+#: src/pages/Details.tsx:278
 msgid "{0, plural, one {Platform} other {platforms}}"
 msgstr "{0, plural, one {Platforma} few {Platformy} many {Platforem} other {Platforem}}"
 
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:589
+#: src/pages/Details.tsx:600
 #: src/pages/SeenHistory.tsx:67
 msgid "{0, plural, one {Played 1 time} other {Played # times}}"
 msgstr "{0, plural, one {Hráno 1krát} few {Hráno #krát} many {Hráno #krát} other {Hráno #krát}}"
 
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:573
+#: src/pages/Details.tsx:584
 #: src/pages/SeenHistory.tsx:51
 msgid "{0, plural, one {Read 1 time} other {Read # times}}"
 msgstr "{0, plural, one {Přečteno 1krát} few {Přečteno #krát} many {Přečteno #krát} other {Přečteno #krát}}"
 
 #. placeholder {0}: episode.seenHistory.length
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:581
+#: src/pages/Details.tsx:592
 #: src/pages/SeasonsPage.tsx:87
 #: src/pages/SeenHistory.tsx:59
 msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
@@ -257,7 +257,7 @@ msgstr "Přidat do historie čtení"
 msgid "Add to seen history"
 msgstr "Přidat do historie zhlédnutého"
 
-#: src/pages/Details.tsx:646
+#: src/pages/Details.tsx:657
 msgid "Add to watchlist"
 msgstr "Přidat do seznamu ke sledování"
 
@@ -504,11 +504,11 @@ msgid "Episode {0} {1}"
 msgstr "Epizoda {0} {1}"
 
 #: src/components/ImportSummaryTable.tsx:93
-#: src/pages/Details.tsx:383
+#: src/pages/Details.tsx:394
 msgid "Episodes"
 msgstr "Epizody"
 
-#: src/pages/Details.tsx:449
+#: src/pages/Details.tsx:460
 msgid "Episodes page"
 msgstr "Stránka epizod"
 
@@ -535,7 +535,7 @@ msgstr "Nepodařilo se načíst skupinu. Mohla být smazána."
 msgid "Filters"
 msgstr "Filtry"
 
-#: src/pages/Details.tsx:528
+#: src/pages/Details.tsx:539
 msgid "First unwatched episode"
 msgstr "První neshlédnutá epizoda"
 
@@ -590,6 +590,7 @@ msgstr "Skrýt název neshlédnutých epizod"
 
 #: src/components/Nav.tsx:36
 #: src/i18n/__tests__/i18n.test.ts:65
+#: src/i18n/__tests__/i18n.test.ts:111
 msgid "Home"
 msgstr "Domů"
 
@@ -597,19 +598,19 @@ msgstr "Domů"
 msgid "Http"
 msgstr "Http"
 
-#: src/pages/Details.tsx:471
+#: src/pages/Details.tsx:482
 msgid "I am listening it"
 msgstr "Poslouchám to"
 
-#: src/pages/Details.tsx:472
+#: src/pages/Details.tsx:483
 msgid "I am playing it"
 msgstr "Hraji to"
 
-#: src/pages/Details.tsx:470
+#: src/pages/Details.tsx:481
 msgid "I am reading it"
 msgstr "Čtu to"
 
-#: src/pages/Details.tsx:469
+#: src/pages/Details.tsx:480
 msgid "I am watching it"
 msgstr "Sleduji to"
 
@@ -618,19 +619,19 @@ msgstr "Sleduji to"
 msgid "I do not remember"
 msgstr "Nepamatuji si"
 
-#: src/pages/Details.tsx:492
+#: src/pages/Details.tsx:503
 msgid "I finished listening it"
 msgstr "Dokončil jsem poslouchání"
 
-#: src/pages/Details.tsx:495
+#: src/pages/Details.tsx:506
 msgid "I finished playing it"
 msgstr "Dokončil jsem hraní"
 
-#: src/pages/Details.tsx:490
+#: src/pages/Details.tsx:501
 msgid "I finished reading it"
 msgstr "Dokončil jsem čtení"
 
-#: src/pages/Details.tsx:489
+#: src/pages/Details.tsx:500
 msgid "I finished watching it"
 msgstr "Dokončil jsem sledování"
 
@@ -681,7 +682,7 @@ msgstr "Klíč"
 
 #: src/components/Facets/ActiveFacetChips.tsx:235
 #: src/components/Facets/LanguageSection.tsx:95
-#: src/pages/Details.tsx:330
+#: src/pages/Details.tsx:341
 msgid "Language"
 msgstr "Jazyk"
 
@@ -690,17 +691,17 @@ msgid "Last airing"
 msgstr "Poslední vysílání"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:537
+#: src/pages/Details.tsx:548
 msgid "Last listened at {0}"
 msgstr "Naposledy posloucháno {0}"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:555
+#: src/pages/Details.tsx:566
 msgid "Last played at {0}"
 msgstr "Naposledy hráno {0}"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:543
+#: src/pages/Details.tsx:554
 msgid "Last read at {0}"
 msgstr "Naposledy čteno {0}"
 
@@ -709,7 +710,7 @@ msgid "Last seen"
 msgstr "Naposledy shlédnuto"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:549
+#: src/pages/Details.tsx:560
 msgid "Last seen at {0}"
 msgstr "Naposledy shlédnuto {0}"
 
@@ -749,7 +750,7 @@ msgstr "Posloucháno"
 msgid "Listened at {0}"
 msgstr "Posloucháno {0}"
 
-#: src/pages/Details.tsx:597
+#: src/pages/Details.tsx:608
 msgid "Listened history"
 msgstr "Historie poslechu"
 
@@ -761,7 +762,7 @@ msgstr "Seznamy"
 #: src/components/PaginatedGridItems.tsx:384
 #: src/components/SelectLastSeenEpisode.tsx:67
 #: src/pages/Calendar.tsx:61
-#: src/pages/Details.tsx:205
+#: src/pages/Details.tsx:208
 #: src/pages/EpisodePage.tsx:42
 #: src/pages/GroupDetailPage.tsx:285
 #: src/pages/GroupsPage.tsx:17
@@ -845,7 +846,7 @@ msgstr "Moje hodnocení"
 msgid "Name"
 msgstr "Název"
 
-#: src/pages/Details.tsx:281
+#: src/pages/Details.tsx:292
 msgid "Network"
 msgstr "Síť"
 
@@ -866,7 +867,7 @@ msgstr "Nové heslo"
 msgid "Next airing"
 msgstr "Další vysílání"
 
-#: src/pages/Details.tsx:515
+#: src/pages/Details.tsx:526
 msgid "Next episode"
 msgstr "Další epizoda"
 
@@ -918,7 +919,7 @@ msgstr "Nyní"
 msgid "Number of episodes"
 msgstr "Počet epizod"
 
-#: src/pages/Details.tsx:366
+#: src/pages/Details.tsx:377
 msgid "Number of pages"
 msgstr "Počet stránek"
 
@@ -928,7 +929,7 @@ msgstr "Počet stránek"
 msgid "On watchlist"
 msgstr "Na seznamu ke sledování"
 
-#: src/pages/Details.tsx:321
+#: src/pages/Details.tsx:332
 msgid "Overview"
 msgstr "Přehled"
 
@@ -966,7 +967,7 @@ msgstr "Odehráno"
 msgid "Played at {0}"
 msgstr "Odehráno {0}"
 
-#: src/pages/Details.tsx:605
+#: src/pages/Details.tsx:616
 msgid "Played history"
 msgstr "Historie hraní"
 
@@ -989,7 +990,7 @@ msgid "Private"
 msgstr "Soukromé"
 
 #: src/components/OrderBy.tsx:22
-#: src/pages/Details.tsx:500
+#: src/pages/Details.tsx:511
 msgid "Progress"
 msgstr "Průběh"
 
@@ -1074,7 +1075,7 @@ msgstr "Přečteno"
 msgid "Read at {0}"
 msgstr "Přečteno {0}"
 
-#: src/pages/Details.tsx:599
+#: src/pages/Details.tsx:610
 msgid "Read history"
 msgstr "Historie čtení"
 
@@ -1131,7 +1132,7 @@ msgstr "Vydání <0/>"
 
 #: src/components/OrderBy.tsx:15
 #: src/hooks/translations.ts:12
-#: src/pages/Details.tsx:232
+#: src/pages/Details.tsx:243
 #: src/pages/EpisodePage.tsx:80
 msgid "Release date"
 msgstr "Datum vydání"
@@ -1185,7 +1186,7 @@ msgstr "Odstranit z historie čtení"
 msgid "Remove from seen history"
 msgstr "Odstranit z historie zhlédnutého"
 
-#: src/pages/Details.tsx:670
+#: src/pages/Details.tsx:681
 msgid "Remove from watchlist"
 msgstr "Odstranit ze seznamu ke sledování"
 
@@ -1197,7 +1198,7 @@ msgstr "Odstranit sérii z historie zhlédnutého"
 msgid "Remove token"
 msgstr "Odstranit token"
 
-#: src/pages/Details.tsx:65
+#: src/pages/Details.tsx:67
 msgid "Review by <0><1>{author}</1></0> at {date}"
 msgstr "Recenze od <0><1>{author}</1></0> ze dne {date}"
 
@@ -1211,7 +1212,7 @@ msgid "RSS link"
 msgstr "RSS odkaz"
 
 #: src/hooks/translations.ts:13
-#: src/pages/Details.tsx:243
+#: src/pages/Details.tsx:254
 #: src/pages/EpisodePage.tsx:71
 msgid "Runtime"
 msgstr "Stopáž"
@@ -1274,7 +1275,7 @@ msgid "Season {0}"
 msgstr "Série {0}"
 
 #: src/components/ImportSummaryTable.tsx:92
-#: src/pages/Details.tsx:376
+#: src/pages/Details.tsx:387
 msgid "Seasons"
 msgstr "Série"
 
@@ -1287,7 +1288,7 @@ msgstr "Shlédnuto"
 msgid "Seen at {0}"
 msgstr "Shlédnuto {0}"
 
-#: src/pages/Details.tsx:602
+#: src/pages/Details.tsx:613
 #: src/pages/import/TraktTv.tsx:191
 msgid "Seen history"
 msgstr "Historie zhlédnutého"
@@ -1358,7 +1359,7 @@ msgid "Set"
 msgstr "Nastavit"
 
 #: src/components/SetProgress.tsx:61
-#: src/pages/Details.tsx:705
+#: src/pages/Details.tsx:716
 msgid "Set progress"
 msgstr "Nastavit průběh"
 
@@ -1392,7 +1393,7 @@ msgstr "Seřadit podle"
 msgid "Sort order"
 msgstr "Pořadí řazení"
 
-#: src/pages/Details.tsx:401
+#: src/pages/Details.tsx:412
 msgid "Source"
 msgstr "Zdroj"
 
@@ -1408,7 +1409,7 @@ msgstr "Statistiky"
 #: src/components/Facets/ActiveFacetChips.tsx:293
 #: src/components/Facets/StatusSection.tsx:116
 #: src/components/OrderBy.tsx:16
-#: src/pages/Details.tsx:290
+#: src/pages/Details.tsx:301
 msgid "Status"
 msgstr "Stav"
 
@@ -1443,7 +1444,7 @@ msgstr "Ke čtení"
 msgid "Topic"
 msgstr "Téma"
 
-#: src/pages/Details.tsx:254
+#: src/pages/Details.tsx:265
 msgid "Total runtime"
 msgstr "Celková stopáž"
 
@@ -1470,7 +1471,7 @@ msgstr "Neinicializováno"
 msgid "Unrated"
 msgstr "Bez hodnocení"
 
-#: src/pages/Details.tsx:391
+#: src/pages/Details.tsx:402
 msgid "Unseen episodes"
 msgstr "Neshlédnuté epizody"
 
@@ -1483,7 +1484,7 @@ msgstr "Počet neshlédnutých epizod"
 msgid "Upcoming"
 msgstr "Nadcházející"
 
-#: src/pages/Details.tsx:691
+#: src/pages/Details.tsx:702
 msgid "Update metadata"
 msgstr "Aktualizovat metadata"
 
@@ -1580,7 +1581,7 @@ msgstr "Kdy jste četli \"{0}\"?"
 msgid "When did you see \"{0}\"?"
 msgstr "Kdy jste viděli \"{0}\"?"
 
-#: src/pages/Details.tsx:125
+#: src/pages/Details.tsx:127
 msgid "Where to watch"
 msgstr "Kde sledovat"
 

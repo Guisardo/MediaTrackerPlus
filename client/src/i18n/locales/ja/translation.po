@@ -44,7 +44,7 @@ msgid "{0, plural, one {1 item} other {# items}}"
 msgstr "{0, plural, other {# 件}}"
 
 #. placeholder {0}: mediaItem.authors.length
-#: src/pages/Details.tsx:339
+#: src/pages/Details.tsx:350
 msgid "{0, plural, one {Author} other {Authors}}"
 msgstr "{0, plural, other {著者}}"
 
@@ -54,7 +54,7 @@ msgid "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {
 msgstr "{0, plural, one {「<0>{searchQuery}</0>」の検索で # 件見つかりました} other {「<1>{searchQuery}</1>」の検索で # 件見つかりました}}"
 
 #. placeholder {0}: mediaItem.genres.length
-#: src/pages/Details.tsx:299
+#: src/pages/Details.tsx:310
 msgid "{0, plural, one {Genre} other {Genres}}"
 msgstr "{0, plural, other {ジャンル}}"
 
@@ -64,36 +64,36 @@ msgid "{0, plural, one {Listed on 1 list} other {Listed on # lists}}"
 msgstr "{0, plural, other {# 件のリストに登録済み}}"
 
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:565
+#: src/pages/Details.tsx:576
 #: src/pages/SeenHistory.tsx:43
 msgid "{0, plural, one {Listened 1 time} other {Listened # times}}"
 msgstr "{0, plural, other {# 回聴きました}}"
 
 #. placeholder {0}: mediaItem.narrators.length
-#: src/pages/Details.tsx:353
+#: src/pages/Details.tsx:364
 msgid "{0, plural, one {Narrator} other {Narrators}}"
 msgstr "{0, plural, other {ナレーター}}"
 
 #. placeholder {0}: mediaItem.platform.length
-#: src/pages/Details.tsx:267
+#: src/pages/Details.tsx:278
 msgid "{0, plural, one {Platform} other {platforms}}"
 msgstr "{0, plural, other {プラットフォーム}}"
 
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:589
+#: src/pages/Details.tsx:600
 #: src/pages/SeenHistory.tsx:67
 msgid "{0, plural, one {Played 1 time} other {Played # times}}"
 msgstr "{0, plural, other {# 回プレイしました}}"
 
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:573
+#: src/pages/Details.tsx:584
 #: src/pages/SeenHistory.tsx:51
 msgid "{0, plural, one {Read 1 time} other {Read # times}}"
 msgstr "{0, plural, other {# 回読みました}}"
 
 #. placeholder {0}: episode.seenHistory.length
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:581
+#: src/pages/Details.tsx:592
 #: src/pages/SeasonsPage.tsx:87
 #: src/pages/SeenHistory.tsx:59
 msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
@@ -257,7 +257,7 @@ msgstr "読書履歴に追加"
 msgid "Add to seen history"
 msgstr "視聴履歴に追加"
 
-#: src/pages/Details.tsx:646
+#: src/pages/Details.tsx:657
 msgid "Add to watchlist"
 msgstr "ウォッチリストに追加"
 
@@ -504,11 +504,11 @@ msgid "Episode {0} {1}"
 msgstr "エピソード {0} {1}"
 
 #: src/components/ImportSummaryTable.tsx:93
-#: src/pages/Details.tsx:383
+#: src/pages/Details.tsx:394
 msgid "Episodes"
 msgstr "エピソード"
 
-#: src/pages/Details.tsx:449
+#: src/pages/Details.tsx:460
 msgid "Episodes page"
 msgstr "エピソードページ"
 
@@ -535,7 +535,7 @@ msgstr "グループの読み込みに失敗しました。削除された可能
 msgid "Filters"
 msgstr "フィルター"
 
-#: src/pages/Details.tsx:528
+#: src/pages/Details.tsx:539
 msgid "First unwatched episode"
 msgstr "最初の未視聴エピソード"
 
@@ -590,6 +590,7 @@ msgstr "未視聴エピソードのタイトルを非表示にする"
 
 #: src/components/Nav.tsx:36
 #: src/i18n/__tests__/i18n.test.ts:65
+#: src/i18n/__tests__/i18n.test.ts:111
 msgid "Home"
 msgstr "ホーム"
 
@@ -597,19 +598,19 @@ msgstr "ホーム"
 msgid "Http"
 msgstr "Http"
 
-#: src/pages/Details.tsx:471
+#: src/pages/Details.tsx:482
 msgid "I am listening it"
 msgstr "聴いています"
 
-#: src/pages/Details.tsx:472
+#: src/pages/Details.tsx:483
 msgid "I am playing it"
 msgstr "プレイしています"
 
-#: src/pages/Details.tsx:470
+#: src/pages/Details.tsx:481
 msgid "I am reading it"
 msgstr "読んでいます"
 
-#: src/pages/Details.tsx:469
+#: src/pages/Details.tsx:480
 msgid "I am watching it"
 msgstr "視聴しています"
 
@@ -618,19 +619,19 @@ msgstr "視聴しています"
 msgid "I do not remember"
 msgstr "覚えていません"
 
-#: src/pages/Details.tsx:492
+#: src/pages/Details.tsx:503
 msgid "I finished listening it"
 msgstr "聴き終えました"
 
-#: src/pages/Details.tsx:495
+#: src/pages/Details.tsx:506
 msgid "I finished playing it"
 msgstr "プレイし終えました"
 
-#: src/pages/Details.tsx:490
+#: src/pages/Details.tsx:501
 msgid "I finished reading it"
 msgstr "読み終えました"
 
-#: src/pages/Details.tsx:489
+#: src/pages/Details.tsx:500
 msgid "I finished watching it"
 msgstr "視聴し終えました"
 
@@ -681,7 +682,7 @@ msgstr "キー"
 
 #: src/components/Facets/ActiveFacetChips.tsx:235
 #: src/components/Facets/LanguageSection.tsx:95
-#: src/pages/Details.tsx:330
+#: src/pages/Details.tsx:341
 msgid "Language"
 msgstr "言語"
 
@@ -690,17 +691,17 @@ msgid "Last airing"
 msgstr "最終放送"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:537
+#: src/pages/Details.tsx:548
 msgid "Last listened at {0}"
 msgstr "{0}に最後に聴きました"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:555
+#: src/pages/Details.tsx:566
 msgid "Last played at {0}"
 msgstr "{0}に最後にプレイしました"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:543
+#: src/pages/Details.tsx:554
 msgid "Last read at {0}"
 msgstr "{0}に最後に読みました"
 
@@ -709,7 +710,7 @@ msgid "Last seen"
 msgstr "最終視聴"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:549
+#: src/pages/Details.tsx:560
 msgid "Last seen at {0}"
 msgstr "{0}に最後に視聴しました"
 
@@ -749,7 +750,7 @@ msgstr "聴取済み"
 msgid "Listened at {0}"
 msgstr "{0}に聴きました"
 
-#: src/pages/Details.tsx:597
+#: src/pages/Details.tsx:608
 msgid "Listened history"
 msgstr "聴取履歴"
 
@@ -761,7 +762,7 @@ msgstr "リスト"
 #: src/components/PaginatedGridItems.tsx:384
 #: src/components/SelectLastSeenEpisode.tsx:67
 #: src/pages/Calendar.tsx:61
-#: src/pages/Details.tsx:205
+#: src/pages/Details.tsx:208
 #: src/pages/EpisodePage.tsx:42
 #: src/pages/GroupDetailPage.tsx:285
 #: src/pages/GroupsPage.tsx:17
@@ -845,7 +846,7 @@ msgstr "自分の評価"
 msgid "Name"
 msgstr "名前"
 
-#: src/pages/Details.tsx:281
+#: src/pages/Details.tsx:292
 msgid "Network"
 msgstr "ネットワーク"
 
@@ -866,7 +867,7 @@ msgstr "新しいパスワード"
 msgid "Next airing"
 msgstr "次回放送"
 
-#: src/pages/Details.tsx:515
+#: src/pages/Details.tsx:526
 msgid "Next episode"
 msgstr "次のエピソード"
 
@@ -918,7 +919,7 @@ msgstr "今"
 msgid "Number of episodes"
 msgstr "エピソード数"
 
-#: src/pages/Details.tsx:366
+#: src/pages/Details.tsx:377
 msgid "Number of pages"
 msgstr "ページ数"
 
@@ -928,7 +929,7 @@ msgstr "ページ数"
 msgid "On watchlist"
 msgstr "ウォッチリストに登録済み"
 
-#: src/pages/Details.tsx:321
+#: src/pages/Details.tsx:332
 msgid "Overview"
 msgstr "概要"
 
@@ -966,7 +967,7 @@ msgstr "プレイ済み"
 msgid "Played at {0}"
 msgstr "{0}にプレイしました"
 
-#: src/pages/Details.tsx:605
+#: src/pages/Details.tsx:616
 msgid "Played history"
 msgstr "プレイ履歴"
 
@@ -989,7 +990,7 @@ msgid "Private"
 msgstr "非公開"
 
 #: src/components/OrderBy.tsx:22
-#: src/pages/Details.tsx:500
+#: src/pages/Details.tsx:511
 msgid "Progress"
 msgstr "進捗"
 
@@ -1074,7 +1075,7 @@ msgstr "読了"
 msgid "Read at {0}"
 msgstr "{0}に読みました"
 
-#: src/pages/Details.tsx:599
+#: src/pages/Details.tsx:610
 msgid "Read history"
 msgstr "読書履歴"
 
@@ -1131,7 +1132,7 @@ msgstr "リリース <0/>"
 
 #: src/components/OrderBy.tsx:15
 #: src/hooks/translations.ts:12
-#: src/pages/Details.tsx:232
+#: src/pages/Details.tsx:243
 #: src/pages/EpisodePage.tsx:80
 msgid "Release date"
 msgstr "リリース日"
@@ -1185,7 +1186,7 @@ msgstr "読書履歴から削除"
 msgid "Remove from seen history"
 msgstr "視聴履歴から削除"
 
-#: src/pages/Details.tsx:670
+#: src/pages/Details.tsx:681
 msgid "Remove from watchlist"
 msgstr "ウォッチリストから削除"
 
@@ -1197,7 +1198,7 @@ msgstr "シーズンを視聴履歴から削除"
 msgid "Remove token"
 msgstr "トークンを削除"
 
-#: src/pages/Details.tsx:65
+#: src/pages/Details.tsx:67
 msgid "Review by <0><1>{author}</1></0> at {date}"
 msgstr "<0><1>{author}</1></0> による {date} のレビュー"
 
@@ -1211,7 +1212,7 @@ msgid "RSS link"
 msgstr "RSSリンク"
 
 #: src/hooks/translations.ts:13
-#: src/pages/Details.tsx:243
+#: src/pages/Details.tsx:254
 #: src/pages/EpisodePage.tsx:71
 msgid "Runtime"
 msgstr "上映時間"
@@ -1274,7 +1275,7 @@ msgid "Season {0}"
 msgstr "シーズン {0}"
 
 #: src/components/ImportSummaryTable.tsx:92
-#: src/pages/Details.tsx:376
+#: src/pages/Details.tsx:387
 msgid "Seasons"
 msgstr "シーズン"
 
@@ -1287,7 +1288,7 @@ msgstr "視聴済み"
 msgid "Seen at {0}"
 msgstr "{0}に視聴"
 
-#: src/pages/Details.tsx:602
+#: src/pages/Details.tsx:613
 #: src/pages/import/TraktTv.tsx:191
 msgid "Seen history"
 msgstr "視聴履歴"
@@ -1358,7 +1359,7 @@ msgid "Set"
 msgstr "設定"
 
 #: src/components/SetProgress.tsx:61
-#: src/pages/Details.tsx:705
+#: src/pages/Details.tsx:716
 msgid "Set progress"
 msgstr "進捗を設定"
 
@@ -1392,7 +1393,7 @@ msgstr "並び替え"
 msgid "Sort order"
 msgstr "並び替え順"
 
-#: src/pages/Details.tsx:401
+#: src/pages/Details.tsx:412
 msgid "Source"
 msgstr "ソース"
 
@@ -1408,7 +1409,7 @@ msgstr "統計"
 #: src/components/Facets/ActiveFacetChips.tsx:293
 #: src/components/Facets/StatusSection.tsx:116
 #: src/components/OrderBy.tsx:16
-#: src/pages/Details.tsx:290
+#: src/pages/Details.tsx:301
 msgid "Status"
 msgstr "ステータス"
 
@@ -1443,7 +1444,7 @@ msgstr "読む予定"
 msgid "Topic"
 msgstr "トピック"
 
-#: src/pages/Details.tsx:254
+#: src/pages/Details.tsx:265
 msgid "Total runtime"
 msgstr "合計上映時間"
 
@@ -1470,7 +1471,7 @@ msgstr "未初期化"
 msgid "Unrated"
 msgstr "未評価"
 
-#: src/pages/Details.tsx:391
+#: src/pages/Details.tsx:402
 msgid "Unseen episodes"
 msgstr "未視聴エピソード"
 
@@ -1483,7 +1484,7 @@ msgstr "未視聴エピソード数"
 msgid "Upcoming"
 msgstr "近日公開"
 
-#: src/pages/Details.tsx:691
+#: src/pages/Details.tsx:702
 msgid "Update metadata"
 msgstr "メタデータを更新"
 
@@ -1580,7 +1581,7 @@ msgstr "\"{0}\" をいつ読みましたか？"
 msgid "When did you see \"{0}\"?"
 msgstr "\"{0}\" をいつ視聴しましたか？"
 
-#: src/pages/Details.tsx:125
+#: src/pages/Details.tsx:127
 msgid "Where to watch"
 msgstr "視聴場所"
 

@@ -44,7 +44,7 @@ msgid "{0, plural, one {1 item} other {# items}}"
 msgstr "{0, plural, one {1 element} few {# elemente} other {# elemente}}"
 
 #. placeholder {0}: mediaItem.authors.length
-#: src/pages/Details.tsx:339
+#: src/pages/Details.tsx:350
 msgid "{0, plural, one {Author} other {Authors}}"
 msgstr "{0, plural, one {Autor} few {Autori} other {Autori}}"
 
@@ -54,7 +54,7 @@ msgid "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {
 msgstr "{0, plural, one {# element găsit pentru interogarea \"<0>{searchQuery}</0>\"} other {# elemente găsite pentru interogarea \"<1>{searchQuery}</1>\"}}"
 
 #. placeholder {0}: mediaItem.genres.length
-#: src/pages/Details.tsx:299
+#: src/pages/Details.tsx:310
 msgid "{0, plural, one {Genre} other {Genres}}"
 msgstr "{0, plural, one {Gen} few {Genuri} other {Genuri}}"
 
@@ -64,36 +64,36 @@ msgid "{0, plural, one {Listed on 1 list} other {Listed on # lists}}"
 msgstr "{0, plural, one {Pe 1 listă} few {Pe # liste} other {Pe # liste}}"
 
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:565
+#: src/pages/Details.tsx:576
 #: src/pages/SeenHistory.tsx:43
 msgid "{0, plural, one {Listened 1 time} other {Listened # times}}"
 msgstr "{0, plural, one {Ascultat 1 dată} few {Ascultat de # ori} other {Ascultat de # ori}}"
 
 #. placeholder {0}: mediaItem.narrators.length
-#: src/pages/Details.tsx:353
+#: src/pages/Details.tsx:364
 msgid "{0, plural, one {Narrator} other {Narrators}}"
 msgstr "{0, plural, one {Narator} few {Naratori} other {Naratori}}"
 
 #. placeholder {0}: mediaItem.platform.length
-#: src/pages/Details.tsx:267
+#: src/pages/Details.tsx:278
 msgid "{0, plural, one {Platform} other {platforms}}"
 msgstr "{0, plural, one {Platformă} few {platforme} other {platforme}}"
 
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:589
+#: src/pages/Details.tsx:600
 #: src/pages/SeenHistory.tsx:67
 msgid "{0, plural, one {Played 1 time} other {Played # times}}"
 msgstr "{0, plural, one {Jucat 1 dată} few {Jucat de # ori} other {Jucat de # ori}}"
 
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:573
+#: src/pages/Details.tsx:584
 #: src/pages/SeenHistory.tsx:51
 msgid "{0, plural, one {Read 1 time} other {Read # times}}"
 msgstr "{0, plural, one {Citit 1 dată} few {Citit de # ori} other {Citit de # ori}}"
 
 #. placeholder {0}: episode.seenHistory.length
 #. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:581
+#: src/pages/Details.tsx:592
 #: src/pages/SeasonsPage.tsx:87
 #: src/pages/SeenHistory.tsx:59
 msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
@@ -257,7 +257,7 @@ msgstr "Adaugă la istoricul citit"
 msgid "Add to seen history"
 msgstr "Adaugă la istoricul vizionat"
 
-#: src/pages/Details.tsx:646
+#: src/pages/Details.tsx:657
 msgid "Add to watchlist"
 msgstr "Adaugă la lista de urmărire"
 
@@ -504,11 +504,11 @@ msgid "Episode {0} {1}"
 msgstr "Episodul {0} {1}"
 
 #: src/components/ImportSummaryTable.tsx:93
-#: src/pages/Details.tsx:383
+#: src/pages/Details.tsx:394
 msgid "Episodes"
 msgstr "Episoade"
 
-#: src/pages/Details.tsx:449
+#: src/pages/Details.tsx:460
 msgid "Episodes page"
 msgstr "Pagina episoade"
 
@@ -535,7 +535,7 @@ msgstr "Nu s-a putut încărca grupul. Poate că a fost șters."
 msgid "Filters"
 msgstr "Filtre"
 
-#: src/pages/Details.tsx:528
+#: src/pages/Details.tsx:539
 msgid "First unwatched episode"
 msgstr "Primul episod nevăzut"
 
@@ -590,6 +590,7 @@ msgstr "Ascunde titlul episoadelor nevăzute"
 
 #: src/components/Nav.tsx:36
 #: src/i18n/__tests__/i18n.test.ts:65
+#: src/i18n/__tests__/i18n.test.ts:111
 msgid "Home"
 msgstr "Acasă"
 
@@ -597,19 +598,19 @@ msgstr "Acasă"
 msgid "Http"
 msgstr "Http"
 
-#: src/pages/Details.tsx:471
+#: src/pages/Details.tsx:482
 msgid "I am listening it"
 msgstr "Îl ascult"
 
-#: src/pages/Details.tsx:472
+#: src/pages/Details.tsx:483
 msgid "I am playing it"
 msgstr "Îl joc"
 
-#: src/pages/Details.tsx:470
+#: src/pages/Details.tsx:481
 msgid "I am reading it"
 msgstr "Îl citesc"
 
-#: src/pages/Details.tsx:469
+#: src/pages/Details.tsx:480
 msgid "I am watching it"
 msgstr "Îl vizionez"
 
@@ -618,19 +619,19 @@ msgstr "Îl vizionez"
 msgid "I do not remember"
 msgstr "Nu îmi amintesc"
 
-#: src/pages/Details.tsx:492
+#: src/pages/Details.tsx:503
 msgid "I finished listening it"
 msgstr "Am terminat de ascultat"
 
-#: src/pages/Details.tsx:495
+#: src/pages/Details.tsx:506
 msgid "I finished playing it"
 msgstr "Am terminat de jucat"
 
-#: src/pages/Details.tsx:490
+#: src/pages/Details.tsx:501
 msgid "I finished reading it"
 msgstr "Am terminat de citit"
 
-#: src/pages/Details.tsx:489
+#: src/pages/Details.tsx:500
 msgid "I finished watching it"
 msgstr "Am terminat de vizionat"
 
@@ -681,7 +682,7 @@ msgstr "Cheie"
 
 #: src/components/Facets/ActiveFacetChips.tsx:235
 #: src/components/Facets/LanguageSection.tsx:95
-#: src/pages/Details.tsx:330
+#: src/pages/Details.tsx:341
 msgid "Language"
 msgstr "Limbă"
 
@@ -690,17 +691,17 @@ msgid "Last airing"
 msgstr "Ultima difuzare"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:537
+#: src/pages/Details.tsx:548
 msgid "Last listened at {0}"
 msgstr "Ultima dată ascultat la {0}"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:555
+#: src/pages/Details.tsx:566
 msgid "Last played at {0}"
 msgstr "Ultima dată jucat la {0}"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:543
+#: src/pages/Details.tsx:554
 msgid "Last read at {0}"
 msgstr "Ultima dată citit la {0}"
 
@@ -709,7 +710,7 @@ msgid "Last seen"
 msgstr "Ultima vizionare"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:549
+#: src/pages/Details.tsx:560
 msgid "Last seen at {0}"
 msgstr "Ultima dată văzut la {0}"
 
@@ -749,7 +750,7 @@ msgstr "Ascultat"
 msgid "Listened at {0}"
 msgstr "Ascultat la {0}"
 
-#: src/pages/Details.tsx:597
+#: src/pages/Details.tsx:608
 msgid "Listened history"
 msgstr "Istoric ascultat"
 
@@ -761,7 +762,7 @@ msgstr "Liste"
 #: src/components/PaginatedGridItems.tsx:384
 #: src/components/SelectLastSeenEpisode.tsx:67
 #: src/pages/Calendar.tsx:61
-#: src/pages/Details.tsx:205
+#: src/pages/Details.tsx:208
 #: src/pages/EpisodePage.tsx:42
 #: src/pages/GroupDetailPage.tsx:285
 #: src/pages/GroupsPage.tsx:17
@@ -845,7 +846,7 @@ msgstr "Evaluarea mea"
 msgid "Name"
 msgstr "Nume"
 
-#: src/pages/Details.tsx:281
+#: src/pages/Details.tsx:292
 msgid "Network"
 msgstr "Rețea"
 
@@ -866,7 +867,7 @@ msgstr "Parolă nouă"
 msgid "Next airing"
 msgstr "Difuzare următoare"
 
-#: src/pages/Details.tsx:515
+#: src/pages/Details.tsx:526
 msgid "Next episode"
 msgstr "Episodul următor"
 
@@ -918,7 +919,7 @@ msgstr "Acum"
 msgid "Number of episodes"
 msgstr "Număr de episoade"
 
-#: src/pages/Details.tsx:366
+#: src/pages/Details.tsx:377
 msgid "Number of pages"
 msgstr "Număr de pagini"
 
@@ -928,7 +929,7 @@ msgstr "Număr de pagini"
 msgid "On watchlist"
 msgstr "Pe lista de urmărire"
 
-#: src/pages/Details.tsx:321
+#: src/pages/Details.tsx:332
 msgid "Overview"
 msgstr "Prezentare generală"
 
@@ -966,7 +967,7 @@ msgstr "Jucat"
 msgid "Played at {0}"
 msgstr "Jucat la {0}"
 
-#: src/pages/Details.tsx:605
+#: src/pages/Details.tsx:616
 msgid "Played history"
 msgstr "Istoric jucat"
 
@@ -989,7 +990,7 @@ msgid "Private"
 msgstr "Privat"
 
 #: src/components/OrderBy.tsx:22
-#: src/pages/Details.tsx:500
+#: src/pages/Details.tsx:511
 msgid "Progress"
 msgstr "Progres"
 
@@ -1074,7 +1075,7 @@ msgstr "Citit"
 msgid "Read at {0}"
 msgstr "Citit la {0}"
 
-#: src/pages/Details.tsx:599
+#: src/pages/Details.tsx:610
 msgid "Read history"
 msgstr "Istoric citit"
 
@@ -1131,7 +1132,7 @@ msgstr "Lansare <0/>"
 
 #: src/components/OrderBy.tsx:15
 #: src/hooks/translations.ts:12
-#: src/pages/Details.tsx:232
+#: src/pages/Details.tsx:243
 #: src/pages/EpisodePage.tsx:80
 msgid "Release date"
 msgstr "Data lansării"
@@ -1185,7 +1186,7 @@ msgstr "Eliminați din istoricul citit"
 msgid "Remove from seen history"
 msgstr "Eliminați din istoricul vizionat"
 
-#: src/pages/Details.tsx:670
+#: src/pages/Details.tsx:681
 msgid "Remove from watchlist"
 msgstr "Eliminați din lista de urmărire"
 
@@ -1197,7 +1198,7 @@ msgstr "Eliminați sezonul din istoricul vizionat"
 msgid "Remove token"
 msgstr "Eliminați tokenul"
 
-#: src/pages/Details.tsx:65
+#: src/pages/Details.tsx:67
 msgid "Review by <0><1>{author}</1></0> at {date}"
 msgstr "Recenzie de <0><1>{author}</1></0> la {date}"
 
@@ -1211,7 +1212,7 @@ msgid "RSS link"
 msgstr "Link RSS"
 
 #: src/hooks/translations.ts:13
-#: src/pages/Details.tsx:243
+#: src/pages/Details.tsx:254
 #: src/pages/EpisodePage.tsx:71
 msgid "Runtime"
 msgstr "Durată"
@@ -1274,7 +1275,7 @@ msgid "Season {0}"
 msgstr "Sezonul {0}"
 
 #: src/components/ImportSummaryTable.tsx:92
-#: src/pages/Details.tsx:376
+#: src/pages/Details.tsx:387
 msgid "Seasons"
 msgstr "Sezoane"
 
@@ -1287,7 +1288,7 @@ msgstr "Văzut"
 msgid "Seen at {0}"
 msgstr "Văzut la {0}"
 
-#: src/pages/Details.tsx:602
+#: src/pages/Details.tsx:613
 #: src/pages/import/TraktTv.tsx:191
 msgid "Seen history"
 msgstr "Istoric vizionat"
@@ -1358,7 +1359,7 @@ msgid "Set"
 msgstr "Setați"
 
 #: src/components/SetProgress.tsx:61
-#: src/pages/Details.tsx:705
+#: src/pages/Details.tsx:716
 msgid "Set progress"
 msgstr "Setați progresul"
 
@@ -1392,7 +1393,7 @@ msgstr "Sortare după"
 msgid "Sort order"
 msgstr "Ordine sortare"
 
-#: src/pages/Details.tsx:401
+#: src/pages/Details.tsx:412
 msgid "Source"
 msgstr "Sursă"
 
@@ -1408,7 +1409,7 @@ msgstr "Statistici"
 #: src/components/Facets/ActiveFacetChips.tsx:293
 #: src/components/Facets/StatusSection.tsx:116
 #: src/components/OrderBy.tsx:16
-#: src/pages/Details.tsx:290
+#: src/pages/Details.tsx:301
 msgid "Status"
 msgstr "Stare"
 
@@ -1443,7 +1444,7 @@ msgstr "De citit"
 msgid "Topic"
 msgstr "Subiect"
 
-#: src/pages/Details.tsx:254
+#: src/pages/Details.tsx:265
 msgid "Total runtime"
 msgstr "Durată totală"
 
@@ -1470,7 +1471,7 @@ msgstr "Neinițializat"
 msgid "Unrated"
 msgstr "Neevaluat"
 
-#: src/pages/Details.tsx:391
+#: src/pages/Details.tsx:402
 msgid "Unseen episodes"
 msgstr "Episoade nevăzute"
 
@@ -1483,7 +1484,7 @@ msgstr "Număr episoade nevăzute"
 msgid "Upcoming"
 msgstr "Viitoare"
 
-#: src/pages/Details.tsx:691
+#: src/pages/Details.tsx:702
 msgid "Update metadata"
 msgstr "Actualizați metadatele"
 
@@ -1580,7 +1581,7 @@ msgstr "Când ai citit \"{0}\"?"
 msgid "When did you see \"{0}\"?"
 msgstr "Când ai văzut \"{0}\"?"
 
-#: src/pages/Details.tsx:125
+#: src/pages/Details.tsx:127
 msgid "Where to watch"
 msgstr "Unde să vizionați"
 

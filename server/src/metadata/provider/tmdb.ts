@@ -167,6 +167,33 @@ export class TMDbMovie extends TMDb {
     return this.fetchTmdbSimilar(ids.tmdbId, 'movie');
   }
 
+  async localizedDetails(
+    ids: ExternalIds,
+    language: string
+  ): Promise<MediaItemForProvider> {
+    const res = await axios.get<TMDbApi.MovieDetailsResponse>(
+      `https://api.themoviedb.org/3/movie/${ids.tmdbId}`,
+      {
+        params: {
+          api_key: TMDB_API_KEY,
+          language: language,
+        },
+      }
+    );
+
+    const movie = this.mapMovie(res.data);
+
+    // Localized details must NOT set originalTitle — preserve base details() responsibility
+    delete movie.originalTitle;
+
+    // Convert empty strings to null
+    if (movie.title === '') movie.title = null;
+    if (movie.overview === '') movie.overview = null;
+    if (movie.genres != null && movie.genres.length === 0) movie.genres = null;
+
+    return movie;
+  }
+
   async findByImdbId(imdbId: string): Promise<MediaItemForProvider> {
     const res = await axios.get(`https://api.themoviedb.org/3/find/${imdbId}`, {
       params: {
@@ -265,6 +292,75 @@ export class TMDbTv extends TMDb {
     );
 
     tvShow.needsDetails = false;
+
+    return tvShow;
+  }
+
+  async localizedDetails(
+    ids: ExternalIds,
+    language: string
+  ): Promise<MediaItemForProvider> {
+    const res = await axios.get<TMDbApi.TvDetailsResponse>(
+      `https://api.themoviedb.org/3/tv/${ids.tmdbId}`,
+      {
+        params: {
+          api_key: TMDB_API_KEY,
+          language: language,
+        },
+      }
+    );
+
+    const tvShow = this.mapTvShow(res.data);
+
+    await Promise.all(
+      tvShow.seasons?.map(async (season) => {
+        try {
+          const seasonRes = await axios.get<TMDbApi.SeasonDetailsResponse>(
+            `https://api.themoviedb.org/3/tv/${ids.tmdbId}/season/${season.seasonNumber}`,
+            {
+              params: {
+                api_key: TMDB_API_KEY,
+                language: language,
+              },
+            }
+          );
+
+          season.episodes =
+            seasonRes.data.episodes?.map((item) => this.mapEpisode(item)) || [];
+        } catch (error) {
+          logger.error(
+            `TMDbTv.localizedDetails: failed to fetch season ${season.seasonNumber} for tmdbId ${ids.tmdbId} in language ${language}: ${error}`,
+            { err: error }
+          );
+          season.episodes = [];
+        }
+
+        return season;
+      }) || []
+    );
+
+    // Localized details must NOT set originalTitle — preserve base details() responsibility
+    delete tvShow.originalTitle;
+
+    // Convert empty strings to null for title, overview, and genres
+    if (tvShow.title === '') tvShow.title = null;
+    if (tvShow.overview === '') tvShow.overview = null;
+    if (tvShow.genres != null && tvShow.genres.length === 0) tvShow.genres = null;
+
+    // Convert empty strings to null for season and episode fields
+    if (tvShow.seasons) {
+      for (const season of tvShow.seasons) {
+        if (season.title === '') season.title = null;
+        if (season.description === '') season.description = null;
+
+        if (season.episodes) {
+          for (const episode of season.episodes) {
+            if (episode.title === '') episode.title = null;
+            if (episode.description === '') episode.description = null;
+          }
+        }
+      }
+    }
 
     return tvShow;
   }

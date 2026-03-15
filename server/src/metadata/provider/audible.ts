@@ -5,6 +5,8 @@ import { MediaItemForProvider, ExternalIds } from 'src/entity/mediaItem';
 import { MetadataProvider } from 'src/metadata/metadataProvider';
 import { GlobalConfiguration } from 'src/repository/globalSettings';
 import { normalizeCreatorField } from 'src/utils/normalizeCreators';
+import { getAudibleLangMap, toTmdbLang } from 'src/metadataLanguages';
+import { logger } from 'src/logger';
 
 export class Audible extends MetadataProvider {
   readonly name = 'audible';
@@ -115,6 +117,52 @@ export class Audible extends MetadataProvider {
           res.config.url
         }. Response: ${JSON.stringify(res.data, null, 2)}`
       );
+    }
+
+    return this.mapResponse(res.data.product, countryCode);
+  }
+
+  async localizedDetails(
+    ids: ExternalIds,
+    language: string
+  ): Promise<MediaItemForProvider> {
+    const { audibleId } = ids;
+
+    if (!audibleId) {
+      logger.warn(
+        `Audible.localizedDetails: no audibleId provided for language '${language}' — returning null`
+      );
+      return null;
+    }
+
+    // Extract the base ISO 639-1 code from the BCP 47 tag (e.g., 'es-419' -> 'es')
+    const baseLang = toTmdbLang(language);
+    const langMap = getAudibleLangMap();
+    const countryCode = langMap.get(baseLang) as AudibleCountryCode | undefined;
+
+    if (!countryCode) {
+      logger.debug(
+        `Audible.localizedDetails: no Audible domain mapping for language '${language}' (base: '${baseLang}') — skipping`
+      );
+      return null;
+    }
+
+    const res = await axios.get<AudibleResponse.DetailsResult>(
+      `https://api.audible.${this.domain(countryCode)}/1.0/catalog/products/${audibleId}`,
+      {
+        params: this.queryParams,
+      }
+    );
+
+    if (res.status !== 200) {
+      throw new Error(`Audible.localizedDetails: HTTP ${res.status} for audibleId=${audibleId} language=${language}`);
+    }
+
+    if (res.data?.product?.title === undefined) {
+      logger.debug(
+        `Audible.localizedDetails: no product data for audibleId=${audibleId} language=${language}`
+      );
+      return null;
     }
 
     return this.mapResponse(res.data.product, countryCode);
