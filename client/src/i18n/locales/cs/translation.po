@@ -590,6 +590,7 @@ msgstr "Skrýt název neshlédnutých epizod"
 
 #: src/components/Nav.tsx:36
 #: src/i18n/__tests__/i18n.test.ts:65
+#: src/i18n/__tests__/i18n.test.ts:111
 msgid "Home"
 msgstr "Domů"
 
