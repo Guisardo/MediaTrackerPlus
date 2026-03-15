@@ -7,6 +7,26 @@ import { InitialData } from '__tests__/__utils__/data';
 // exercise DROP TABLE (migrate.down) must never touch the shared database.
 let knex: Knex;
 
+const expectUniqueIndex = async (
+  database: Knex,
+  tableName: string,
+  expectedColumns: string[]
+) => {
+  const indexes = await database.raw(`PRAGMA index_list('${tableName}');`);
+  const uniqueIndexes = indexes.filter(
+    (index: { unique: number }) => index.unique === 1
+  );
+
+  const uniqueIndexColumns = await Promise.all(
+    uniqueIndexes.map(async (index: { name: string }) => {
+      const columns = await database.raw(`PRAGMA index_info('${index.name}');`);
+      return columns.map((column: { name: string }) => column.name);
+    })
+  );
+
+  expect(uniqueIndexColumns).toContainEqual(expectedColumns);
+};
+
 describe('translationTables migration', () => {
   beforeAll(async () => {
     knex = knexLib({
@@ -280,26 +300,10 @@ describe('translationTables migration', () => {
     expect(hasEpisodeTranslation).toBe(true);
   });
 
-  test('unique constraint on (mediaItemId, language) is enforced', async () => {
-    const mediaItemId = InitialData.mediaItem.id;
-
-    // Clean up any leftover rows from prior tests in this suite
-    await knex('mediaItemTranslation').where({ mediaItemId, language: 'es' }).del();
-
-    // Insert first translation
-    await knex('mediaItemTranslation').insert({
-      mediaItemId,
-      language: 'es',
-      title: 'Spanish Title',
-    });
-
-    // Attempt to insert duplicate (should fail without onConflict merge)
-    await expect(
-      knex('mediaItemTranslation').insert({
-        mediaItemId,
-        language: 'es',
-        title: 'Duplicate',
-      })
-    ).rejects.toThrow();
+  test('unique index on (mediaItemId, language) exists', async () => {
+    await expectUniqueIndex(knex, 'mediaItemTranslation', [
+      'mediaItemId',
+      'language',
+    ]);
   });
 });

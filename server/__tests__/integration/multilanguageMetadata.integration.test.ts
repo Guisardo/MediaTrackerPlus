@@ -72,6 +72,24 @@ const mockConfig = Config as unknown as {
 const originalMetadataLanguages = Config.METADATA_LANGUAGES;
 const originalAudibleLangMap = Config.AUDIBLE_LANG_MAP;
 
+const expectUniqueIndex = async (tableName: string, expectedColumns: string[]) => {
+  const indexes = await Database.knex.raw(`PRAGMA index_list('${tableName}');`);
+  const uniqueIndexes = indexes.filter(
+    (index: { unique: number }) => index.unique === 1
+  );
+
+  const uniqueIndexColumns = await Promise.all(
+    uniqueIndexes.map(async (index: { name: string }) => {
+      const columns = await Database.knex.raw(
+        `PRAGMA index_info('${index.name}');`
+      );
+      return columns.map((column: { name: string }) => column.name);
+    })
+  );
+
+  expect(uniqueIndexColumns).toContainEqual(expectedColumns);
+};
+
 // ==========================================================================
 // Single outer describe for shared DB lifecycle
 // ==========================================================================
@@ -236,30 +254,11 @@ describe('Multi-Language Metadata Integration Tests', () => {
       expect(remaining?.cnt).toBe(0);
     });
 
-    test('unique constraint prevents duplicate (mediaItemId, language) pairs', async () => {
-      await Database.knex('mediaItem').insert({
-        id: 9902,
-        title: 'Unique Test',
-        source: 'user',
-        lastTimeUpdated: Date.now(),
-      });
-
-      await Database.knex('mediaItemTranslation').insert({
-        mediaItemId: 9902,
-        language: 'fr',
-        title: 'French Title',
-      });
-
-      await expect(
-        Database.knex('mediaItemTranslation').insert({
-          mediaItemId: 9902,
-          language: 'fr',
-          title: 'Duplicate',
-        })
-      ).rejects.toThrow();
-
-      // Clean up
-      await Database.knex('mediaItem').where({ id: 9902 }).delete();
+    test('unique index prevents duplicate (mediaItemId, language) pairs', async () => {
+      await expectUniqueIndex('mediaItemTranslation', [
+        'mediaItemId',
+        'language',
+      ]);
     });
   });
 
