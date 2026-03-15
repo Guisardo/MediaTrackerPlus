@@ -20,6 +20,16 @@ npm run build
 npm run start
 ```
 
+## Local development
+
+```bash
+npm install
+npm run dev
+```
+
+This starts the Vite client on `http://localhost:7000` with a `0.0.0.0` bind address, and the API server on port `7481` bound to `0.0.0.0`.
+Changes under `client/` refresh in the browser automatically, and changes under `server/` rebuild and restart the local API without manually stopping the process.
+
 ## With docker
 
 ## Version Tags
