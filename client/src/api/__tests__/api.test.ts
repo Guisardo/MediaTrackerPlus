@@ -273,7 +273,6 @@ describe('ClientApiFetchLogger', () => {
             {
               method: 'POST',
               headers: {
-                'Accept-Language': 'en',
                 Authorization: '[redacted]',
                 'Content-Type': 'application/json',
               },
@@ -374,7 +373,6 @@ describe('ClientApiFetchLogger', () => {
   });
 });
 
-<<<<<<< HEAD
 // ---------------------------------------------------------------------------
 // Accept-Language Header Injection
 // ---------------------------------------------------------------------------
