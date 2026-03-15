@@ -6,8 +6,6 @@
  * `new MediaTracker(...)` call in api.ts does not trigger real network behaviour.
  */
 
-import { FetchError, MediaTrackerError, unwrapError, errorHandler } from '../api';
-
 // ---------------------------------------------------------------------------
 // Module-level mocks – prevents real network behaviour
 // ---------------------------------------------------------------------------
@@ -20,6 +18,22 @@ jest.mock('mediatracker-api', () => {
     Api: jest.fn().mockImplementation(() => ({})),
   };
 }, { virtual: true });
+
+let clientApiFetchLogger: typeof import('../api').clientApiFetchLogger;
+let FetchError: typeof import('../api').FetchError;
+let MediaTrackerError: typeof import('../api').MediaTrackerError;
+let unwrapError: typeof import('../api').unwrapError;
+let errorHandler: typeof import('../api').errorHandler;
+
+beforeAll(() => {
+  ({
+    clientApiFetchLogger,
+    FetchError,
+    MediaTrackerError,
+    unwrapError,
+    errorHandler,
+  } = require('../api'));
+});
 
 // ---------------------------------------------------------------------------
 // FetchError
@@ -214,8 +228,181 @@ describe('errorHandler', () => {
   });
 });
 
+describe('ClientApiFetchLogger', () => {
+  const originalNodeEnv = process.env.NODE_ENV;
+  const originalFetch = global.fetch;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    process.env.NODE_ENV = 'development';
+  });
+
+  afterAll(() => {
+    process.env.NODE_ENV = originalNodeEnv;
+    global.fetch = originalFetch;
+  });
+
+  it('logs sanitized fetch start and completion in development', async () => {
+    const debugSpy = jest.spyOn(console, 'debug').mockImplementation(jest.fn());
+    const response = {
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+    } as Response;
+
+    global.fetch = jest.fn().mockResolvedValue(response);
+
+    await clientApiFetchLogger.execute('/api/user', {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer secret',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username: 'demo' }),
+    });
+
+    expect(debugSpy).toHaveBeenNthCalledWith(
+      1,
+      '[MediaTracker] client.api.fetch started',
+      expect.objectContaining({
+        args: {
+          type: 'array',
+          length: 2,
+          sample: [
+            '/api/user',
+            {
+              method: 'POST',
+              headers: {
+                Authorization: '[redacted]',
+                'Content-Type': 'application/json',
+              },
+              body: '[redacted]',
+            },
+          ],
+        },
+      })
+    );
+    expect(debugSpy).toHaveBeenNthCalledWith(
+      2,
+      '[MediaTracker] client.api.fetch completed',
+      expect.objectContaining({
+        result: {
+          ok: true,
+          status: 200,
+          statusText: 'OK',
+        },
+      })
+    );
+  });
+
+  it('logs failures and rethrows fetch errors in development', async () => {
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation(jest.fn());
+    const response = {
+      ok: false,
+      status: 401,
+      statusText: 'Unauthorized',
+      text: jest.fn().mockResolvedValue('denied'),
+    } as unknown as Response;
+
+    global.fetch = jest.fn().mockResolvedValue(response);
+
+    await expect(clientApiFetchLogger.execute('/api/user')).rejects.toThrow(
+      FetchError
+    );
+
+    expect(errorSpy).toHaveBeenCalledWith(
+      '[MediaTracker] client.api.fetch failed',
+      expect.objectContaining({
+        error: expect.objectContaining({
+          name: 'FetchError',
+        }),
+      })
+    );
+  });
+
+  it('redacts serialized credential payloads from the logged request body', async () => {
+    const debugSpy = jest.spyOn(console, 'debug').mockImplementation(jest.fn());
+    const response = {
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+    } as Response;
+
+    global.fetch = jest.fn().mockResolvedValue(response);
+
+    await clientApiFetchLogger.execute('/api/user/login', {
+      method: 'POST',
+      body: JSON.stringify({
+        username: 'demo',
+        password: 'super-secret',
+      }),
+    });
+
+    expect(debugSpy).toHaveBeenCalledWith(
+      '[MediaTracker] client.api.fetch started',
+      expect.objectContaining({
+        args: {
+          type: 'array',
+          length: 2,
+          sample: [
+            '/api/user/login',
+            expect.objectContaining({
+              body: '[redacted]',
+            }),
+          ],
+        },
+      })
+    );
+  });
+
+  it('redacts sensitive query parameters from logged request URLs', async () => {
+    const debugSpy = jest.spyOn(console, 'debug').mockImplementation(jest.fn());
+    const response = {
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+    } as Response;
+
+    global.fetch = jest.fn().mockResolvedValue(response);
+
+    await clientApiFetchLogger.execute(
+      '/api/oauth/callback?code=top-secret&token=abc123&state=ok'
+    );
+
+    expect(debugSpy).toHaveBeenCalledWith(
+      '[MediaTracker] client.api.fetch started',
+      expect.objectContaining({
+        args: {
+          type: 'array',
+          length: 1,
+          sample: [
+            '/api/oauth/callback?code=%5Bredacted%5D&token=%5Bredacted%5D&state=ok',
+          ],
+        },
+      })
+    );
+  });
+
+  it('does not log in production mode', async () => {
+    process.env.NODE_ENV = 'production';
+
+    const debugSpy = jest.spyOn(console, 'debug').mockImplementation(jest.fn());
+    const response = {
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+    } as Response;
+
+    global.fetch = jest.fn().mockResolvedValue(response);
+
+    await clientApiFetchLogger.execute('/api/items');
+
+    expect(debugSpy).not.toHaveBeenCalled();
+  });
+});
+
 // ---------------------------------------------------------------------------
-// Accept-Language Header Injection (customFetch)
+// Accept-Language Header Injection
 // ---------------------------------------------------------------------------
 
 describe('customFetch Accept-Language header injection', () => {
@@ -230,56 +417,45 @@ describe('customFetch Accept-Language header injection', () => {
   });
 
   it('injects Accept-Language header with current i18n.locale', async () => {
-    // Mock fetch to capture the request
     const mockFetch = jest.fn().mockResolvedValue({
       ok: true,
+      status: 200,
+      statusText: 'OK',
       text: jest.fn().mockResolvedValue(''),
     });
     global.fetch = mockFetch;
 
-    // Import fresh to get the mocked i18n
-    jest.isolateModules(() => {
-      jest.doMock('@lingui/core', () => ({
-        i18n: { locale: 'en' },
-      }));
+    await clientApiFetchLogger.execute('http://api.example.com/test', {});
 
-      const apiModule = require('../api');
-      const customFetch = apiModule.mediaTrackerApi.config?.customFetch;
-
-      if (customFetch) {
-        customFetch('http://api.example.com/test', {});
-      }
-    });
-
-    // Verify that fetch was called with Accept-Language header
-    if (mockFetch.mock.calls.length > 0) {
-      const callArgs = mockFetch.mock.calls[0];
-      const headers = callArgs[1]?.headers as Headers;
-      expect(headers?.get?.('Accept-Language')).toBe('en');
-    }
+    const callArgs = mockFetch.mock.calls[0];
+    const headers = callArgs[1]?.headers as Headers;
+    expect(headers?.get?.('Accept-Language')).toBe('en');
   });
 
   it('preserves existing headers while adding Accept-Language', async () => {
-    const mockResponse = {
+    const mockFetch = jest.fn().mockResolvedValue({
       ok: true,
+      status: 200,
+      statusText: 'OK',
       text: jest.fn().mockResolvedValue(''),
-    };
-    global.fetch = jest.fn().mockResolvedValue(mockResponse);
+    });
+    global.fetch = mockFetch;
 
-    // Test that when init already has headers, they're preserved
-    // We can't directly test the customFetch since it's initialized at module load time
-    // but we can verify the logic by testing the Header merge behavior
-    const headers = new Headers({ 'Content-Type': 'application/json' });
-    headers.set('Accept-Language', 'en');
+    await clientApiFetchLogger.execute('http://api.example.com/test', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
+    const callArgs = mockFetch.mock.calls[0];
+    const headers = callArgs[1]?.headers as Headers;
     expect(headers.get('Content-Type')).toBe('application/json');
     expect(headers.get('Accept-Language')).toBe('en');
   });
 
-  it('sets Accept-Language header dynamically from i18n.locale', async () => {
-    // This test verifies that the header is set from the current i18n.locale value
-    // by testing the mock that was set up in beforeAll
-    const i18n = jest.requireMock('@lingui/core').i18n;
-    expect(i18n.locale).toBe('en');
+  it('sets Accept-Language header dynamically from i18n.locale', () => {
+    const lingui = jest.requireMock('@lingui/core').i18n;
+    expect(lingui.locale).toBe('en');
   });
 });
+export {};

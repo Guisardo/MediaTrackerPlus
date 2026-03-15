@@ -11,6 +11,7 @@ import passport from 'passport';
 import { Config } from 'src/config';
 import { logger } from 'src/logger';
 import { httpLogMiddleware } from 'src/middlewares/httpLogMiddleware';
+import { requestDebugMiddleware } from 'src/middlewares/requestDebugMiddleware';
 import { AccessTokenMiddleware } from 'src/middlewares/token';
 import { configurationRepository } from 'src/repository/globalSettings';
 import { sessionKeyRepository } from 'src/repository/sessionKey';
@@ -74,6 +75,7 @@ export class Server {
 
     this.#app.use(cookieParser());
     this.#app.use(express.json());
+    this.#app.use(requestDebugMiddleware);
 
     this.#app.use(passport.initialize());
     this.#app.use(passport.session());
