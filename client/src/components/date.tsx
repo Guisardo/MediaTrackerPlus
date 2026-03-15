@@ -3,6 +3,16 @@ import { useLingui } from '@lingui/react';
 import { formatDistance, formatDuration, intervalToDuration } from 'date-fns';
 import * as locale from 'date-fns/locale';
 
+const resolveDateFnsLocale = (localeCode: string) => {
+  const baseLocale = localeCode.toLowerCase().split('-')[0];
+
+  return (
+    locale[localeCode as keyof typeof locale] ||
+    locale[baseLocale as keyof typeof locale] ||
+    locale.enUS
+  );
+};
+
 export const RelativeTime: FunctionComponent<{ to: Date }> = (props) => {
   const { to } = props;
   const lingui = useLingui();
@@ -10,7 +20,7 @@ export const RelativeTime: FunctionComponent<{ to: Date }> = (props) => {
   return (
     <>
       {formatDistance(to, new Date(), {
-        locale: locale[lingui.i18n.locale],
+        locale: resolveDateFnsLocale(lingui.i18n.locale),
         addSuffix: true,
       })}
     </>
@@ -32,7 +42,7 @@ export const FormatDuration: FunctionComponent<{ milliseconds: number }> = (
         }),
         {
           delimiter: ', ',
-          locale: locale[lingui.i18n.locale],
+          locale: resolveDateFnsLocale(lingui.i18n.locale),
         }
       )}
     </>

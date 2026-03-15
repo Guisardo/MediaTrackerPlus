@@ -3,7 +3,7 @@
  *
  * Validates:
  *  - setupI18n() activates a supported locale
- *  - All 28 locale catalogs are loaded into the i18n instance
+ *  - All 29 locale catalogs are loaded into the i18n instance
  *  - Hashed message IDs (Lingui v5 compiled format) resolve correctly
  *  - Intl.PluralRules is used natively (no make-plural dependency)
  *  - i18n._() works with the { id, message } descriptor shape
@@ -12,14 +12,14 @@
 import { i18n } from '@lingui/core';
 
 // Import the function under test
-import { setupI18n } from 'src/i18n/i18n';
+import { resolveSupportedLocale, setupI18n } from 'src/i18n/i18n';
 
 // The English compiled catalog (hashed IDs → translated arrays)
 import { messages as enMessages } from 'src/i18n/locales/en/translation';
 
 const SUPPORTED_LOCALES = [
   'af', 'ar', 'ca', 'cs', 'da', 'de', 'el', 'en',
-  'es', 'fi', 'fr', 'he', 'hu', 'it', 'ja', 'ko',
+  'es', 'es-419', 'fi', 'fr', 'he', 'hu', 'it', 'ja', 'ko',
   'nl', 'no', 'pl', 'pt', 'ro', 'ru', 'sr', 'sv',
   'tr', 'uk', 'vi', 'zh',
 ] as const;
@@ -37,7 +37,7 @@ describe('setupI18n', () => {
   });
 
   it('loads message catalogs for all 28 supported locales', () => {
-    // After setupI18n(), i18n._locales should include all 28 locales.
+    // After setupI18n(), i18n._locales should include all 29 locales.
     // We verify by temporarily activating each locale — if activation
     // throws or returns undefined, the catalog was not loaded.
     for (const locale of SUPPORTED_LOCALES) {
@@ -105,10 +105,27 @@ describe('setupI18n', () => {
     expect(result).not.toContain('items');
   });
 
+  it('loads an es-419 catalog without stripping the region tag', () => {
+    i18n.activate(resolveSupportedLocale('es-419'));
+    expect(i18n.locale).toBe('es-419');
+    expect(i18n._({ id: 'i0qMbr', message: 'Home' })).toBeTruthy();
+  });
+
   it('falls back to English when an unknown locale is detected', () => {
-    // In jsdom, navigator.language is typically undefined or "en",
-    // which means the fallback should be 'en'. Re-run setup and confirm.
-    setupI18n();
-    expect(i18n.locale).toBe('en');
+    expect(resolveSupportedLocale('zz-ZZ')).toBe('en');
+  });
+});
+
+describe('resolveSupportedLocale', () => {
+  it('returns exact supported regional locales', () => {
+    expect(resolveSupportedLocale('es-419')).toBe('es-419');
+  });
+
+  it('falls back to the base locale for unsupported regions', () => {
+    expect(resolveSupportedLocale('es-AR')).toBe('es');
+  });
+
+  it('falls back to English for unknown locales', () => {
+    expect(resolveSupportedLocale('zz-ZZ')).toBe('en');
   });
 });

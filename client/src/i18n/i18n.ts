@@ -10,6 +10,7 @@ import { messages as de } from 'src/i18n/locales/de/translation';
 import { messages as el } from 'src/i18n/locales/el/translation';
 import { messages as en } from 'src/i18n/locales/en/translation';
 import { messages as es } from 'src/i18n/locales/es/translation';
+import { messages as es419 } from 'src/i18n/locales/es-419/translation';
 import { messages as fi } from 'src/i18n/locales/fi/translation';
 import { messages as fr } from 'src/i18n/locales/fr/translation';
 import { messages as he } from 'src/i18n/locales/he/translation';
@@ -30,45 +31,63 @@ import { messages as uk } from 'src/i18n/locales/uk/translation';
 import { messages as vi } from 'src/i18n/locales/vi/translation';
 import { messages as zh } from 'src/i18n/locales/zh/translation';
 
+const DEFAULT_LOCALE = 'en';
+
+const allMessages = {
+  af,
+  ar,
+  ca,
+  cs,
+  da,
+  de,
+  el,
+  en,
+  es,
+  'es-419': es419,
+  fi,
+  fr,
+  he,
+  hu,
+  it,
+  ja,
+  ko,
+  nl,
+  no,
+  pl,
+  pt,
+  ro,
+  ru,
+  sr,
+  sv,
+  tr,
+  uk,
+  vi,
+  zh,
+};
+
+export const resolveSupportedLocale = (detectedLocale?: string | null) => {
+  const normalizedLocale = detectedLocale?.toLowerCase();
+
+  if (!normalizedLocale) {
+    return DEFAULT_LOCALE;
+  }
+
+  if (normalizedLocale in allMessages) {
+    return normalizedLocale;
+  }
+
+  const baseLocale = normalizedLocale.split('-')[0];
+
+  if (baseLocale in allMessages) {
+    return baseLocale;
+  }
+
+  return DEFAULT_LOCALE;
+};
+
 export const setupI18n = () => {
-  const allMessages = {
-    af,
-    ar,
-    ca,
-    cs,
-    da,
-    de,
-    el,
-    en,
-    es,
-    fi,
-    fr,
-    he,
-    hu,
-    it,
-    ja,
-    ko,
-    nl,
-    no,
-    pl,
-    pt,
-    ro,
-    ru,
-    sr,
-    sv,
-    tr,
-    uk,
-    vi,
-    zh,
-  };
-
-  const supportedLanguages = Object.keys(allMessages);
-
-  const detectedLocale = detect(fromNavigator(), 'en').split('-')?.at(0);
-
-  const locale = supportedLanguages.includes(detectedLocale)
-    ? detectedLocale
-    : 'en';
+  const detectedLocale = detect(fromNavigator(), DEFAULT_LOCALE);
+  const locale = resolveSupportedLocale(detectedLocale);
 
   i18n.load(allMessages);
   i18n.activate(locale);

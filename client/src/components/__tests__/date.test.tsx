@@ -15,15 +15,15 @@ import {
   formatDuration,
   intervalToDuration,
 } from 'date-fns';
-import { enUS } from 'date-fns/locale';
+import { enUS, es } from 'date-fns/locale';
 
 // ---------------------------------------------------------------------------
 // Mock @lingui/react so useLingui returns an English locale
 // ---------------------------------------------------------------------------
+const mockUseLingui = jest.fn();
+
 jest.mock('@lingui/react', () => ({
-  useLingui: () => ({
-    i18n: { locale: 'en' },
-  }),
+  useLingui: () => mockUseLingui(),
 }));
 
 // ---------------------------------------------------------------------------
@@ -40,6 +40,7 @@ jest.mock('date-fns/locale', () => {
     __esModule: true,
     ...actual,
     en: actual.enUS,
+    es: actual.es,
   };
 });
 
@@ -69,6 +70,12 @@ const expectedDuration = (milliseconds: number): string =>
 // ---------------------------------------------------------------------------
 
 describe('RelativeTime', () => {
+  beforeEach(() => {
+    mockUseLingui.mockReturnValue({
+      i18n: { locale: 'en' },
+    });
+  });
+
   it('renders a relative time string for a date in the past', () => {
     const twoDaysAgo = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
 
@@ -120,6 +127,21 @@ describe('RelativeTime', () => {
     // But textContent should be non-empty (the formatted relative time string)
     expect(container.textContent).toBeTruthy();
   });
+
+  it('falls back to the base date-fns locale for regional tags like es-419', () => {
+    mockUseLingui.mockReturnValue({
+      i18n: { locale: 'es-419' },
+    });
+    const twoDaysAgo = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000);
+
+    const { container } = render(<RelativeTime to={twoDaysAgo} />);
+
+    const expected = formatDistance(twoDaysAgo, new Date(), {
+      locale: es,
+      addSuffix: true,
+    });
+    expect(container.textContent).toBe(expected);
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -127,6 +149,12 @@ describe('RelativeTime', () => {
 // ---------------------------------------------------------------------------
 
 describe('FormatDuration', () => {
+  beforeEach(() => {
+    mockUseLingui.mockReturnValue({
+      i18n: { locale: 'en' },
+    });
+  });
+
   it('renders zero duration as an empty string', () => {
     // formatDuration returns '' for a zero-length interval
     const { container } = render(<FormatDuration milliseconds={0} />);
@@ -179,6 +207,21 @@ describe('FormatDuration', () => {
     const expected = expectedDuration(oneHourThirtyMin);
     // The delimiter in the component is ', '
     expect(expected).toContain(', ');
+    expect(container.textContent).toBe(expected);
+  });
+
+  it('formats durations with the base date-fns locale for es-419', () => {
+    mockUseLingui.mockReturnValue({
+      i18n: { locale: 'es-419' },
+    });
+    const ninetyMinutes = 90 * 60 * 1000;
+
+    const { container } = render(<FormatDuration milliseconds={ninetyMinutes} />);
+
+    const expected = formatDuration(
+      intervalToDuration({ start: 0, end: ninetyMinutes }),
+      { delimiter: ', ', locale: es }
+    );
     expect(container.textContent).toBe(expected);
   });
 });
