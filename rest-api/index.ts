@@ -330,7 +330,6 @@ export interface Seen {
   id?: number | null;
   date?: number | null;
   mediaItemId: number;
-  seasonId?: number | null;
   episodeId?: number | null;
   userId: number;
   duration?: number | null;

@@ -4544,10 +4544,6 @@
           "mediaItemId": {
             "type": "number"
           },
-          "seasonId": {
-            "type": "number",
-            "nullable": true
-          },
           "episodeId": {
             "type": "number",
             "nullable": true
