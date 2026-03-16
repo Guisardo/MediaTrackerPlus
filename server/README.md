@@ -1,19 +1,20 @@
-# MediaTracker-Plus &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/dnlwttnbrg/MediaTrackerPlus/blob/main/LICENSE.md) [![Docker Image Size](https://img.shields.io/docker/image-size/dnlwttnbrg/mediatracker-plus)](https://hub.docker.com/repository/docker/dnlwttnbrg/mediatracker-plus) [![Docker Pulls](https://img.shields.io/docker/pulls/dnlwttnbrg/mediatracker-plus)](https://hub.docker.com/repository/docker/dnlwttnbrg/mediatracker-plus) [![CodeFactor](https://www.codefactor.io/repository/github/dnlwttnbrg/mediatrackerplus/badge)](https://www.codefactor.io/repository/github/dnlwttnbrg/mediatrackerplus) [![codecov](https://codecov.io/github/dnlwttnbrg/MediaTrackerPlus/graph/badge.svg?token=7O9IV84JVL)](https://codecov.io/github/dnlwttnbrg/MediaTrackerPlus)
+# MediaTracker-Plus &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Guisardo/MediaTrackerPlus/blob/main/LICENSE.md) [![Docker Image Size](https://img.shields.io/docker/image-size/guisardo/mediatracker-plus)](https://hub.docker.com/repository/docker/guisardo/mediatracker-plus) [![Docker Pulls](https://img.shields.io/docker/pulls/guisardo/mediatracker-plus)](https://hub.docker.com/repository/docker/guisardo/mediatracker-plus) [![CodeFactor](https://www.codefactor.io/repository/github/guisardo/mediatrackerplus/badge)](https://www.codefactor.io/repository/github/guisardo/mediatrackerplus) [![codecov](https://codecov.io/github/Guisardo/MediaTrackerPlus/graph/badge.svg?token=7O9IV84JVL)](https://codecov.io/github/Guisardo/MediaTrackerPlus)
 
 Self hosted platform for tracking movies, tv shows, video games, books and audiobooks, highly inspired by [flox](https://github.com/devfake/flox).
+This repository is maintained at [Guisardo/MediaTrackerPlus](https://github.com/Guisardo/MediaTrackerPlus).
 This is a fork from [Mediatracker](https://github.com/bonukai/MediaTracker) because I wanted new features and the original repository is at this time abandoned. But feel free to check out the original repository.
-This is a drop in replacement of the original repository. For now, the databases are compartible.
+This is a drop in replacement of the original repository. For now, the databases are compatible.
 
 # API Documentation
 
-[https://dnlwttnbrg.github.io/MediaTrackerPlus/](https://dnlwttnbrg.github.io/MediaTrackerPlus/)
+[https://guisardo.github.io/MediaTrackerPlus/](https://guisardo.github.io/MediaTrackerPlus/)
 
 # Installation
 
 ## Building from source
 
 ```bash
-git clone https://github.com/dnlwttnbrg/MediaTrackerPlus.git
+git clone https://github.com/Guisardo/MediaTrackerPlus.git
 cd MediaTrackerPlus
 npm install
 npm run build
@@ -39,7 +40,7 @@ docker run \
     -e TMDB_LANG=en \
     -e AUDIBLE_LANG=us \
     -e TZ=Europe/London \
-    dnlwttnbrg/mediatracker-plus:latest
+    guisardo/mediatracker-plus:latest
 ```
 
 ## With docker-compose
@@ -59,7 +60,7 @@ services:
       TMDB_LANG: en
       AUDIBLE_LANG: us
       TZ: Europe/London
-    image: dnlwttnbrg/mediatracker-plus:latest
+    image: guisardo/mediatracker-plus:latest
 
 volumes:
   assetsVolume: null
@@ -102,7 +103,7 @@ volumes:
 # Building docker image
 
 ```bash
-docker build --tag mediatracker-plus:latest https://github.com/dnlwttnbrg/MediaTrackerPlus.git
+docker build --tag mediatracker-plus:latest https://github.com/Guisardo/MediaTrackerPlus.git
 docker run -p 7481:7481 mediatracker
 ```
 

@@ -16,6 +16,6 @@ jobs:
         uses: peter-evans/dockerhub-description@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          repository: dnlwttnbrg/mediatracker-plus
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: guisardo/mediatracker-plus
           short-description: ${{ github.event.repository.description }}
