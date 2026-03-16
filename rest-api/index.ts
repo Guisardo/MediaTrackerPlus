@@ -280,6 +280,7 @@ export interface TvSeason {
   numberOfEpisodes?: number | null;
   externalPosterUrl?: string | null;
   posterId?: string | null;
+  poster?: string | null;
   releaseDate?: string | null;
   tvShowId?: number | null;
   tmdbId?: number | null;
@@ -329,6 +330,7 @@ export interface Seen {
   id?: number | null;
   date?: number | null;
   mediaItemId: number;
+  seasonId?: number | null;
   episodeId?: number | null;
   userId: number;
   duration?: number | null;
@@ -807,28 +809,28 @@ export interface TraktTvImportSummary {
 
 export interface TraktTvImportNotImportedItems {
   watchlist: {
-    movies?: TraktTvNotImportedMovie[] | null;
-    shows?: TraktTvNotImportedTvShow[] | null;
-    seasons?: TraktTvNotImportedSeason[] | null;
-    episodes?: TraktTvNotImportedEpisode[] | null;
+    movies: TraktTvNotImportedMovie[];
+    shows: TraktTvNotImportedTvShow[];
+    seasons: TraktTvNotImportedSeason[];
+    episodes: TraktTvNotImportedEpisode[];
   };
   seen: {
-    movies?: TraktTvNotImportedMovie[] | null;
-    episodes?: TraktTvNotImportedEpisode[] | null;
+    movies: TraktTvNotImportedMovie[];
+    episodes: TraktTvNotImportedEpisode[];
   };
   ratings: {
-    movies?: TraktTvNotImportedMovie[] | null;
-    shows?: TraktTvNotImportedTvShow[] | null;
-    seasons?: TraktTvNotImportedSeason[] | null;
-    episodes?: TraktTvNotImportedEpisode[] | null;
+    movies: TraktTvNotImportedMovie[];
+    shows: TraktTvNotImportedTvShow[];
+    seasons: TraktTvNotImportedSeason[];
+    episodes: TraktTvNotImportedEpisode[];
   };
   lists: {
     listName: string;
     listId: string;
-    movies?: TraktTvNotImportedMovie[] | null;
-    shows?: TraktTvNotImportedTvShow[] | null;
-    seasons?: TraktTvNotImportedSeason[] | null;
-    episodes?: TraktTvNotImportedEpisode[] | null;
+    movies: TraktTvNotImportedMovie[];
+    shows: TraktTvNotImportedTvShow[];
+    seasons: TraktTvNotImportedSeason[];
+    episodes: TraktTvNotImportedEpisode[];
   }[];
 }
 
@@ -1521,11 +1523,10 @@ export namespace Progress {
     export type RequestQuery = {
       mediaItemId: number;
       episodeId?: number | null;
-      date: number;
+      date?: number | null;
+      action?: 'paused' | 'playing' | null;
       duration?: number | null;
       progress?: number | null;
-      action?: 'paused' | 'playing' | null;
-      device?: string | null;
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -3137,11 +3138,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       query: {
         mediaItemId: number;
         episodeId?: number | null;
-        date: number;
+        date?: number | null;
+        action?: 'paused' | 'playing' | null;
         duration?: number | null;
         progress?: number | null;
-        action?: 'paused' | 'playing' | null;
-        device?: string | null;
       },
       params: RequestParams = {}
     ) =>

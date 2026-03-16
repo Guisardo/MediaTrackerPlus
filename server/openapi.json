@@ -2204,23 +2204,6 @@
           {
             "name": "date",
             "in": "query",
-            "required": true,
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "duration",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "number",
-              "nullable": true
-            }
-          },
-          {
-            "name": "progress",
-            "in": "query",
             "required": false,
             "schema": {
               "type": "number",
@@ -2242,11 +2225,20 @@
             }
           },
           {
-            "name": "device",
+            "name": "duration",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "string",
+              "type": "number",
+              "nullable": true
+            }
+          },
+          {
+            "name": "progress",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
               "nullable": true
             }
           }
@@ -4345,6 +4337,10 @@
             "type": "string",
             "nullable": true
           },
+          "poster": {
+            "type": "string",
+            "nullable": true
+          },
           "releaseDate": {
             "type": "string",
             "nullable": true
@@ -4547,6 +4543,10 @@
           },
           "mediaItemId": {
             "type": "number"
+          },
+          "seasonId": {
+            "type": "number",
+            "nullable": true
           },
           "episodeId": {
             "type": "number",
@@ -6452,31 +6452,33 @@
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/TraktTvNotImportedMovie"
-                },
-                "nullable": true
+                }
               },
               "shows": {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/TraktTvNotImportedTvShow"
-                },
-                "nullable": true
+                }
               },
               "seasons": {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/TraktTvNotImportedSeason"
-                },
-                "nullable": true
+                }
               },
               "episodes": {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/TraktTvNotImportedEpisode"
-                },
-                "nullable": true
+                }
               }
-            }
+            },
+            "required": [
+              "episodes",
+              "movies",
+              "seasons",
+              "shows"
+            ]
           },
           "seen": {
             "type": "object",
@@ -6485,17 +6487,19 @@
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/TraktTvNotImportedMovie"
-                },
-                "nullable": true
+                }
               },
               "episodes": {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/TraktTvNotImportedEpisode"
-                },
-                "nullable": true
+                }
               }
-            }
+            },
+            "required": [
+              "episodes",
+              "movies"
+            ]
           },
           "ratings": {
             "type": "object",
@@ -6504,31 +6508,33 @@
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/TraktTvNotImportedMovie"
-                },
-                "nullable": true
+                }
               },
               "shows": {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/TraktTvNotImportedTvShow"
-                },
-                "nullable": true
+                }
               },
               "seasons": {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/TraktTvNotImportedSeason"
-                },
-                "nullable": true
+                }
               },
               "episodes": {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/TraktTvNotImportedEpisode"
-                },
-                "nullable": true
+                }
               }
-            }
+            },
+            "required": [
+              "episodes",
+              "movies",
+              "seasons",
+              "shows"
+            ]
           },
           "lists": {
             "type": "array",
@@ -6545,34 +6551,34 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/TraktTvNotImportedMovie"
-                  },
-                  "nullable": true
+                  }
                 },
                 "shows": {
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/TraktTvNotImportedTvShow"
-                  },
-                  "nullable": true
+                  }
                 },
                 "seasons": {
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/TraktTvNotImportedSeason"
-                  },
-                  "nullable": true
+                  }
                 },
                 "episodes": {
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/TraktTvNotImportedEpisode"
-                  },
-                  "nullable": true
+                  }
                 }
               },
               "required": [
+                "episodes",
                 "listId",
-                "listName"
+                "listName",
+                "movies",
+                "seasons",
+                "shows"
               ]
             }
           }
