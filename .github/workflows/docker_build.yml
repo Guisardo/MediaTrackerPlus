@@ -43,4 +43,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: dnlwttnbrg/mediatracker-plus:${{ steps.version.outputs.result }},dnlwttnbrg/mediatracker-plus:latest
+          tags: guisardo/mediatracker-plus:${{ steps.version.outputs.result }},guisardo/mediatracker-plus:latest

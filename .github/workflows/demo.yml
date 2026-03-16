@@ -1,9 +1,8 @@
 name: Update demo website
 
+# Legacy VPS deployment is paused until replacement demo infrastructure exists.
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   build:
