@@ -449,7 +449,7 @@ describe('TMDbMovie.localizedDetails', () => {
       );
     });
 
-    test('maps null poster_path and backdrop_path to null', async () => {
+    test('maps null poster_path and backdrop_path to undefined', async () => {
       mockedAxios.get.mockResolvedValueOnce({
         data: buildTmdbMovieResponse({
           poster_path: null,
@@ -460,8 +460,8 @@ describe('TMDbMovie.localizedDetails', () => {
 
       const result = await tmdbMovie.localizedDetails({ tmdbId: 550 }, 'en');
 
-      expect(result!.externalPosterUrl).toBeNull();
-      expect(result!.externalBackdropUrl).toBeNull();
+      expect(result!.externalPosterUrl).toBeUndefined();
+      expect(result!.externalBackdropUrl).toBeUndefined();
     });
   });
 });

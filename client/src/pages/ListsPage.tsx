@@ -14,11 +14,7 @@ import { listDescription, listName } from 'src/utils';
 export const ListsPage: FunctionComponent = () => {
   const [searchParams] = useSearchParams();
   const { user } = useUser();
-  const currentUserId = user?.id;
-
-  if (currentUserId == null) {
-    return <Trans>Loading</Trans>;
-  }
+  const currentUserId = user?.id ?? 0;
 
   const userId = searchParams.has('userId')
     ? Number(searchParams.get('userId'))
@@ -30,7 +26,7 @@ export const ListsPage: FunctionComponent = () => {
     userId: userId,
   });
 
-  if (!lists) {
+  if (!user?.id || !lists) {
     return <Trans>Loading</Trans>;
   }
 
