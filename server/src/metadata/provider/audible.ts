@@ -132,14 +132,14 @@ export class Audible extends MetadataProvider {
   override async localizedDetails(
     ids: ExternalIds,
     language: string
-  ): Promise<MediaItemForProvider | undefined> {
+  ): Promise<MediaItemForProvider | null> {
     const { audibleId } = ids;
 
     if (!audibleId) {
       logger.warn(
         `Audible.localizedDetails: no audibleId provided for language '${language}' — returning null`
       );
-      return undefined;
+      return null;
     }
 
     // Extract the base ISO 639-1 code from the BCP 47 tag (e.g., 'es-419' -> 'es')
@@ -151,7 +151,7 @@ export class Audible extends MetadataProvider {
       logger.debug(
         `Audible.localizedDetails: no Audible domain mapping for language '${language}' (base: '${baseLang}') — skipping`
       );
-      return undefined;
+      return null;
     }
 
     const res = await axios.get<AudibleResponse.DetailsResult>(
@@ -169,7 +169,7 @@ export class Audible extends MetadataProvider {
       logger.debug(
         `Audible.localizedDetails: no product data for audibleId=${audibleId} language=${language}`
       );
-      return undefined;
+      return null;
     }
 
     return this.mapResponse(res.data.product, countryCode);

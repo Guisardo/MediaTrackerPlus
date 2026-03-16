@@ -346,11 +346,11 @@ class MediaItemRepository extends repository<MediaItemBase>({
     }
 
     if (!mediaItem.externalPosterUrl) {
-      mediaItem.posterId = undefined;
+      mediaItem.posterId = null;
     }
 
     if (!mediaItem.externalBackdropUrl) {
-      mediaItem.backdropId = undefined;
+      mediaItem.backdropId = null;
     }
 
     return await Database.knex.transaction(async (trx) => {

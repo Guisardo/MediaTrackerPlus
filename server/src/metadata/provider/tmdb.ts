@@ -8,9 +8,17 @@ import { GlobalConfiguration } from 'src/repository/globalSettings';
 import { Config } from 'src/config';
 import { logger } from 'src/logger';
 import { SimilarItem } from 'src/metadata/types';
-import { definedOrUndefined } from 'src/repository/repository';
+import { definedOrNull, definedOrUndefined } from 'src/repository/repository';
 
 const TMDB_API_KEY = Config.TMDB_API_KEY;
+
+/**
+ * Converts null, undefined, or empty string values to null.
+ * Used for TMDB API response fields where an empty string from the API
+ * should be treated as absent (null) rather than as a meaningful value.
+ */
+const emptyOrNullToNull = <T>(value: T | null | undefined): T | null =>
+  value == null || value === '' ? null : value;
 
 /** Minimum vote count required to include a TMDB similar item in results. */
 const TMDB_SIMILAR_MINIMUM_VOTE_COUNT = 10;
@@ -106,14 +114,14 @@ abstract class TMDb extends MetadataProvider {
       title: '',
       externalBackdropUrl: response.backdrop_path
         ? getPosterUrl(response.backdrop_path)
-        : undefined,
+        : definedOrNull(response.backdrop_path),
       externalPosterUrl: response.poster_path
         ? getPosterUrl(response.poster_path)
-        : undefined,
+        : definedOrNull(response.poster_path),
       tmdbId: response.id,
       overview: definedOrUndefined(response.overview),
-      status: definedOrUndefined(response.status),
-      url: definedOrUndefined(response.homepage),
+      status: definedOrNull(response.status),
+      url: definedOrNull(response.homepage),
       genres: response.genres?.map((genre) => genre.name),
     };
   }
@@ -193,10 +201,10 @@ export class TMDbMovie extends TMDb {
     delete movie.originalTitle;
 
     // Convert empty strings to null
-    if (movie.title === '') movie.title = '';
-    if (movie.overview === '') movie.overview = undefined;
+    if (movie.title === '') movie.title = null as unknown as string;
+    if (movie.overview === '') movie.overview = null as unknown as string;
     if (movie.genres != null && movie.genres.length === 0)
-      movie.genres = undefined;
+      movie.genres = null as unknown as string[];
 
     return movie;
   }
@@ -358,21 +366,21 @@ export class TMDbTv extends TMDb {
     delete tvShow.originalTitle;
 
     // Convert empty strings to null for title, overview, and genres
-    if (tvShow.title === '') tvShow.title = '';
-    if (tvShow.overview === '') tvShow.overview = undefined;
+    if (tvShow.title === '') tvShow.title = null as unknown as string;
+    if (tvShow.overview === '') tvShow.overview = null as unknown as string;
     if (tvShow.genres != null && tvShow.genres.length === 0)
-      tvShow.genres = undefined;
+      tvShow.genres = null as unknown as string[];
 
     // Convert empty strings to null for season and episode fields
     if (tvShow.seasons) {
       for (const season of tvShow.seasons) {
-        if (season.title === '') season.title = '';
-        if (season.description === '') season.description = undefined;
+        if (season.title === '') season.title = null as unknown as string;
+        if (season.description === '') season.description = null as unknown as string;
 
         if (season.episodes) {
           for (const episode of season.episodes) {
-            if (episode.title === '') episode.title = '';
-            if (episode.description === '') episode.description = undefined;
+            if (episode.title === '') episode.title = null as unknown as string;
+            if (episode.description === '') episode.description = null as unknown as string;
           }
         }
       }
@@ -498,13 +506,13 @@ export class TMDbTv extends TMDb {
       return {
         tmdbId: item.id,
         title: item.name,
-        description: definedOrUndefined(item.overview),
+        description: emptyOrNullToNull(item.overview),
         externalPosterUrl: item.poster_path
           ? getPosterUrl(item.poster_path)
           : undefined,
         seasonNumber: item.season_number,
         numberOfEpisodes: item.episode_count,
-        releaseDate: definedOrUndefined(item.air_date),
+        releaseDate: emptyOrNullToNull(item.air_date),
         isSpecialSeason: item.season_number === 0,
       };
     });
@@ -515,10 +523,10 @@ export class TMDbTv extends TMDb {
   private mapEpisode(item: TMDbApi.Episode) {
     return {
       title: item.name,
-      description: definedOrUndefined(item.overview),
+      description: emptyOrNullToNull(item.overview),
       episodeNumber: item.episode_number,
       seasonNumber: item.season_number,
-      releaseDate: definedOrUndefined(item.air_date),
+      releaseDate: emptyOrNullToNull(item.air_date),
       isSpecialEpisode: item.season_number === 0,
       tmdbId: item.id,
     };

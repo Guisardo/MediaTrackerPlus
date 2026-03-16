@@ -167,23 +167,50 @@ export const getDetailsKnex = async (params: {
         .filter(TvEpisodeFilters.unwatchedEpisodes).length === 0,
   }));
 
-  const firstUnwatchedEpisode = _(episodes)
-    .filter(TvEpisodeFilters.unwatchedEpisodes)
-    .filter(TvEpisodeFilters.releasedEpisodes)
-    .filter(TvEpisodeFilters.nonSpecialEpisodes)
-    .minBy((episode) => episode.seasonNumber * 1000 + episode.episodeNumber);
+  // Strip per-episode user-specific fields (userRating, seenHistory, lastSeenAt)
+  // from special episode references. These episode objects were mutated in the
+  // episodes.forEach loop above with concrete fallback values (null / []) for
+  // strict-mode safety, but when surfaced as firstUnwatchedEpisode /
+  // upcomingEpisode / lastAiredEpisode they should carry undefined — consistent
+  // with the items.ts (mapRawResult) code path which explicitly sets them to
+  // undefined.
+  const stripEpisodeUserFields = (
+    episode: TvEpisode | undefined
+  ): TvEpisode | undefined => {
+    if (!episode) {
+      return undefined;
+    }
+    return {
+      ...episode,
+      userRating: undefined,
+      seenHistory: undefined,
+      lastSeenAt: undefined,
+    };
+  };
 
-  const upcomingEpisode = _(episodes)
-    .filter(TvEpisodeFilters.withReleaseDateEpisodes)
-    .filter(TvEpisodeFilters.nonSpecialEpisodes)
-    .filter(TvEpisodeFilters.unreleasedEpisodes)
-    .minBy((episode) => parseISO(episode.releaseDate!).getTime());
+  const firstUnwatchedEpisode = stripEpisodeUserFields(
+    _(episodes)
+      .filter(TvEpisodeFilters.unwatchedEpisodes)
+      .filter(TvEpisodeFilters.releasedEpisodes)
+      .filter(TvEpisodeFilters.nonSpecialEpisodes)
+      .minBy((episode) => episode.seasonNumber * 1000 + episode.episodeNumber)
+  );
 
-  const lastAiredEpisode = _(episodes)
-    .filter(TvEpisodeFilters.withReleaseDateEpisodes)
-    .filter(TvEpisodeFilters.nonSpecialEpisodes)
-    .filter(TvEpisodeFilters.releasedEpisodes)
-    .maxBy((episode) => parseISO(episode.releaseDate!).getTime());
+  const upcomingEpisode = stripEpisodeUserFields(
+    _(episodes)
+      .filter(TvEpisodeFilters.withReleaseDateEpisodes)
+      .filter(TvEpisodeFilters.nonSpecialEpisodes)
+      .filter(TvEpisodeFilters.unreleasedEpisodes)
+      .minBy((episode) => parseISO(episode.releaseDate!).getTime())
+  );
+
+  const lastAiredEpisode = stripEpisodeUserFields(
+    _(episodes)
+      .filter(TvEpisodeFilters.withReleaseDateEpisodes)
+      .filter(TvEpisodeFilters.nonSpecialEpisodes)
+      .filter(TvEpisodeFilters.releasedEpisodes)
+      .maxBy((episode) => parseISO(episode.releaseDate!).getTime())
+  );
 
   const unseenEpisodesCount = _(episodes)
     .filter(TvEpisodeFilters.nonSpecialEpisodes)

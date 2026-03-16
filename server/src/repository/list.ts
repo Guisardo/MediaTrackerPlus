@@ -37,7 +37,7 @@ class ListRepository extends repository<List>({
   tableName: 'list',
   primaryColumnName: 'id',
 }) {
-  public override async update(args: Partial<List>): Promise<Partial<List>> {
+  public override async update(args: Partial<List>): Promise<Partial<List> | undefined> {
     const { userId, name, description, privacy, sortBy, sortOrder, id } = args;
 
     if (id == undefined || userId == undefined) {
@@ -45,7 +45,7 @@ class ListRepository extends repository<List>({
     }
 
     if (name?.trim().length === 0) {
-      return {};
+      return;
     }
 
     const updatedAt = new Date().getTime();
@@ -53,11 +53,11 @@ class ListRepository extends repository<List>({
       const list = await trx<List>('list').where('id', id).first();
 
       if (!list) {
-        return {};
+        return;
       }
 
       if (list.userId !== userId) {
-        return {};
+        return;
       }
 
       const listWithTheSameName = await trx<List>('list')
@@ -67,7 +67,7 @@ class ListRepository extends repository<List>({
         .first();
 
       if (listWithTheSameName) {
-        return {};
+        return;
       }
 
       await trx<List>('list')
@@ -81,7 +81,7 @@ class ListRepository extends repository<List>({
         })
         .where('id', id);
 
-      return (await trx<List>('list').where('id', id).first()) ?? {};
+      return await trx<List>('list').where('id', id).first();
     });
   }
 

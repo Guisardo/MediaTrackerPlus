@@ -185,7 +185,16 @@ export const repository = <T extends object>(args: {
       uniqueBy: (value: Partial<T>) => Partial<T>,
       limitQuery?: Partial<T>
     ) {
-      const serialize = (item: Partial<T>) => JSON.stringify(uniqueBy(item));
+      const normalizeUniqueKey = (item: Partial<T>): Record<string, unknown> => {
+        const key = uniqueBy(item);
+        const normalized: Record<string, unknown> = {};
+        for (const [k, v] of Object.entries(key as Record<string, unknown>)) {
+          normalized[k] = v === undefined ? null : v;
+        }
+        return normalized;
+      };
+
+      const serialize = (item: Partial<T>) => JSON.stringify(normalizeUniqueKey(item));
 
       return await Database.knex.transaction(async (trx) => {
         const fetchAllItems = async () => {
@@ -198,7 +207,16 @@ export const repository = <T extends object>(args: {
           const existingItems: T[] = [];
 
           for (const value of values) {
-            const res = (await trx(this.tableName).where(uniqueBy(value))) as T[];
+            const normalizedKey = normalizeUniqueKey(value);
+            const res = (await trx(this.tableName).where((qb) => {
+              for (const [col, val] of Object.entries(normalizedKey)) {
+                if (val === null) {
+                  qb.whereNull(col);
+                } else {
+                  qb.where(col, val as any);
+                }
+              }
+            })) as T[];
 
             res.forEach((item) => existingItems.push(item));
           }
@@ -247,7 +265,7 @@ export const repository = <T extends object>(args: {
       });
     }
 
-    public async update(value: Partial<T>): Promise<Partial<T>> {
+    public async update(value: Partial<T>): Promise<Partial<T> | undefined> {
       const qb = Database.knex(this.tableName).update(
         this.serialize(omitUndefinedValues(this.stripValue(value)))
       );

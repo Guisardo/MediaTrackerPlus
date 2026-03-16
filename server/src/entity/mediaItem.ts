@@ -28,8 +28,8 @@ export type MediaItemBase = ExternalIds & {
   originalTitle?: string;
   externalPosterUrl?: string;
   externalBackdropUrl?: string;
-  posterId?: string;
-  backdropId?: string;
+  posterId?: string | null;
+  backdropId?: string | null;
   tmdbRating?: number;
   releaseDate?: string;
   overview?: string;

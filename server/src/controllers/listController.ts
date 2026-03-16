@@ -87,7 +87,7 @@ export class ListController {
       sortOrder,
     });
 
-    if (list.id != null) {
+    if (list) {
       res.json(list as List);
     } else {
       res.sendStatus(400);

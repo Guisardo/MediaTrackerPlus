@@ -133,7 +133,6 @@ export class SeenController {
         seenEpisodes.map((episode) => ({
           userId: userId,
           mediaItemId: mediaItemId,
-          seasonId: episode.seasonId,
           episodeId: episode.id,
           date:
             lastSeenAt === 'release_date'

@@ -27,11 +27,11 @@ class ConfigurationRepository extends repository<Configuration>({
     });
   }
 
-  public async get(): Promise<Configuration> {
+  public async get(): Promise<Configuration | undefined> {
     const configEntry = await Database.knex('configuration').first();
 
     if (!configEntry || !configEntry.configurationJson) {
-      return GlobalConfiguration.get();
+      return undefined;
     }
 
     return JSON.parse(configEntry.configurationJson);
