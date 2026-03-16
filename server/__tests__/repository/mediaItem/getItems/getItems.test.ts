@@ -28,7 +28,7 @@ describe('getItems', () => {
     listItemRepository.addItem({
       watchlist: true,
       userId: user.id,
-      mediaItemId: mediaItem.id,
+      mediaItemId: mediaItem.id!,
     });
   });
 

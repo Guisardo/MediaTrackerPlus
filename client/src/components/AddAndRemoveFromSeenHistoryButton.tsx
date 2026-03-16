@@ -87,7 +87,9 @@ export const RemoveFromSeenHistoryButton: FunctionComponent<{
   const { mediaItem, season, episode, seenId } = props;
 
   const seasonEpisodesIdSet = new Set(
-    season?.episodes?.map((episode) => episode.id)
+    season?.episodes
+      ?.map((episode) => episode.id)
+      .filter((id): id is number => id !== undefined)
   );
 
   const count =
@@ -99,9 +101,9 @@ export const RemoveFromSeenHistoryButton: FunctionComponent<{
         ).length
       : season
       ? mediaItem.seenHistory?.filter((entry) =>
-          seasonEpisodesIdSet.has(entry.episodeId)
+          entry.episodeId != null && seasonEpisodesIdSet.has(entry.episodeId)
         ).length
-      : mediaItem.seenHistory?.length;
+      : mediaItem.seenHistory?.length ?? 0;
 
   return (
     <Button
@@ -109,7 +111,7 @@ export const RemoveFromSeenHistoryButton: FunctionComponent<{
       size="sm"
       onClick={async () =>
         (await Confirm(
-          plural(count, {
+          plural(count ?? 0, {
             one: 'Do you want to remove # seen history entry?',
             other: 'Do you want to remove all # seen history entries?',
           })

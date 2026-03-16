@@ -64,8 +64,9 @@ const applyTranslationOverlay = async (
   });
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getItemsKnex = async (args: any): Promise<any> => {
+export const getItemsKnex = async (
+  args: GetItemsArgs & { page?: number; language?: string | null }
+): Promise<unknown> => {
   const { page, language } = args;
   const { sqlQuery, sqlCountQuery, sqlPaginationQuery } = await getItemsKnexSql(
     args
@@ -74,7 +75,7 @@ export const getItemsKnex = async (args: any): Promise<any> => {
   if (page) {
     const [resCount, res] = await Database.knex.transaction(async (trx) => {
       const resCount = await sqlCountQuery.transacting(trx);
-      const res = await sqlPaginationQuery.transacting(trx);
+      const res = await sqlPaginationQuery!.transacting(trx);
 
       return [resCount, res];
     });
@@ -115,7 +116,7 @@ export const getItemsKnex = async (args: any): Promise<any> => {
   }
 };
 
-const getItemsKnexSql = async (args: GetItemsArgs & { year: string }) => {
+const getItemsKnexSql = async (args: GetItemsArgs & { year?: string }) => {
   const {
     onlyOnWatchlist,
     mediaType,
@@ -1459,7 +1460,7 @@ export class QueryBuilderHelper {
     };
   }
   static firstUnwatchedEpisode<
-    TRecord = unknown,
+    TRecord extends {} = Record<string, unknown>,
     TResult = Record<string, unknown>[]
   >(
     query: Knex.QueryBuilder<TRecord, TResult>,

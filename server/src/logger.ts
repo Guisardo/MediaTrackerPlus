@@ -7,6 +7,7 @@ import {
   LeveledLogMethod,
   Logger,
 } from 'winston';
+import { TransformableInfo } from 'logform';
 
 import { configMigrationLogs, Config } from 'src/config';
 import {
@@ -27,9 +28,9 @@ const fileTransport = (filename: string) => {
   });
 };
 
-export const stackErrorFormatter = format((info: LogEntry) => {
+export const stackErrorFormatter = format((info: TransformableInfo) => {
   if ('stack' in info) {
-    info.message = info.stack;
+    info.message = String(info.stack);
   }
 
   // When an Error is passed as metadata (e.g. logger.error('msg', { err })),

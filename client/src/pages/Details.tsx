@@ -58,6 +58,10 @@ const Review: FunctionComponent<{ userRating: UserRating }> = (props) => {
     return <></>;
   }
 
+  if (!user) {
+    return <></>;
+  }
+
   const date = new Date(userRating.date).toLocaleString();
   const author = user.name;
 
@@ -150,11 +154,13 @@ const ExternalLinks: FunctionComponent<{
 }> = (props) => {
   const { mediaItem } = props;
   const { configuration } = useConfiguration();
+  const fallbackCountryCode = configuration?.audibleLang?.toLowerCase() as
+    | AudibleCountryCode
+    | undefined;
+  const countryCode = mediaItem.audibleCountryCode ?? fallbackCountryCode;
 
   const audibleDomain =
-    audibleLanguages[
-      mediaItem.audibleCountryCode || configuration.audibleLang?.toLowerCase()
-    ] || 'com';
+    (countryCode ? audibleLanguages[countryCode] : undefined) || 'com';
 
   return (
     <div className="flex h-5">
@@ -200,8 +206,8 @@ const ExternalLinks: FunctionComponent<{
 };
 
 export const DetailsPage: FunctionComponent = () => {
-  const { mediaItemId } = useParams();
-  const { mediaItem, isLoading, error } = useDetails(Number(mediaItemId));
+  const { mediaItemId: routeMediaItemId } = useParams();
+  const { mediaItem, isLoading, error } = useDetails(Number(routeMediaItemId));
   const { i18n } = useLingui();
 
   if (isLoading) {
@@ -216,12 +222,18 @@ export const DetailsPage: FunctionComponent = () => {
     return <>{error}</>;
   }
 
+  if (!mediaItem || mediaItem.id == null) {
+    return <Trans>Loading</Trans>;
+  }
+
+  const mediaItemRecordId = mediaItem.id;
+
   return (
     <div>
       <div className="flex flex-col mt-2 mb-4 md:flex-row">
         <div className="self-center w-64 shrink-0 md:self-start">
           <Poster
-            src={mediaItem.poster}
+            src={mediaItem.poster ?? undefined}
             mediaType={mediaItem.mediaType}
             itemMediaType={mediaItem.mediaType}
           />
@@ -250,25 +262,25 @@ export const DetailsPage: FunctionComponent = () => {
             </div>
           )}
 
-          {mediaItem.runtime > 0 && (
+          {mediaItem.runtime != null && mediaItem.runtime > 0 && (
             <div>
               <span className="font-bold">
                 <Trans>Runtime</Trans>:{' '}
               </span>
               <span>
-                <FormatDuration milliseconds={mediaItem.runtime * 60 * 1000} />
+                <FormatDuration milliseconds={mediaItem.runtime! * 60 * 1000} />
               </span>
             </div>
           )}
 
-          {mediaItem.totalRuntime > 0 && (
+          {mediaItem.totalRuntime != null && mediaItem.totalRuntime > 0 && (
             <div>
               <span className="font-bold">
                 <Trans>Total runtime</Trans>:{' '}
               </span>
               <span>
                 <FormatDuration
-                  milliseconds={mediaItem.totalRuntime * 60 * 1000}
+                  milliseconds={mediaItem.totalRuntime! * 60 * 1000}
                 />
               </span>
             </div>
@@ -320,7 +332,7 @@ export const DetailsPage: FunctionComponent = () => {
                 <span key={genre}>
                   <span className="italic">{genre}</span>
 
-                  {index < mediaItem.genres.length - 1 && (
+                  {index < mediaItem.genres!.length - 1 && (
                     <span className="mx-1 text-zinc-600">|</span>
                   )}
                 </span>
@@ -398,7 +410,7 @@ export const DetailsPage: FunctionComponent = () => {
                 {mediaItem.numberOfEpisodes}
               </div>
 
-              {mediaItem.unseenEpisodesCount > 0 && (
+              {mediaItem.unseenEpisodesCount != null && mediaItem.unseenEpisodesCount > 0 && (
                 <div>
                   <span className="font-bold">
                     <Trans>Unseen episodes</Trans>:{' '}
@@ -437,7 +449,7 @@ export const DetailsPage: FunctionComponent = () => {
       </div>
 
       <div className="mt-3">
-        <AddToListButtonWithModal mediaItemId={mediaItem.id} />
+        <AddToListButtonWithModal mediaItemId={mediaItemRecordId} />
       </div>
 
       <div className="mt-3">
@@ -458,7 +470,7 @@ export const DetailsPage: FunctionComponent = () => {
 
       {mediaItem.mediaType === 'tv' && (
         <Button asChild variant="outline" className="mt-3 text-green-600 dark:text-green-400">
-          <Link to={`/seasons/${mediaItem.id}`}>
+          <Link to={`/seasons/${mediaItemRecordId}`}>
             <Trans>Episodes page</Trans>
           </Link>
         </Button>
@@ -474,7 +486,7 @@ export const DetailsPage: FunctionComponent = () => {
                 className="mt-3"
                 onClick={async () => {
                   addToProgress({
-                    mediaItemId: mediaItem.id,
+                    mediaItemId: mediaItemRecordId,
                     progress: 0,
                   });
                 }}
@@ -494,7 +506,7 @@ export const DetailsPage: FunctionComponent = () => {
                   className="mt-3"
                   onClick={async () => {
                     addToProgress({
-                      mediaItemId: mediaItem.id,
+                      mediaItemId: mediaItemRecordId,
                       progress: 1,
                     });
                   }}
@@ -511,7 +523,7 @@ export const DetailsPage: FunctionComponent = () => {
 
                 <div className="mt-3">
                   <Trans>Progress</Trans>:{' '}
-                  {Math.round(mediaItem.progress * 100)}%
+                  {Math.round((mediaItem.progress ?? 0) * 100)}%
                 </div>
               </>
             )}
@@ -544,39 +556,39 @@ export const DetailsPage: FunctionComponent = () => {
           <MarkAsSeenFirstUnwatchedEpisode mediaItem={mediaItem} />
         </div>
       )}
-      {mediaItem.lastSeenAt > 0 && (
+      {mediaItem.lastSeenAt != null && mediaItem.lastSeenAt > 0 && (
         <div className="mt-3">
           {isAudiobook(mediaItem) && (
             <Trans>
-              Last listened at {new Date(mediaItem.lastSeenAt).toLocaleString()}
+              Last listened at {new Date(mediaItem.lastSeenAt!).toLocaleString()}
             </Trans>
           )}
 
           {isBook(mediaItem) && (
             <Trans>
-              Last read at {new Date(mediaItem.lastSeenAt).toLocaleString()}
+              Last read at {new Date(mediaItem.lastSeenAt!).toLocaleString()}
             </Trans>
           )}
 
           {(isMovie(mediaItem) || isTvShow(mediaItem)) && (
             <Trans>
-              Last seen at {new Date(mediaItem.lastSeenAt).toLocaleString()}
+              Last seen at {new Date(mediaItem.lastSeenAt!).toLocaleString()}
             </Trans>
           )}
 
           {isVideoGame(mediaItem) && (
             <Trans>
-              Last played at {new Date(mediaItem.lastSeenAt).toLocaleString()}
+              Last played at {new Date(mediaItem.lastSeenAt!).toLocaleString()}
             </Trans>
           )}
         </div>
       )}
-      {mediaItem.seenHistory?.length > 0 && (
+      {(mediaItem.seenHistory?.length ?? 0) > 0 && (
         <div className="mt-3">
           <div>
             {isAudiobook(mediaItem) && (
               <Plural
-                value={mediaItem.seenHistory.length}
+                value={mediaItem.seenHistory!.length}
                 one="Listened 1 time"
                 other="Listened # times"
               />
@@ -584,7 +596,7 @@ export const DetailsPage: FunctionComponent = () => {
 
             {isBook(mediaItem) && (
               <Plural
-                value={mediaItem.seenHistory.length}
+                value={mediaItem.seenHistory!.length}
                 one="Read 1 time"
                 other="Read # times"
               />
@@ -592,7 +604,7 @@ export const DetailsPage: FunctionComponent = () => {
 
             {(isMovie(mediaItem) || isTvShow(mediaItem)) && (
               <Plural
-                value={mediaItem.seenHistory.length}
+                value={mediaItem.seenHistory!.length}
                 one="Seen 1 time"
                 other="Seen # times"
               />
@@ -600,7 +612,7 @@ export const DetailsPage: FunctionComponent = () => {
 
             {isVideoGame(mediaItem) && (
               <Plural
-                value={mediaItem.seenHistory.length}
+                value={mediaItem.seenHistory!.length}
                 one="Played 1 time"
                 other="Played # times"
               />
@@ -627,7 +639,8 @@ export const DetailsPage: FunctionComponent = () => {
       )}
 
       {/* Rating */}
-      {(hasBeenReleased(mediaItem) || !hasReleaseDate(mediaItem)) && (
+      {(hasBeenReleased(mediaItem) || !hasReleaseDate(mediaItem)) &&
+        mediaItem.userRating && (
         <RatingAndReview
           userRating={mediaItem.userRating}
           mediaItem={mediaItem}
@@ -691,7 +704,7 @@ const UpdateMetadataButton: FunctionComponent<{
   const { mediaItem } = props;
 
   const { updateMetadata, isLoading, isError } = useUpdateMetadata(
-    mediaItem.id
+    mediaItem.id!
   );
 
   return (
@@ -745,7 +758,7 @@ const MarkAsSeenFirstUnwatchedEpisode: FunctionComponent<{
       {(closeModal) => (
         <SelectSeenDate
           mediaItem={mediaItem}
-          episode={mediaItem.firstUnwatchedEpisode}
+          episode={mediaItem.firstUnwatchedEpisode ?? undefined}
           closeModal={closeModal}
         />
       )}

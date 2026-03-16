@@ -113,11 +113,11 @@ describe('facetFilters', () => {
     await mediaItemRepository.createMany([movie1, movie2, tvShow1, game1, book1]);
 
     // Add all items to user's library (watchlist or seen)
-    await addToWatchlistAndSeen(user.id, movie1.id, true, true);
-    await addToWatchlistAndSeen(user.id, movie2.id, true, true);
-    await addToWatchlistAndSeen(user.id, tvShow1.id, true, true);
-    await addToWatchlistAndSeen(user.id, game1.id, true, false);
-    await addToWatchlistAndSeen(user.id, book1.id, true, true);
+    await addToWatchlistAndSeen(user.id, movie1.id!, true, true);
+    await addToWatchlistAndSeen(user.id, movie2.id!, true, true);
+    await addToWatchlistAndSeen(user.id, tvShow1.id!, true, true);
+    await addToWatchlistAndSeen(user.id, game1.id!, true, false);
+    await addToWatchlistAndSeen(user.id, book1.id!, true, true);
   });
 
   afterAll(clearDatabase);

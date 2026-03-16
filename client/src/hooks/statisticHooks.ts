@@ -5,10 +5,7 @@ import { mediaTrackerApi } from 'src/api/api';
 export const useGenreSeen = (
   currentYear: Statistics.StatisticsSeeninyearList.RequestQuery
 ) => {
-  let year = currentYear;
-  if (currentYear.year === null) {
-    year = null;
-  }
+  const year = currentYear.year === null ? undefined : currentYear;
 
   const {
     error: error,
@@ -30,10 +27,7 @@ export const useGenreSeen = (
 export const useSeen = (
   currentYear: Statistics.StatisticsSeeninyearList.RequestQuery
 ) => {
-  let year = currentYear;
-  if (currentYear.year === null) {
-    year = null;
-  }
+  const year = currentYear.year === null ? undefined : currentYear;
 
   const {
     error: error,

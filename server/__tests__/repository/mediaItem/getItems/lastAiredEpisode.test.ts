@@ -139,7 +139,7 @@ describe('lastAiredEpisode', () => {
 
     await listItemRepository.addItem({
       watchlist: true,
-      mediaItemId: mediaItem.id,
+      mediaItemId: mediaItem.id!,
       userId: user.id,
     });
   });
@@ -161,7 +161,7 @@ describe('lastAiredEpisode', () => {
   test('details', async () => {
     const result = await mediaItemRepository.details({
       userId: 1,
-      mediaItemId: mediaItem.id,
+      mediaItemId: mediaItem.id!,
     });
 
     expect(result.lastAiredEpisode).toMatchObject(

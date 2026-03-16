@@ -1,11 +1,7 @@
-import { NextFunction } from 'express';
+import { NextFunction, RequestHandler } from 'express';
 
 export const request = (
-  handler: (
-    req: Express.Request,
-    res: Express.Response,
-    next: NextFunction
-  ) => void,
+  handler: RequestHandler,
   args: {
     userId: number;
     pathParams?: Record<string, unknown>;
@@ -70,8 +66,8 @@ export const request = (
         query: args.requestQuery ?? {},
         body: args.requestBody ?? {},
         headers: args.requestHeaders ?? {},
-      } as unknown as Express.Request,
-      res as unknown as Express.Response,
+      } as unknown as Parameters<RequestHandler>[0],
+      res as unknown as Parameters<RequestHandler>[1],
       ((err?: unknown) => {
         if (err) {
           reject(err);

@@ -57,9 +57,9 @@ export const importFromGoodreadsRss = async (
 
   const parser = new XMLParser();
   const feed: RssFeed = parser.parse(res.data);
-  const items = feed?.rss?.channel?.item;
+  const items = feed.rss.channel.item ?? [];
 
-  const mediaItems = items?.map(
+  const mediaItems = items.map(
     (item): MediaItemBase => ({
       title: item.title,
       mediaType: 'book',
@@ -68,11 +68,12 @@ export const importFromGoodreadsRss = async (
       overview: item.book_description,
       externalPosterUrl: item.book_large_image_url,
       authors: normalizeCreatorField([item.author_name]),
-      releaseDate: item.book_published?.toString(),
-      numberOfPages:
-        typeof item.book?.num_pages === 'number'
-          ? item.book.num_pages
-          : undefined,
+      ...(item.book_published != null
+        ? { releaseDate: item.book_published.toString() }
+        : {}),
+      ...(typeof item.book?.num_pages === 'number'
+        ? { numberOfPages: item.book.num_pages }
+        : {}),
     })
   );
 
@@ -85,44 +86,50 @@ export const importFromGoodreadsRss = async (
   const mediaItemByGoodreadsIdMap = _.keyBy(addedItems, 'goodreadsId');
 
   const toRead = items
-    ?.filter((item) => item.user_shelves === 'to-read')
+    .filter((item) => item.user_shelves === 'to-read')
     .map((item) => ({
-      mediaItemId: mediaItemByGoodreadsIdMap[item.book_id].id,
+      mediaItemId: mediaItemByGoodreadsIdMap[item.book_id]?.id ?? 0,
       addedAt: new Date(item.user_date_added).getTime(),
-    }));
+    }))
+    .filter((item) => item.mediaItemId !== 0);
 
   const currentlyReading = items
-    ?.filter((item) => item.user_shelves === 'currently-reading')
+    .filter((item) => item.user_shelves === 'currently-reading')
     .map(
       (item): Progress => ({
-        mediaItemId: mediaItemByGoodreadsIdMap[item.book_id].id,
+        mediaItemId: mediaItemByGoodreadsIdMap[item.book_id]?.id ?? 0,
         userId: userId,
         date: new Date(item.user_date_added).getTime(),
         progress: 0,
       })
-    );
+    )
+    .filter((item) => item.mediaItemId !== 0);
 
   const read = items
-    ?.filter((item) => item.user_shelves === '')
+    .filter((item) => item.user_shelves === '')
     .map(
       (item): Seen => ({
-        mediaItemId: mediaItemByGoodreadsIdMap[item.book_id].id,
+        mediaItemId: mediaItemByGoodreadsIdMap[item.book_id]?.id ?? 0,
         userId: userId,
-        date: item.user_read_at ? new Date(item.user_read_at).getTime() : null,
+        ...(item.user_read_at
+          ? { date: new Date(item.user_read_at).getTime() }
+          : {}),
       })
-    );
+    )
+    .filter((item) => item.mediaItemId !== 0);
 
   const rating = items
-    ?.filter((item) => item.user_rating || item.user_review)
+    .filter((item) => item.user_rating || item.user_review)
     .map(
       (item): UserRating => ({
-        mediaItemId: mediaItemByGoodreadsIdMap[item.book_id].id,
+        mediaItemId: mediaItemByGoodreadsIdMap[item.book_id]?.id ?? 0,
         userId: userId,
         rating: item.user_rating,
         review: item.user_review,
         date: new Date(item.user_date_added).getTime(),
       })
-    );
+    )
+    .filter((item) => item.mediaItemId !== 0);
 
   const lists = _.groupBy(
     items.filter(
@@ -135,12 +142,12 @@ export const importFromGoodreadsRss = async (
     'user_shelves'
   );
 
-  const seenUniqueBy = (value: Seen) => ({
+  const seenUniqueBy = (value: Partial<Seen>) => ({
     mediaItemId: value.mediaItemId,
     date: value.date,
   });
 
-  const progressUniqueBy = (value: Seen) => ({
+  const progressUniqueBy = (value: Partial<Progress>) => ({
     mediaItemId: value.mediaItemId,
   });
 
@@ -156,11 +163,15 @@ export const importFromGoodreadsRss = async (
         userId: userId,
       }));
 
+    if (!list) {
+      continue;
+    }
+
     for (const listItem of listItems) {
       await listItemRepository.addItem({
         listId: list.id,
         userId: userId,
-        mediaItemId: mediaItemByGoodreadsIdMap[listItem.book_id].id,
+        mediaItemId: mediaItemByGoodreadsIdMap[listItem.book_id]?.id ?? 0,
       });
     }
   }

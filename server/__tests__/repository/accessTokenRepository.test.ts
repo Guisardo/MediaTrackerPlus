@@ -123,7 +123,7 @@ describe('accessTokenRepository', () => {
         token: hashedToken,
       });
 
-      const found = await accessTokenRepository.findOne({ token: hashedToken });
+      const found = (await accessTokenRepository.findOne({ token: hashedToken }))!;
 
       expect(found).toBeDefined();
       expect(found.userId).toBe(Data.user.id);
@@ -148,7 +148,7 @@ describe('accessTokenRepository', () => {
         { userId: Data.user.id, description: 'multi-2', token: hash2 },
       ]);
 
-      const found = await accessTokenRepository.findOne({ token: hash2 });
+      const found = (await accessTokenRepository.findOne({ token: hash2 }))!;
 
       expect(found).toBeDefined();
       expect(found.description).toBe('multi-2');
@@ -163,9 +163,9 @@ describe('accessTokenRepository', () => {
         token: hash,
       });
 
-      const found = await accessTokenRepository.findOne({
+      const found = (await accessTokenRepository.findOne({
         userId: Data.user.id,
-      });
+      }))!;
 
       expect(found).toBeDefined();
       expect(found.userId).toBe(Data.user.id);

@@ -96,6 +96,6 @@ describe('episodes', () => {
     });
 
     expect(mediaItem.seasons).toHaveLength(3);
-    expect(Array.isArray(mediaItem.seasons[2].episodes)).toBe(true);
+    expect(Array.isArray(mediaItem.seasons![2].episodes)).toBe(true);
   });
 });

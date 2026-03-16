@@ -7,6 +7,7 @@ import { MetadataProvider } from 'src/metadata/metadataProvider';
 import { GlobalConfiguration } from 'src/repository/globalSettings';
 import { logger } from 'src/logger';
 import { SimilarItem } from 'src/metadata/types';
+import { definedOrUndefined } from 'src/repository/repository';
 
 const getPosterUrl = (path: string, size: CoverSize = 't_original') => {
   return urljoin(
@@ -20,18 +21,27 @@ export class IGDB extends MetadataProvider {
   readonly name = 'IGDB';
   readonly mediaType = 'video_game';
 
-  public async search(query: string): Promise<MediaItemForProvider[]> {
+  public override async search(query: string): Promise<MediaItemForProvider[]> {
     const result = await this.searchGames(query);
 
     return Promise.all(result.map((item) => this.mapGame(item)));
   }
 
-  async details(mediaItem: ExternalIds): Promise<MediaItemForProvider> {
+  override async details(mediaItem: ExternalIds): Promise<MediaItemForProvider> {
+    if (!mediaItem.igdbId) {
+      throw new Error('IGDB.details requires an igdbId');
+    }
+
     const result = await this.game(mediaItem.igdbId);
-    return result ? this.mapGame(result) : null;
+
+    if (!result) {
+      throw new Error(`IGDB.details: no game found for igdbId=${mediaItem.igdbId}`);
+    }
+
+    return this.mapGame(result);
   }
 
-  async fetchGameLocalizations(
+  override async fetchGameLocalizations(
     ids: ExternalIds
   ): Promise<Array<{ regionId: number; name: string }>> {
     if (!ids.igdbId) {
@@ -63,7 +73,7 @@ export class IGDB extends MetadataProvider {
       }));
   }
 
-  async similar(ids: ExternalIds): Promise<SimilarItem[]> {
+  override async similar(ids: ExternalIds): Promise<SimilarItem[]> {
     if (!ids.igdbId) {
       logger.warn(`IGDB.similar: no igdbId provided — returning empty results`);
       return [];
@@ -135,6 +145,8 @@ export class IGDB extends MetadataProvider {
   }
 
   private mapGame(searchResult: Game): MediaItemForProvider {
+    const website = searchResult.websites?.[0]?.url;
+
     return {
       needsDetails: false,
       source: this.name,
@@ -142,17 +154,16 @@ export class IGDB extends MetadataProvider {
       igdbId: searchResult.id,
       releaseDate: searchResult.first_release_date
         ? new Date(searchResult.first_release_date * 1000).toISOString()
-        : null,
+        : undefined,
       title: searchResult.name,
-      overview: searchResult.summary,
+      overview: definedOrUndefined(searchResult.summary),
       externalPosterUrl: searchResult.cover
         ? getPosterUrl(searchResult.cover.image_id)
-        : null,
+        : undefined,
       genres: searchResult.genres
         ? searchResult.genres.map((genre) => genre.name)
-        : null,
-      url:
-        searchResult.websites?.length > 0 ? searchResult.websites[0].url : null,
+        : undefined,
+      url: definedOrUndefined(website),
       developer: searchResult.involved_companies?.find((item) => item.developer)
         ?.company.name,
       publisher: searchResult.involved_companies
@@ -163,7 +174,7 @@ export class IGDB extends MetadataProvider {
     };
   }
 
-  private async game(gameId: number) {
+  private async game(gameId: number): Promise<Game | undefined> {
     const res = (await this.get(
       'games',
       `fields 
@@ -214,11 +225,16 @@ export class IGDB extends MetadataProvider {
 
   private async get(endpoint: string, query: string) {
     await this.refreshToken();
+    const token = this.token;
+
+    if (!token) {
+      throw new Error('IGDB token was not initialized');
+    }
 
     const result = await this.requestQueue.request(() =>
       axios.post(urljoin('https://api.igdb.com/v4/', endpoint), query, {
         headers: {
-          Authorization: 'Bearer ' + this.token.access_token,
+          Authorization: 'Bearer ' + token.access_token,
           'Client-ID': GlobalConfiguration.configuration.igdbClientId,
         },
       })
@@ -229,7 +245,9 @@ export class IGDB extends MetadataProvider {
 
   private async refreshToken() {
     if (
-      this.tokenAcquiredAt?.getTime() + this.token?.expires_in * 1000 >
+      this.token &&
+      this.tokenAcquiredAt &&
+      this.tokenAcquiredAt.getTime() + this.token.expires_in * 1000 >
       new Date().getTime()
     ) {
       return;
@@ -251,8 +269,8 @@ export class IGDB extends MetadataProvider {
     }
   }
 
-  private token: Token;
-  private tokenAcquiredAt: Date;
+  private token?: Token;
+  private tokenAcquiredAt?: Date;
   private readonly requestQueue = new RequestQueue({
     timeBetweenRequests: 250,
   });

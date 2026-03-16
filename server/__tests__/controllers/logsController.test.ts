@@ -3,7 +3,7 @@ import { Database } from 'src/dbconfig';
 import { LogEntry } from 'src/logger';
 import { Data } from '__tests__/__utils__/data';
 import { clearDatabase, runMigrations } from '__tests__/__utils__/utils';
-import { NextFunction } from 'express';
+import { Request, Response, NextFunction, RequestHandler } from 'express';
 
 /**
  * LogsController tests.
@@ -58,11 +58,7 @@ const getLogsMock = getLogs as jest.MockedFunction<typeof getLogs>;
  * `send()` resolves the promise.
  */
 const requestWithStatus = (
-  handler: (
-    req: Express.Request,
-    res: Express.Response,
-    next: NextFunction
-  ) => void,
+  handler: RequestHandler,
   args: {
     userId: number;
     requestQuery?: Record<string, unknown>;
@@ -86,8 +82,8 @@ const requestWithStatus = (
         params: {},
         query: args.requestQuery ?? {},
         body: {},
-      } as unknown as Express.Request,
-      res as unknown as Express.Response,
+      } as unknown as Request,
+      res as unknown as Response,
       reject
     );
   });

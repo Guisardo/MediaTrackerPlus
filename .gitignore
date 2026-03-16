@@ -21,9 +21,6 @@ client/junit.xml
 */src/i18n/locales/*/*.ts
 
 rest-api/index.js
-rest-api/index.ts
-
-server/openapi.json
 
 docs/dist
 

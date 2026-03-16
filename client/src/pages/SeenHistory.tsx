@@ -21,8 +21,11 @@ export const SeenHistoryPage: FunctionComponent = () => {
   const episodesMap: Record<number, TvEpisode> = useMemo(
     () =>
       mediaItem?.seasons
-        .flatMap((season) => season.episodes)
-        .reduce((res, episode) => ({ ...res, [episode.id]: episode }), {}),
+        ?.flatMap((season) => season.episodes ?? [])
+        .reduce<Record<number, TvEpisode>>(
+          (res, episode) => ({ ...res, [episode.id!]: episode }),
+          {}
+        ) ?? {},
     [mediaItem]
   );
 
@@ -34,14 +37,18 @@ export const SeenHistoryPage: FunctionComponent = () => {
     return <>{error}</>;
   }
 
+  if (!mediaItem) {
+    return <Trans>Loading</Trans>;
+  }
+
   return (
     <>
-      {mediaItem.seenHistory?.length > 0 && (
+      {(mediaItem.seenHistory?.length ?? 0) > 0 && (
         <div className="mt-3">
           <div>
             {isAudiobook(mediaItem) && (
               <Plural
-                value={mediaItem.seenHistory.length}
+                value={mediaItem.seenHistory!.length}
                 one="Listened 1 time"
                 other="Listened # times"
               />
@@ -49,7 +56,7 @@ export const SeenHistoryPage: FunctionComponent = () => {
 
             {isBook(mediaItem) && (
               <Plural
-                value={mediaItem.seenHistory.length}
+                value={mediaItem.seenHistory!.length}
                 one="Read 1 time"
                 other="Read # times"
               />
@@ -57,7 +64,7 @@ export const SeenHistoryPage: FunctionComponent = () => {
 
             {(isMovie(mediaItem) || isTvShow(mediaItem)) && (
               <Plural
-                value={mediaItem.seenHistory.length}
+                value={mediaItem.seenHistory!.length}
                 one="Seen 1 time"
                 other="Seen # times"
               />
@@ -65,7 +72,7 @@ export const SeenHistoryPage: FunctionComponent = () => {
 
             {isVideoGame(mediaItem) && (
               <Plural
-                value={mediaItem.seenHistory.length}
+                value={mediaItem.seenHistory!.length}
                 one="Played 1 time"
                 other="Played # times"
               />
@@ -73,8 +80,8 @@ export const SeenHistoryPage: FunctionComponent = () => {
           </div>
 
           <ul className="list-disc">
-            {mediaItem.seenHistory
-              .sort((a, b) => b.date - a.date)
+            {mediaItem.seenHistory!
+              .sort((a, b) => (b.date ?? 0) - (a.date ?? 0))
               .map((seenEntry) => ({
                 ...seenEntry,
                 dateStr: seenEntry.date
@@ -126,7 +133,7 @@ export const SeenHistoryPage: FunctionComponent = () => {
                           episodesMap[seenEntry.episodeId]) ||
                         undefined
                       }
-                      seenId={seenEntry.id}
+                      seenId={seenEntry.id ?? undefined}
                     />
                   </div>
                 </li>

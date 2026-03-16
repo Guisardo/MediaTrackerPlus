@@ -6,10 +6,13 @@ import React, {
   useState,
 } from 'react';
 
-const DarkModeContext = createContext<{
-  darkMode: boolean;
-  setDarkMode: (value: boolean) => void;
-}>(null);
+const DarkModeContext = createContext<
+  | {
+      darkMode: boolean;
+      setDarkMode: (value: boolean) => void;
+    }
+  | undefined
+>(undefined);
 
 export const DarkModeProvider: FunctionComponent<{ children: React.ReactNode }> = (props) => {
   const [darkMode, setDarkModeValue] = useState<boolean>(
@@ -53,5 +56,11 @@ export const DarkModeProvider: FunctionComponent<{ children: React.ReactNode }> 
 };
 
 export const useDarkMode = () => {
-  return useContext(DarkModeContext);
+  const context = useContext(DarkModeContext);
+
+  if (!context) {
+    throw new Error('useDarkMode must be used inside DarkModeProvider');
+  }
+
+  return context;
 };

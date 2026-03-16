@@ -17,6 +17,17 @@ const getDetails = async (mediaItemId: number) => {
   return mediaTrackerApi.details.get(mediaItemId);
 };
 
+const requireId = (
+  value: number | null | undefined,
+  label: string
+): number => {
+  if (value == null) {
+    throw new Error(`${label} is required`);
+  }
+
+  return value;
+};
+
 export const useDetails = (mediaItemId: number) => {
   const { isLoading, error, data } = useQuery({
     queryKey: detailsKey(mediaItemId),
@@ -44,12 +55,13 @@ export const useUpdateMetadata = (mediaItemId: number) => {
 };
 
 const updateMediaItem = async (mediaItem: MediaItemItemsResponse) => {
-  const key = detailsKey(mediaItem.id);
+  const mediaItemId = requireId(mediaItem.id, 'mediaItem.id');
+  const key = detailsKey(mediaItemId);
   await queryClient.invalidateQueries({ queryKey: key, refetchType: 'all' });
 
   const updatedMediaItem =
     queryClient.getQueryData<MediaItemItemsResponse>(key) ||
-    (await getDetails(mediaItem.id));
+    (await getDetails(mediaItemId));
 
   const updater = (item: MediaItemItemsResponse) => {
     return item.id === updatedMediaItem?.id ? updatedMediaItem : item;
@@ -57,15 +69,19 @@ const updateMediaItem = async (mediaItem: MediaItemItemsResponse) => {
 
   queryClient.setQueriesData(
     { queryKey: ['items'] },
-    (items: Items.Paginated.ResponseBody) => {
+    (items: Items.Paginated.ResponseBody | undefined) => {
+      if (!items) {
+        return items;
+      }
+
       return {
         ...items,
-        data: items?.data?.map(updater),
+        data: items.data.map(updater),
       };
     }
   );
 
-  queryClient.setQueriesData({ queryKey: ['listItems'] }, (items: ListItemsResponse) => {
+  queryClient.setQueriesData({ queryKey: ['listItems'] }, (items: ListItemsResponse | undefined) => {
     return items?.map((item) => ({
       ...item,
       mediaItem: updater(item.mediaItem),
@@ -79,7 +95,7 @@ const updateMediaItem = async (mediaItem: MediaItemItemsResponse) => {
 
 export const setRating = async (
   options: {
-    rating?: number;
+    rating?: number | null;
     review?: string;
   } & (
     | { mediaItem: MediaItemItemsResponse }
@@ -87,18 +103,16 @@ export const setRating = async (
     | { mediaItem: MediaItemItemsResponse; episode: TvEpisode }
   )
 ) => {
-  const { mediaItem, season, episode } = {
-    season: undefined,
-    episode: undefined,
-    ...options,
-  };
+  const mediaItem = options.mediaItem;
+  const season = 'season' in options ? options.season : undefined;
+  const episode = 'episode' in options ? options.episode : undefined;
 
   await mediaTrackerApi.rating.add({
-    mediaItemId: mediaItem.id,
-    seasonId: season?.id,
-    episodeId: episode?.id,
-    rating: options.rating,
-    review: options.review,
+    mediaItemId: requireId(mediaItem.id, 'mediaItem.id'),
+    ...(season?.id != null ? { seasonId: season.id } : {}),
+    ...(episode?.id != null ? { episodeId: episode.id } : {}),
+    ...(options.rating !== undefined ? { rating: options.rating } : {}),
+    ...(options.review !== undefined ? { review: options.review } : {}),
   });
 
   await updateMediaItem(mediaItem);
@@ -150,9 +164,9 @@ export const removeFromWatchlist = async (args: {
   const { mediaItem, season, episode } = args;
 
   await mediaTrackerApi.watchlist.delete({
-    mediaItemId: mediaItem.id,
-    seasonId: season?.id,
-    episodeId: episode?.id,
+    mediaItemId: requireId(mediaItem.id, 'mediaItem.id'),
+    ...(season?.id != null ? { seasonId: season.id } : {}),
+    ...(episode?.id != null ? { episodeId: episode.id } : {}),
   });
 
   if (!season && !episode) {
@@ -175,9 +189,9 @@ export const addToWatchlist = async (args: {
   const { mediaItem, season, episode } = args;
 
   await mediaTrackerApi.watchlist.add({
-    mediaItemId: mediaItem.id,
-    seasonId: season?.id,
-    episodeId: episode?.id,
+    mediaItemId: requireId(mediaItem.id, 'mediaItem.id'),
+    ...(season?.id != null ? { seasonId: season.id } : {}),
+    ...(episode?.id != null ? { episodeId: episode.id } : {}),
   });
 
   if (!season && !episode) {
@@ -200,10 +214,10 @@ export const addToProgress = async (args: {
   const { mediaItemId, progress, duration } = args;
 
   await mediaTrackerApi.progress.add({
-    mediaItemId: mediaItemId,
+    mediaItemId,
     date: new Date().getTime(),
-    progress: progress,
-    duration: duration,
+    progress,
+    ...(duration !== undefined ? { duration } : {}),
   });
 
   queryClient.invalidateQueries({ queryKey: detailsKey(mediaItemId) });
@@ -218,11 +232,11 @@ export const markAsSeen = async (args: {
   date?: Date;
 }) => {
   await mediaTrackerApi.seen.add({
-    mediaItemId: args.mediaItem.id,
-    seasonId: args.season?.id,
-    episodeId: args.episode?.id,
-    lastSeenAt: args.seenAt,
-    date: args.date?.getTime(),
+    mediaItemId: requireId(args.mediaItem.id, 'mediaItem.id'),
+    ...(args.season?.id != null ? { seasonId: args.season.id } : {}),
+    ...(args.episode?.id != null ? { episodeId: args.episode.id } : {}),
+    ...(args.seenAt !== undefined ? { lastSeenAt: args.seenAt } : {}),
+    ...(args.date !== undefined ? { date: args.date.getTime() } : {}),
   });
 
   await updateMediaItem(args.mediaItem);
@@ -237,11 +251,11 @@ export const setLastSeenEpisode = async (args: {
   date?: Date;
 }) => {
   await mediaTrackerApi.seen.add({
-    mediaItemId: args.mediaItem.id,
-    lastSeenEpisodeId: args.episode?.id,
+    mediaItemId: requireId(args.mediaItem.id, 'mediaItem.id'),
+    lastSeenEpisodeId: requireId(args.episode.id, 'episode.id'),
     lastSeenAt: args.lastSeenAt,
-    seasonId: args.season?.id,
-    date: args.date?.getTime(),
+    ...(args.season?.id != null ? { seasonId: args.season.id } : {}),
+    ...(args.date !== undefined ? { date: args.date.getTime() } : {}),
   });
 
   await updateMediaItem(args.mediaItem);
@@ -258,9 +272,9 @@ export const markAsUnseen = async (args: {
     await mediaTrackerApi.seen.deleteById(args.seenId);
   } else {
     await mediaTrackerApi.seen.delete({
-      mediaItemId: args.mediaItem.id,
-      seasonId: args.season?.id,
-      episodeId: args.episode?.id,
+      mediaItemId: requireId(args.mediaItem.id, 'mediaItem.id'),
+      ...(args.season?.id != null ? { seasonId: args.season.id } : {}),
+      ...(args.episode?.id != null ? { episodeId: args.episode.id } : {}),
     });
   }
 
@@ -272,7 +286,7 @@ export const removeFromSeenHistory = async (
   mediaItem: MediaItemItemsResponse
 ) => {
   await mediaTrackerApi.seen.delete({
-    mediaItemId: mediaItem.id,
+    mediaItemId: requireId(mediaItem.id, 'mediaItem.id'),
   });
   await updateMediaItem(mediaItem);
   queryClient.invalidateQueries({ queryKey: ['items'] });

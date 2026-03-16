@@ -28,23 +28,25 @@ export const EpisodePage: FunctionComponent = () => {
   const { user } = useUser();
   const { mediaItem } = useDetails(Number(mediaItemId));
 
+  if (!mediaItem) {
+    return <Trans>Loading</Trans>;
+  }
+
   const episode = findEpisodeBySeasonAndEpisodeNumber(
     mediaItem,
     Number(seasonNumber),
     Number(episodeNumber)
   );
 
-  if (mediaItem && !episode) {
+  if (!episode || mediaItem.id == null) {
     throw new Error('Invalid episode number');
   }
 
-  if (!mediaItem) {
-    return <Trans>Loading</Trans>;
-  }
+  const mediaItemIdNumber = mediaItem.id;
 
   return (
     <div>
-      <Link className="text-2xl font-bold" to={`/details/${mediaItem.id}`}>
+      <Link className="text-2xl font-bold" to={`/details/${mediaItemIdNumber}`}>
         {mediaItem.title} {formatEpisodeNumber(episode)}
       </Link>
       {episode.description && (
@@ -85,8 +87,8 @@ export const EpisodePage: FunctionComponent = () => {
 
       <div className="mt-3">
         <AddToListButtonWithModal
-          mediaItemId={mediaItem.id}
-          episodeId={episode.id}
+          mediaItemId={mediaItemIdNumber}
+          episodeId={episode.id ?? 0}
         />
       </div>
 

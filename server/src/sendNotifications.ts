@@ -36,12 +36,20 @@ const notificationForFutureItems = async () => {
   );
 
   for (const mediaItem of releasedItems) {
+    if (!mediaItem.releaseDate) {
+      continue;
+    }
+
     const releaseDate = parseISO(mediaItem.releaseDate);
 
     addFutureNotification(
-      async () =>
-        (await checkIfNotificationHasBeenSent(mediaItem)) &&
-        (await sendNotificationForMediaItem(mediaItem)),
+      async () => {
+        if (await checkIfNotificationHasBeenSent(mediaItem)) {
+          return;
+        }
+
+        await sendNotificationForMediaItem(mediaItem);
+      },
       releaseDate
     );
 
@@ -88,15 +96,26 @@ const notificationForFutureEpisodes = async () => {
       }
 
       const episode = groupedByTvShow[0];
+      if (!episode?.releaseDate || !episode.tvShow) {
+        continue;
+      }
+
       const releaseDate = parseISO(episode.releaseDate);
 
       addFutureNotification(
-        async () =>
-          sendNotificationForEpisodes(
-            await Promise.all(
-              groupedByTvShow.filter(checkIfNotificationHasBeenSent)
-            )
-          ),
+        async () => {
+          const notificationStatus = await Promise.all(
+            groupedByTvShow.map(async (item) => ({
+              item,
+              alreadySent: await checkIfNotificationHasBeenSent(item),
+            }))
+          );
+          const unsentEpisodes = notificationStatus
+            .filter(({ alreadySent }) => !alreadySent)
+            .map(({ item }) => item);
+
+          await sendNotificationForEpisodes(unsentEpisodes);
+        },
         releaseDate
       );
 
@@ -130,6 +149,9 @@ const sendNotificationForEpisodes = async (episodes: TvEpisode[]) => {
   }
 
   const tvShow = episodes[0].tvShow;
+  if (!tvShow?.id) {
+    return;
+  }
 
   const usersToNotify = await userRepository.findUsersWithMediaItemOnWatchlist({
     mediaItemId: tvShow.id,
@@ -166,6 +188,10 @@ const sendNotificationForEpisodes = async (episodes: TvEpisode[]) => {
 };
 
 const sendNotificationForMediaItem = async (mediaItem: MediaItemBase) => {
+  if (!mediaItem.id) {
+    return;
+  }
+
   const title = mediaItem.title;
   const usersToNotify = await userRepository.findUsersWithMediaItemOnWatchlist({
     mediaItemId: mediaItem.id,
@@ -200,13 +226,22 @@ const sendNotificationForItem = async (args: {
 
   for (const user of users) {
     const platform = user.notificationPlatform;
+    if (!platform) {
+      continue;
+    }
+
     const credentials = await notificationPlatformsCredentialsRepository.get(
       user.id
     );
+    const platformCredentials = credentials[platform];
+
+    if (!platformCredentials) {
+      continue;
+    }
 
     await Notifications.sendNotification(platform, {
       message: notificationMessage,
-      credentials: credentials[platform],
+      credentials: platformCredentials,
     });
   }
 

@@ -22,11 +22,11 @@ describe('delete list', () => {
   afterAll(clearDatabase);
 
   test('watchlist should not be deleted', async () => {
-    const watchlist = await listRepository.create({
+    const watchlist = (await listRepository.create({
       userId: Data.user.id,
       name: 'Watchlist',
       isWatchlist: true,
-    });
+    }))!;
 
     await listRepository.delete({
       listId: watchlist.id,

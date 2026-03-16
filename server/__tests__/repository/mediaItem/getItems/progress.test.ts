@@ -38,14 +38,14 @@ const date = new Date().getTime();
 const progress: Progress = {
   date: date,
   userId: user.id,
-  mediaItemId: mediaItem.id,
+  mediaItemId: mediaItem.id!,
   progress: 0.8,
 };
 
 const progress2: Progress = {
   date: date,
   userId: user2.id,
-  mediaItemId: mediaItem.id,
+  mediaItemId: mediaItem.id!,
   progress: 0.4,
 };
 
@@ -82,7 +82,7 @@ describe('progress', () => {
 
   test('details, user', async () => {
     const res = await mediaItemRepository.details({
-      mediaItemId: mediaItem.id,
+      mediaItemId: mediaItem.id!,
       userId: user.id,
     });
 
@@ -91,7 +91,7 @@ describe('progress', () => {
 
   test('details, user2', async () => {
     const res = await mediaItemRepository.details({
-      mediaItemId: mediaItem.id,
+      mediaItemId: mediaItem.id!,
       userId: user2.id,
     });
 

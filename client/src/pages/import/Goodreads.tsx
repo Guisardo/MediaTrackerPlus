@@ -16,7 +16,7 @@ const useGoodreadsImport = () => {
 };
 
 export const GoodreadsImportPage: FunctionComponent = () => {
-  const [rssLink, setRssLink] = useState<string>();
+  const [rssLink, setRssLink] = useState('');
   const { goodreadsImport, summary, loading } = useGoodreadsImport();
 
   return (

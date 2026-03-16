@@ -170,11 +170,11 @@ describe('TMDbMovie.localizedDetails', () => {
 
       const result = await tmdbMovie.localizedDetails({ tmdbId: 550 }, 'es');
 
-      expect(result.title).toBe('El Club de la Pelea');
-      expect(result.overview).toBe(
+      expect(result!.title).toBe('El Club de la Pelea');
+      expect(result!.overview).toBe(
         'Un empleado de oficina insomne y un fabricante de jabon forman un club de lucha.'
       );
-      expect(result.genres).toEqual(['Accion', 'Drama']);
+      expect(result!.genres).toEqual(['Accion', 'Drama']);
     });
 
     test('returns the full mapped movie structure (source, mediaType, tmdbId, etc.)', async () => {
@@ -193,14 +193,14 @@ describe('TMDbMovie.localizedDetails', () => {
 
       const result = await tmdbMovie.localizedDetails({ tmdbId: 671 }, 'fr');
 
-      expect(result.source).toBe('tmdb');
-      expect(result.mediaType).toBe('movie');
-      expect(result.tmdbId).toBe(671);
-      expect(result.releaseDate).toBe('2001-11-16');
-      expect(result.runtime).toBe(152);
-      expect(result.tmdbRating).toBe(7.9);
-      expect(result.imdbId).toBe('tt0241527');
-      expect(result.status).toBe('Released');
+      expect(result!.source).toBe('tmdb');
+      expect(result!.mediaType).toBe('movie');
+      expect(result!.tmdbId).toBe(671);
+      expect(result!.releaseDate).toBe('2001-11-16');
+      expect(result!.runtime).toBe(152);
+      expect(result!.tmdbRating).toBe(7.9);
+      expect(result!.imdbId).toBe('tt0241527');
+      expect(result!.status).toBe('Released');
     });
   });
 
@@ -220,7 +220,7 @@ describe('TMDbMovie.localizedDetails', () => {
 
       const result = await tmdbMovie.localizedDetails({ tmdbId: 550 }, 'fr');
 
-      expect(result).not.toHaveProperty('originalTitle');
+      expect(result!).not.toHaveProperty('originalTitle');
     });
 
     test('originalTitle is deleted even when API returns a non-empty original_title', async () => {
@@ -235,7 +235,7 @@ describe('TMDbMovie.localizedDetails', () => {
       const result = await tmdbMovie.localizedDetails({ tmdbId: 613 }, 'fr');
 
       // originalTitle must not be present in the returned object at all
-      expect(Object.keys(result)).not.toContain('originalTitle');
+      expect(Object.keys(result!)).not.toContain('originalTitle');
     });
   });
 
@@ -255,7 +255,7 @@ describe('TMDbMovie.localizedDetails', () => {
 
       const result = await tmdbMovie.localizedDetails({ tmdbId: 550 }, 'xx');
 
-      expect(result.title).toBeNull();
+      expect(result!.title).toBeNull();
     });
 
     test('preserves non-empty title as-is', async () => {
@@ -268,7 +268,7 @@ describe('TMDbMovie.localizedDetails', () => {
 
       const result = await tmdbMovie.localizedDetails({ tmdbId: 550 }, 'pt');
 
-      expect(result.title).toBe('Clube da Luta');
+      expect(result!.title).toBe('Clube da Luta');
     });
   });
 
@@ -288,7 +288,7 @@ describe('TMDbMovie.localizedDetails', () => {
 
       const result = await tmdbMovie.localizedDetails({ tmdbId: 550 }, 'xx');
 
-      expect(result.overview).toBeNull();
+      expect(result!.overview).toBeNull();
     });
 
     test('preserves non-empty overview as-is', async () => {
@@ -301,7 +301,7 @@ describe('TMDbMovie.localizedDetails', () => {
 
       const result = await tmdbMovie.localizedDetails({ tmdbId: 550 }, 'fr');
 
-      expect(result.overview).toBe(
+      expect(result!.overview).toBe(
         'Un insomniaque et un vendeur de savon creent un club de combat.'
       );
     });
@@ -322,7 +322,7 @@ describe('TMDbMovie.localizedDetails', () => {
 
       const result = await tmdbMovie.localizedDetails({ tmdbId: 550 }, 'xx');
 
-      expect(result.genres).toBeNull();
+      expect(result!.genres).toBeNull();
     });
 
     test('preserves non-empty genres array as-is', async () => {
@@ -338,7 +338,7 @@ describe('TMDbMovie.localizedDetails', () => {
 
       const result = await tmdbMovie.localizedDetails({ tmdbId: 550 }, 'it');
 
-      expect(result.genres).toEqual(['Azione', 'Dramma']);
+      expect(result!.genres).toEqual(['Azione', 'Dramma']);
     });
 
     test('preserves undefined genres (when API returns no genres field)', async () => {
@@ -354,7 +354,7 @@ describe('TMDbMovie.localizedDetails', () => {
 
       // When genres are undefined from mapItem, the null conversion guard
       // (movie.genres != null) won't trigger, so genres stays undefined
-      expect(result.genres).toBeUndefined();
+      expect(result!.genres).toBeUndefined();
     });
   });
 
@@ -375,11 +375,11 @@ describe('TMDbMovie.localizedDetails', () => {
 
       const result = await tmdbMovie.localizedDetails({ tmdbId: 550 }, 'xx');
 
-      expect(result.title).toBeNull();
-      expect(result.overview).toBeNull();
-      expect(result.genres).toBeNull();
+      expect(result!.title).toBeNull();
+      expect(result!.overview).toBeNull();
+      expect(result!.genres).toBeNull();
       // originalTitle should still be deleted
-      expect(result).not.toHaveProperty('originalTitle');
+      expect(result!).not.toHaveProperty('originalTitle');
     });
   });
 
@@ -441,10 +441,10 @@ describe('TMDbMovie.localizedDetails', () => {
 
       const result = await tmdbMovie.localizedDetails({ tmdbId: 550 }, 'en');
 
-      expect(result.externalPosterUrl).toBe(
+      expect(result!.externalPosterUrl).toBe(
         'https://image.tmdb.org/t/p/original/abc123.jpg'
       );
-      expect(result.externalBackdropUrl).toBe(
+      expect(result!.externalBackdropUrl).toBe(
         'https://image.tmdb.org/t/p/original/def456.jpg'
       );
     });
@@ -460,8 +460,8 @@ describe('TMDbMovie.localizedDetails', () => {
 
       const result = await tmdbMovie.localizedDetails({ tmdbId: 550 }, 'en');
 
-      expect(result.externalPosterUrl).toBeNull();
-      expect(result.externalBackdropUrl).toBeNull();
+      expect(result!.externalPosterUrl).toBeNull();
+      expect(result!.externalBackdropUrl).toBeNull();
     });
   });
 });

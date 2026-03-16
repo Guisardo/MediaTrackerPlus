@@ -61,7 +61,7 @@ describe('ImportSummaryTable', () => {
       <ImportSummaryTable column="Games" rows={[]} />
     );
     expect(container.querySelector('table')).toBeInTheDocument();
-    expect(container.querySelector('tbody').children.length).toBe(0);
+    expect(container.querySelector('tbody')!.children.length).toBe(0);
   });
 
   it('uses key prop when provided, falls back to title', () => {

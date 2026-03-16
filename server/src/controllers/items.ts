@@ -40,7 +40,7 @@ function resolveMetadataLanguage(
   }
 
   // Tier 2 fallback: use first configured language
-  return availableLanguages[0];
+  return availableLanguages[0] ?? null;
 }
 
 /**
@@ -139,8 +139,8 @@ export class ItemsController {
         ? Number(rawGroupId)
         : undefined;
 
-    if (page <= 0) {
-      res.status(400);
+    if (typeof page !== 'number' || page <= 0) {
+      res.sendStatus(400);
       return;
     }
 
@@ -153,33 +153,39 @@ export class ItemsController {
     const language = resolveMetadataLanguage(req.headers['accept-language']);
 
     const result = await mediaItemRepository.items({
-      userId: userId,
-      mediaType: mediaType,
-      orderBy: orderBy,
-      sortOrder: sortOrder,
-      filter: filter,
-      page: page,
-      year: year,
-      genre: genre,
-      onlySeenItems: onlySeenItems,
-      onlyOnWatchlist: onlyOnWatchlist,
-      onlyWithNextEpisodesToWatch: onlyWithNextEpisodesToWatch,
-      onlyWithNextAiring: onlyWithNextAiring,
-      onlyWithUserRating: onlyWithUserRating,
-      onlyWithoutUserRating: onlyWithoutUserRating,
-      onlyWithProgress: onlyWithProgress,
-      genres: genres,
-      languages: languages,
-      creators: creators,
-      publishers: publishers,
-      mediaTypes: mediaTypes,
-      yearMin: yearMin,
-      yearMax: yearMax,
-      ratingMin: ratingMin,
-      ratingMax: ratingMax,
-      status: status,
-      groupId: membershipResult.resolvedGroupId,
-      language: language,
+      userId,
+      orderBy,
+      sortOrder,
+      page,
+      ...(mediaType !== undefined ? { mediaType } : {}),
+      ...(filter !== undefined ? { filter } : {}),
+      ...(year !== undefined ? { year } : {}),
+      ...(genre !== undefined ? { genre } : {}),
+      ...(onlySeenItems !== undefined ? { onlySeenItems } : {}),
+      ...(onlyOnWatchlist !== undefined ? { onlyOnWatchlist } : {}),
+      ...(onlyWithNextEpisodesToWatch !== undefined
+        ? { onlyWithNextEpisodesToWatch }
+        : {}),
+      ...(onlyWithNextAiring !== undefined ? { onlyWithNextAiring } : {}),
+      ...(onlyWithUserRating !== undefined ? { onlyWithUserRating } : {}),
+      ...(onlyWithoutUserRating !== undefined
+        ? { onlyWithoutUserRating }
+        : {}),
+      ...(onlyWithProgress !== undefined ? { onlyWithProgress } : {}),
+      ...(genres !== undefined ? { genres } : {}),
+      ...(languages !== undefined ? { languages } : {}),
+      ...(creators !== undefined ? { creators } : {}),
+      ...(publishers !== undefined ? { publishers } : {}),
+      ...(mediaTypes !== undefined ? { mediaTypes } : {}),
+      ...(yearMin !== undefined ? { yearMin } : {}),
+      ...(yearMax !== undefined ? { yearMax } : {}),
+      ...(ratingMin !== undefined ? { ratingMin } : {}),
+      ...(ratingMax !== undefined ? { ratingMax } : {}),
+      ...(status !== undefined ? { status } : {}),
+      ...(membershipResult.resolvedGroupId !== undefined
+        ? { groupId: membershipResult.resolvedGroupId }
+        : {}),
+      ...(language !== null ? { language } : {}),
     });
 
     res.json(result);
@@ -235,27 +241,33 @@ export class ItemsController {
 
     const result = await mediaItemRepository.facets({
       userId,
-      mediaType,
-      filter,
-      genres,
-      languages,
-      creators,
-      publishers,
-      mediaTypes,
-      yearMin,
-      yearMax,
-      ratingMin,
-      ratingMax,
-      status,
-      onlyOnWatchlist,
-      onlySeenItems,
-      onlyWithNextAiring,
-      onlyWithNextEpisodesToWatch,
-      onlyWithUserRating,
-      onlyWithoutUserRating,
-      onlyWithProgress,
-      orderBy,
-      groupId: membershipResult.resolvedGroupId,
+      ...(mediaType !== undefined ? { mediaType } : {}),
+      ...(filter !== undefined ? { filter } : {}),
+      ...(genres !== undefined ? { genres } : {}),
+      ...(languages !== undefined ? { languages } : {}),
+      ...(creators !== undefined ? { creators } : {}),
+      ...(publishers !== undefined ? { publishers } : {}),
+      ...(mediaTypes !== undefined ? { mediaTypes } : {}),
+      ...(yearMin !== undefined ? { yearMin } : {}),
+      ...(yearMax !== undefined ? { yearMax } : {}),
+      ...(ratingMin !== undefined ? { ratingMin } : {}),
+      ...(ratingMax !== undefined ? { ratingMax } : {}),
+      ...(status !== undefined ? { status } : {}),
+      ...(onlyOnWatchlist !== undefined ? { onlyOnWatchlist } : {}),
+      ...(onlySeenItems !== undefined ? { onlySeenItems } : {}),
+      ...(onlyWithNextAiring !== undefined ? { onlyWithNextAiring } : {}),
+      ...(onlyWithNextEpisodesToWatch !== undefined
+        ? { onlyWithNextEpisodesToWatch }
+        : {}),
+      ...(onlyWithUserRating !== undefined ? { onlyWithUserRating } : {}),
+      ...(onlyWithoutUserRating !== undefined
+        ? { onlyWithoutUserRating }
+        : {}),
+      ...(onlyWithProgress !== undefined ? { onlyWithProgress } : {}),
+      ...(orderBy !== undefined ? { orderBy } : {}),
+      ...(membershipResult.resolvedGroupId !== undefined
+        ? { groupId: membershipResult.resolvedGroupId }
+        : {}),
     });
 
     res.json(result);

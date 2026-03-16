@@ -22,21 +22,21 @@ class UserRepository extends repository<User>({
     'addRecommendedToWatchlist',
   ],
 }) {
-  public async find(where: Partial<User>): Promise<User[]> {
+  public override async find(where: Partial<User>): Promise<User[]> {
     const res = (await Database.knex<User>(this.tableName)
       .where(where)
       .select(userNonSensitiveColumns)) as User[];
 
-    if (res) {
-      return res.map((value) => this.deserialize(value));
-    }
+    return res.map((value) => this.deserialize(value));
   }
 
-  public async findOne(where: Partial<User>): Promise<User> {
+  public override async findOne(
+    where: Partial<User>
+  ): Promise<User | undefined> {
     const res = (await Database.knex<User>(this.tableName)
       .where(where)
       .select(userNonSensitiveColumns)
-      .first()) as unknown as User;
+      .first()) as unknown as User | undefined;
 
     if (res) {
       return this.deserialize(res);
@@ -88,20 +88,26 @@ class UserRepository extends repository<User>({
       );
   }
 
-  public async findOneWithPassword(where: Partial<User>): Promise<User> {
+  public async findOneWithPassword(
+    where: Partial<User>
+  ): Promise<User | undefined> {
     return await Database.knex<User>(this.tableName).where(where).first();
   }
 
-  public async create(user: Omit<User, 'id'>) {
+  public override async create(user: Omit<User, 'id'>) {
     user.password = await argon2.hash(user.password);
 
     const res = await Database.knex.transaction(async (trx) => {
       const [res] = await trx<User>('user').insert(
-        _.pick(user, this.columnNames),
+        _.pick(user, this.columnNames ?? []),
         'id'
       );
 
       const currentDate = new Date().getTime();
+
+      if (!res) {
+        throw new Error('Failed to create user');
+      }
 
       await trx('list').insert({
         name: 'Watchlist',
@@ -122,7 +128,7 @@ class UserRepository extends repository<User>({
     return res.id;
   }
 
-  public async update(user: Partial<User>) {
+  public override async update(user: Partial<User>) {
     const result = _.cloneDeep(user);
 
     if (result.password) {

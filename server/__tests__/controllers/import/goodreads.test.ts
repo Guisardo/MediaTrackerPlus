@@ -62,7 +62,7 @@ describe('Goodreads import', () => {
     expect(list).toBeDefined();
 
     const listItems = await Database.knex<ListItem>('listItem').where({
-      listId: list.id,
+      listId: list!.id,
     });
     expect(listItems.length).toEqual(1);
   });

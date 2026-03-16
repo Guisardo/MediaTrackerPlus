@@ -408,7 +408,7 @@ describe('UsersController', () => {
         name: passwordTestUser.name,
       });
       const isValid = await userRepository.verifyPassword(
-        updatedUser,
+        updatedUser!,
         'brandNew4!'
       );
 

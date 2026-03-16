@@ -2,6 +2,7 @@ import { typescriptRoutesToOpenApi } from 'typescript-routes-to-openapi';
 import { version } from '../package.json';
 
 typescriptRoutesToOpenApi({
+  tsConfigPath: './tsconfig.app.json',
   openapi: {
     info: {
       title: 'MediaTracker',

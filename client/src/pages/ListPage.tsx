@@ -20,34 +20,38 @@ import { useDarkMode } from 'src/hooks/darkMode';
 export const ListPage: FunctionComponent = () => {
   const { listId } = useParams();
   const { darkMode } = useDarkMode();
+  const numericListId = Number(listId);
 
-  const { list } = useList({ listId: Number(listId) });
+  const { list } = useList({ listId: numericListId });
 
   const sortByTranslation = useListSortByKeys();
   const [searchParams] = useSearchParams();
   const sortBy =
     sortByTranslation.translationToKey(searchParams.get('orderBy') as string) ??
-    list?.sortBy;
+    list?.sortBy ??
+    'recently-added';
 
-  const { listItems } = useListItems({ listId: Number(listId), sortBy });
+  const { listItems } = useListItems({ listId: numericListId, sortBy });
 
   const [searchQuery, setSearchQuery] = useState('');
 
-  const [sortOrder, setSortOrder] = useState<ListSortOrder>(list?.sortOrder);
+  const [sortOrder, setSortOrder] = useState<ListSortOrder>(
+    list?.sortOrder ?? 'desc'
+  );
 
   useEffect(() => {
-    if (sortOrder === undefined && list !== undefined) {
+    if (list?.sortOrder) {
       setSortOrder(list.sortOrder);
     }
-  }, [sortOrder, list]);
+  }, [list?.sortOrder]);
 
-  const filteredItems = searchQuery
-    ? listItems.filter((listItem) =>
+  const filteredItems = (searchQuery
+    ? (listItems ?? []).filter((listItem) =>
         listItem.mediaItem.title
           ?.toLowerCase()
           ?.includes(searchQuery.toLowerCase())
       )
-    : listItems;
+    : listItems) ?? [];
 
   const {
     currentPage,
@@ -57,7 +61,7 @@ export const ListPage: FunctionComponent = () => {
     showPaginationComponent,
   } = usePagination({
     itemsPerPage: 24,
-    totalItems: filteredItems?.length,
+    totalItems: filteredItems.length,
   });
 
   const handleFIlterChange = () => {
@@ -69,18 +73,21 @@ export const ListPage: FunctionComponent = () => {
   const { Menu: OrderByMenuComponent, selectedValue: translatedSortBy } =
     useMenuComponent({
       values: sortByTranslation.translations.sort(),
-      initialSelection: sortByTranslation.keyToTranslation(list?.sortBy),
+      initialSelection: sortByTranslation.keyToTranslation(
+        list?.sortBy ?? 'recently-added'
+      ),
       paramFilter: 'orderBy',
       handleFilterChange: handleFIlterChange,
     });
 
-  const data = getPaginatedItems(
+  const data =
+    getPaginatedItems(
     useSortedList({
       listItems: filteredItems,
       sortBy: sortBy,
       sortOrder: sortOrder,
     })
-  );
+    ) ?? [];
 
   if (!listItems || !list) {
     return <Trans>Loading</Trans>;
@@ -95,14 +102,21 @@ export const ListPage: FunctionComponent = () => {
               <Link to={`/list/${list.id}`}>{listName(list)}</Link>
             </div>
             <div className="ml-2 text-xs">
-              <EditListButton list={list} />
+              <EditListButton
+                list={{
+                  ...list,
+                  description: list.description ?? undefined,
+                  sortBy: list.sortBy ?? undefined,
+                  sortOrder: list.sortOrder ?? undefined,
+                }}
+              />
             </div>
           </div>
 
           <div className="mb-3 whitespace-pre">{listDescription(list)}</div>
 
           <div>
-            <FormatDuration milliseconds={list.totalRuntime * 60 * 1000} />
+            <FormatDuration milliseconds={(list.totalRuntime ?? 0) * 60 * 1000} />
           </div>
 
           {list.traktId && (
@@ -147,8 +161,8 @@ export const ListPage: FunctionComponent = () => {
           <div key={listItem.id.toString()} className="w-40 mr-2 mb-2">
             <GridItem
               mediaItem={listItem.mediaItem}
-              season={listItem.season}
-              episode={listItem.episode}
+              season={listItem.season ?? undefined}
+              episode={listItem.episode ?? undefined}
               appearance={{
                 topBar: {
                   showFirstUnwatchedEpisodeBadge: true,

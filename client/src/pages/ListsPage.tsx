@@ -14,12 +14,17 @@ import { listDescription, listName } from 'src/utils';
 export const ListsPage: FunctionComponent = () => {
   const [searchParams] = useSearchParams();
   const { user } = useUser();
+  const currentUserId = user?.id;
+
+  if (currentUserId == null) {
+    return <Trans>Loading</Trans>;
+  }
 
   const userId = searchParams.has('userId')
     ? Number(searchParams.get('userId'))
-    : user.id;
+    : currentUserId;
 
-  const canEditOrAddList = userId === user.id;
+  const canEditOrAddList = userId === currentUserId;
 
   const { lists } = useLists({
     userId: userId,
@@ -46,7 +51,14 @@ export const ListsPage: FunctionComponent = () => {
 
             {canEditOrAddList && (
               <div className="pl-2 text-xs">
-                <EditListButton list={list} />
+                <EditListButton
+                  list={{
+                    ...list,
+                    description: list.description ?? undefined,
+                    sortBy: list.sortBy ?? undefined,
+                    sortOrder: list.sortOrder ?? undefined,
+                  }}
+                />
               </div>
             )}
           </div>

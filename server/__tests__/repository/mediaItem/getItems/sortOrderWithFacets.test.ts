@@ -92,10 +92,10 @@ describe('sortOrderWithFacets', () => {
     await listItemRepository.addItem({
       userId: user.id,
       watchlist: true,
-      mediaItemId: movieA.id,
+      mediaItemId: movieA.id!,
     });
     await seenRepository.create({
-      mediaItemId: movieA.id,
+      mediaItemId: movieA.id!,
       userId: user.id,
       date: new Date().getTime(),
     });
@@ -103,10 +103,10 @@ describe('sortOrderWithFacets', () => {
     await listItemRepository.addItem({
       userId: user.id,
       watchlist: true,
-      mediaItemId: movieB.id,
+      mediaItemId: movieB.id!,
     });
     await seenRepository.create({
-      mediaItemId: movieB.id,
+      mediaItemId: movieB.id!,
       userId: user.id,
       date: new Date().getTime(),
     });
@@ -114,10 +114,10 @@ describe('sortOrderWithFacets', () => {
     await listItemRepository.addItem({
       userId: user.id,
       watchlist: true,
-      mediaItemId: tvShowC.id,
+      mediaItemId: tvShowC.id!,
     });
     await seenRepository.create({
-      mediaItemId: tvShowC.id,
+      mediaItemId: tvShowC.id!,
       userId: user.id,
       date: new Date().getTime(),
     });
@@ -125,7 +125,7 @@ describe('sortOrderWithFacets', () => {
     await listItemRepository.addItem({
       userId: user.id,
       watchlist: true,
-      mediaItemId: gameD.id,
+      mediaItemId: gameD.id!,
     });
     // gameD: watchlist only, not seen
 

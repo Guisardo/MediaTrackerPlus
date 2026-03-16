@@ -40,8 +40,8 @@
     "build": "npm run lingui:extract && npm run lingui:compile && npm run build:routes && npm run build:server",
     "start": "cross-env NODE_ENV=production node build/index.js",
     "dev:start": "cross-env DATABASE_PATH=./data.db node build/index.js",
-    "check-types": "tsc --noEmit",
-    "lint": "eslint src && npm run check-types",
+    "check-types": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.test.json --noEmit && tsc -p tsconfig.scripts.json --noEmit",
+    "lint": "eslint src __tests__ scripts && npm run check-types",
     "watch:lint": "nodemon --watch src --ext * --exec \"npm run lint\""
   },
   "dependencies": {

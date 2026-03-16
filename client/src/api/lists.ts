@@ -16,10 +16,10 @@ export const useLists = (args: {
     queryKey: key,
     queryFn: () =>
       mediaTrackerApi.lists.getUsersLists({
-        userId: userId,
-        mediaItemId: mediaItemId,
-        seasonId: seasonId,
-        episodeId: episodeId,
+        userId,
+        ...(mediaItemId !== undefined ? { mediaItemId } : {}),
+        ...(seasonId !== undefined ? { seasonId } : {}),
+        ...(episodeId !== undefined ? { episodeId } : {}),
       }),
   });
 

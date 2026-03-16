@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 import { mediaItemRepository } from 'src/repository/mediaItem';
-import { MediaItemBaseWithSeasons } from 'src/entity/mediaItem';
+import { MediaItemBaseWithSeasons, MediaItemItemsResponse } from 'src/entity/mediaItem';
 import { User } from 'src/entity/user';
 import { userRepository } from 'src/repository/user';
 import { Seen } from 'src/entity/seen';
@@ -245,13 +245,13 @@ describe('unseenEpisodesCount', () => {
       listItemRepository.addItem({
         userId: user.id,
         watchlist: true,
-        mediaItemId: item.id,
+        mediaItemId: item.id!,
       });
 
       listItemRepository.addItem({
         userId: user2.id,
         watchlist: true,
-        mediaItemId: item.id,
+        mediaItemId: item.id!,
       });
     }
   });
@@ -263,7 +263,7 @@ describe('unseenEpisodesCount', () => {
       userId: user.id,
     });
 
-    const items = _.keyBy(fetchedMediaItems, (item) => item.id);
+    const items = _.keyBy(fetchedMediaItems, (item) => item.id) as _.Dictionary<MediaItemItemsResponse>;
 
     Object.entries(unseenEpisodesCountUser1).forEach(
       ([mediaItemId, unseenEpisodesCount]) =>
@@ -278,7 +278,7 @@ describe('unseenEpisodesCount', () => {
       userId: user2.id,
     });
 
-    const items = _.keyBy(fetchedMediaItems, (item) => item.id);
+    const items = _.keyBy(fetchedMediaItems, (item) => item.id) as _.Dictionary<MediaItemItemsResponse>;
 
     Object.entries(unseenEpisodesCountUser2).forEach(
       ([mediaItemId, unseenEpisodesCount]) =>

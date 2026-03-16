@@ -68,7 +68,7 @@ describe('TraktTv import', () => {
 
   test('should import', async () => {
     mockedAxios.get.mockImplementation(
-      async (url, { data }) =>
+      async (url, config) =>
         ({
           'https://api.trakt.tv/sync/watchlist': {
             status: 200,
@@ -197,7 +197,7 @@ describe('TraktTv import', () => {
                 'x-pagination-limit': 1,
               },
             },
-          }[(data as { page: number })?.page],
+          }[(config?.data as { page: number })?.page],
           'https://api.trakt.tv/sync/ratings': {
             status: 200,
             data: [

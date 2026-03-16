@@ -21,9 +21,7 @@ export const useTranslatedKeysFactory = <
     const keyToTranslation = (key: Key) => arg[key];
 
     const map = <T>(callback: (key: Key, translation: Translation) => T) => {
-      return Object.entries(arg).map(([key, translation]: [Key, Translation]) =>
-        callback(key, translation)
-      );
+      return entries.map(([key, translation]) => callback(key, translation));
     };
 
     return {

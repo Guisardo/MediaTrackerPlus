@@ -117,7 +117,11 @@ export const PaginatedGridItems: FunctionComponent<{
     initialValue: 1,
     resetPage: false,
   });
-  const [page, _setPage] = useState<number>(currentValue as number);
+  const [page, _setPage] = useState<number>(Number(currentValue ?? 1));
+  const orderByArg = args.orderBy ?? 'title';
+  const sortOrderArg = args.sortOrder ?? 'asc';
+  const mediaTypeArg = args.mediaType ?? undefined;
+  const filterMediaType = mediaTypeArg ?? 'movie';
 
   const handleArgumentChange = useCallback(() => {
     if (page != 1) {
@@ -127,9 +131,9 @@ export const PaginatedGridItems: FunctionComponent<{
   }, [page]);
 
   const { orderBy, sortOrder, OrderByComponent } = useOrderByComponent({
-    sortOrder: args.sortOrder,
-    orderBy: args.orderBy,
-    mediaType: args.mediaType,
+    sortOrder: sortOrderArg,
+    orderBy: orderByArg,
+    mediaType: mediaTypeArg,
     handleFilterChange: handleArgumentChange,
   });
 
@@ -142,8 +146,8 @@ export const PaginatedGridItems: FunctionComponent<{
   // When showFacets=true, the FilterByComponent JSX is suppressed, but the
   // hook still runs to avoid breaking hook call order.
   const { filter, FilterByComponent } = useFilterBy(
-    args.mediaType,
-    props.isStatisticsPage,
+    filterMediaType,
+    props.isStatisticsPage ?? false,
     handleArgumentChange
   );
 
@@ -176,7 +180,7 @@ export const PaginatedGridItems: FunctionComponent<{
   const facetsQueryArgs: Items.Facets.RequestQuery = {
     ...args,
     ...facets.facetParams,
-    mediaType: args.mediaType,
+    mediaType: mediaTypeArg,
     orderBy: orderBy,
     ...(selectedGroupId !== undefined ? { groupId: selectedGroupId } : {}),
   };
@@ -203,12 +207,16 @@ export const PaginatedGridItems: FunctionComponent<{
       setSearchParams({
         search: searchQuery,
       });
-      search({ mediaType: args.mediaType, query: searchQuery });
+      if (!mediaTypeArg) {
+        return;
+      }
+
+      search({ mediaType: mediaTypeArg, query: searchQuery });
       _setPage(1);
     } else {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [args.mediaType, searchQuery]);
+  }, [mediaTypeArg, searchQuery]);
 
   const isLoading = isLoadingSearchResult || isLoadingItems;
   // When showFacets is true, the status facet replaces FilterByComponent so we
@@ -238,7 +246,7 @@ export const PaginatedGridItems: FunctionComponent<{
       <StatusSection
         selectedStatus={facets.status}
         setStatus={facets.setStatus}
-        mediaType={args.mediaType as string | undefined}
+        mediaType={filterMediaType}
       />
       <GenreSection
         genres={facetData.genres}
@@ -268,19 +276,19 @@ export const PaginatedGridItems: FunctionComponent<{
         creators={facetData.creators}
         selectedCreators={facets.creators}
         setCreators={facets.setCreators}
-        mediaType={args.mediaType as string | undefined}
+        mediaType={filterMediaType}
       />
       <PublisherSection
         publishers={facetData.publishers}
         selectedPublishers={facets.publishers}
         setPublishers={facets.setPublishers}
-        mediaType={args.mediaType as string | undefined}
+        mediaType={filterMediaType}
       />
       <MediaTypeSection
         mediaTypes={facetData.mediaTypes}
         selectedMediaTypes={facets.mediaTypes}
         setMediaTypes={facets.setMediaTypes}
-        mediaType={args.mediaType as string | undefined}
+        mediaType={filterMediaType}
       />
     </>
   ) : null;
@@ -295,7 +303,7 @@ export const PaginatedGridItems: FunctionComponent<{
 
         <div className="flex flex-row flex-wrap items-grid flex-1 min-w-0">
           <div className="mb-1 header w-full">
-            {showSearch && args.mediaType && (
+            {showSearch && mediaTypeArg && (
               <Search onSearch={setSearchQuery} />
             )}
 
@@ -315,7 +323,7 @@ export const PaginatedGridItems: FunctionComponent<{
                     <div>
                       {searchQuery ? (
                         <Plural
-                          value={searchResult?.length}
+                          value={searchResult?.length ?? 0}
                           one={
                             <Trans>
                               Found # item for query &quot;
@@ -331,7 +339,7 @@ export const PaginatedGridItems: FunctionComponent<{
                         />
                       ) : (
                         <Plural
-                          value={numberOfItemsTotal}
+                          value={numberOfItemsTotal ?? 0}
                           one={`1 item ${args.year ? 'in ' + args.year : ''} ${
                             args.genre ? 'with genre ' + args.genre : ''
                           }`}
@@ -372,7 +380,7 @@ export const PaginatedGridItems: FunctionComponent<{
                 {showFacets && (
                   <ActiveFacetChips
                     facets={facets}
-                    mediaType={args.mediaType as string | undefined}
+                    mediaType={filterMediaType}
                   />
                 )}
               </>
@@ -389,7 +397,7 @@ export const PaginatedGridItems: FunctionComponent<{
               {(searchQuery ? searchResult : items)?.map((mediaItem) => (
                 <div key={mediaItem.id} className="w-40 mr-2 mb-2">
                   <GridItem
-                    mediaType={args.mediaType}
+                    mediaType={mediaTypeArg}
                     mediaItem={mediaItem}
                     appearance={{
                       ...gridItemAppearance,
@@ -400,7 +408,11 @@ export const PaginatedGridItems: FunctionComponent<{
                 </div>
               ))}
               <div className="footer">
-                {!searchQuery && items && !isLoadingItems && numberOfPages > 1 && (
+                {!searchQuery &&
+                  items &&
+                  !isLoadingItems &&
+                  numberOfPages !== undefined &&
+                  numberOfPages > 1 && (
                   <Pagination
                     numberOfPages={numberOfPages}
                     page={page}

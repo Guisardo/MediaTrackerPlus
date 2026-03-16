@@ -43,7 +43,7 @@ export abstract class MetadataProvider<Name extends string = string> {
   localizedDetails?(
     ids: ExternalIds,
     language: string
-  ): Promise<MediaItemForProvider>;
+  ): Promise<MediaItemForProvider | undefined>;
 
   /**
    * Fetch all regional game localizations in a single API call.

@@ -33,7 +33,7 @@ export class Notifications {
 
     const user = await userRepository.findOne({ id: userId });
 
-    if (!user.notificationPlatform) {
+    if (!user || !user.notificationPlatform) {
       return;
     }
 
@@ -47,9 +47,17 @@ export class Notifications {
       throw new Error(t`Platform ${user.notificationPlatform} does not exist`);
     }
 
+    const platformCredentials = credentials[user.notificationPlatform];
+
+    if (!platformCredentials) {
+      throw new Error(
+        t`Missing credentials for platform ${user.notificationPlatform}`
+      );
+    }
+
     await this.sendNotification(user.notificationPlatform, {
       message: message,
-      credentials: credentials[user.notificationPlatform],
+      credentials: platformCredentials,
     });
   };
 

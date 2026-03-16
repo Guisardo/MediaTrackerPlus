@@ -18,17 +18,13 @@ export const requireUserAuthentication = (
   }
 };
 
-export const onlyForAdmin = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const onlyForAdmin: RequestHandler = async (req, res, next) => {
   if (typeof req.user !== 'number') {
     res.status(401).send();
   } else {
     const user = await userRepository.findOne({ id: req.user });
 
-    if (!user.admin) {
+    if (!user?.admin) {
       res.status(401).send();
     } else {
       next();

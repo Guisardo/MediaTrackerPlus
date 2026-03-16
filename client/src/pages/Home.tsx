@@ -104,6 +104,7 @@ export const HomePage: FunctionComponent = () => {
           title={t`Recently released`}
           items={recentlyReleased?.filter(
             (mediaItem) =>
+              mediaItem.lastAiring != null &&
               new Date(mediaItem.lastAiring) > subDays(new Date(), 30)
           )}
           gridItemArgs={{

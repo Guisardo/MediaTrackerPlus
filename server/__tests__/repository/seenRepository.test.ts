@@ -223,10 +223,10 @@ describe('seenRepository', () => {
         date: now,
       });
 
-      const entry = await seenRepository.findOne({
+      const entry = (await seenRepository.findOne({
         userId: Data.user.id,
         episodeId: Data.episode.id,
-      });
+      }))!;
 
       expect(entry).toBeDefined();
       expect(entry.episodeId).toBe(Data.episode.id);
@@ -249,10 +249,10 @@ describe('seenRepository', () => {
         date: new Date().getTime(),
       });
 
-      const entry = await seenRepository.findOne({
+      const entry = (await seenRepository.findOne({
         userId: Data.user.id,
         mediaItemId: Data.movie.id,
-      });
+      }))!;
 
       expect(entry).toBeDefined();
       expect(entry.mediaItemId).toBe(Data.movie.id);

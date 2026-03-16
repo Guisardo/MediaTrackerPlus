@@ -85,6 +85,13 @@ async function backfillItemTranslations(
   mediaItem: MediaItemBase,
   missingLanguages: string[]
 ): Promise<void> {
+  if (mediaItem.id == null) {
+    logger.warn(
+      `Backfill: media item '${mediaItem.title}' has no id — skipping translation backfill`
+    );
+    return;
+  }
+
   const metadataProvider = metadataProviders.get(
     mediaItem.mediaType,
     mediaItem.source
@@ -103,6 +110,9 @@ async function backfillItemTranslations(
 
   if (mediaItem.mediaType === 'tv') {
     const seasons = await mediaItemRepository.seasonsWithEpisodes(mediaItem);
+    if (!seasons) {
+      return;
+    }
     seasonIdByNumber = new Map<number, number>();
     episodeIdBySeasonAndEpisode = new Map<string, number>();
 
@@ -172,7 +182,7 @@ async function backfillItemTranslations(
         }
       } catch (error) {
         logger.error(
-          `Backfill: failed to fetch localized details for mediaItem ${mediaItem.id} (${mediaItem.title}) in language '${language}': ${error}`,
+          `Backfill: failed to fetch localized details for mediaItem ${mediaItem.id} (${mediaItem.title}) in language '${language}': ${String(error)}`,
           { err: error }
         );
       }
@@ -208,7 +218,7 @@ async function backfillItemTranslations(
       }
     } catch (error) {
       logger.error(
-        `Backfill: failed to fetch game localizations for mediaItem ${mediaItem.id} (${mediaItem.title}): ${error}`,
+        `Backfill: failed to fetch game localizations for mediaItem ${mediaItem.id} (${mediaItem.title}): ${String(error)}`,
         { err: error }
       );
     }
@@ -255,7 +265,7 @@ async function runBackfill(missingLanguages: string[]): Promise<void> {
         processed++;
       } catch (error) {
         logger.error(
-          `Backfill: failed to process mediaItem ${mediaItem.id} (${mediaItem.title}): ${error}`,
+          `Backfill: failed to process mediaItem ${mediaItem.id} (${mediaItem.title}): ${String(error)}`,
           { err: error }
         );
         processed++;

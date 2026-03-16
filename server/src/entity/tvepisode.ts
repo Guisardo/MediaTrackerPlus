@@ -7,18 +7,18 @@ import { MediaItemItemsResponse } from 'src/entity/mediaItem';
 export type TvEpisode = {
   id?: number;
   title: string;
-  description?: string;
+  description?: string | null;
   episodeNumber: number;
   seasonNumber: number;
-  releaseDate?: string;
+  releaseDate?: string | null;
   tvShowId?: number;
   seasonId?: number;
   tmdbId?: number;
   imdbId?: string;
   runtime?: number;
   seenHistory?: Seen[];
-  userRating?: UserRating;
-  lastSeenAt?: number;
+  userRating?: UserRating | null;
+  lastSeenAt?: number | null;
   seasonAndEpisodeNumber?: number;
   seen?: boolean;
   tvShow?: MediaItemItemsResponse;
@@ -57,22 +57,26 @@ export class TvEpisodeFilters {
   };
 
   public static releasedEpisodes = (episode: TvEpisode) => {
+    if (!episode.releaseDate || episode.releaseDate.trim() === '') {
+      return false;
+    }
+
     return (
-      episode.releaseDate &&
-      episode.releaseDate.trim() != '' &&
       parseISO(episode.releaseDate) <= new Date()
     );
   };
 
   public static unreleasedEpisodes = (episode: TvEpisode) => {
+    if (!episode.releaseDate || episode.releaseDate.trim() === '') {
+      return true;
+    }
+
     return (
-      !episode.releaseDate ||
-      episode.releaseDate.trim() == '' ||
       parseISO(episode.releaseDate) > new Date()
     );
   };
 
   public static withReleaseDateEpisodes = (episode: TvEpisode) => {
-    return episode.releaseDate !== undefined;
+    return episode.releaseDate != null && episode.releaseDate.trim() !== '';
   };
 }

@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-export const useUpdateSearchParams = <T>(args: {
+export const useUpdateSearchParams = <T extends string | number>(args: {
   filterParam: string;
   initialValue: T;
   resetPage: boolean;
@@ -10,9 +10,7 @@ export const useUpdateSearchParams = <T>(args: {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const currentValue = searchParams.get(filterParam)
-    ? searchParams.get(filterParam)
-    : initialValue;
+  const currentValue = searchParams.get(filterParam) ?? initialValue;
 
   const deleteFunction = useCallback(
     (name: string, value: T) => {

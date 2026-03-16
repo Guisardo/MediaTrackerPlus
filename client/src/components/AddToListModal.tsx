@@ -19,13 +19,14 @@ export const AddToListModal: FunctionComponent<{
   const { mediaItemId, seasonId, episodeId, closeModal } = props;
   const { mediaItem } = useDetails(mediaItemId);
   const { user } = useUser();
+  const userId = user?.id ?? 0;
 
   const { lists } = useLists({
-    userId: user.id,
+    userId,
   });
 
   const { lists: listsWithItem, invalidateListsQuery } = useLists({
-    userId: user.id,
+    userId,
     mediaItemId: mediaItemId,
     seasonId: seasonId,
     episodeId: episodeId,
@@ -41,7 +42,7 @@ export const AddToListModal: FunctionComponent<{
 
   const episode = episodeId
     ? mediaItem?.seasons
-        ?.flatMap((season) => season.episodes)
+        ?.flatMap((season) => season.episodes ?? [])
         ?.find((episode) => episode.id === episodeId)
     : undefined;
 
@@ -101,7 +102,11 @@ export const AddToListModal: FunctionComponent<{
       <div className="flex mt-2">
         <AddListButton />
 
-        <Button variant="destructive" className="ml-auto" onClick={() => closeModal()}>
+        <Button
+          variant="destructive"
+          className="ml-auto"
+          onClick={() => closeModal?.()}
+        >
           <Trans>Close</Trans>
         </Button>
       </div>
@@ -117,12 +122,13 @@ export const AddToListButtonWithModal: FunctionComponent<{
   const { mediaItemId, seasonId, episodeId } = props;
 
   const { user } = useUser();
+  const userId = user?.id ?? 0;
   const { lists } = useLists({
-    userId: user.id,
+    userId,
   });
 
   const { lists: listsWithItem } = useLists({
-    userId: user.id,
+    userId,
     mediaItemId: mediaItemId,
     seasonId: seasonId,
     episodeId: episodeId,

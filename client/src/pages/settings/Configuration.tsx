@@ -18,7 +18,7 @@ export const SettingsConfigurationPage: FunctionComponent = () => {
 
   return (
     <>
-      {isLoading ? (
+      {isLoading || !configuration ? (
         <></>
       ) : (
         <>
@@ -121,9 +121,13 @@ const IGDBcredentialsComponent: FunctionComponent = () => {
   const [clientSecret, setClientSecret] = useState('');
 
   useEffect(() => {
-    setClientId(configuration.igdbClientId);
-    setClientSecret(configuration.igdbClientSecret);
-  }, [configuration.igdbClientId, configuration.igdbClientSecret]);
+    setClientId(configuration?.igdbClientId ?? '');
+    setClientSecret(configuration?.igdbClientSecret ?? '');
+  }, [configuration?.igdbClientId, configuration?.igdbClientSecret]);
+
+  if (!configuration) {
+    return null;
+  }
 
   return (
     <SettingsSegment title={t`IGDB credentials`}>

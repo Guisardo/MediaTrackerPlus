@@ -93,52 +93,76 @@ export const getDetailsKnex = async (params: {
   });
 
   if (!mediaItem) {
-    return;
+    throw new Error(`Media item ${mediaItemId} not found`);
   }
 
-  const groupedSeasonRating = _(userRating)
+  const groupedSeasonRating: Record<number, UserRating | null> = {};
+  _(userRating)
     .filter(UserRatingFilters.seasonUserRating)
     .groupBy((rating) => rating.seasonId)
-    .mapValues((ratings) => (ratings?.length > 0 ? ratings[0] : null))
-    .value();
+    .forEach((ratings, seasonId) => {
+      const key = Number(seasonId);
+      if (!Number.isNaN(key)) {
+        groupedSeasonRating[key] = ratings?.length > 0 ? ratings[0] ?? null : null;
+      }
+    });
 
-  const groupedEpisodesRating = _(userRating)
+  const groupedEpisodesRating: Record<number, UserRating | null> = {};
+  _(userRating)
     .filter(UserRatingFilters.episodeUserRating)
     .groupBy((rating) => rating.episodeId)
-    .mapValues((ratings) => (ratings?.length > 0 ? ratings[0] : null))
-    .value();
+    .forEach((ratings, episodeId) => {
+      const key = Number(episodeId);
+      if (!Number.isNaN(key)) {
+        groupedEpisodesRating[key] = ratings?.length > 0 ? ratings[0] ?? null : null;
+      }
+    });
 
-  const groupedEpisodesSeenHistory = _(seenHistory)
+  const groupedEpisodesSeenHistory: Record<number, Seen[]> = {};
+  _(seenHistory)
     .filter(SeenFilters.episodeSeenValue)
     .groupBy((seen) => seen.episodeId)
-    .value();
+    .forEach((entries, episodeId) => {
+      const key = Number(episodeId);
+      if (!Number.isNaN(key)) {
+        groupedEpisodesSeenHistory[key] = entries;
+      }
+    });
 
   const mediaItemLists = lists.filter((row) => !row.seasonId && !row.episodeId);
 
   episodes.forEach((episode) => {
-    episode.userRating = groupedEpisodesRating[episode.id];
-    episode.seenHistory = groupedEpisodesSeenHistory[episode.id];
+    if (episode.id != null) {
+      episode.userRating = groupedEpisodesRating[episode.id] ?? null;
+      episode.seenHistory = groupedEpisodesSeenHistory[episode.id] ?? [];
+    } else {
+      episode.userRating = null;
+      episode.seenHistory = [];
+    }
     episode.isSpecialEpisode = Boolean(episode.isSpecialEpisode);
     episode.lastSeenAt = _.first(episode.seenHistory)?.date;
-    episode.seen = episode.seenHistory?.length > 0;
+    episode.seen = episode.seenHistory.length > 0;
     delete episode.seasonAndEpisodeNumber;
   });
 
-  const groupedEpisodes = _.groupBy(episodes, (episode) => episode.seasonId);
+  const groupedEpisodes = _.groupBy(
+    episodes.filter((episode) => episode.seasonId != null),
+    (episode) => episode.seasonId as number
+  );
 
   const seasonsWithPosters = seasons.map((season) => ({
     ...season,
     isSpecialSeason: Boolean(season.isSpecialSeason),
     poster: season.posterId ? `/img/${season.posterId}` : null,
     posterSmall: season.posterId ? `/img/${season.posterId}?size=small` : null,
-    episodes: groupedEpisodes[season.id] || [],
-    userRating: groupedSeasonRating[season.id],
+    episodes: season.id != null ? groupedEpisodes[season.id] ?? [] : [],
+    userRating: season.id != null ? groupedSeasonRating[season.id] ?? null : null,
     seen:
-      season.episodes
-        ?.filter(TvEpisodeFilters.withReleaseDateEpisodes)
+      (season.id != null ? groupedEpisodes[season.id] ?? [] : [])
+        .filter(TvEpisodeFilters.withReleaseDateEpisodes)
         .filter(TvEpisodeFilters.releasedEpisodes).length > 0 &&
-      season.episodes
-        ?.filter(TvEpisodeFilters.withReleaseDateEpisodes)
+      (season.id != null ? groupedEpisodes[season.id] ?? [] : [])
+        .filter(TvEpisodeFilters.withReleaseDateEpisodes)
         .filter(TvEpisodeFilters.releasedEpisodes)
         .filter(TvEpisodeFilters.unwatchedEpisodes).length === 0,
   }));
@@ -153,13 +177,13 @@ export const getDetailsKnex = async (params: {
     .filter(TvEpisodeFilters.withReleaseDateEpisodes)
     .filter(TvEpisodeFilters.nonSpecialEpisodes)
     .filter(TvEpisodeFilters.unreleasedEpisodes)
-    .minBy((episode) => parseISO(episode.releaseDate).getTime());
+    .minBy((episode) => parseISO(episode.releaseDate!).getTime());
 
   const lastAiredEpisode = _(episodes)
     .filter(TvEpisodeFilters.withReleaseDateEpisodes)
     .filter(TvEpisodeFilters.nonSpecialEpisodes)
     .filter(TvEpisodeFilters.releasedEpisodes)
-    .maxBy((episode) => parseISO(episode.releaseDate).getTime());
+    .maxBy((episode) => parseISO(episode.releaseDate!).getTime());
 
   const unseenEpisodesCount = _(episodes)
     .filter(TvEpisodeFilters.nonSpecialEpisodes)
@@ -187,18 +211,21 @@ export const getDetailsKnex = async (params: {
   const seen =
     mediaItem.mediaType === 'tv'
       ? numberOfEpisodes > 0 && unseenEpisodesCount === 0
-      : seenHistory && seenHistory?.length > 0;
+      : seenHistory.length > 0;
 
   const lastSeen = _.first(seenHistory)?.date || null;
 
   const progressGroupedByDate = _(progress).groupBy('date');
+  const latestProgressDate = progressGroupedByDate.keys().max();
   const progressValue = _.maxBy(
-    progressGroupedByDate.get(progressGroupedByDate.keys().max()),
+    latestProgressDate != null
+      ? progressGroupedByDate.get(latestProgressDate) ?? []
+      : [],
     'progress'
   )?.progress;
 
   const totalRuntime = episodes?.reduce(
-    (sum, episode) => sum + (episode.runtime || mediaItem.runtime),
+    (sum, episode) => sum + (episode.runtime ?? mediaItem.runtime ?? 0),
     0
   );
 

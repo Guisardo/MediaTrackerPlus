@@ -52,7 +52,8 @@ export const SetProgressComponent: FunctionComponent<{
   closeModal?: () => void;
 }> = (props) => {
   const { mediaItem, closeModal } = props;
-  const [progress, setProgress] = useState(mediaItem.progress * 100 || 0);
+  const mediaItemId = mediaItem.id;
+  const [progress, setProgress] = useState((mediaItem.progress ?? 0) * 100);
   const [duration, setDuration] = useState(0);
 
   return (
@@ -64,15 +65,20 @@ export const SetProgressComponent: FunctionComponent<{
         className="flex flex-col mt-4"
         onSubmit={(e) => {
           e.preventDefault();
+
+          if (mediaItemId == null) {
+            return;
+          }
+
           addToProgress({
-            mediaItemId: mediaItem.id,
+            mediaItemId,
             progress: progress / 100,
             duration: duration,
           });
-          closeModal();
+          closeModal?.();
         }}
       >
-        {isBook(mediaItem) && mediaItem.numberOfPages && (
+        {isBook(mediaItem) && mediaItem.numberOfPages != null && (
           <InputComponent
             max={mediaItem.numberOfPages}
             progress={progress}
@@ -82,7 +88,7 @@ export const SetProgressComponent: FunctionComponent<{
         )}
 
         {(isAudiobook(mediaItem) || isMovie(mediaItem)) &&
-          mediaItem.runtime && (
+          mediaItem.runtime != null && (
             <InputComponent
               max={mediaItem.runtime}
               progress={progress}
@@ -125,7 +131,11 @@ export const SetProgressComponent: FunctionComponent<{
           <Trans>Set</Trans>
         </Button>
       </form>
-      <Button variant="destructive" className="w-full mt-3" onClick={() => closeModal()}>
+      <Button
+        variant="destructive"
+        className="w-full mt-3"
+        onClick={() => closeModal?.()}
+      >
         <Trans>Cancel</Trans>
       </Button>
     </div>

@@ -2,8 +2,12 @@
   "compilerOptions": {
     "target": "es2020",
     "module": "commonjs",
-    "strict": false,
+    "strict": true,
+    "noImplicitOverride": true,
+    "useUnknownInCatchVariables": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
-  }
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true
+  },
+  "include": ["index.ts"]
 }

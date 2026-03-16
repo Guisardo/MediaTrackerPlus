@@ -15,12 +15,17 @@ export const useMenuComponent = <T extends string>(args: {
   handleFilterChange: () => void;
 }) => {
   const { values, paramFilter, initialSelection } = args;
+  const fallbackValue = initialSelection ?? values[0] ?? '';
   const { currentValue, updateSearchParams } = useUpdateSearchParams<string>({
     filterParam: paramFilter,
-    initialValue: initialSelection,
+    initialValue: fallbackValue,
     resetPage: true,
   });
-  const [selectedValue, setSelectedValue] = useState(currentValue);
+  const [selectedValue, setSelectedValue] = useState<T | undefined>(
+    typeof currentValue === 'string' && currentValue !== ''
+      ? (currentValue as T)
+      : undefined
+  );
 
   useEffect(() => {
     if (selectedValue === undefined && initialSelection !== undefined) {
@@ -31,14 +36,14 @@ export const useMenuComponent = <T extends string>(args: {
   const Menu: FunctionComponent<{ children: React.ReactNode }> = (params) => {
     const { children } = params;
     const [showMenu, setShowMenu] = useState(false);
-    const ref = useRef(null);
+    const ref = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
       const handler = (event: MouseEvent) => {
         if (
-          ref &&
           ref.current &&
           ref.current !== event.target &&
+          event.target instanceof Node &&
           !ref.current.contains(event.target)
         ) {
           setShowMenu(false);

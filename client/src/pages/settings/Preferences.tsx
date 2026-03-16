@@ -6,19 +6,23 @@ import { CheckboxWithTitleAndDescription } from 'src/components/Checkbox';
 export const SettingsPreferencesPage: FunctionComponent = () => {
   const { user, updateUser } = useUser();
 
+  if (!user) {
+    return <></>;
+  }
+
   return (
     <>
       <CheckboxWithTitleAndDescription
         title={t`Public reviews`}
         description={t`Show your reviews to other users`}
-        checked={user.publicReviews}
+        checked={user.publicReviews === true}
         onChange={(value) => updateUser({ publicReviews: value })}
       />
 
       <CheckboxWithTitleAndDescription
         title={t`Avoid episode spoilers`}
         description={t`Hide title of unseen episodes`}
-        checked={user.hideEpisodeTitleForUnseenEpisodes}
+        checked={user.hideEpisodeTitleForUnseenEpisodes === true}
         onChange={(value) =>
           updateUser({
             hideEpisodeTitleForUnseenEpisodes: value,
@@ -29,7 +33,7 @@ export const SettingsPreferencesPage: FunctionComponent = () => {
       <CheckboxWithTitleAndDescription
         title={t`Avoid season spoilers`}
         description={t`Hide overview of unseen seasons`}
-        checked={user.hideOverviewForUnseenSeasons}
+        checked={user.hideOverviewForUnseenSeasons === true}
         onChange={(value) =>
           updateUser({
             hideOverviewForUnseenSeasons: value,

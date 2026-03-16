@@ -38,7 +38,7 @@ export const LogsPage: FunctionComponent = () => {
               {new Date(log.timestamp).toLocaleString()}{' '}
             </span>
             <span
-              style={{ color: logLevelToColorMap[log.level] }}
+              style={{ color: logLevelToColorMap[log.level as keyof typeof logLevelToColorMap] }}
               className="text-md"
             >
               {log.level}

@@ -84,22 +84,22 @@ export type MediaItemDetailsResponse = Omit<
   isSearchResult?: boolean;
   hasDetails?: boolean;
 
-  poster?: string;
-  posterSmall?: string;
-  backdrop?: string;
+  poster?: string | null;
+  posterSmall?: string | null;
+  backdrop?: string | null;
 
   seenHistory?: Seen[];
   unseenEpisodesCount?: number;
-  userRating?: UserRating;
-  upcomingEpisode?: TvEpisode;
-  lastAiredEpisode?: TvEpisode;
-  nextAiring?: string;
-  lastAiring?: string;
+  userRating?: UserRating | null;
+  upcomingEpisode?: TvEpisode | null;
+  lastAiredEpisode?: TvEpisode | null;
+  nextAiring?: string | null;
+  lastAiring?: string | null;
   onWatchlist?: boolean;
-  lastSeenAt?: number;
+  lastSeenAt?: number | null;
   seen?: boolean;
-  firstUnwatchedEpisode?: TvEpisode;
-  progress?: number;
+  firstUnwatchedEpisode?: TvEpisode | null;
+  progress?: number | null;
   totalRuntime?: number;
   lists: List[];
   metadataLanguage?: string | null;
@@ -109,22 +109,22 @@ export type MediaItemItemsResponse = Omit<MediaItemBase, 'lockedAt'> & {
   isSearchResult?: boolean;
   hasDetails?: boolean;
 
-  poster?: string;
-  posterSmall?: string;
-  backdrop?: string;
+  poster?: string | null;
+  posterSmall?: string | null;
+  backdrop?: string | null;
 
   seenHistory?: Seen[];
   unseenEpisodesCount?: number;
-  userRating?: UserRating;
-  upcomingEpisode?: TvEpisode;
-  lastAiredEpisode?: TvEpisode;
-  nextAiring?: string;
-  lastAiring?: string;
+  userRating?: UserRating | null;
+  upcomingEpisode?: TvEpisode | null;
+  lastAiredEpisode?: TvEpisode | null;
+  nextAiring?: string | null;
+  lastAiring?: string | null;
   onWatchlist?: boolean;
-  lastSeenAt?: number;
+  lastSeenAt?: number | null;
   seen?: boolean;
-  firstUnwatchedEpisode?: TvEpisode;
-  progress?: number;
+  firstUnwatchedEpisode?: TvEpisode | null;
+  progress?: number | null;
   totalRuntime?: number;
   estimatedRating?: number | null;
   platformSeen?: boolean;

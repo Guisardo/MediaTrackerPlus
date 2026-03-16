@@ -13,6 +13,7 @@ import { listItemRepository } from 'src/repository/listItemRepository';
 import { MediaType } from 'src/entity/mediaItem';
 import { findMediaItemOrEpisodeByExternalId } from 'src/metadata/findByExternalId';
 import { Database } from 'src/dbconfig';
+import { definedOrNull, definedOrUndefined } from 'src/repository/repository';
 
 /**
  * @openapi_tags Seen
@@ -77,17 +78,24 @@ export class SeenController {
             id: episodeId,
           });
 
+          if (!episode?.releaseDate) {
+            res.sendStatus(400);
+            return;
+          }
+
           date = parseISO(episode.releaseDate);
         } else if (seasonId) {
           const season = await tvSeasonRepository.findOne({
             id: seasonId,
           });
+          if (!season?.releaseDate) {
+            res.sendStatus(400);
+            return;
+          }
+
           date = parseISO(season.releaseDate);
         } else {
-          const mediaItem = await mediaItemRepository.findOne({
-            id: mediaItemId,
-          });
-          if (!mediaItem) {
+          if (!mediaItem.releaseDate) {
             res.sendStatus(400);
             return;
           }
@@ -99,7 +107,7 @@ export class SeenController {
     if (lastSeenEpisodeId) {
       const episodes = await tvEpisodeRepository.find({
         tvShowId: mediaItemId,
-        seasonId: seasonId || undefined,
+        seasonId: definedOrUndefined(seasonId),
       });
 
       const lastEpisode = episodes.find(
@@ -129,22 +137,15 @@ export class SeenController {
           episodeId: episode.id,
           date:
             lastSeenAt === 'release_date'
-              ? parseISO(episode.releaseDate).getTime()
-              : date?.getTime() || null,
+              ? parseISO(episode.releaseDate!).getTime()
+              : definedOrNull(date?.getTime()),
           duration:
-            episode.runtime * 60 * 1000 || mediaItem.runtime * 60 * 1000,
+            (episode.runtime ?? mediaItem.runtime) != null
+              ? (episode.runtime ?? mediaItem.runtime)! * 60 * 1000
+              : undefined,
         }))
       );
     } else {
-      const mediaItem = await mediaItemRepository.findOne({
-        id: mediaItemId,
-      });
-
-      if (!mediaItem) {
-        res.sendStatus(400);
-        return;
-      }
-
       if (episodeId) {
         const episode = await tvEpisodeRepository.findOne({
           id: episodeId,
@@ -159,7 +160,7 @@ export class SeenController {
           userId: userId,
           mediaItemId: mediaItemId,
           episodeId: episodeId,
-          date: date?.getTime() || null,
+          date: definedOrNull(date?.getTime()),
         });
       } else if (seasonId) {
         const episodes = await tvEpisodeRepository.find({
@@ -178,10 +179,12 @@ export class SeenController {
                 episodeId: episode.id,
                 date:
                   lastSeenAt === 'release_date'
-                    ? parseISO(episode.releaseDate).getTime()
-                    : date?.getTime() || null,
+                    ? parseISO(episode.releaseDate!).getTime()
+                    : definedOrNull(date?.getTime()),
                 duration:
-                  episode.runtime * 60 * 1000 || mediaItem.runtime * 60 * 1000,
+                  (episode.runtime ?? mediaItem.runtime) != null
+                    ? (episode.runtime ?? mediaItem.runtime)! * 60 * 1000
+                    : undefined,
               })
             )
         );
@@ -202,11 +205,12 @@ export class SeenController {
                   episodeId: episode.id,
                   date:
                     lastSeenAt === 'release_date'
-                      ? parseISO(episode.releaseDate).getTime()
-                      : date?.getTime() || null,
+                      ? parseISO(episode.releaseDate!).getTime()
+                      : definedOrNull(date?.getTime()),
                   duration:
-                    episode.runtime * 60 * 1000 ||
-                    mediaItem.runtime * 60 * 1000,
+                    (episode.runtime ?? mediaItem.runtime) != null
+                      ? (episode.runtime ?? mediaItem.runtime)! * 60 * 1000
+                      : undefined,
                 })
               )
           );
@@ -215,8 +219,8 @@ export class SeenController {
             userId: userId,
             mediaItemId: mediaItemId,
             episodeId: null,
-            date: date?.getTime() || null,
-            duration: duration || null,
+            date: definedOrNull(date?.getTime()),
+            duration: definedOrNull(duration),
           });
         }
       }
@@ -268,19 +272,31 @@ export class SeenController {
       return;
     }
 
+    if (!mediaItem) {
+      res.sendStatus(400);
+      return;
+    }
+
     await Database.knex.transaction(async (trx) => {
       const previousSeenItem = await trx<Seen>('seen')
         .where('userId', userId)
         .where('mediaItemId', mediaItem.id)
-        .where('episodeId', episode?.id || null)
+        .modify((qb) => {
+          if (episode?.id == null) {
+            qb.whereNull('episodeId');
+          } else {
+            qb.where('episodeId', episode.id);
+          }
+        })
         .where('date', '>', Date.now() - 1000 * 60 * 60 * 12);
 
       if (previousSeenItem.length > 0) {
+        const previousSeenDate = previousSeenItem[0]?.date;
         logger.debug(
           `seen entry for userId ${userId}, mediaItemId: ${
             mediaItem.id
           }, episodeId: ${episode?.id} already exists, at ${new Date(
-            previousSeenItem.at(0).date
+            previousSeenDate ?? Date.now()
           )}`
         );
 

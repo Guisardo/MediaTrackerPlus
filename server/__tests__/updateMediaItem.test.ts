@@ -233,7 +233,7 @@ describe('updateMediaItem', () => {
       sendDate: Date.now(),
     });
 
-    const updatedMediaItem = await updateMediaItem(mediaItem);
+    const updatedMediaItem = (await updateMediaItem(mediaItem))!;
 
     expect(updatedMediaItem.seasons?.length).toEqual(1);
     expect(updatedMediaItem.seasons?.at(0)?.episodes?.length || 0).toEqual(0);
@@ -241,11 +241,11 @@ describe('updateMediaItem', () => {
 });
 
 const testUpdateTvShowFailureOnEpisodes = async () => {
-  const updatedMediaItem = await updateMediaItem(mediaItem);
+  const updatedMediaItem = (await updateMediaItem(mediaItem))!;
 
   expect(mediaItem.title).not.toBe(updatedMediaItem.title);
   expect(mediaItem.runtime).not.toBe(updatedMediaItem.runtime);
-  expect(mediaItem.seasons.length).toBe(updatedMediaItem.seasons.length);
+  expect(mediaItem.seasons.length).toBe(updatedMediaItem.seasons!.length);
   expect(mediaItem.seasons?.map((season) => season.episodes?.length)).toEqual(
     updatedMediaItem.seasons?.map((season) => season.episodes?.length)
   );

@@ -57,7 +57,7 @@ export const useOrderByComponent = (args: {
 
   const values = Object.entries(mediaTypeOrderByString)
     .filter(([value, text]) => Boolean(text))
-    .map(([value, text]: [MediaItemOrderBy, string]) => text);
+    .map(([, text]) => text as string);
 
   const { selectedValue, Menu } = useMenuComponent({
     values: values,

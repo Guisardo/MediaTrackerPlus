@@ -83,9 +83,9 @@ const EpisodeComponent: FunctionComponent<{
         </div>
 
         <div className="w-28">
-          {episode.seenHistory?.length > 0 && (
+          {(episode.seenHistory?.length ?? 0) > 0 && (
             <Plural
-              value={episode.seenHistory.length}
+              value={episode.seenHistory!.length}
               one="Seen 1 time"
               other="Seen # times"
             />
@@ -125,20 +125,20 @@ export const SeasonsPage: FunctionComponent = () => {
 
   const navigate = useNavigate();
 
-  useEffect(
-    () => seasonNumber && setSelectedSeasonNumber(Number(seasonNumber)),
-    [seasonNumber, setSelectedSeasonNumber]
-  );
+  useEffect(() => {
+    if (seasonNumber) {
+      setSelectedSeasonNumber(Number(seasonNumber));
+    }
+  }, [seasonNumber, setSelectedSeasonNumber]);
 
-  useEffect(
-    () =>
-      selectedSeasonNumber !== undefined &&
+  useEffect(() => {
+    if (selectedSeasonNumber !== undefined) {
       navigate(`/seasons/${mediaItemId}/${selectedSeasonNumber}`, {
         replace: true,
-      }),
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [selectedSeasonNumber]
-  );
+  }, [selectedSeasonNumber]);
 
   if (isLoading || !selectedSeason) {
     return <Trans>Loading</Trans>;
@@ -148,15 +148,21 @@ export const SeasonsPage: FunctionComponent = () => {
     return <>{error}</>;
   }
 
-  if (mediaItem && mediaItem.mediaType !== 'tv') {
+  if (!mediaItem || mediaItem.id == null) {
+    return <Trans>Loading</Trans>;
+  }
+
+  if (mediaItem.mediaType !== 'tv') {
     throw new Error(t`This component can only be used with tv shows`);
   }
+
+  const mediaItemIdNumber = mediaItem.id;
 
   return (
     <>
       <div className="sm:w-full">
         <div className="flex w-full">
-          <Link className="text-2xl font-bold" to={`/details/${mediaItem.id}`}>
+          <Link className="text-2xl font-bold" to={`/details/${mediaItemIdNumber}`}>
             {mediaItem.title}
           </Link>
         </div>
@@ -183,6 +189,7 @@ export const SeasonsPage: FunctionComponent = () => {
           key={selectedSeasonNumber}
           mediaItem={mediaItem}
           season={selectedSeason}
+          mediaItemId={mediaItemIdNumber}
         />
       </div>
     </>
@@ -192,8 +199,9 @@ export const SeasonsPage: FunctionComponent = () => {
 const SeasonComponent: FunctionComponent<{
   mediaItem: MediaItemDetailsResponse;
   season: TvSeason;
+  mediaItemId: number;
 }> = (props) => {
-  const { mediaItem, season } = props;
+  const { mediaItem, season, mediaItemId } = props;
   const { user } = useUser();
 
   return (
@@ -204,7 +212,7 @@ const SeasonComponent: FunctionComponent<{
 
       <div className="flex flex-col my-2 md:flex-row">
         <div className="self-center w-60 shrink-0 md:mr-2 md:self-start">
-          <Poster src={season.posterSmall} itemMediaType="tv" />
+          <Poster src={season.posterSmall ?? undefined} itemMediaType="tv" />
         </div>
         <div>
           {season.description && (
@@ -224,12 +232,12 @@ const SeasonComponent: FunctionComponent<{
               </div>
             </div>
           )}
-          {season.episodes?.length > 0 && (
+          {(season.episodes?.length ?? 0) > 0 && (
             <>
               <b>
                 <Trans>Number of episodes</Trans>:{' '}
               </b>
-              {season.episodes.length}
+              {season.episodes!.length}
             </>
           )}
 
@@ -254,19 +262,19 @@ const SeasonComponent: FunctionComponent<{
 
           <div className="mt-2">
             <AddToListButtonWithModal
-              mediaItemId={mediaItem.id}
-              seasonId={season.id}
+              mediaItemId={mediaItemId}
+              seasonId={season.id ?? 0}
             />
           </div>
         </div>
       </div>
       <div className="w-full whitespace-nowrap">
-        {season.episodes.map((episode, index) => (
+        {(season.episodes ?? []).map((episode, index) => (
           <div
-            key={episode.id}
+            key={episode.id ?? `${episode.seasonNumber}-${episode.episodeNumber}`}
             className={clsx({
               'border-b border-zinc-600/30 dark:border-zinc-300/30':
-                index !== season.episodes.length - 1,
+                index !== (season.episodes?.length ?? 0) - 1,
             })}
           >
             <EpisodeComponent mediaItem={mediaItem} episode={episode} />

@@ -247,19 +247,19 @@ describe('US-023: Content List Facets Integration Tests', () => {
     ]);
 
     // user1's library (10 items): all except movieUser2Only
-    await addToWatchlistAndSeen(user1.id, movieInception.id, true, true);
-    await addToWatchlistAndSeen(user1.id, movieLucy.id, true, true);
-    await addToWatchlistAndSeen(user1.id, movieInterstellar.id, true, true);
-    await addToWatchlistAndSeen(user1.id, tvBreakingBad.id, true, true);
-    await addToWatchlistAndSeen(user1.id, tvAlternateSci.id, true, true);
-    await addToWatchlistAndSeen(user1.id, gameWitcher.id, true, false); // watchlist only, not seen
-    await addToWatchlistAndSeen(user1.id, gameEldenRing.id, true, true);
-    await addToWatchlistAndSeen(user1.id, bookDune.id, true, true);
-    await addToWatchlistAndSeen(user1.id, bookKingkiller.id, true, true);
-    await addToWatchlistAndSeen(user1.id, audiobookLOTR.id, true, true);
+    await addToWatchlistAndSeen(user1.id, movieInception.id!, true, true);
+    await addToWatchlistAndSeen(user1.id, movieLucy.id!, true, true);
+    await addToWatchlistAndSeen(user1.id, movieInterstellar.id!, true, true);
+    await addToWatchlistAndSeen(user1.id, tvBreakingBad.id!, true, true);
+    await addToWatchlistAndSeen(user1.id, tvAlternateSci.id!, true, true);
+    await addToWatchlistAndSeen(user1.id, gameWitcher.id!, true, false); // watchlist only, not seen
+    await addToWatchlistAndSeen(user1.id, gameEldenRing.id!, true, true);
+    await addToWatchlistAndSeen(user1.id, bookDune.id!, true, true);
+    await addToWatchlistAndSeen(user1.id, bookKingkiller.id!, true, true);
+    await addToWatchlistAndSeen(user1.id, audiobookLOTR.id!, true, true);
 
     // user2's library: only movieUser2Only
-    await addToWatchlistAndSeen(user2.id, movieUser2Only.id, true, true);
+    await addToWatchlistAndSeen(user2.id, movieUser2Only.id!, true, true);
 
     // User ratings for user1
     await userRatingRepository.create({

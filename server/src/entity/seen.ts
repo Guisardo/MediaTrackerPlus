@@ -1,16 +1,18 @@
 export type Seen = {
   id?: number;
-  date?: number;
+  date?: number | null;
   mediaItemId: number;
-  episodeId?: number;
+  seasonId?: number | null;
+  episodeId?: number | null;
   userId: number;
-  duration?: number;
+  duration?: number | null;
 };
 
 export const seenColumns = <const>[
   'date',
   'id',
   'mediaItemId',
+  'seasonId',
   'episodeId',
   'userId',
   'duration',

@@ -47,7 +47,7 @@ export const MyRouter: FunctionComponent = () => {
                 element={<Navigate to="/" replace={true} />}
               />
 
-              {configuration.enableRegistration && (
+              {configuration?.enableRegistration && (
                 <Route
                   path="/register"
                   element={<Navigate to="/" replace={true} />}
@@ -179,11 +179,11 @@ export const MyRouter: FunctionComponent = () => {
             </>
           ) : (
             <>
-              {!configuration.noUsers && (
+              {!configuration?.noUsers && (
                 <Route path="/login" element={<LoginPage key="/login" />} />
               )}
 
-              {configuration.enableRegistration && (
+              {configuration?.enableRegistration && (
                 <Route
                   path="/register"
                   element={<RegisterPage key="/register" />}
@@ -200,7 +200,7 @@ export const MyRouter: FunctionComponent = () => {
               <NotFound />
             ) : (
               <Navigate
-                to={configuration.noUsers ? '/register' : '/login'}
+                to={configuration?.noUsers ? '/register' : '/login'}
                 replace={true}
               />
             )

@@ -49,7 +49,7 @@ const ImportSummaryTableCellComponent: FunctionComponent<{
 
   return (
     <td className="text-sm text-center">
-      {exported > 0 && (
+      {exported !== undefined && exported > 0 && (
         <>
           {imported ? imported : '?'} / {exported}
         </>

@@ -907,17 +907,19 @@ describe('migrations', () => {
 
     await Database.knex('watchlist').insert(watchlistItem);
 
-    const { watchlistSize: watchlistSize } = await Database.knex('watchlist')
+    const watchlistCountRow = await Database.knex('watchlist')
       .count({
         watchlistSize: '*',
       })
       .first();
+    const watchlistSize = watchlistCountRow!.watchlistSize;
 
-    const { listItemSizeBefore } = await Database.knex('listItem')
+    const listItemBeforeRow = await Database.knex('listItem')
       .count({
         listItemSizeBefore: '*',
       })
       .first();
+    const listItemSizeBefore = listItemBeforeRow!.listItemSizeBefore;
 
     await Database.knex.migrate.up({
       name: `20220427212000_watchlistToList.${Config.MIGRATIONS_EXTENSION}`,
@@ -933,13 +935,16 @@ describe('migrations', () => {
       directory: Config.MIGRATIONS_DIRECTORY,
     });
 
-    const { listItemSizeAfter } = await Database.knex('listItem')
+    const listItemAfterRow = await Database.knex('listItem')
       .count({
         listItemSizeAfter: '*',
       })
       .first();
+    const listItemSizeAfter = listItemAfterRow!.listItemSizeAfter;
 
-    expect(watchlistSize + listItemSizeBefore).toBe(listItemSizeAfter);
+    expect(Number(watchlistSize) + Number(listItemSizeBefore)).toBe(
+      Number(listItemSizeAfter)
+    );
 
     const watchlist = await Database.knex('list')
       .where('isWatchlist', true)
@@ -1584,11 +1589,12 @@ describe('migrations', () => {
 
   test('20230511000000_dropRankInList', async () => {
     const listId = 999;
-    const { count } = await Database.knex('list')
+    const listCountRow = await Database.knex('list')
       .where('userId', InitialData.user.id)
       .count({ count: '*' })
       .as('count')
       .first();
+    const count = listCountRow!.count;
 
     await Database.knex('list').insert({
       id: listId,
@@ -1619,7 +1625,7 @@ describe('migrations', () => {
         .orderBy('id')
         .select('rank')
     ).toEqual(
-      new Array(count + 1).fill(null).map((_, index) => ({ rank: index }))
+      new Array(Number(count) + 1).fill(null).map((_, index) => ({ rank: index }))
     );
 
     await Database.knex.migrate.up({

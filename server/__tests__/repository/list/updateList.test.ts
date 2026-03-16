@@ -22,15 +22,15 @@ describe('update list', () => {
   afterAll(clearDatabase);
 
   test('list with new name already taken should not be allowed', async () => {
-    const list = await listRepository.create({
+    const list = (await listRepository.create({
       name: 'list',
       userId: Data.user.id,
-    });
+    }))!;
 
-    const list2 = await listRepository.create({
+    const list2 = (await listRepository.create({
       name: 'list2',
       userId: Data.user.id,
-    });
+    }))!;
 
     expect(
       await listRepository.update({
@@ -50,15 +50,15 @@ describe('update list', () => {
   });
 
   test('list with name already taken by other user should be allowed', async () => {
-    const list = await listRepository.create({
+    const list = (await listRepository.create({
       name: 'list',
       userId: Data.user2.id,
-    });
+    }))!;
 
-    const list2 = await listRepository.create({
+    const list2 = (await listRepository.create({
       name: 'list2',
       userId: Data.user.id,
-    });
+    }))!;
 
     expect(
       await listRepository.update({
@@ -82,10 +82,10 @@ describe('update list', () => {
   });
 
   test('list with empty name should not be allowed', async () => {
-    const list = await listRepository.create({
+    const list = (await listRepository.create({
       name: 'list',
       userId: Data.user2.id,
-    });
+    }))!;
 
     expect(
       await listRepository.update({
@@ -105,10 +105,10 @@ describe('update list', () => {
   });
 
   test('should update list', async () => {
-    const list = await listRepository.create({
+    const list = (await listRepository.create({
       name: 'list',
       userId: Data.user2.id,
-    });
+    }))!;
 
     const newName = 'abc';
     const newDescription = '12345';

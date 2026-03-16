@@ -37,15 +37,7 @@ class ListRepository extends repository<List>({
   tableName: 'list',
   primaryColumnName: 'id',
 }) {
-  public async update(args: {
-    name: string;
-    description?: string;
-    privacy?: ListPrivacy;
-    sortBy?: ListSortBy;
-    sortOrder?: ListSortOrder;
-    id: number;
-    userId: number;
-  }): Promise<List> {
+  public override async update(args: Partial<List>): Promise<Partial<List>> {
     const { userId, name, description, privacy, sortBy, sortOrder, id } = args;
 
     if (id == undefined || userId == undefined) {
@@ -53,7 +45,7 @@ class ListRepository extends repository<List>({
     }
 
     if (name?.trim().length === 0) {
-      return;
+      return {};
     }
 
     const updatedAt = new Date().getTime();
@@ -61,11 +53,11 @@ class ListRepository extends repository<List>({
       const list = await trx<List>('list').where('id', id).first();
 
       if (!list) {
-        return;
+        return {};
       }
 
       if (list.userId !== userId) {
-        return;
+        return {};
       }
 
       const listWithTheSameName = await trx<List>('list')
@@ -75,7 +67,7 @@ class ListRepository extends repository<List>({
         .first();
 
       if (listWithTheSameName) {
-        return;
+        return {};
       }
 
       await trx<List>('list')
@@ -89,11 +81,11 @@ class ListRepository extends repository<List>({
         })
         .where('id', id);
 
-      return await trx<List>('list').where('id', id).first();
+      return (await trx<List>('list').where('id', id).first()) ?? {};
     });
   }
 
-  public async create(args: {
+  public override async create(args: {
     name: string;
     description?: string;
     privacy?: ListPrivacy;
@@ -102,7 +94,7 @@ class ListRepository extends repository<List>({
     userId: number;
     isWatchlist?: boolean;
     traktId?: number;
-  }): Promise<List> {
+  }): Promise<List | undefined> {
     const {
       userId,
       name,
@@ -144,7 +136,7 @@ class ListRepository extends repository<List>({
     };
   }
 
-  public async delete(args: {
+  public override async delete(args: {
     listId: number;
     userId: number;
   }): Promise<number> {
@@ -169,7 +161,7 @@ class ListRepository extends repository<List>({
   public async details(args: {
     listId: number;
     userId: number;
-  }): Promise<ListDetailsResponse> {
+  }): Promise<ListDetailsResponse | undefined> {
     const { listId, userId } = args;
 
     const res = await Database.knex('list')

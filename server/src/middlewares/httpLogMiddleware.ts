@@ -5,7 +5,7 @@ export const httpLogMiddleware: RequestHandler = (req, res, next) => {
   const start = new Date().getTime();
   res.once('finish', () =>
     logger.http({
-      ip: req.ip,
+      ip: req.ip || '',
       method: req.method,
       url: req.url,
       httpVersion: req.httpVersion,

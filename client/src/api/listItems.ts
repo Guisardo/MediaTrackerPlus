@@ -10,7 +10,11 @@ export const useListItems = (args: { listId: number; sortBy?: ListSortBy }) => {
 
   const { data, isLoading, isError } = useQuery({
     queryKey: key,
-    queryFn: () => mediaTrackerApi.list.getListItems({ listId, sortBy }),
+    queryFn: () =>
+      mediaTrackerApi.list.getListItems({
+        listId,
+        ...(sortBy !== undefined ? { sortBy } : {}),
+      }),
   });
 
   return {

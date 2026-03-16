@@ -42,8 +42,8 @@ type ServerConfig = {
   production: boolean;
 };
 export class Server {
-  #app: Express;
-  #server: http.Server;
+  #app!: Express;
+  #server?: http.Server;
   #config: ServerConfig;
 
   constructor(config: ServerConfig) {
@@ -145,7 +145,7 @@ export class Server {
     }
 
     await new Promise<void>((resolve, reject) => {
-      this.#server = this.#app.listen(
+      const server = this.#app.listen(
         this.#config.port,
         this.#config.hostname,
         async () => {
@@ -158,13 +158,13 @@ export class Server {
               t`MediaTracker ${Config.version} listening at ${address}`
             );
 
-            this.#server.on('close', async () => {
+            server.on('close', async () => {
               logger.info(t`Server closed`);
             });
 
             const onCloseHandler = async (signal: string) => {
               logger.info(t`Received signal ${signal}`);
-              this.#server.close();
+              server.close();
 
               await Database.knex.destroy();
 
@@ -197,13 +197,17 @@ export class Server {
           }
         }
       );
+
+      this.#server = server;
     });
   }
 
   async close() {
-    if (this.#server)
+    const server = this.#server;
+
+    if (server)
       await new Promise<void>((resolve, reject) =>
-        this.#server.close((e) => (e ? reject(e) : resolve()))
+        server.close((e) => (e ? reject(e) : resolve()))
       );
   }
 }
@@ -217,9 +221,9 @@ type ApplicationConfig = {
   demo?: boolean;
 };
 export class Application {
-  #server: Server;
+  #server?: Server;
   #config: ApplicationConfig;
-  #sessionKey: string;
+  #sessionKey?: string;
 
   constructor(config: ApplicationConfig) {
     this.#config = config;
@@ -343,7 +347,7 @@ export const initialize = async (args: {
   }
 
   configuration = await configurationRepository.get();
-  setupI18n(configuration.serverLang);
+  setupI18n(configuration?.serverLang || serverLang || 'en');
 
   if (demo) {
     const demoUser = await userRepository.findOne({ name: 'demo' });
@@ -418,7 +422,7 @@ export const createAndStartErrorServer = (args: {
 };
 
 export const createAndStartServer = async () => {
-  let server: Server;
+  let server: Server | undefined;
 
   try {
     const res = await initialize({
@@ -442,7 +446,11 @@ export const createAndStartServer = async () => {
     await server.listen();
   } catch (error) {
     await server?.close();
-    console.log(chalk.red.bold(error.stack || error));
+    console.log(
+      chalk.red.bold(
+        error instanceof Error ? error.stack ?? error.message : String(error)
+      )
+    );
     createAndStartErrorServer({
       hostname: Config.HOSTNAME,
       port: Config.PORT,

@@ -298,13 +298,18 @@ const fixEpisodesWithInvalidMediaItemId = async (knex: Knex) => {
   }
 
   for (const episodeWithInvalidMediaItemId of danglingEpisodes) {
-    if (mediaItemMapping.has(episodeWithInvalidMediaItemId.tvShowId)) {
+    if (episodeWithInvalidMediaItemId.tvShowId === undefined) {
+      continue;
+    }
+
+    const mappedMediaItemId = mediaItemMapping.get(
+      episodeWithInvalidMediaItemId.tvShowId
+    );
+
+    if (mappedMediaItemId !== undefined) {
       await knex('episode')
         .where('id', episodeWithInvalidMediaItemId.id)
-        .update(
-          'tvShowId',
-          mediaItemMapping.has(episodeWithInvalidMediaItemId.tvShowId)
-        );
+        .update('tvShowId', mappedMediaItemId);
     } else {
       await knex('userRating')
         .where({
@@ -347,17 +352,17 @@ const fixWatchlistWithInvalidMediaItemId = async (
     .select('watchlist.*');
 
   for (const watchlist of watchlistItemsWithInvalidMediaItemId) {
-    if (mediaItemMapping.has(watchlist.mediaItemId)) {
+    const mappedMediaItemId = mediaItemMapping.get(watchlist.mediaItemId);
+
+    if (mappedMediaItemId !== undefined) {
       if (
-        await knex('watchlist')
-          .where('mediaItemId', mediaItemMapping.has(watchlist.mediaItemId))
-          .first()
+        await knex('watchlist').where('mediaItemId', mappedMediaItemId).first()
       ) {
         await knex('watchlist').where('id', watchlist.id).delete();
       } else {
         await knex('watchlist')
           .where('id', watchlist.id)
-          .update('mediaItemId', mediaItemMapping.has(watchlist.mediaItemId));
+          .update('mediaItemId', mappedMediaItemId);
       }
     }
   }
@@ -421,14 +426,16 @@ const fixUserRatingWithInvalidMediaItemId = async (
     .select('userRating.*');
 
   for (const rating of userRatingWithInvalidMediaItemId) {
-    if (mediaItemMapping.has(rating.mediaItemId)) {
+    const mappedMediaItemId = mediaItemMapping.get(rating.mediaItemId);
+
+    if (mappedMediaItemId !== undefined) {
       await updateOrDeleteUserRating(
         knex,
         {
           mediaItemId: rating.mediaItemId,
         },
         {
-          mediaItemId: mediaItemMapping.get(rating.mediaItemId),
+          mediaItemId: mappedMediaItemId,
         }
       );
     }
@@ -488,13 +495,18 @@ const fixSeasonsWithInvalidMediaItemId = async (knex: Knex) => {
   }
 
   for (const seasonWithInvalidMediaItemId of danglingSeasons) {
-    if (mediaItemMapping.has(seasonWithInvalidMediaItemId.tvShowId)) {
+    if (seasonWithInvalidMediaItemId.tvShowId === undefined) {
+      continue;
+    }
+
+    const mappedMediaItemId = mediaItemMapping.get(
+      seasonWithInvalidMediaItemId.tvShowId
+    );
+
+    if (mappedMediaItemId !== undefined) {
       await knex('season')
         .where('id', seasonWithInvalidMediaItemId.id)
-        .update(
-          'tvShowId',
-          mediaItemMapping.has(seasonWithInvalidMediaItemId.tvShowId)
-        );
+        .update('tvShowId', mappedMediaItemId);
     } else {
       await knex('userRating')
         .where({

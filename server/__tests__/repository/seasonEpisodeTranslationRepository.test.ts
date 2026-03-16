@@ -112,10 +112,10 @@ describe('seasonEpisodeTranslationRepository', () => {
         const rows = await getAllSeasonTranslations();
         expect(rows).toHaveLength(2);
 
-        const enRow = await getSeasonTranslation(Data.season.id, 'en');
+        const enRow = (await getSeasonTranslation(Data.season.id, 'en'))!;
         expect(enRow.title).toBe('Season 1');
 
-        const frRow = await getSeasonTranslation(Data.season.id, 'fr');
+        const frRow = (await getSeasonTranslation(Data.season.id, 'fr'))!;
         expect(frRow.title).toBe('Saison 1');
       });
     });
@@ -156,7 +156,7 @@ describe('seasonEpisodeTranslationRepository', () => {
           description: 'Descricao da temporada',
         });
 
-        const row = await getSeasonTranslation(Data.season.id, 'pt');
+        const row = (await getSeasonTranslation(Data.season.id, 'pt'))!;
         expect(row.title).toBeNull();
         expect(row.description).toBe('Descricao da temporada');
       });
@@ -167,7 +167,7 @@ describe('seasonEpisodeTranslationRepository', () => {
           description: null,
         });
 
-        const row = await getSeasonTranslation(Data.season.id, 'it');
+        const row = (await getSeasonTranslation(Data.season.id, 'it'))!;
         expect(row.title).toBe('Stagione 1');
         expect(row.description).toBeNull();
       });
@@ -178,7 +178,7 @@ describe('seasonEpisodeTranslationRepository', () => {
           description: null,
         });
 
-        const row = await getSeasonTranslation(Data.season.id, 'ja');
+        const row = (await getSeasonTranslation(Data.season.id, 'ja'))!;
         expect(row.title).toBeNull();
         expect(row.description).toBeNull();
         expect(row.seasonId).toBe(Data.season.id);
@@ -188,7 +188,7 @@ describe('seasonEpisodeTranslationRepository', () => {
       test('treats undefined data fields as null via nullish coalescing', async () => {
         await upsertSeasonTranslation(Data.season.id, 'ko', {});
 
-        const row = await getSeasonTranslation(Data.season.id, 'ko');
+        const row = (await getSeasonTranslation(Data.season.id, 'ko'))!;
         expect(row.title).toBeNull();
         expect(row.description).toBeNull();
       });
@@ -204,7 +204,7 @@ describe('seasonEpisodeTranslationRepository', () => {
           description: 'Updated Description',
         });
 
-        const row = await getSeasonTranslation(Data.season.id, 'zh');
+        const row = (await getSeasonTranslation(Data.season.id, 'zh'))!;
         expect(row.title).toBeNull();
         expect(row.description).toBe('Updated Description');
       });
@@ -253,10 +253,10 @@ describe('seasonEpisodeTranslationRepository', () => {
         const rows = await getAllEpisodeTranslations();
         expect(rows).toHaveLength(2);
 
-        const enRow = await getEpisodeTranslation(Data.episode.id, 'en');
+        const enRow = (await getEpisodeTranslation(Data.episode.id, 'en'))!;
         expect(enRow.title).toBe('Episode 1');
 
-        const frRow = await getEpisodeTranslation(Data.episode.id, 'fr');
+        const frRow = (await getEpisodeTranslation(Data.episode.id, 'fr'))!;
         expect(frRow.description).toBe('Le premier episode.');
       });
 
@@ -274,10 +274,10 @@ describe('seasonEpisodeTranslationRepository', () => {
         const rows = await getAllEpisodeTranslations();
         expect(rows).toHaveLength(2);
 
-        const ep1Row = await getEpisodeTranslation(Data.episode.id, 'de');
+        const ep1Row = (await getEpisodeTranslation(Data.episode.id, 'de'))!;
         expect(ep1Row.title).toBe('Folge 1');
 
-        const ep2Row = await getEpisodeTranslation(Data.episode2.id, 'de');
+        const ep2Row = (await getEpisodeTranslation(Data.episode2.id, 'de'))!;
         expect(ep2Row.title).toBe('Folge 2');
       });
     });
@@ -312,7 +312,7 @@ describe('seasonEpisodeTranslationRepository', () => {
           description: 'Original description',
         });
 
-        const firstRow = await getEpisodeTranslation(Data.episode.id, 'en');
+        const firstRow = (await getEpisodeTranslation(Data.episode.id, 'en'))!;
         const firstId = firstRow.id;
 
         await upsertEpisodeTranslation(Data.episode.id, 'en', {
@@ -340,7 +340,7 @@ describe('seasonEpisodeTranslationRepository', () => {
           description: 'Descricao do episodio',
         });
 
-        const row = await getEpisodeTranslation(Data.episode.id, 'pt');
+        const row = (await getEpisodeTranslation(Data.episode.id, 'pt'))!;
         expect(row.title).toBeNull();
         expect(row.description).toBe('Descricao do episodio');
       });
@@ -351,7 +351,7 @@ describe('seasonEpisodeTranslationRepository', () => {
           description: null,
         });
 
-        const row = await getEpisodeTranslation(Data.episode.id, 'ja');
+        const row = (await getEpisodeTranslation(Data.episode.id, 'ja'))!;
         expect(row.title).toBe('Episode Title');
         expect(row.description).toBeNull();
       });
@@ -359,7 +359,7 @@ describe('seasonEpisodeTranslationRepository', () => {
       test('treats undefined data fields as null via nullish coalescing', async () => {
         await upsertEpisodeTranslation(Data.episode.id, 'ko', {});
 
-        const row = await getEpisodeTranslation(Data.episode.id, 'ko');
+        const row = (await getEpisodeTranslation(Data.episode.id, 'ko'))!;
         expect(row.title).toBeNull();
         expect(row.description).toBeNull();
       });
@@ -375,7 +375,7 @@ describe('seasonEpisodeTranslationRepository', () => {
           description: null,
         });
 
-        const row = await getEpisodeTranslation(Data.episode.id, 'zh');
+        const row = (await getEpisodeTranslation(Data.episode.id, 'zh'))!;
         expect(row.title).toBeNull();
         expect(row.description).toBeNull();
       });

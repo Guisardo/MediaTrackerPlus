@@ -6,6 +6,7 @@ import { OpenLibrary } from 'src/metadata/provider/openlibrary';
 import { TMDbMovie, TMDbTv } from 'src/metadata/provider/tmdb';
 import { tvEpisodeRepository } from 'src/repository/episode';
 import { mediaItemRepository } from 'src/repository/mediaItem';
+import { definedOrUndefined } from 'src/repository/repository';
 import { updateMediaItem } from 'src/updateMetadata';
 
 export const findEpisodeByExternalId = async (args: {
@@ -16,9 +17,9 @@ export const findEpisodeByExternalId = async (args: {
   const { imdbId, tmdbId, tvdbId } = args;
 
   const episode = await tvEpisodeRepository.findOne({
-    tmdbId: tmdbId || undefined,
-    tvdbId: tvdbId || undefined,
-    imdbId: imdbId || undefined,
+    tmdbId: definedOrUndefined(tmdbId),
+    tvdbId: definedOrUndefined(tvdbId),
+    imdbId: definedOrUndefined(imdbId),
   });
 
   if (episode) {

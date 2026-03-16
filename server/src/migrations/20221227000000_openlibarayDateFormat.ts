@@ -24,8 +24,8 @@ export async function down(knex: Knex): Promise<void> {
   return;
 }
 
-const parseDate = (dateStr: string): string => {
-  if (dateStr.length === 4 && !Number.isNaN(dateStr)) {
+const parseDate = (dateStr: string): string | undefined => {
+  if (dateStr.length === 4 && !Number.isNaN(Number(dateStr))) {
     return dateStr;
   }
 

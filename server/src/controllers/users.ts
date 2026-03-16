@@ -35,7 +35,7 @@ export class UsersController {
       const user = await userRepository.findOne({ id: req.user });
       res.send(user);
     } else {
-      res.send(null);
+      res.send();
     }
   });
 
@@ -172,7 +172,7 @@ export class UsersController {
       });
     } catch (error) {
       res.status(400);
-      res.send(error.toString());
+      res.send(error instanceof Error ? error.toString() : String(error));
       return;
     }
 
@@ -244,7 +244,7 @@ export class UsersController {
 
     const user = await userRepository.findOneWithPassword({ id: userId });
 
-    if (!(await userRepository.verifyPassword(user, currentPassword))) {
+    if (!user || !(await userRepository.verifyPassword(user, currentPassword))) {
       res.sendStatus(401);
       return;
     }
@@ -275,7 +275,7 @@ export class UsersController {
     if (user) {
       res.send(_.pick(user, ['id', 'name']));
     } else {
-      res.send(null);
+      res.send();
     }
   });
 

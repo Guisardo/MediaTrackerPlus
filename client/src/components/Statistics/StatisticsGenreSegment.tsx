@@ -5,20 +5,20 @@ import { createSearchParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent } from 'src/components/ui/card';
 
 const StatisticsGenreSegment = (props: {
-  data: GenreSummeryResponse;
-  year: string;
+  data?: GenreSummeryResponse;
+  year?: string;
 }) => {
   const { data, year } = props;
 
   const navigate = useNavigate();
 
   const rountes = [
-    { path: '/statistics/genre/tv/', name: t`Tv`, type: 'tv' },
-    { path: '/statistics/genre/movie/', name: t`Movies`, type: 'movie' },
+    { path: '/statistics/genre/tv/', name: t`Tv`, type: 'tv' as const },
+    { path: '/statistics/genre/movie/', name: t`Movies`, type: 'movie' as const },
     {
       path: '/statistics/genre/video_game/',
       name: t`Games`,
-      type: 'video_game',
+      type: 'video_game' as const,
     },
     //   { path: '/genre/books/', name: t`Books`, type: 'book' },
     //  { path: '/genre/audiobooks/', name: t`Audiobooks`, type: 'audiobook' },
@@ -30,8 +30,9 @@ const StatisticsGenreSegment = (props: {
         <div className="flex flex-wrap gap-4">
           {rountes.map((route) => {
             const type = route.type;
+            const items = data[type];
             return (
-              data[type] && (
+              items.length > 0 && (
                 <Card
                   key={type}
                   className="rounded-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm"
@@ -43,20 +44,22 @@ const StatisticsGenreSegment = (props: {
                       </div>
                     </div>
                     <div className="whitespace-nowrap">
-                      {data[type].map((item) => {
+                      {items.map((item: { genre: string; count: number }) => {
                         return (
                           <div key={item.genre}>
-                            <div
+                          <div
                               className="hover:underline hover:cursor-pointer text-sm text-zinc-600 dark:text-zinc-400"
-                              onClick={() =>
+                              onClick={() => {
+                                const search = createSearchParams({
+                                  genre: item.genre,
+                                  ...(year ? { year } : {}),
+                                }).toString();
+
                                 navigate({
                                   pathname: route.path,
-                                  search: createSearchParams({
-                                    year: year,
-                                    genre: item.genre,
-                                  }).toString(),
-                                })
-                              }
+                                  search,
+                                });
+                              }}
                             >
                               <Trans>
                                 <b>{item.genre}</b> (<b>{item.count}</b>)

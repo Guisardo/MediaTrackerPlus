@@ -27,10 +27,16 @@ jobs:
       - run: npm ci
       - name: Build
         run: npm run build
+      - name: Verify generated API artifacts
+        run: git diff --exit-code -- server/openapi.json rest-api/index.ts
+      - name: Verify generated contracts
+        run: npm run verify-generated-contracts
       - name: Type check server
         run: npm run check-types --prefix server
       - name: Type check client
         run: npm run check-types --prefix client
+      - name: Type check rest-api
+        run: npm run check-types --prefix rest-api
       - name: Lint
         run: npm run lint
 
