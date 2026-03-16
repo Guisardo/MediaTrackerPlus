@@ -104,7 +104,7 @@ describe('tvEpisodeRepository', () => {
         isSpecialEpisode: true,
       });
 
-      const row: TvEpisode = await tvEpisodeRepository.findOne({ id });
+      const row = (await tvEpisodeRepository.findOne({ id }))!;
 
       expect(row.isSpecialEpisode).toBe(true);
     });
@@ -119,7 +119,7 @@ describe('tvEpisodeRepository', () => {
         isSpecialEpisode: false,
       });
 
-      const row: TvEpisode = await tvEpisodeRepository.findOne({ id });
+      const row = (await tvEpisodeRepository.findOne({ id }))!;
 
       expect(row.isSpecialEpisode).toBe(false);
     });
@@ -214,7 +214,7 @@ describe('tvEpisodeRepository', () => {
         isSpecialEpisode: false,
       });
 
-      const found = await tvEpisodeRepository.findOne({ id });
+      const found = (await tvEpisodeRepository.findOne({ id }))!;
 
       expect(found).toBeDefined();
       expect(found.id).toBe(id);
@@ -237,7 +237,7 @@ describe('tvEpisodeRepository', () => {
         isSpecialEpisode: false,
       });
 
-      const found = await tvEpisodeRepository.findOne({ id });
+      const found = (await tvEpisodeRepository.findOne({ id }))!;
 
       expect(typeof found.isSpecialEpisode).toBe('boolean');
     });
@@ -300,7 +300,7 @@ describe('tvEpisodeRepository', () => {
 
       await tvEpisodeRepository.update({ id, title: 'New Title' });
 
-      const updated = await tvEpisodeRepository.findOne({ id });
+      const updated = (await tvEpisodeRepository.findOne({ id }))!;
 
       expect(updated.title).toBe('New Title');
     });
@@ -318,7 +318,7 @@ describe('tvEpisodeRepository', () => {
 
       await tvEpisodeRepository.update({ id, releaseDate: '2005-06-15' });
 
-      const updated = await tvEpisodeRepository.findOne({ id });
+      const updated = (await tvEpisodeRepository.findOne({ id }))!;
 
       expect(updated.releaseDate).toBe('2005-06-15');
     });
@@ -336,7 +336,7 @@ describe('tvEpisodeRepository', () => {
 
       await tvEpisodeRepository.update({ id, runtime: 55 });
 
-      const updated = await tvEpisodeRepository.findOne({ id });
+      const updated = (await tvEpisodeRepository.findOne({ id }))!;
 
       expect(updated.runtime).toBe(55);
     });

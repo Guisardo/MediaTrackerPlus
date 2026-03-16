@@ -27,10 +27,16 @@ jobs:
       - run: npm ci
       - name: Build
         run: npm run build
+      - name: Verify generated API artifacts
+        run: git diff --exit-code -- server/openapi.json rest-api/index.ts
+      - name: Verify generated contracts
+        run: npm run verify-generated-contracts
       - name: Type check server
         run: npm run check-types --prefix server
       - name: Type check client
         run: npm run check-types --prefix client
+      - name: Type check rest-api
+        run: npm run check-types --prefix rest-api
       - name: Lint
         run: npm run lint
 
@@ -103,3 +109,33 @@ jobs:
           name: frontend-coverage
           path: client/coverage/
           retention-days: 7
+
+  required-status-check:
+    if: ${{ always() }}
+    needs:
+      - lint
+      - test-backend
+      - test-frontend
+      - coverage
+    runs-on: ubuntu-latest
+    name: Required Status Check
+    steps:
+      - name: Fail when any required job failed
+        env:
+          LINT_RESULT: ${{ needs.lint.result }}
+          TEST_BACKEND_RESULT: ${{ needs.test-backend.result }}
+          TEST_FRONTEND_RESULT: ${{ needs.test-frontend.result }}
+          COVERAGE_RESULT: ${{ needs.coverage.result }}
+        run: |
+          echo "lint=${LINT_RESULT}"
+          echo "test-backend=${TEST_BACKEND_RESULT}"
+          echo "test-frontend=${TEST_FRONTEND_RESULT}"
+          echo "coverage=${COVERAGE_RESULT}"
+
+          if [ "${LINT_RESULT}" != "success" ] || \
+             [ "${TEST_BACKEND_RESULT}" != "success" ] || \
+             [ "${TEST_FRONTEND_RESULT}" != "success" ] || \
+             [ "${COVERAGE_RESULT}" != "success" ]; then
+            echo "One or more required jobs failed."
+            exit 1
+          fi

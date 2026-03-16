@@ -80,8 +80,8 @@ describe('useMenuComponent – Menu visibility', () => {
 
     await user.click(screen.getByText('Trigger'));
 
-    expect(screen.getByText('Asc')).toBeInTheDocument();
-    expect(screen.getByText('Desc')).toBeInTheDocument();
+    expect(screen.getByText('Asc', { selector: 'li' })).toBeInTheDocument();
+    expect(screen.getByText('Desc', { selector: 'li' })).toBeInTheDocument();
   });
 
   it('hides the dropdown list after clicking the trigger a second time', async () => {
@@ -89,10 +89,10 @@ describe('useMenuComponent – Menu visibility', () => {
     renderMenu({ values: ['Asc', 'Desc'] });
 
     await user.click(screen.getByText('Trigger'));
-    expect(screen.getByText('Asc')).toBeInTheDocument();
+    expect(screen.getByText('Asc', { selector: 'li' })).toBeInTheDocument();
 
     await user.click(screen.getByText('Trigger'));
-    expect(screen.queryByText('Asc')).not.toBeInTheDocument();
+    expect(screen.queryByText('Asc', { selector: 'li' })).not.toBeInTheDocument();
   });
 
   it('closes the dropdown when clicking outside', async () => {
@@ -100,14 +100,14 @@ describe('useMenuComponent – Menu visibility', () => {
     renderMenu({ values: ['Asc', 'Desc'] });
 
     await user.click(screen.getByText('Trigger'));
-    expect(screen.getByText('Asc')).toBeInTheDocument();
+    expect(screen.getByText('Asc', { selector: 'li' })).toBeInTheDocument();
 
     // Click outside – userEvent.click on the body element triggers the
     // mousedown handler that hides the menu.
     await user.click(document.body);
 
     await waitFor(() => {
-      expect(screen.queryByText('Asc')).not.toBeInTheDocument();
+      expect(screen.queryByText('Asc', { selector: 'li' })).not.toBeInTheDocument();
     });
   });
 });
@@ -119,7 +119,7 @@ describe('useMenuComponent – value selection', () => {
     renderMenu({ values: ['Asc', 'Desc'], handleFilterChange });
 
     await user.click(screen.getByText('Trigger'));
-    await user.click(screen.getByText('Asc'));
+    await user.click(screen.getByText('Asc', { selector: 'li' }));
 
     expect(handleFilterChange).toHaveBeenCalledTimes(1);
   });

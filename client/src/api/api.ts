@@ -4,8 +4,8 @@ import { applyMethodDecorator, traceAsyncMethod } from 'src/logger/tracing';
 
 export class FetchError extends Error {
   readonly status: number;
-  readonly statusText?: string;
-  readonly body?: string;
+  readonly statusText: string | undefined;
+  readonly body: string | undefined;
 
   constructor(args: { status: number; statusText?: string; body?: string }) {
     super(
@@ -64,38 +64,35 @@ export const mediaTrackerApi = new MediaTracker({
   customFetch: (input, init) => clientApiFetchLogger.execute(input, init),
 });
 
-export const unwrapError = async <T>(
-  data: Promise<T | RequestError>
-): Promise<
+export type ApiResult<T> =
   | {
       data: T;
-      error: undefined;
+      error?: never;
     }
   | {
-      data: undefined;
+      data?: never;
       error: string;
-    }
-> => {
+    };
+
+export const unwrapError = async <T>(
+  data: Promise<T | RequestError>
+): Promise<ApiResult<T>> => {
   const res = await data;
 
   if (isMediaTrackerError(res)) {
     return {
-      data: undefined,
       error: res.errorMessage,
     };
   }
 
   return {
     data: res,
-    error: undefined,
   };
 };
 
 export const errorHandler = <T, U>(
   fn: (args: T) => Promise<U | RequestError>
-) => {
-  return async (args: T) => unwrapError(fn(args));
-};
+): ((args: T) => Promise<ApiResult<U>>) => async (args: T) => unwrapError(fn(args));
 
 const isMediaTrackerError = <T>(
   data: T | RequestError

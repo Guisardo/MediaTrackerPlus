@@ -208,7 +208,7 @@ describe('progressRepository', () => {
         progress: 0.6,
       });
 
-      const found = await progressRepository.findOne({ id });
+      const found = (await progressRepository.findOne({ id }))!;
 
       expect(found).toBeDefined();
       expect(found.id).toBe(id);
@@ -223,10 +223,10 @@ describe('progressRepository', () => {
         progress: 0.55,
       });
 
-      const found = await progressRepository.findOne({
+      const found = (await progressRepository.findOne({
         userId: Data.user.id,
         mediaItemId: Data.movie.id,
-      });
+      }))!;
 
       expect(found).toBeDefined();
       expect(found.userId).toBe(Data.user.id);
@@ -257,10 +257,10 @@ describe('progressRepository', () => {
         progress: 0.25,
       });
 
-      const found = await progressRepository.findOne({
+      const found = (await progressRepository.findOne({
         userId: Data.user.id,
         episodeId: Data.episode.id,
-      });
+      }))!;
 
       expect(found).toBeDefined();
       expect(found.episodeId).toBe(Data.episode.id);
@@ -365,7 +365,7 @@ describe('progressRepository', () => {
 
       await progressRepository.update({ id, progress: 0.9 });
 
-      const updated = await progressRepository.findOne({ id });
+      const updated = (await progressRepository.findOne({ id }))!;
 
       expect(updated.progress).toBe(0.9);
     });
@@ -381,7 +381,7 @@ describe('progressRepository', () => {
 
       await progressRepository.update({ id, action: 'paused' });
 
-      const updated = await progressRepository.findOne({ id });
+      const updated = (await progressRepository.findOne({ id }))!;
 
       expect(updated.action).toBe('paused');
     });
@@ -397,7 +397,7 @@ describe('progressRepository', () => {
 
       await progressRepository.update({ id, duration: 5400 });
 
-      const updated = await progressRepository.findOne({ id });
+      const updated = (await progressRepository.findOne({ id }))!;
 
       expect(updated.duration).toBe(5400);
     });
@@ -413,7 +413,7 @@ describe('progressRepository', () => {
 
       await progressRepository.update({ id, device: 'Smart TV' });
 
-      const updated = await progressRepository.findOne({ id });
+      const updated = (await progressRepository.findOne({ id }))!;
 
       expect(updated.device).toBe('Smart TV');
     });
@@ -434,7 +434,7 @@ describe('progressRepository', () => {
 
       await progressRepository.update({ id: idA, progress: 0.99 });
 
-      const entryB = await progressRepository.findOne({ id: idB });
+      const entryB = (await progressRepository.findOne({ id: idB }))!;
 
       expect(entryB.progress).toBe(0.7);
     });
@@ -509,10 +509,10 @@ describe('progressRepository', () => {
 
       await progressRepository.delete({ userId: Data.user.id });
 
-      const user2Entry = await progressRepository.findOne({
+      const user2Entry = (await progressRepository.findOne({
         userId: Data.user2.id,
         mediaItemId: Data.movie.id,
-      });
+      }))!;
 
       expect(user2Entry).toBeDefined();
       expect(user2Entry.userId).toBe(Data.user2.id);

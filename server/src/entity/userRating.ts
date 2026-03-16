@@ -3,10 +3,10 @@ export type UserRating = {
   mediaItemId: number;
   date: number;
   userId: number;
-  rating?: number;
-  review?: string;
-  episodeId?: number;
-  seasonId?: number;
+  rating?: number | null;
+  review?: string | null;
+  episodeId?: number | null;
+  seasonId?: number | null;
 };
 
 export const userRatingColumns = <const>[

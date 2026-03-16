@@ -11,6 +11,7 @@ import { logger } from 'src/logger';
 import { Progress } from 'src/entity/progress';
 import { Database } from 'src/dbconfig';
 import { Seen } from 'src/entity/seen';
+import { definedOrNull } from 'src/repository/repository';
 /**
  * @openapi_tags Progress
  */
@@ -21,7 +22,14 @@ export class ProgressController {
   add = createExpressRoute<{
     method: 'put';
     path: '/api/progress';
-    requestQuery: Omit<Progress, 'id' | 'userId'>;
+    requestQuery: {
+      mediaItemId: number;
+      episodeId?: number;
+      date?: number;
+      action?: 'playing' | 'paused';
+      duration?: number;
+      progress?: number;
+    };
   }>(async (req, res) => {
     const userId = Number(req.user);
 
@@ -55,7 +63,7 @@ export class ProgressController {
     await addItem({
       userId: userId,
       action: action,
-      date: date,
+      date: date ?? Date.now(),
       duration: duration,
       episodeId: episodeId,
       mediaItemId: mediaItemId,
@@ -121,6 +129,11 @@ export class ProgressController {
     }
 
     if (mediaType === 'tv') {
+      if (!mediaItem || mediaItem.id == null || !episode || episode.id == null) {
+        res.status(400).send();
+        return;
+      }
+
       await addItem({
         userId: userId,
         action: action,
@@ -132,6 +145,11 @@ export class ProgressController {
         device: device,
       });
     } else {
+      if (!mediaItem || mediaItem.id == null) {
+        res.status(400).send();
+        return;
+      }
+
       await addItem({
         userId: userId,
         action: action,
@@ -168,21 +186,27 @@ export class ProgressController {
 
 const addItem = async (args: Progress) => {
   logger.debug(`added progress ${JSON.stringify(args)}`);
+  const progressWhere = (qb: ReturnType<typeof Database.knex>) => {
+    qb.where({
+      userId: args.userId,
+      mediaItemId: args.mediaItemId,
+    });
+
+    if (args.episodeId == null) {
+      qb.whereNull('episodeId');
+    } else {
+      qb.where('episodeId', args.episodeId);
+    }
+  };
 
   if (args.progress === 1) {
     await Database.knex.transaction(async (trx) => {
-      await trx<Progress>('progress')
-        .where({
-          userId: args.userId,
-          mediaItemId: args.mediaItemId,
-          episodeId: args.episodeId || null,
-        })
-        .delete();
+      await trx<Progress>('progress').where(progressWhere).delete();
 
       await trx<Seen>('seen').insert({
         userId: args.userId,
         mediaItemId: args.mediaItemId,
-        episodeId: args.episodeId || null,
+        episodeId: definedOrNull(args.episodeId),
         date: Date.now(),
         duration: args.duration,
       });
@@ -190,11 +214,7 @@ const addItem = async (args: Progress) => {
   } else {
     await Database.knex.transaction(async (trx) => {
       const currentProgress = await trx<Progress>('progress')
-        .where({
-          userId: args.userId,
-          mediaItemId: args.mediaItemId,
-          episodeId: args.episodeId || null,
-        })
+        .where(progressWhere)
         .first();
 
       if (currentProgress) {
@@ -212,7 +232,7 @@ const addItem = async (args: Progress) => {
           date: Date.now(),
           duration: args.duration,
           mediaItemId: args.mediaItemId,
-          episodeId: args.episodeId || null,
+          episodeId: definedOrNull(args.episodeId),
           progress: args.progress,
           device: args.device,
         });
@@ -220,7 +240,7 @@ const addItem = async (args: Progress) => {
     });
   }
 
-  if (args.progress < 1) {
+  if (args.progress != null && args.progress < 1) {
     await listItemRepository.addItem({
       userId: args.userId,
       mediaItemId: args.mediaItemId,

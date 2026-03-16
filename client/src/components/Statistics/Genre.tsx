@@ -1,7 +1,6 @@
 import React from 'react';
 import { IStatistocsProps, YearSelector } from 'src/pages/Statistics';
 import StatisticsGenreSegment from './StatisticsGenreSegment';
-import { mediaTrackerApi } from 'src/api/api';
 import { useGenreSeen } from 'src/hooks/statisticHooks';
 
 const StatsticsGenre = (props: IStatistocsProps) => {
@@ -19,7 +18,7 @@ const StatsticsGenre = (props: IStatistocsProps) => {
       ></YearSelector>
       <StatisticsGenreSegment
         data={data}
-        year={props.currentYear.year}
+        year={props.currentYear.year ?? undefined}
       ></StatisticsGenreSegment>
     </>
   );

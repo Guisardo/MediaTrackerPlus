@@ -4,7 +4,7 @@ import { Trans } from '@lingui/macro';
 import { setLastSeenEpisode, useDetails } from 'src/api/details';
 import { Modal } from 'src/components/Modal';
 import { SelectSeenDateComponent } from 'src/components/SelectSeenDate';
-import { MediaItemItemsResponse, TvSeason } from 'mediatracker-api';
+import { MediaItemItemsResponse, TvEpisode, TvSeason } from 'mediatracker-api';
 import { formatSeasonNumber } from 'src/utils';
 import { Button } from 'src/components/ui/button';
 import {
@@ -20,46 +20,79 @@ export const SelectLastSeenEpisode: FunctionComponent<{
   season?: TvSeason;
   closeModal: (selected?: boolean) => void;
 }> = (props) => {
-  const { closeModal, season } = props;
+  const { closeModal, season, tvShow } = props;
+  const tvShowId = tvShow.id ?? 0;
 
-  const { mediaItem: tvShow, isLoading } = useDetails(props.tvShow.id);
-
-  const [selectedSeasonId, setSelectedSeasonId] = useState<number>(season?.id);
-
-  const selectedSeason = tvShow?.seasons?.find(
-    (value) => value.id === selectedSeasonId
+  const { mediaItem: tvShowDetails, isLoading } = useDetails(tvShowId);
+  const seasonsWithEpisodes = (tvShowDetails?.seasons ?? []).filter(
+    (value) => (value.episodes?.length ?? 0) > 0
   );
-
-  const [selectedEpisodeId, setSelectedEpisodeId] = useState<number>(
-    selectedSeason?.episodes[selectedSeason?.episodes.length - 1].id
+  const [selectedSeasonId, setSelectedSeasonId] = useState<number | undefined>(
+    season?.id ?? undefined
   );
+  const [selectedEpisodeId, setSelectedEpisodeId] = useState<number | undefined>();
 
-  const selectedEpisode = selectedSeason?.episodes?.find(
-    (episode) => episode.id === selectedEpisodeId
-  );
+  const selectedSeason =
+    (selectedSeasonId !== undefined
+      ? seasonsWithEpisodes.find((value) => value.id === selectedSeasonId)
+      : undefined) ??
+    (season && (season.episodes?.length ?? 0) > 0 ? season : undefined) ??
+    seasonsWithEpisodes.at(-1);
+  const selectedSeasonEpisodes = selectedSeason?.episodes ?? [];
+  const selectedEpisode: TvEpisode | undefined =
+    (selectedEpisodeId !== undefined
+      ? selectedSeasonEpisodes.find((value) => value.id === selectedEpisodeId)
+      : undefined) ?? selectedSeasonEpisodes.at(-1);
 
   useEffect(() => {
-    if (season || !tvShow || tvShow?.seasons?.length === 0) {
+    if (season || seasonsWithEpisodes.length === 0) {
       return;
     }
 
-    const seasonsWithEpisodes = tvShow.seasons.filter(
-      (season) => season.episodes.length > 0
-    );
+    const initialSeason = seasonsWithEpisodes.at(-1);
+    const initialEpisode = initialSeason?.episodes?.at(-1);
 
-    const firstSeason = seasonsWithEpisodes[seasonsWithEpisodes.length - 1];
+    if (selectedSeasonId === undefined) {
+      setSelectedSeasonId(initialSeason?.id ?? undefined);
+    }
 
-    setSelectedSeasonId(firstSeason.id);
-    setSelectedEpisodeId(
-      firstSeason.episodes[firstSeason.episodes.length - 1].id
-    );
-  }, [tvShow, season]);
+    if (selectedEpisodeId === undefined) {
+      setSelectedEpisodeId(initialEpisode?.id ?? undefined);
+    }
+  }, [season, seasonsWithEpisodes, selectedEpisodeId, selectedSeasonId]);
 
   useEffect(() => {
-    if (selectedSeason && !selectedEpisode) {
-      setSelectedEpisodeId(selectedSeason.episodes?.at(0)?.id);
+    if (!selectedSeason) {
+      return;
     }
-  }, [selectedSeason, selectedEpisode]);
+
+    if (selectedEpisode?.id !== undefined) {
+      return;
+    }
+
+    setSelectedEpisodeId(selectedSeason.episodes?.at(-1)?.id ?? undefined);
+  }, [selectedEpisode, selectedSeason]);
+
+  if (
+    !isLoading &&
+    (!tvShowDetails ||
+      seasonsWithEpisodes.length === 0 ||
+      !selectedSeason ||
+      !selectedEpisode)
+  ) {
+    return (
+      <div className="p-3 rounded ">
+        <div className="max-w-sm py-2 mx-5 text-xl font-bold text-center">
+          <Trans>No episodes available</Trans>
+        </div>
+        <div className="flex justify-end mt-2">
+          <Button variant="destructive" onClick={() => closeModal()}>
+            <Trans>Cancel</Trans>
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-3 rounded ">
@@ -83,18 +116,18 @@ export const SelectLastSeenEpisode: FunctionComponent<{
                   <Trans>Season</Trans>:
                 </span>
                 <Select
-                  value={String(selectedSeasonId)}
+                  value={selectedSeasonId !== undefined ? String(selectedSeasonId) : ''}
                   onValueChange={(value) => setSelectedSeasonId(Number(value))}
                 >
                   <SelectTrigger aria-label="Season">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {tvShow.seasons
-                      ?.filter((season) => !season.isSpecialSeason)
-                      .map((season) => (
-                        <SelectItem key={season.id} value={String(season.id)}>
-                          {season.title}
+                    {seasonsWithEpisodes
+                      .filter((value) => !value.isSpecialSeason)
+                      .map((value) => (
+                        <SelectItem key={value.id} value={String(value.id)}>
+                          {value.title}
                         </SelectItem>
                       ))}
                   </SelectContent>
@@ -106,19 +139,19 @@ export const SelectLastSeenEpisode: FunctionComponent<{
                 <Trans>Episode</Trans>:
               </span>
               <Select
-                value={String(selectedEpisodeId)}
+                value={selectedEpisodeId !== undefined ? String(selectedEpisodeId) : ''}
                 onValueChange={(value) => setSelectedEpisodeId(Number(value))}
               >
                 <SelectTrigger aria-label="Episode">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {selectedSeason?.episodes?.map((episode) => (
-                    <SelectItem key={episode.id} value={String(episode.id)}>
-                      {!episode.title.endsWith(` ${episode.episodeNumber}`) &&
-                        episode.episodeNumber + '. '}
+                  {selectedSeasonEpisodes.map((value) => (
+                    <SelectItem key={value.id} value={String(value.id)}>
+                      {!value.title.endsWith(` ${value.episodeNumber}`) &&
+                        value.episodeNumber + '. '}
 
-                      {episode.title}
+                      {value.title}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -136,16 +169,28 @@ export const SelectLastSeenEpisode: FunctionComponent<{
                 </Button>
               )}
             >
-              {(closeModal) => (
+              {(closeSeenDateModal) => (
                 <SelectSeenDateComponent
                   mediaItem={tvShow}
-                  closeModal={closeModal}
+                  closeModal={closeSeenDateModal}
                   onSelected={async (args) => {
-                    closeModal();
+                    closeSeenDateModal();
+
+                    if (!selectedEpisode) {
+                      return;
+                    }
+
+                    const lastSeenAt = args.date
+                      ? 'custom_date'
+                      : args.seenAt;
+
+                    if (!lastSeenAt) {
+                      return;
+                    }
 
                     await setLastSeenEpisode({
                       mediaItem: tvShow,
-                      lastSeenAt: args.seenAt,
+                      lastSeenAt,
                       date: args.date,
                       episode: selectedEpisode,
                       season: season ? selectedSeason : undefined,

@@ -1,0 +1,24 @@
+{
+  "extends": "@tsconfig/recommended/tsconfig.json",
+  "compilerOptions": {
+    "outDir": "build/src",
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "target": "ESNext",
+    "strict": true,
+    "noImplicitOverride": true,
+    "useUnknownInCatchVariables": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "noEmit": true
+  },
+  "exclude": ["node_modules", "build"]
+}

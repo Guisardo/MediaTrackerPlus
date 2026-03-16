@@ -81,6 +81,24 @@ export const GridItem: FunctionComponent<{
   } = props.appearance || {};
 
   const item = episode || season || mediaItem;
+  const posterSrc = mediaItem.posterSmall ?? undefined;
+  const firstUnwatchedEpisode =
+    mediaItem.mediaType === 'tv'
+      ? mediaItem.firstUnwatchedEpisode ?? undefined
+      : undefined;
+  const upcomingEpisode =
+    mediaItem.mediaType === 'tv'
+      ? mediaItem.upcomingEpisode ?? undefined
+      : undefined;
+  const lastAiredEpisode =
+    mediaItem.mediaType === 'tv'
+      ? mediaItem.lastAiredEpisode ?? undefined
+      : undefined;
+  const runtimeMinutes = episode
+    ? episode.runtime || mediaItem.runtime || undefined
+    : season
+    ? season.totalRuntime ?? undefined
+    : mediaItem.totalRuntime ?? undefined;
 
   const isOnWatchlist =
     (season && season.onWatchlist) ||
@@ -111,7 +129,7 @@ export const GridItem: FunctionComponent<{
     <div className="@container w-full">
       <div className="rounded-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm pb-4">
         <Poster
-          src={mediaItem.posterSmall}
+          src={posterSrc}
           mediaType={mediaType}
           itemMediaType={mediaItem.mediaType}
           href={
@@ -158,14 +176,14 @@ export const GridItem: FunctionComponent<{
                   href={`#/seasons/${mediaItem.id}`}
                 >
                   {topBar.showFirstUnwatchedEpisodeBadge &&
-                    mediaItem.firstUnwatchedEpisode && (
+                    firstUnwatchedEpisode && (
                       <ItemBadge>
-                        {formatEpisodeNumber(mediaItem.firstUnwatchedEpisode)}
+                        {formatEpisodeNumber(firstUnwatchedEpisode)}
                       </ItemBadge>
                     )}
                   {topBar.showUnwatchedEpisodesCount &&
-                    mediaItem.unseenEpisodesCount > 0 && (
-                      <ItemBadge>{mediaItem.unseenEpisodesCount}</ItemBadge>
+                    (mediaItem.unseenEpisodesCount ?? 0) > 0 && (
+                      <ItemBadge>{mediaItem.unseenEpisodesCount ?? 0}</ItemBadge>
                     )}
                   {topBar.showUnwatchedEpisodesCount && mediaItem.seen == true && (
                     <ItemBadge>
@@ -206,7 +224,7 @@ export const GridItem: FunctionComponent<{
           {/* Release year and MediaType */}
           <div className="flex justify-between text-sm text-zinc-600 dark:text-zinc-400">
             <span>
-              {mediaItem.releaseDate &&
+              {mediaItem.releaseDate != null &&
                 parseISO(mediaItem.releaseDate).getFullYear()}
             </span>
 
@@ -225,7 +243,7 @@ export const GridItem: FunctionComponent<{
               <div className="w-full h-2 mt-1 rounded bg-zinc-300 dark:bg-zinc-700">
                 <div
                   className="h-full rounded bg-zinc-900 dark:bg-zinc-100"
-                  style={{ width: `${mediaItem.progress * 100}%` }}
+                  style={{ width: `${(mediaItem.progress ?? 0) * 100}%` }}
                 />
               </div>
             </>
@@ -233,12 +251,10 @@ export const GridItem: FunctionComponent<{
 
           {showNextAiring && (
             <div className='overflow-hidden overflow-ellipsis whitespace-nowrap text-sm text-zinc-600 dark:text-zinc-400"'>
-              {mediaItem.mediaType === 'tv' && mediaItem.upcomingEpisode && (
+              {upcomingEpisode?.releaseDate && (
                 <>
-                  {formatEpisodeNumber(mediaItem.upcomingEpisode)}{' '}
-                  <RelativeTime
-                    to={parseISO(mediaItem.upcomingEpisode.releaseDate)}
-                  />
+                  {formatEpisodeNumber(upcomingEpisode)}{' '}
+                  <RelativeTime to={parseISO(upcomingEpisode.releaseDate)} />
                 </>
               )}
               {mediaItem.mediaType !== 'tv' && mediaItem.releaseDate && (
@@ -251,12 +267,10 @@ export const GridItem: FunctionComponent<{
 
           {showLastAiring && (
             <div className="overflow-hidden overflow-ellipsis whitespace-nowrap text-sm text-zinc-600 dark:text-zinc-400">
-              {mediaItem.mediaType === 'tv' && mediaItem.lastAiredEpisode && (
+              {lastAiredEpisode?.releaseDate && (
                 <>
-                  {formatEpisodeNumber(mediaItem.lastAiredEpisode)}{' '}
-                  <RelativeTime
-                    to={parseISO(mediaItem.lastAiredEpisode.releaseDate)}
-                  />
+                  {formatEpisodeNumber(lastAiredEpisode)}{' '}
+                  <RelativeTime to={parseISO(lastAiredEpisode.releaseDate)} />
                 </>
               )}
               {mediaItem.mediaType !== 'tv' && mediaItem.releaseDate && (
@@ -267,19 +281,9 @@ export const GridItem: FunctionComponent<{
             </div>
           )}
 
-          {showTotalRuntime && (
+          {showTotalRuntime && runtimeMinutes !== undefined && (
             <>
-              <FormatDuration
-                milliseconds={
-                  (episode
-                    ? episode.runtime || mediaItem.runtime
-                    : season
-                    ? season.totalRuntime
-                    : mediaItem.totalRuntime) *
-                  60 *
-                  1000
-                }
-              />
+              <FormatDuration milliseconds={runtimeMinutes * 60 * 1000} />
             </>
           )}
 
@@ -293,24 +297,22 @@ export const GridItem: FunctionComponent<{
         </div>
 
         {showMarksAsSeenFirstUnwatchedEpisode &&
-          (!isTvShow(mediaItem) ||
-            (isTvShow(mediaItem) && mediaItem.firstUnwatchedEpisode)) && (
+          (!isTvShow(mediaItem) || firstUnwatchedEpisode) && (
             <div className="flex flex-col items-center mt-2 px-2">
               <AddToSeenHistoryButton
                 mediaItem={mediaItem}
-                episode={mediaItem.firstUnwatchedEpisode}
+                episode={firstUnwatchedEpisode}
                 useSeasonAndEpisodeNumber={true}
               />
             </div>
           )}
 
         {showMarksAsSeenLastAiredEpisode &&
-          (!isTvShow(mediaItem) ||
-            (isTvShow(mediaItem) && mediaItem.lastAiredEpisode)) && (
+          (!isTvShow(mediaItem) || lastAiredEpisode) && (
             <div className="flex flex-col items-center mt-2 px-2">
               <AddToSeenHistoryButton
                 mediaItem={mediaItem}
-                episode={mediaItem.lastAiredEpisode}
+                episode={lastAiredEpisode}
                 useSeasonAndEpisodeNumber={true}
               />
             </div>

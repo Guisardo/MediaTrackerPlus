@@ -982,7 +982,7 @@ describe('GroupController', () => {
 
       try {
         const originalSetImmediate = global.setImmediate;
-        let capturedCallback: (() => void) | null = null;
+        let capturedCallback: (() => void) | undefined = undefined;
 
         global.setImmediate = jest.fn((callback) => {
           capturedCallback = callback as () => void;
@@ -1000,7 +1000,7 @@ describe('GroupController', () => {
 
         // Execute the captured callback to verify it calls cleanupSoftDeletedGroup
         expect(capturedCallback).toBeDefined();
-        await (capturedCallback as () => Promise<void>)();
+        await (capturedCallback as unknown as () => Promise<void>)();
 
         expect(cleanupSpy).toHaveBeenCalledWith(groupId);
       } finally {

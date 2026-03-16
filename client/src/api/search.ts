@@ -13,15 +13,20 @@ export const useItemsKey = (
 
 export const useSearch = () => {
   const [query, setQuery] =
-    useState<{ mediaType: MediaType; query: string }>(null);
+    useState<{ mediaType: MediaType; query: string } | null>(null);
 
   const { isLoading, error, data } = useQuery({
     queryKey: ['search', query],
-    queryFn: () =>
-      mediaTrackerApi.search.search({
+    queryFn: () => {
+      if (query == null) {
+        throw new Error('Search query is not initialized');
+      }
+
+      return mediaTrackerApi.search.search({
         mediaType: query.mediaType,
         q: query.query,
-      }),
+      });
+    },
     enabled: query !== null,
   });
 

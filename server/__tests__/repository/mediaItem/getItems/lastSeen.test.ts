@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 import { mediaItemRepository } from 'src/repository/mediaItem';
-import { MediaItemBaseWithSeasons } from 'src/entity/mediaItem';
+import { MediaItemBaseWithSeasons, MediaItemItemsResponse } from 'src/entity/mediaItem';
 import { User } from 'src/entity/user';
 import { userRepository } from 'src/repository/user';
 import { Seen } from 'src/entity/seen';
@@ -216,10 +216,10 @@ const mediaItem: MediaItemBaseWithSeasons[] = [
 ];
 
 const lastSeenUser1: Record<number, number | null> = {
-  1: seenEpisodes[2].date,
+  1: seenEpisodes[2].date!,
   2: null,
-  3: seenEpisodes[4].date,
-  4: seenEpisodes[5].date,
+  3: seenEpisodes[4].date!,
+  4: seenEpisodes[5].date!,
   5: null,
 };
 
@@ -228,7 +228,7 @@ const lastSeenUser2: Record<number, number | null> = {
   2: null,
   3: null,
   4: null,
-  5: seenEpisodes[7].date,
+  5: seenEpisodes[7].date!,
 };
 
 describe('lastSeen', () => {
@@ -247,7 +247,7 @@ describe('lastSeen', () => {
       userId: user.id,
     });
 
-    const items = _.keyBy(fetchedMediaItems, (item) => item.id);
+    const items = _.keyBy(fetchedMediaItems, (item) => item.id) as _.Dictionary<MediaItemItemsResponse>;
 
     Object.entries(lastSeenUser1)
       .filter(([mediaItemId, lastSeenAt]) => lastSeenAt)
@@ -261,7 +261,7 @@ describe('lastSeen', () => {
       userId: user2.id,
     });
 
-    const items = _.keyBy(fetchedMediaItems, (item) => item.id);
+    const items = _.keyBy(fetchedMediaItems, (item) => item.id) as _.Dictionary<MediaItemItemsResponse>;
 
     Object.entries(lastSeenUser2)
       .filter(([mediaItemId, lastSeenAt]) => lastSeenAt)

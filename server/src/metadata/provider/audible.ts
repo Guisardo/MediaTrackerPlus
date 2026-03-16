@@ -26,7 +26,12 @@ export class Audible extends MetadataProvider {
   };
 
   private countryCode() {
-    return GlobalConfiguration.configuration.audibleLang?.toLocaleLowerCase() as AudibleCountryCode;
+    const countryCode =
+      GlobalConfiguration.configuration.audibleLang?.toLocaleLowerCase();
+
+    return countryCode && countryCode in this.languages
+      ? (countryCode as AudibleCountryCode)
+      : 'us';
   }
 
   public domain(countryCode: AudibleCountryCode) {
@@ -44,7 +49,7 @@ export class Audible extends MetadataProvider {
     image_sizes: [500, 1000, 2400].join(','),
   };
 
-  async search(query: string): Promise<MediaItemForProvider[]> {
+  override async search(query: string): Promise<MediaItemForProvider[]> {
     const countryCode = this.countryCode();
 
     const res = await axios.get<AudibleResponse.SearchResult>(
@@ -67,8 +72,10 @@ export class Audible extends MetadataProvider {
     throw new Error(`Error: ${res.status}`);
   }
 
-  async findByAudibleId(audibleId: string): Promise<MediaItemForProvider> {
-    const countryCode = GlobalConfiguration.configuration.audibleLang;
+  async findByAudibleId(
+    audibleId: string
+  ): Promise<MediaItemForProvider | undefined> {
+    const countryCode = this.countryCode();
 
     const res = await axios.get<AudibleResponse.DetailsResult>(
       `https://api.audible.${this.domain(
@@ -84,19 +91,19 @@ export class Audible extends MetadataProvider {
     }
 
     if (res.data?.product?.title === undefined) {
-      return;
+      return undefined;
     }
 
     return this.mapResponse(res.data.product, countryCode);
   }
 
-  async details(
+  override async details(
     arg: ExternalIds & { countryCode?: AudibleCountryCode }
   ): Promise<MediaItemForProvider> {
     const { audibleId } = arg;
 
     const countryCode =
-      arg.countryCode || GlobalConfiguration.configuration.audibleLang;
+      arg.countryCode || this.countryCode();
 
     const res = await axios.get<AudibleResponse.DetailsResult>(
       `https://api.audible.${this.domain(
@@ -122,10 +129,10 @@ export class Audible extends MetadataProvider {
     return this.mapResponse(res.data.product, countryCode);
   }
 
-  async localizedDetails(
+  override async localizedDetails(
     ids: ExternalIds,
     language: string
-  ): Promise<MediaItemForProvider> {
+  ): Promise<MediaItemForProvider | null> {
     const { audibleId } = ids;
 
     if (!audibleId) {

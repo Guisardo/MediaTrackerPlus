@@ -17,18 +17,22 @@ import {
 export const SettingsNotificationsPage: FunctionComponent = () => {
   const { user, updateUser } = useUser();
 
+  if (!user) {
+    return <></>;
+  }
+
   return (
     <>
       <CheckboxWithTitleAndDescription
         title={t`Send notification for releases`}
         description={t`Receive notification for all media items on your watchlist, when they are released, including new seasons for tv shows`}
-        checked={user.sendNotificationForReleases}
+        checked={user.sendNotificationForReleases === true}
         onChange={(value) => updateUser({ sendNotificationForReleases: value })}
       />
       <CheckboxWithTitleAndDescription
         title={t`Send notification for episodes releases`}
         description={t`Receive notification for every episode for all tv shows on your watchlist, when it's released`}
-        checked={user.sendNotificationForEpisodesReleases}
+        checked={user.sendNotificationForEpisodesReleases === true}
         onChange={(value) =>
           updateUser({ sendNotificationForEpisodesReleases: value })
         }
@@ -36,7 +40,7 @@ export const SettingsNotificationsPage: FunctionComponent = () => {
       <CheckboxWithTitleAndDescription
         title={t`Send notification when status changes`}
         description={t`Receive notification for all media items on your watchlist, when its status changes`}
-        checked={user.sendNotificationWhenStatusChanges}
+        checked={user.sendNotificationWhenStatusChanges === true}
         onChange={(value) =>
           updateUser({ sendNotificationWhenStatusChanges: value })
         }
@@ -44,7 +48,7 @@ export const SettingsNotificationsPage: FunctionComponent = () => {
       <CheckboxWithTitleAndDescription
         title={t`Send notification when release date changes`}
         description={t`Receive notification for all media items on your watchlist, when its release date changes`}
-        checked={user.sendNotificationWhenReleaseDateChanges}
+        checked={user.sendNotificationWhenReleaseDateChanges === true}
         onChange={(value) =>
           updateUser({ sendNotificationWhenReleaseDateChanges: value })
         }
@@ -52,7 +56,7 @@ export const SettingsNotificationsPage: FunctionComponent = () => {
       <CheckboxWithTitleAndDescription
         title={t`Send notification when number of seasons changes`}
         description={t`Receive notification for all tv shows on your watchlist, when its number of seasons changes`}
-        checked={user.sendNotificationWhenNumberOfSeasonsChanges}
+        checked={user.sendNotificationWhenNumberOfSeasonsChanges === true}
         onChange={(value) =>
           updateUser({ sendNotificationWhenNumberOfSeasonsChanges: value })
         }
@@ -160,11 +164,15 @@ const platforms: ReadonlyArray<
 const NotificationPlatform: FunctionComponent = () => {
   const { user, updateUser } = useUser();
 
+  if (!user) {
+    return null;
+  }
+
   return (
     <>
       <div className="flex mb-2 items-center gap-2">
         <Select
-          value={user.notificationPlatform || ''}
+          value={user.notificationPlatform ?? undefined}
           onValueChange={(value) => {
             updateUser({
               notificationPlatform: value as never,
@@ -191,7 +199,7 @@ const NotificationPlatform: FunctionComponent = () => {
 };
 
 const NotificationPlatformsCredentials: FunctionComponent<{
-  platformName: string;
+  platformName: keyof User.GetNotificationCredentials.ResponseBody;
   href: string;
   hasPriority?: boolean;
   maxPriority?: number;
@@ -207,17 +215,19 @@ const NotificationPlatformsCredentials: FunctionComponent<{
   } = useNotificationPlatformsCredentials();
 
   useEffect(() => {
-    if (
-      notificationPlatformsCredentials &&
-      platformName in notificationPlatformsCredentials
-    ) {
+    if (notificationPlatformsCredentials) {
       const credentials = notificationPlatformsCredentials[platformName];
 
+      if (!credentials || !formRef.current) {
+        return;
+      }
+
+      const credentialsRecord = credentials as Record<string, string>;
       formRef.current
         .querySelectorAll<HTMLInputElement>('input')
         .forEach((input) => {
-          if (input.name in credentials && !input.value) {
-            input.value = credentials[input.name];
+          if (input.name in credentialsRecord && !input.value) {
+            input.value = credentialsRecord[input.name];
           }
         });
 

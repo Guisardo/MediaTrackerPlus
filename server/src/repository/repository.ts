@@ -5,6 +5,13 @@ import { applyMethodDecorator, traceMethod } from 'src/logger/tracing';
 export const omitUndefinedValues = <T extends object>(value: Partial<T>) =>
   _.pickBy(value, (v) => v !== undefined) as Partial<T>;
 
+export const definedOrUndefined = <T>(
+  value: T | null | undefined
+): T | undefined => (value == null ? undefined : value);
+
+export const definedOrNull = <T>(value: T | null | undefined): T | null =>
+  value == null ? null : value;
+
 const BATCH_SIZE = 30;
 
 export const repository = <T extends object>(args: {
@@ -66,32 +73,30 @@ export const repository = <T extends object>(args: {
         return value;
       }
 
-      return _.pick(value, this.columnNames);
+      return _.pick(value, this.columnNames) as Partial<T>;
     }
 
     public async count(where?: Partial<T>): Promise<number> {
       const res = await Database.knex(this.tableName)
-        .where(omitUndefinedValues(where) || {})
+        .where(omitUndefinedValues((where ?? {}) as Partial<T>))
         .count<{ count: number }[]>('* as count')
         .first();
 
-      return Number(res.count);
+      return Number(res?.count ?? 0);
     }
 
-    public async find(where?: Partial<T>) {
+    public async find(where?: Partial<T>): Promise<T[]> {
       const res = (await Database.knex<T>(this.tableName).where(
-        omitUndefinedValues(where) || {}
+        omitUndefinedValues((where ?? {}) as Partial<T>)
       )) as T[];
 
-      if (res) {
-        return res.map((value) => this.deserialize(value));
-      }
+      return res.map((value) => this.deserialize(value));
     }
 
-    public async findOne(where?: Partial<T>) {
+    public async findOne(where?: Partial<T>): Promise<T | undefined> {
       const res = (await Database.knex<T>(this.tableName)
-        .where(omitUndefinedValues(where) || {})
-        .first()) as T;
+        .where(omitUndefinedValues((where ?? {}) as Partial<T>))
+        .first()) as T | undefined;
 
       if (res) {
         return this.deserialize(res);
@@ -101,7 +106,7 @@ export const repository = <T extends object>(args: {
     public async delete(where?: Partial<T>) {
       return Database.knex<T>(this.tableName)
         .delete()
-        .where(omitUndefinedValues(where) || {});
+        .where(omitUndefinedValues((where ?? {}) as Partial<T>));
     }
 
     public async deleteManyById<A extends typeof args.primaryColumnName>(
@@ -109,7 +114,7 @@ export const repository = <T extends object>(args: {
     ) {
       return Database.knex(this.tableName)
         .delete()
-        .whereIn(primaryColumnName.toString(), ids);
+        .whereIn(primaryColumnName.toString(), ids as any[]);
     }
 
     public async create(value: Partial<T>) {
@@ -122,7 +127,7 @@ export const repository = <T extends object>(args: {
         .returning(this.primaryColumnName as string);
 
       if (res?.length > 0) {
-        return res[0][this.primaryColumnName];
+        return res[0]?.[this.primaryColumnName];
       }
     }
 
@@ -141,7 +146,7 @@ export const repository = <T extends object>(args: {
             .returning(this.primaryColumnName as string);
 
           if (res?.length > 0) {
-            return res[0][this.primaryColumnName];
+            return res[0]?.[this.primaryColumnName];
           }
         }
       });
@@ -153,10 +158,10 @@ export const repository = <T extends object>(args: {
       }
 
       if (this.uniqueBy) {
-        return this.createManyUnique(values, uniqueBy);
+        return this.createManyUnique(values, this.uniqueBy);
       }
 
-      const res = await Database.knex
+      const res = (await (Database.knex as any)
         .batchInsert(
           this.tableName,
           values.map((value) =>
@@ -164,11 +169,11 @@ export const repository = <T extends object>(args: {
           ),
           BATCH_SIZE
         )
-        .returning(this.primaryColumnName as string);
+        .returning(this.primaryColumnName as string)) as Partial<T>[];
 
       res.forEach(
         (value, index) =>
-          (values[index][this.primaryColumnName] =
+          (values[index]![this.primaryColumnName] =
             value[this.primaryColumnName])
       );
 
@@ -180,18 +185,38 @@ export const repository = <T extends object>(args: {
       uniqueBy: (value: Partial<T>) => Partial<T>,
       limitQuery?: Partial<T>
     ) {
-      const serialize = (item: Partial<T>) => JSON.stringify(uniqueBy(item));
+      const normalizeUniqueKey = (item: Partial<T>): Record<string, unknown> => {
+        const key = uniqueBy(item);
+        const normalized: Record<string, unknown> = {};
+        for (const [k, v] of Object.entries(key as Record<string, unknown>)) {
+          normalized[k] = v === undefined ? null : v;
+        }
+        return normalized;
+      };
+
+      const serialize = (item: Partial<T>) => JSON.stringify(normalizeUniqueKey(item));
 
       return await Database.knex.transaction(async (trx) => {
         const fetchAllItems = async () => {
-          return await trx(this.tableName).where(limitQuery ? limitQuery : {});
+          return (await trx(this.tableName).where(
+            (limitQuery ?? {}) as Partial<T>
+          )) as T[];
         };
 
         const fetchMatchingItems = async () => {
           const existingItems: T[] = [];
 
           for (const value of values) {
-            const res = await trx(this.tableName).where(uniqueBy(value));
+            const normalizedKey = normalizeUniqueKey(value);
+            const res = (await trx(this.tableName).where((qb) => {
+              for (const [col, val] of Object.entries(normalizedKey)) {
+                if (val === null) {
+                  qb.whereNull(col);
+                } else {
+                  qb.where(col, val as any);
+                }
+              }
+            })) as T[];
 
             res.forEach((item) => existingItems.push(item));
           }
@@ -218,7 +243,7 @@ export const repository = <T extends object>(args: {
           .value();
 
         if (newItems.length > 0) {
-          const res = await Database.knex
+          const res = (await (Database.knex as any)
             .batchInsert(
               this.tableName,
               newItems.map((value) =>
@@ -227,11 +252,11 @@ export const repository = <T extends object>(args: {
               BATCH_SIZE
             )
             .returning(this.primaryColumnName as string)
-            .transacting(trx);
+            .transacting(trx)) as Partial<T>[];
 
           res.forEach(
             (value, index) =>
-              (newItems[index][this.primaryColumnName] =
+              (newItems[index]![this.primaryColumnName] =
                 value[this.primaryColumnName])
           );
 
@@ -240,13 +265,16 @@ export const repository = <T extends object>(args: {
       });
     }
 
-    public async update(value: Partial<T>): Promise<Partial<T>> {
+    public async update(value: Partial<T>): Promise<Partial<T> | undefined> {
       const qb = Database.knex(this.tableName).update(
         this.serialize(omitUndefinedValues(this.stripValue(value)))
       );
 
-      if (value[primaryColumnName]) {
-        qb.where(primaryColumnName, value[primaryColumnName]);
+      if (value[primaryColumnName] !== undefined) {
+        qb.where(
+          primaryColumnName as string,
+          value[primaryColumnName] as any
+        );
       }
 
       await qb;
@@ -302,7 +330,7 @@ export const repository = <T extends object>(args: {
   ].forEach((methodName) =>
     applyMethodDecorator(
       Repository.prototype,
-      methodName,
+      methodName as keyof Repository,
       traceMethod({ includeResult: false })
     )
   );

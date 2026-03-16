@@ -4,8 +4,9 @@ import { useUser } from 'src/api/user';
 
 export const WatchlistPage: FunctionComponent = () => {
   const { user } = useUser();
+  const addRecommendedToWatchlist = user?.addRecommendedToWatchlist;
   const orderBy =
-    user.addRecommendedToWatchlist !== false ? 'recommended' : 'lastSeen';
+    addRecommendedToWatchlist !== false ? 'recommended' : 'lastSeen';
 
   return (
     <PaginatedGridItems

@@ -2,8 +2,28 @@ import chalk from 'chalk';
 import _ from 'lodash';
 import { nanoid } from 'nanoid';
 import { format } from 'winston';
+import { TransformableInfo } from 'logform';
 
 import { LogEntry } from 'src/logger';
+
+type ValidationLogEntry = LogEntry & {
+  type: 'validationError';
+  error: string;
+  body?: Record<string, unknown>;
+  method: string;
+  url: string;
+};
+
+type HttpEntry = LogEntry & {
+  type: 'http';
+  ip: string;
+  method: string;
+  url: string;
+  httpVersion: string;
+  statusCode: number;
+  responseSize: number;
+  duration: number;
+};
 
 export const logWithId = format((info) => {
   info.id = nanoid(36);
@@ -11,27 +31,29 @@ export const logWithId = format((info) => {
   return info;
 });
 
-export const validationErrorLogFormatter = format((info: LogEntry) => {
+export const validationErrorLogFormatter = format((info: TransformableInfo) => {
   if ('type' in info && info.type === 'validationError') {
+    const logEntry = info as ValidationLogEntry;
     const body =
-      info.body && Object.keys(info.body).length > 0
-        ? JSON.stringify(info.body)
+      logEntry.body && Object.keys(logEntry.body).length > 0
+        ? JSON.stringify(logEntry.body)
         : '';
 
     info.message = `${chalk.red('ValidationError')} ${chalk.yellow(
-      `${info.method} ${info.url} ${body}`
-    )} ${info.error}`;
+      `${logEntry.method} ${logEntry.url} ${body}`
+    )} ${logEntry.error}`;
   }
 
   return info;
 });
 
-export const httpLogFormatter = format((info: LogEntry) => {
+export const httpLogFormatter = format((info: TransformableInfo) => {
   if ('type' in info && info.type === 'http') {
-    info.message = `${info.ip} "${chalk.magenta(
-      `${info.method} ${info.url} HTTP/${info.httpVersion}`
-    )}" ${info.statusCode} ${info.responseSize} ${chalk.blue(
-      `${info.duration}ms`
+    const logEntry = info as HttpEntry;
+    info.message = `${logEntry.ip} "${chalk.magenta(
+      `${logEntry.method} ${logEntry.url} HTTP/${logEntry.httpVersion}`
+    )}" ${logEntry.statusCode} ${logEntry.responseSize} ${chalk.blue(
+      `${logEntry.duration}ms`
     )}`;
   }
 

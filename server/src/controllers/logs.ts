@@ -19,7 +19,9 @@ export class LogsController {
       from?: string;
     };
     responseBody: LogEntry[];
-  }>(onlyForAdmin, async (req, res) => {
+  }>(async (req, res, next) => {
+    await onlyForAdmin(req as never, res, next);
+  }, async (req, res) => {
     const { count, from, error, warn, http, debug, info } = req.query;
 
     const logs = await getLogs({

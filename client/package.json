@@ -8,7 +8,7 @@
     "lingui:compile": "lingui compile",
     "dev": "npm run lingui:compile && vite",
     "build": "npm run lingui:extract && npm run lingui:compile && vite build",
-    "check-types": "tsc --noEmit",
+    "check-types": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.test.json --noEmit",
     "lint": "eslint src && npm run check-types",
     "test": "jest",
     "test:coverage": "jest --coverage"

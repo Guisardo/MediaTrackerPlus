@@ -1,5 +1,4 @@
 import React from 'react';
-import { mediaTrackerApi } from 'src/api/api';
 import StatisticsSegmant from './StatisticsSegment';
 import { Statistics } from 'mediatracker-api';
 import { useSeen } from 'src/hooks/statisticHooks';
@@ -13,12 +12,12 @@ const StatisticSummaryYear = (props: {
     isFetched: isFetchedSeenCount,
   } = useSeen(props.currentYear);
 
-  return (
+  return data ? (
     <StatisticsSegmant
       data={data}
-      year={props.currentYear?.year}
+      year={props.currentYear.year ?? undefined}
     ></StatisticsSegmant>
-  );
+  ) : null;
 };
 
 export default StatisticSummaryYear;

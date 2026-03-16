@@ -102,11 +102,11 @@ describe('translationRepository', () => {
       const rows = await getAllTranslations();
       expect(rows).toHaveLength(2);
 
-      const enRow = await getTranslation(Data.tvShow.id, 'en');
+      const enRow = (await getTranslation(Data.tvShow.id, 'en'))!;
       expect(enRow).toBeDefined();
       expect(enRow.title).toBe('English Title');
 
-      const esRow = await getTranslation(Data.tvShow.id, 'es');
+      const esRow = (await getTranslation(Data.tvShow.id, 'es'))!;
       expect(esRow).toBeDefined();
       expect(esRow.title).toBe('Titulo en espanol');
     });
@@ -127,10 +127,10 @@ describe('translationRepository', () => {
       const rows = await getAllTranslations();
       expect(rows).toHaveLength(2);
 
-      const tvRow = await getTranslation(Data.tvShow.id, 'de');
+      const tvRow = (await getTranslation(Data.tvShow.id, 'de'))!;
       expect(tvRow.title).toBe('TV Show Titel');
 
-      const movieRow = await getTranslation(Data.movie.id, 'de');
+      const movieRow = (await getTranslation(Data.movie.id, 'de'))!;
       expect(movieRow.title).toBe('Film Titel');
     });
   });
@@ -171,7 +171,7 @@ describe('translationRepository', () => {
         genres: null,
       });
 
-      const firstRow = await getTranslation(Data.tvShow.id, 'en');
+      const firstRow = (await getTranslation(Data.tvShow.id, 'en'))!;
       const firstId = firstRow.id;
 
       await upsertMediaItemTranslation(Data.tvShow.id, 'en', {
@@ -202,7 +202,7 @@ describe('translationRepository', () => {
         genres: ['Action', 'Comedy', 'Drama'],
       });
 
-      const row = await getTranslation(Data.tvShow.id, 'en');
+      const row = (await getTranslation(Data.tvShow.id, 'en'))!;
       expect(row).toBeDefined();
 
       // The raw DB value should be a JSON string
@@ -222,7 +222,7 @@ describe('translationRepository', () => {
         genres: [],
       });
 
-      const row = await getTranslation(Data.tvShow.id, 'ja');
+      const row = (await getTranslation(Data.tvShow.id, 'ja'))!;
       expect(row).toBeDefined();
 
       const rawGenres = row.genres as string;
@@ -237,7 +237,7 @@ describe('translationRepository', () => {
         genres: ['Horror'],
       });
 
-      const row = await getTranslation(Data.tvShow.id, 'ko');
+      const row = (await getTranslation(Data.tvShow.id, 'ko'))!;
       const parsed = JSON.parse(row.genres as string);
       expect(parsed).toEqual(['Horror']);
     });
@@ -255,7 +255,7 @@ describe('translationRepository', () => {
         genres: ['Action'],
       });
 
-      const row = await getTranslation(Data.tvShow.id, 'en');
+      const row = (await getTranslation(Data.tvShow.id, 'en'))!;
       expect(row).toBeDefined();
       expect(row.title).toBeNull();
       expect(row.overview).toBe('Some overview');
@@ -268,7 +268,7 @@ describe('translationRepository', () => {
         genres: ['Action'],
       });
 
-      const row = await getTranslation(Data.tvShow.id, 'en');
+      const row = (await getTranslation(Data.tvShow.id, 'en'))!;
       expect(row).toBeDefined();
       expect(row.overview).toBeNull();
       expect(row.title).toBe('Some title');
@@ -281,7 +281,7 @@ describe('translationRepository', () => {
         genres: null,
       });
 
-      const row = await getTranslation(Data.tvShow.id, 'en');
+      const row = (await getTranslation(Data.tvShow.id, 'en'))!;
       expect(row).toBeDefined();
       expect(row.genres).toBeNull();
     });
@@ -293,7 +293,7 @@ describe('translationRepository', () => {
         genres: null,
       });
 
-      const row = await getTranslation(Data.tvShow.id, 'en');
+      const row = (await getTranslation(Data.tvShow.id, 'en'))!;
       expect(row).toBeDefined();
       expect(row.title).toBeNull();
       expect(row.overview).toBeNull();
@@ -308,7 +308,7 @@ describe('translationRepository', () => {
         // title, overview, genres are all undefined (not provided)
       });
 
-      const row = await getTranslation(Data.tvShow.id, 'pt');
+      const row = (await getTranslation(Data.tvShow.id, 'pt'))!;
       expect(row).toBeDefined();
       expect(row.title).toBeNull();
       expect(row.overview).toBeNull();
@@ -335,7 +335,7 @@ describe('translationRepository', () => {
         genres: null,
       });
 
-      const row = await getTranslation(Data.tvShow.id, 'it');
+      const row = (await getTranslation(Data.tvShow.id, 'it'))!;
       expect(row).toBeDefined();
       expect(row.title).toBeNull();
       expect(row.overview).toBe('Panoramica aggiornata');

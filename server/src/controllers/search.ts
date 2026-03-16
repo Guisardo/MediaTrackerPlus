@@ -5,6 +5,7 @@ import { MediaItemItemsResponse, MediaType } from 'src/entity/mediaItem';
 import { findMediaItemByExternalId } from 'src/metadata/findByExternalId';
 import { metadataProviders } from 'src/metadata/metadataProviders';
 import { mediaItemRepository } from 'src/repository/mediaItem';
+import { definedOrUndefined } from 'src/repository/repository';
 import { resolveLocale } from 'src/localeResolver';
 import { getMetadataLanguages } from 'src/metadataLanguages';
 
@@ -74,7 +75,7 @@ export class SearchController {
 
       const existingItemsDetails = await mediaItemRepository.items({
         userId: userId,
-        mediaItemIds: [mediaItem.id],
+        mediaItemIds: mediaItem.id != null ? [mediaItem.id] : [],
         language: language,
       });
 
@@ -96,8 +97,10 @@ export class SearchController {
 
     const existingItemsDetails = await mediaItemRepository.items({
       userId: userId,
-      mediaItemIds: result.map((item) => item.id),
-      language: language,
+      mediaItemIds: result
+        .map((item) => definedOrUndefined(item.id))
+        .filter((id): id is number => id !== undefined),
+      ...(language != null ? { language } : {}),
     });
 
     res.send(existingItemsDetails);

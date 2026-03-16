@@ -2,7 +2,7 @@
   "name": "mediatracker-plus",
   "private": true,
   "scripts": {
-    "postinstall": "cd server && npm install && cd ../client && npm install",
+    "postinstall": "cd server && npm install && cd ../client && npm install && cd ../rest-api && npm install",
     "build": "npm run build --prefix server && npm run build --prefix client",
     "start": "npm run start --prefix server",
     "dev": "sh ./scripts/dev.sh",
@@ -13,7 +13,8 @@
     "test:client": "npm run test --prefix client",
     "test:coverage": "npm run test:coverage --prefix server",
     "test:client:coverage": "npm run test:coverage --prefix client",
-    "check-types": "npm run check-types --prefix server && npm run check-types --prefix client"
+    "check-types": "npm run check-types --prefix server && npm run check-types --prefix client && npm run check-types --prefix rest-api",
+    "verify-generated-contracts": "node scripts/verify-generated-contracts.js"
   },
   "devDependencies": {
     "@types/jest": "^28.1.1",

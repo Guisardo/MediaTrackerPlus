@@ -68,7 +68,7 @@ describe('configurationRepository', () => {
       const result = await configurationRepository.get();
 
       expect(result).toBeDefined();
-      expect(result.enableRegistration).toBe(true);
+      expect(result!.enableRegistration).toBe(true);
     });
 
     test('returns false for enableRegistration when stored as false', async () => {
@@ -76,7 +76,7 @@ describe('configurationRepository', () => {
 
       const result = await configurationRepository.get();
 
-      expect(result.enableRegistration).toBe(false);
+      expect(result!.enableRegistration).toBe(false);
     });
 
     test('returns optional fields such as tmdbLang when they are stored', async () => {
@@ -87,7 +87,7 @@ describe('configurationRepository', () => {
 
       const result = await configurationRepository.get();
 
-      expect(result.tmdbLang).toBe('fr');
+      expect(result!.tmdbLang).toBe('fr');
     });
 
     test('returns optional fields such as serverLang when they are stored', async () => {
@@ -98,7 +98,7 @@ describe('configurationRepository', () => {
 
       const result = await configurationRepository.get();
 
-      expect(result.serverLang).toBe('de');
+      expect(result!.serverLang).toBe('de');
     });
 
     test('returns optional fields such as audibleLang when they are stored', async () => {
@@ -109,7 +109,7 @@ describe('configurationRepository', () => {
 
       const result = await configurationRepository.get();
 
-      expect(result.audibleLang).toBe('uk');
+      expect(result!.audibleLang).toBe('uk');
     });
   });
 
@@ -127,8 +127,8 @@ describe('configurationRepository', () => {
       const result = await configurationRepository.get();
 
       expect(result).toBeDefined();
-      expect(result.enableRegistration).toBe(false);
-      expect(result.tmdbLang).toBe('es');
+      expect(result!.enableRegistration).toBe(false);
+      expect(result!.tmdbLang).toBe('es');
     });
 
     test('replaces the existing configuration row when called a second time', async () => {
@@ -143,8 +143,8 @@ describe('configurationRepository', () => {
       expect(rows).toHaveLength(1);
 
       const result = await configurationRepository.get();
-      expect(result.enableRegistration).toBe(false);
-      expect(result.serverLang).toBe('ko');
+      expect(result!.enableRegistration).toBe(false);
+      expect(result!.serverLang).toBe('ko');
     });
 
     test('stores all provided fields in the JSON document', async () => {
@@ -159,11 +159,11 @@ describe('configurationRepository', () => {
 
       const result = await configurationRepository.get();
 
-      expect(result.tmdbLang).toBe('ja');
-      expect(result.serverLang).toBe('en');
-      expect(result.audibleLang).toBe('us');
-      expect(result.igdbClientId).toBe('my-client-id');
-      expect(result.igdbClientSecret).toBe('my-client-secret');
+      expect(result!.tmdbLang).toBe('ja');
+      expect(result!.serverLang).toBe('en');
+      expect(result!.audibleLang).toBe('us');
+      expect(result!.igdbClientId).toBe('my-client-id');
+      expect(result!.igdbClientSecret).toBe('my-client-secret');
     });
   });
 
@@ -179,7 +179,7 @@ describe('configurationRepository', () => {
 
       const result = await configurationRepository.get();
 
-      expect(result.enableRegistration).toBe(false);
+      expect(result!.enableRegistration).toBe(false);
     });
 
     test('updates a single field without overwriting other existing fields', async () => {
@@ -193,10 +193,10 @@ describe('configurationRepository', () => {
 
       const result = await configurationRepository.get();
 
-      expect(result.tmdbLang).toBe('de');
+      expect(result!.tmdbLang).toBe('de');
       // Pre-existing fields must be preserved.
-      expect(result.enableRegistration).toBe(true);
-      expect(result.serverLang).toBe('en');
+      expect(result!.enableRegistration).toBe(true);
+      expect(result!.serverLang).toBe('en');
     });
 
     test('adds a new optional field to the stored configuration', async () => {
@@ -206,8 +206,8 @@ describe('configurationRepository', () => {
 
       const result = await configurationRepository.get();
 
-      expect(result.audibleLang).toBe('ca');
-      expect(result.enableRegistration).toBe(true);
+      expect(result!.audibleLang).toBe('ca');
+      expect(result!.enableRegistration).toBe(true);
     });
 
     test('update returns the merged configuration object', async () => {
@@ -226,7 +226,7 @@ describe('configurationRepository', () => {
 
       const result = await configurationRepository.get();
 
-      expect(result.serverLang).toBe('da');
+      expect(result!.serverLang).toBe('da');
     });
 
     test('update also synchronises GlobalConfiguration in memory', async () => {

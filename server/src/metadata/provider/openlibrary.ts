@@ -9,7 +9,7 @@ export class OpenLibrary extends MetadataProvider {
   readonly name = 'openlibrary';
   readonly mediaType = 'book';
 
-  async search(query: string): Promise<MediaItemForProvider[]> {
+  override async search(query: string): Promise<MediaItemForProvider[]> {
     const res = await axios.get('https://openlibrary.org/search.json', {
       params: {
         q: query,
@@ -52,7 +52,7 @@ export class OpenLibrary extends MetadataProvider {
     });
   }
 
-  async details(args: {
+  override async details(args: {
     openlibraryId: string;
     numberOfPages?: number;
     externalPosterUrl?: string;
@@ -121,7 +121,7 @@ export class OpenLibrary extends MetadataProvider {
     return names.filter((name): name is string => name !== null);
   }
 
-  async similar(ids: ExternalIds): Promise<SimilarItem[]> {
+  override async similar(ids: ExternalIds): Promise<SimilarItem[]> {
     if (!ids.openlibraryId) {
       logger.warn(
         `OpenLibrary.similar: no openlibraryId provided — returning empty results`
@@ -182,8 +182,12 @@ export class OpenLibrary extends MetadataProvider {
   }
 }
 
-const parseDate = (dateStr: string): string => {
-  if (dateStr?.length === 4 && !Number.isNaN(dateStr)) {
+const parseDate = (dateStr?: string): string | undefined => {
+  if (!dateStr) {
+    return undefined;
+  }
+
+  if (dateStr.length === 4 && !Number.isNaN(Number(dateStr))) {
     return dateStr;
   }
 

@@ -297,9 +297,9 @@ describe('TMDbTv.localizedDetails', () => {
 
       const result = await tmdbTv.localizedDetails({ tmdbId: 1399 }, 'es');
 
-      expect(result.title).toBe('Programa de TV de Prueba');
-      expect(result.overview).toBe('Un gran programa de TV sobre pruebas.');
-      expect(result.genres).toEqual(['Drama', 'Ciencia ficcion y fantasia']);
+      expect(result!.title).toBe('Programa de TV de Prueba');
+      expect(result!.overview).toBe('Un gran programa de TV sobre pruebas.');
+      expect(result!.genres).toEqual(['Drama', 'Ciencia ficcion y fantasia']);
     });
 
     test('returns the full mapped TV structure (source, mediaType, tmdbId, etc.)', async () => {
@@ -307,12 +307,12 @@ describe('TMDbTv.localizedDetails', () => {
 
       const result = await tmdbTv.localizedDetails({ tmdbId: 1399 }, 'en');
 
-      expect(result.source).toBe('tmdb');
-      expect(result.mediaType).toBe('tv');
-      expect(result.tmdbId).toBe(1399);
-      expect(result.releaseDate).toBe('2020-01-15');
-      expect(result.tmdbRating).toBe(8.7);
-      expect(result.status).toBe('Returning Series');
+      expect(result!.source).toBe('tmdb');
+      expect(result!.mediaType).toBe('tv');
+      expect(result!.tmdbId).toBe(1399);
+      expect(result!.releaseDate).toBe('2020-01-15');
+      expect(result!.tmdbRating).toBe(8.7);
+      expect(result!.status).toBe('Returning Series');
     });
   });
 
@@ -334,17 +334,17 @@ describe('TMDbTv.localizedDetails', () => {
 
       const result = await tmdbTv.localizedDetails({ tmdbId: 1399 }, 'es');
 
-      expect(result.seasons).toHaveLength(2);
+      expect(result!.seasons).toHaveLength(2);
 
       // Season 1 episodes
-      expect(result.seasons[0].episodes).toHaveLength(2);
-      expect(result.seasons[0].episodes[0].title).toBe('Episodio Uno');
-      expect(result.seasons[0].episodes[0].description).toBe('Resumen del episodio uno');
-      expect(result.seasons[0].episodes[1].title).toBe('Episodio Dos');
+      expect(result!.seasons![0]!.episodes).toHaveLength(2);
+      expect(result!.seasons![0]!.episodes![0]!.title).toBe('Episodio Uno');
+      expect(result!.seasons![0]!.episodes![0]!.description).toBe('Resumen del episodio uno');
+      expect(result!.seasons![0]!.episodes![1]!.title).toBe('Episodio Dos');
 
       // Season 2 episodes
-      expect(result.seasons[1].episodes).toHaveLength(1);
-      expect(result.seasons[1].episodes[0].title).toBe('Episodio Tres');
+      expect(result!.seasons![1]!.episodes).toHaveLength(1);
+      expect(result!.seasons![1]!.episodes![0]!.title).toBe('Episodio Tres');
     });
 
     test('episodes include correct episodeNumber and seasonNumber', async () => {
@@ -357,11 +357,11 @@ describe('TMDbTv.localizedDetails', () => {
 
       const result = await tmdbTv.localizedDetails({ tmdbId: 1399 }, 'es');
 
-      const ep1 = result.seasons[0].episodes[0];
+      const ep1 = result!.seasons![0]!.episodes![0]!;
       expect(ep1.episodeNumber).toBe(1);
       expect(ep1.seasonNumber).toBe(1);
 
-      const ep2 = result.seasons[0].episodes[1];
+      const ep2 = result!.seasons![0]!.episodes![1]!;
       expect(ep2.episodeNumber).toBe(2);
       expect(ep2.seasonNumber).toBe(1);
     });
@@ -407,10 +407,10 @@ describe('TMDbTv.localizedDetails', () => {
 
       const result = await tmdbTv.localizedDetails({ tmdbId: 1399 }, 'es');
 
-      expect(result.seasons).toHaveLength(1);
-      expect(result.seasons[0].title).toBe('Temporada 1');
-      expect(result.seasons[0].description).toBe('La primera temporada.');
-      expect(result.seasons[0].seasonNumber).toBe(1);
+      expect(result!.seasons).toHaveLength(1);
+      expect(result!.seasons![0]!.title).toBe('Temporada 1');
+      expect(result!.seasons![0]!.description).toBe('La primera temporada.');
+      expect(result!.seasons![0]!.seasonNumber).toBe(1);
     });
   });
 
@@ -427,7 +427,7 @@ describe('TMDbTv.localizedDetails', () => {
 
       const result = await tmdbTv.localizedDetails({ tmdbId: 1399 }, 'fr');
 
-      expect(result).not.toHaveProperty('originalTitle');
+      expect(result!).not.toHaveProperty('originalTitle');
     });
   });
 
@@ -441,7 +441,7 @@ describe('TMDbTv.localizedDetails', () => {
 
       const result = await tmdbTv.localizedDetails({ tmdbId: 1399 }, 'xx');
 
-      expect(result.title).toBeNull();
+      expect(result!.title).toBeNull();
     });
 
     test('converts empty show overview to null', async () => {
@@ -449,7 +449,7 @@ describe('TMDbTv.localizedDetails', () => {
 
       const result = await tmdbTv.localizedDetails({ tmdbId: 1399 }, 'xx');
 
-      expect(result.overview).toBeNull();
+      expect(result!.overview).toBeNull();
     });
 
     test('converts empty genres array to null', async () => {
@@ -457,7 +457,7 @@ describe('TMDbTv.localizedDetails', () => {
 
       const result = await tmdbTv.localizedDetails({ tmdbId: 1399 }, 'xx');
 
-      expect(result.genres).toBeNull();
+      expect(result!.genres).toBeNull();
     });
   });
 
@@ -491,7 +491,7 @@ describe('TMDbTv.localizedDetails', () => {
 
       const result = await tmdbTv.localizedDetails({ tmdbId: 1399 }, 'xx');
 
-      expect(result.seasons[0].title).toBeNull();
+      expect(result!.seasons![0]!.title).toBeNull();
     });
 
     test('converts empty season description to null', async () => {
@@ -519,7 +519,7 @@ describe('TMDbTv.localizedDetails', () => {
 
       const result = await tmdbTv.localizedDetails({ tmdbId: 1399 }, 'xx');
 
-      expect(result.seasons[0].description).toBeNull();
+      expect(result!.seasons![0]!.description).toBeNull();
     });
 
     test('converts empty episode title to null', async () => {
@@ -549,7 +549,7 @@ describe('TMDbTv.localizedDetails', () => {
 
       const result = await tmdbTv.localizedDetails({ tmdbId: 1399 }, 'xx');
 
-      expect(result.seasons[0].episodes[0].title).toBeNull();
+      expect(result!.seasons![0]!.episodes![0]!.title).toBeNull();
     });
 
     test('converts empty episode description to null', async () => {
@@ -579,7 +579,7 @@ describe('TMDbTv.localizedDetails', () => {
 
       const result = await tmdbTv.localizedDetails({ tmdbId: 1399 }, 'xx');
 
-      expect(result.seasons[0].episodes[0].description).toBeNull();
+      expect(result!.seasons![0]!.episodes![0]!.description).toBeNull();
     });
   });
 
@@ -607,11 +607,11 @@ describe('TMDbTv.localizedDetails', () => {
       const result = await tmdbTv.localizedDetails({ tmdbId: 1399 }, 'fr');
 
       // Season 1 should have empty episodes
-      expect(result.seasons[0].episodes).toEqual([]);
+      expect(result!.seasons![0]!.episodes).toEqual([]);
 
       // Season 2 should have its episode
-      expect(result.seasons[1].episodes).toHaveLength(1);
-      expect(result.seasons[1].episodes[0].title).toBe('S2E1');
+      expect(result!.seasons![1]!.episodes).toHaveLength(1);
+      expect(result!.seasons![1]!.episodes![0]!.title).toBe('S2E1');
     });
 
     test('logs an error when a season API call fails', async () => {
@@ -703,7 +703,7 @@ describe('TMDbTv.localizedDetails', () => {
 
       const result = await tmdbTv.localizedDetails({ tmdbId: 1399 }, 'fr');
 
-      expect(result.seasons).toEqual([]);
+      expect(result!.seasons).toEqual([]);
       // Only 1 API call (no season calls)
       expect(mockedAxios.get).toHaveBeenCalledTimes(1);
     });

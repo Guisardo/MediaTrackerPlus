@@ -7,14 +7,18 @@ const CLIENT_SECRET =
   '4274a0fcefea5877bb94323033fe945a65528c2112411cadc091bb164173c377';
 
 export class TraktTvExport {
-  private deviceCode: TraktApi.DeviceCodeResponse;
-  private deviceToken: TraktApi.DeviceTokenResponse;
-  private deviceCodeAcquiredAt: Date;
+  private deviceCode?: TraktApi.DeviceCodeResponse;
+  private deviceToken?: TraktApi.DeviceTokenResponse;
+  private deviceCodeAcquiredAt?: Date;
 
   private hasDeviceCodeExpired() {
+    if (!this.deviceCode || !this.deviceCodeAcquiredAt) {
+      return true;
+    }
+
     return (
       new Date().getTime() >
-      this.deviceCodeAcquiredAt?.getTime() + this.deviceCode?.expires_in * 1000
+      this.deviceCodeAcquiredAt.getTime() + this.deviceCode.expires_in * 1000
     );
   }
 
@@ -34,6 +38,10 @@ export class TraktTvExport {
 
       const handler = async () => {
         try {
+          if (!this.deviceCode) {
+            return;
+          }
+
           const res = await axios.post<TraktApi.DeviceTokenResponse>(
             'https://api.trakt.tv/oauth/device/token',
             {
@@ -56,6 +64,10 @@ export class TraktTvExport {
       const interval = setInterval(handler, this.deviceCode.interval * 1000);
     }
 
+    if (!this.deviceCode) {
+      throw new Error('No device code');
+    }
+
     return {
       userCode: this.deviceCode.user_code,
       verificationUrl: this.deviceCode.verification_url,
@@ -70,6 +82,10 @@ export class TraktTvExport {
   }
 
   private headers() {
+    if (!this.deviceToken) {
+      throw new Error('No device token');
+    }
+
     return {
       'Content-type': 'application/json',
       'trakt-api-version': 2,
@@ -84,7 +100,7 @@ export class TraktTvExport {
     const limit = 1000;
 
     let page = 1;
-    let pageCount: number = undefined;
+    let pageCount: number | undefined;
 
     do {
       const historyResponse = await axios.get<TraktApi.HistoryResponse>(
@@ -101,7 +117,7 @@ export class TraktTvExport {
       pageCount = Number(historyResponse.headers['x-pagination-page-count']);
 
       result.push(...historyResponse.data);
-    } while (page <= pageCount);
+    } while (pageCount != null && page <= pageCount);
 
     return result;
   }

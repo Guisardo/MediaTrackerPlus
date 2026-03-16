@@ -45,34 +45,34 @@ const getItemsToDelete = (
     (season) => season.seasonNumber
   );
 
-  const oldSeasons = oldMediaItem.seasons?.map((season) => season.seasonNumber);
-  const newSeasons = updatedMediaItem.seasons?.map(
-    (season) => season.seasonNumber
-  );
+  const oldSeasons =
+    oldMediaItem.seasons?.map((season) => season.seasonNumber) ?? [];
+  const newSeasons =
+    updatedMediaItem.seasons?.map((season) => season.seasonNumber) ?? [];
 
   const seasonNumbersToDelete = _.difference(oldSeasons, newSeasons);
-  const seasonToDelete = seasonNumbersToDelete.map(
-    (seasonNumber) => oldSeasonsMap[seasonNumber]
-  );
+  const seasonToDelete = seasonNumbersToDelete
+    .map((seasonNumber) => oldSeasonsMap[seasonNumber])
+    .filter((season): season is TvSeason => season != null);
 
-  const episodesToDelete = oldMediaItem.seasons?.flatMap((season) => {
+  const episodesToDelete = (oldMediaItem.seasons ?? []).flatMap((season) => {
     const episodesMap = _.keyBy(
       oldSeasonsMap[season.seasonNumber]?.episodes,
       (episode) => episode.episodeNumber
     );
 
-    const oldEpisodes = season?.episodes?.map(
-      (episode) => episode.episodeNumber
-    );
-    const newEpisodes = newSeasonsMap[season.seasonNumber]?.episodes?.map(
-      (episode) => episode.episodeNumber
-    );
+    const oldEpisodes =
+      season.episodes?.map((episode) => episode.episodeNumber) ?? [];
+    const newEpisodes =
+      newSeasonsMap[season.seasonNumber]?.episodes?.map(
+        (episode) => episode.episodeNumber
+      ) ?? [];
 
     const episodesNumbersToDelete = _.difference(oldEpisodes, newEpisodes);
 
-    return episodesNumbersToDelete.map(
-      (episodeNumber) => episodesMap[episodeNumber]
-    );
+    return episodesNumbersToDelete
+      .map((episodeNumber) => episodesMap[episodeNumber])
+      .filter((episode): episode is TvEpisode => episode != null);
   });
 
   return [episodesToDelete, seasonToDelete];
@@ -152,7 +152,7 @@ const downloadNewAssets = async (
         (season) =>
           season.id &&
           season.externalPosterUrl !==
-            newSeasonsMap[season.id]?.externalPosterUrl
+            newSeasonsMap[season.seasonNumber]?.externalPosterUrl
       )
       .map((season) =>
         updateAsset({
@@ -167,6 +167,10 @@ const sendNotifications = async (
   oldMediaItem: MediaItemBaseWithSeasons,
   newMediaItem: MediaItemBaseWithSeasons
 ) => {
+  if (oldMediaItem.id == null) {
+    return;
+  }
+
   const users = await userRepository.usersWithMediaItemOnWatchlist(
     oldMediaItem.id
   );
@@ -196,12 +200,13 @@ const sendNotifications = async (
         (f) =>
           t`Status changed for ${f.mediaItemUrl(newMediaItem)}: "${status}"`
       ),
-      filter: (user) => user.sendNotificationWhenStatusChanges,
+      filter: (user) => user.sendNotificationWhenStatusChanges === true,
     });
   }
 
   if (
     newMediaItem.releaseDate !== oldMediaItem.releaseDate &&
+    newMediaItem.releaseDate &&
     parseISO(newMediaItem.releaseDate) > new Date()
   ) {
     const releaseDate = newMediaItem.releaseDate;
@@ -213,7 +218,7 @@ const sendNotifications = async (
             newMediaItem
           )}: "${releaseDate}"`
       ),
-      filter: (user) => user.sendNotificationWhenReleaseDateChanges,
+      filter: (user) => user.sendNotificationWhenReleaseDateChanges === true,
     });
   }
 
@@ -240,6 +245,9 @@ const sendNotifications = async (
             oldMediaItemNonSpecialSeasons.length -
             1
         ];
+      if (!removedSeason) {
+        return;
+      }
 
       const seasonNumber = removedSeason.seasonNumber;
 
@@ -250,7 +258,7 @@ const sendNotifications = async (
               newMediaItem
             )} has been canceled`
         ),
-        filter: (user) => user.sendNotificationWhenNumberOfSeasonsChanges,
+        filter: (user) => user.sendNotificationWhenNumberOfSeasonsChanges === true,
       });
     } else if (
       newMediaItemNonSpecialSeasons.length >
@@ -263,6 +271,9 @@ const sendNotifications = async (
             oldMediaItemNonSpecialSeasons.length -
             1
         ];
+      if (!newSeason) {
+        return;
+      }
 
       if (newSeason.releaseDate) {
         if (parseISO(newSeason.releaseDate) > new Date()) {
@@ -277,7 +288,8 @@ const sendNotifications = async (
                   newMediaItem
                 )} will be released at ${releaseDate}`
             ),
-            filter: (user) => user.sendNotificationWhenNumberOfSeasonsChanges,
+            filter: (user) =>
+              user.sendNotificationWhenNumberOfSeasonsChanges === true,
           });
         }
       } else {
@@ -286,7 +298,8 @@ const sendNotifications = async (
             (f) => t`${f.mediaItemUrl(newMediaItem)} got a new season`
           ),
 
-          filter: (user) => user.sendNotificationWhenNumberOfSeasonsChanges,
+          filter: (user) =>
+            user.sendNotificationWhenNumberOfSeasonsChanges === true,
         });
       }
     } else if (oldMediaItemNonSpecialSeasons.length > 0) {
@@ -294,10 +307,14 @@ const sendNotifications = async (
         oldMediaItemNonSpecialSeasons[oldMediaItemNonSpecialSeasons.length - 1];
       const newMediaItemLastSeason =
         newMediaItemNonSpecialSeasons[newMediaItemNonSpecialSeasons.length - 1];
+      if (!oldMediaItemLastSeason || !newMediaItemLastSeason) {
+        return;
+      }
 
       if (
         oldMediaItemLastSeason.releaseDate !==
           newMediaItemLastSeason.releaseDate &&
+        newMediaItemLastSeason.releaseDate &&
         parseISO(newMediaItemLastSeason.releaseDate) > new Date()
       ) {
         const seasonNumber = newMediaItemLastSeason.seasonNumber;
@@ -312,7 +329,8 @@ const sendNotifications = async (
                 newMediaItem
               )} will be released at ${releaseDate}`
           ),
-          filter: (user) => user.sendNotificationWhenNumberOfSeasonsChanges,
+          filter: (user) =>
+            user.sendNotificationWhenNumberOfSeasonsChanges === true,
         });
       }
     }
@@ -322,6 +340,10 @@ const sendNotifications = async (
 export const updateMediaItem = async (
   oldMediaItem?: MediaItemBaseWithSeasons
 ) => {
+  if (!oldMediaItem || oldMediaItem.id == null) {
+    return;
+  }
+
   const title = oldMediaItem.title;
 
   if (oldMediaItem.lastTimeUpdated) {
@@ -332,10 +354,6 @@ export const updateMediaItem = async (
     logger.info(t`Updating: ${title} (last updated at: ${date})`);
   } else {
     logger.info(t`Updating: ${title}`);
-  }
-
-  if (!oldMediaItem) {
-    return;
   }
 
   await mediaItemRepository.lock(oldMediaItem.id);
@@ -411,6 +429,9 @@ export const updateMediaItem = async (
       // Upsert the first language's data from the base details() response
       if (languages.length > 0) {
         const firstLanguage = languages[0];
+        if (!firstLanguage) {
+          throw new Error('Expected at least one metadata language');
+        }
         await upsertMediaItemTranslation(oldMediaItem.id, firstLanguage, {
           title: newMediaItem.title ?? null,
           overview: newMediaItem.overview ?? null,
@@ -504,7 +525,8 @@ export const updateMediaItem = async (
     // IGDB game localizations: single fetch per item, map regions to ISO codes
     if (metadataProvider.fetchGameLocalizations != null && updatedMediaItem) {
       try {
-        const localizations = await metadataProvider.fetchGameLocalizations(oldMediaItem);
+        const localizations =
+          await metadataProvider.fetchGameLocalizations(oldMediaItem);
         const languages = getMetadataLanguages();
 
         for (const localization of localizations) {
@@ -545,13 +567,14 @@ export const updateMediaItem = async (
 };
 
 const shouldUpdate = (mediaItem: MediaItemBase) => {
-  const timePassed = new Date().getTime() - mediaItem.lastTimeUpdated;
+  const lastTimeUpdated = mediaItem.lastTimeUpdated ?? 0;
+  const timePassed = new Date().getTime() - lastTimeUpdated;
 
   if (
     mediaItem.mediaType !== 'tv' &&
     mediaItem.releaseDate &&
     parseISO(mediaItem.releaseDate) < new Date() &&
-    parseISO(mediaItem.releaseDate) < new Date(mediaItem.lastTimeUpdated)
+    parseISO(mediaItem.releaseDate) < new Date(lastTimeUpdated)
   ) {
     return (
       timePassed >=
@@ -599,14 +622,16 @@ const margeTvShow = async (
   }
 
   if (episodesToDelete.length > 0 || seasonsToDelete.length > 0) {
-    const episodesIdToDelete = [
+    const episodesIdToDelete: number[] = [
       ...episodesToDelete.map((episode) => episode.id),
       ...seasonsToDelete.flatMap((season) =>
         season.episodes?.map((episode) => episode.id)
       ),
-    ].filter(Boolean);
+    ].filter((id): id is number => id != null);
 
-    const seasonsIdsToDelete = seasonsToDelete.map((season) => season.id);
+    const seasonsIdsToDelete = seasonsToDelete
+      .map((season) => season.id)
+      .filter((id): id is number => id != null);
 
     if (episodesIdToDelete.length > 0 || seasonsIdsToDelete.length > 0) {
       try {
@@ -751,7 +776,9 @@ export const updateMediaItems = async (args: {
       await updateMediaItem(mediaItem);
       numberOfUpdatedItems++;
     } catch (error) {
-      logger.error(chalk.red(error.toString()));
+      logger.error(
+        chalk.red(error instanceof Error ? error.toString() : String(error))
+      );
       numberOfFailures++;
     }
   }

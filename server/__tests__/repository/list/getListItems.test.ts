@@ -59,7 +59,7 @@ describe('get list items', () => {
       userId: Data.user.id,
     });
 
-    expect(res.season.totalRuntime).toBe(
+    expect(res.season!.totalRuntime).toBe(
       episodeWithRuntime.runtime + Data.tvShow.runtime
     );
 
@@ -80,7 +80,7 @@ describe('get list items', () => {
     });
 
     expect(res.mediaItem.unseenEpisodesCount).toBe(2);
-    expect(res.season.unseenEpisodesCount).toBe(2);
+    expect(res.season!.unseenEpisodesCount).toBe(2);
 
     await Database.knex('listItem').delete();
   });

@@ -66,7 +66,8 @@ const AddOrEditListModal: FunctionComponent<{
   const { closeModal, list } = props;
 
   const { user } = useUser();
-  const { lists, invalidateListsQuery } = useLists({ userId: user.id });
+  const userId = user?.id;
+  const { lists, invalidateListsQuery } = useLists({ userId: userId ?? 0 });
 
   const [name, setName] = useState(listName(list) || '');
   const [description, setDescription] = useState(listDescription(list) || '');
@@ -106,9 +107,9 @@ const AddOrEditListModal: FunctionComponent<{
           );
           nameRef.current?.reportValidity();
         } else {
-          if (edit) {
+          if (edit && list) {
             await mediaTrackerApi.list.updateList({
-              id: list?.id,
+              id: list.id,
               name,
               description,
               privacy,
@@ -116,6 +117,10 @@ const AddOrEditListModal: FunctionComponent<{
               sortOrder,
             });
           } else {
+            if (userId == null) {
+              return;
+            }
+
             await mediaTrackerApi.list.addList({
               name,
               description,
@@ -224,6 +229,10 @@ const AddOrEditListModal: FunctionComponent<{
             variant="destructive"
             className="ml-2"
             onClick={async () => {
+              if (!list) {
+                return;
+              }
+
               if (
                 await Confirm(
                   t`Do you really want to remove list "${list.name}"`

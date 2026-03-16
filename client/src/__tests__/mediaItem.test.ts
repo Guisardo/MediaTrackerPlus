@@ -89,7 +89,7 @@ describe('firstUnwatchedSeason', () => {
     const item = makeDetailsItem({ seasons });
 
     const result = firstUnwatchedSeason(item);
-    expect(result.seasonNumber).toBe(2);
+    expect(result!.seasonNumber).toBe(2);
   });
 
   it('returns undefined when all non-special seasons are seen', () => {

@@ -1,7 +1,8 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { queryClient } from 'src/App';
-import { errorHandler, mediaTrackerApi } from 'src/api/api';
+import { ApiResult, errorHandler, mediaTrackerApi } from 'src/api/api';
 import React from 'react';
+import { UserResponse } from 'mediatracker-api';
 
 export const useOtherUser = (userId: number) => {
   const { isLoading, error, data } = useQuery({
@@ -84,14 +85,14 @@ export const useRegisterUser = () => {
   const mutation = useMutation({
     mutationFn: (data: Parameters<typeof mediaTrackerApi.user.register>[0]) =>
       errorHandler(mediaTrackerApi.user.register)(data),
-    onSuccess: (data: { data?: any; error?: string }) => {
+    onSuccess: (data: ApiResult<UserResponse>) => {
       if (data.data) {
         queryClient.invalidateQueries({ queryKey: ['configuration'] });
         queryClient.invalidateQueries({ queryKey: ['user'] });
       }
     },
-    onSettled: (data: { data?: any; error?: string } | undefined) => {
-      if (data.error) {
+    onSettled: (data: ApiResult<UserResponse> | undefined) => {
+      if (data?.error) {
         setError(data.error);
       } else {
         setError(undefined);

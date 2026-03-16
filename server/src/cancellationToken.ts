@@ -1,6 +1,6 @@
 export class CancellationToken {
   private _shouldCancel = false;
-  private resolve: (value: void) => void;
+  private resolve?: () => void;
 
   public async cancel() {
     this._shouldCancel = true;
@@ -15,6 +15,6 @@ export class CancellationToken {
   }
 
   public complected() {
-    this.resolve && this.resolve();
+    this.resolve?.();
   }
 }

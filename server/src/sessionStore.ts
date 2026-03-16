@@ -2,14 +2,17 @@ import { SessionData, Store } from 'express-session';
 import { sessionRepository } from 'src/repository/session';
 
 export class SessionStore extends Store {
-  override async destroy(sid: string, callback: (error?: string) => void) {
+  override async destroy(
+    sid: string,
+    callback: (error?: unknown) => void
+  ) {
     await sessionRepository.delete({ sid: sid });
     callback();
   }
 
   override async get(
     sid: string,
-    callback: (error: string, session: SessionData) => void
+    callback: (error: unknown, session?: SessionData | null) => void
   ) {
     const session = await sessionRepository.findOne({ sid: sid });
 
@@ -36,7 +39,7 @@ export class SessionStore extends Store {
   }
 
   override async all(
-    callback: (error: unknown, sessions: SessionData[]) => void
+    callback: (error: unknown, sessions?: SessionData[]) => void
   ) {
     const sessions = await sessionRepository.find();
 

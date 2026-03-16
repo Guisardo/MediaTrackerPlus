@@ -20,13 +20,14 @@ export const StarRating: FunctionComponent<
     episode: undefined,
     ...props,
   };
-  const rating: number = episode
-    ? episode.userRating?.rating
-    : season
-    ? season.userRating?.rating
-    : mediaItem.userRating?.rating;
+  const rating =
+    (episode
+      ? episode.userRating?.rating
+      : season
+      ? season.userRating?.rating
+      : mediaItem.userRating?.rating) ?? 0;
 
-  const [hoverIndex, setHoverIndex] = useState(null);
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
   const _setRating = (value: number) =>
     setRating({
@@ -51,11 +52,12 @@ export const StarRating: FunctionComponent<
             className={clsx(
               'material-icons hover:text-yellow-400 select-none',
               {
-                'text-yellow-400': index < rating || index < hoverIndex,
+                'text-yellow-400':
+                  index < rating || (hoverIndex !== null && index < hoverIndex),
               }
             )}
           >
-            {index < rating && (!hoverIndex || index < hoverIndex)
+            {index < rating && (hoverIndex === null || index < hoverIndex)
               ? 'star'
               : 'star_border'}
           </span>
@@ -78,13 +80,14 @@ const StarRatingModal: FunctionComponent<
     ...props,
   };
 
-  const rating: number = episode
-    ? episode.userRating?.rating
-    : season
-    ? season.userRating?.rating
-    : mediaItem.userRating?.rating;
+  const rating =
+    (episode
+      ? episode.userRating?.rating
+      : season
+      ? season.userRating?.rating
+      : mediaItem.userRating?.rating) ?? 0;
 
-  const [hoverIndex, setHoverIndex] = useState(null);
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const [review, setReview] = useState(
     (episode
       ? episode.userRating?.review
@@ -93,7 +96,7 @@ const StarRatingModal: FunctionComponent<
       : mediaItem.userRating?.review) || ''
   );
 
-  const onSetRating = async (value?: number) => {
+  const onSetRating = async (value?: number | null) => {
     setRating({
       mediaItem: mediaItem,
       season: season,
@@ -134,10 +137,12 @@ const StarRatingModal: FunctionComponent<
               onPointerLeave={() => setHoverIndex(null)}
               className={clsx(
                 'material-icons select-none hover:text-yellow-400 text-2xl',
-                (index < rating || index < hoverIndex) && 'text-yellow-400'
+                (index < rating ||
+                  (hoverIndex !== null && index < hoverIndex)) &&
+                  'text-yellow-400'
               )}
             >
-              {index < rating && (!hoverIndex || index < hoverIndex)
+              {index < rating && (hoverIndex === null || index < hoverIndex)
                 ? 'star'
                 : 'star_border'}
             </span>
@@ -187,11 +192,12 @@ export const BadgeRating: FunctionComponent<
     ...props,
   };
 
-  const rating: number = episode
-    ? episode.userRating?.rating
-    : season
-    ? season.userRating?.rating
-    : mediaItem.userRating?.rating;
+  const rating =
+    (episode
+      ? episode.userRating?.rating
+      : season
+      ? season.userRating?.rating
+      : mediaItem.userRating?.rating) ?? 0;
 
   const seen = episode
     ? episode.seen === true

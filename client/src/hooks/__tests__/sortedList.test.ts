@@ -130,7 +130,7 @@ describe('useSortedList — title', () => {
 
   it('sorts alphabetically ascending', () => {
     const result = renderSorted('title', 'asc', items);
-    expect(result.map((i) => i.mediaItem.title)).toEqual([
+    expect(result!.map((i) => i.mediaItem.title)).toEqual([
       'Alpha',
       'Mango',
       'Zorro',
@@ -139,7 +139,7 @@ describe('useSortedList — title', () => {
 
   it('sorts alphabetically descending', () => {
     const result = renderSorted('title', 'desc', items);
-    expect(result.map((i) => i.mediaItem.title)).toEqual([
+    expect(result!.map((i) => i.mediaItem.title)).toEqual([
       'Zorro',
       'Mango',
       'Alpha',
@@ -166,7 +166,7 @@ describe('useSortedList — release-date', () => {
     ];
 
     const result = renderSorted('release-date', 'asc', items);
-    expect(result.map((i) => i.mediaItem.title)).toEqual(['A', 'B', 'C']);
+    expect(result!.map((i) => i.mediaItem.title)).toEqual(['A', 'B', 'C']);
   });
 
   it('sorts by episode.releaseDate when an episode is present', () => {
@@ -184,8 +184,8 @@ describe('useSortedList — release-date', () => {
     ];
 
     const result = renderSorted('release-date', 'asc', items);
-    expect(result[0].episode.releaseDate).toBe('2021-01-01');
-    expect(result[1].episode.releaseDate).toBe('2022-05-01');
+    expect(result![0]!.episode!.releaseDate).toBe('2021-01-01');
+    expect(result![1]!.episode!.releaseDate).toBe('2022-05-01');
   });
 
   it('pushes items with null releaseDate to the end', () => {
@@ -199,8 +199,8 @@ describe('useSortedList — release-date', () => {
     ];
 
     const result = renderSorted('release-date', 'asc', items);
-    expect(result[0].mediaItem.title).toBe('A Has Date');
-    expect(result[1].mediaItem.title).toBe('Z No Date');
+    expect(result![0]!.mediaItem.title).toBe('A Has Date');
+    expect(result![1]!.mediaItem.title).toBe('Z No Date');
   });
 });
 
@@ -223,7 +223,7 @@ describe('useSortedList — recently-watched', () => {
     ];
 
     const result = renderSorted('recently-watched', 'desc', items);
-    expect(result.map((i) => i.mediaItem.title)).toEqual(['New', 'Mid', 'Old']);
+    expect(result!.map((i) => i.mediaItem.title)).toEqual(['New', 'Mid', 'Old']);
   });
 
   it('sorts by lastSeenAt ascending', () => {
@@ -237,8 +237,8 @@ describe('useSortedList — recently-watched', () => {
     ];
 
     const result = renderSorted('recently-watched', 'asc', items);
-    expect(result[0].mediaItem.title).toBe('Old');
-    expect(result[1].mediaItem.title).toBe('New');
+    expect(result![0]!.mediaItem.title).toBe('Old');
+    expect(result![1]!.mediaItem.title).toBe('New');
   });
 
   it('pushes items with null lastSeenAt to the end', () => {
@@ -252,8 +252,8 @@ describe('useSortedList — recently-watched', () => {
     ];
 
     const result = renderSorted('recently-watched', 'desc', items);
-    expect(result[0].mediaItem.title).toBe('Seen');
-    expect(result[1].mediaItem.title).toBe('Never Seen');
+    expect(result![0]!.mediaItem.title).toBe('Seen');
+    expect(result![1]!.mediaItem.title).toBe('Never Seen');
   });
 });
 
@@ -279,8 +279,8 @@ describe('useSortedList — recently-aired', () => {
 
     const result = renderSorted('recently-aired', 'desc', items);
     // 'Past' has a valid pastDate; 'Future' is pushed to end as undefined
-    expect(result[0].mediaItem.title).toBe('Past');
-    expect(result[1].mediaItem.title).toBe('Future');
+    expect(result![0]!.mediaItem.title).toBe('Past');
+    expect(result![1]!.mediaItem.title).toBe('Future');
   });
 
   it('uses lastAiredEpisode.releaseDate for TV shows without episode/season context', () => {
@@ -300,8 +300,8 @@ describe('useSortedList — recently-aired', () => {
     ];
 
     const result = renderSorted('recently-aired', 'desc', items);
-    expect(result[0].mediaItem.title).toBe('Show A');
-    expect(result[1].mediaItem.title).toBe('Show B');
+    expect(result![0]!.mediaItem.title).toBe('Show A');
+    expect(result![1]!.mediaItem.title).toBe('Show B');
   });
 });
 
@@ -342,9 +342,9 @@ describe('useSortedList — next-airing', () => {
 
     const result = renderSorted('next-airing', 'asc', items);
     // past date is treated as undefined → pushed to end
-    expect(result[0].mediaItem.title).toBe('Near Future');
-    expect(result[1].mediaItem.title).toBe('Far Future');
-    expect(result[2].mediaItem.title).toBe('Past Show');
+    expect(result![0]!.mediaItem.title).toBe('Near Future');
+    expect(result![1]!.mediaItem.title).toBe('Far Future');
+    expect(result![2]!.mediaItem.title).toBe('Past Show');
   });
 });
 
@@ -367,7 +367,7 @@ describe('useSortedList — runtime', () => {
     ];
 
     const result = renderSorted('runtime', 'asc', items);
-    expect(result.map((i) => i.mediaItem.title)).toEqual([
+    expect(result!.map((i) => i.mediaItem.title)).toEqual([
       'Short',
       'Medium',
       'Long',
@@ -385,8 +385,8 @@ describe('useSortedList — runtime', () => {
     ];
 
     const result = renderSorted('runtime', 'desc', items);
-    expect(result[0].mediaItem.title).toBe('Long');
-    expect(result[1].mediaItem.title).toBe('Short');
+    expect(result![0]!.mediaItem.title).toBe('Long');
+    expect(result![1]!.mediaItem.title).toBe('Short');
   });
 
   it('uses episode.runtime when episode is present', () => {
@@ -404,8 +404,8 @@ describe('useSortedList — runtime', () => {
     ];
 
     const result = renderSorted('runtime', 'asc', items);
-    expect(result[0].episode.runtime).toBe(25);
-    expect(result[1].episode.runtime).toBe(45);
+    expect(result![0]!.episode!.runtime).toBe(25);
+    expect(result![1]!.episode!.runtime).toBe(45);
   });
 
   it('pushes items with null runtime to the end', () => {
@@ -419,8 +419,8 @@ describe('useSortedList — runtime', () => {
     ];
 
     const result = renderSorted('runtime', 'asc', items);
-    expect(result[0].mediaItem.title).toBe('Has Runtime');
-    expect(result[1].mediaItem.title).toBe('No Runtime');
+    expect(result![0]!.mediaItem.title).toBe('Has Runtime');
+    expect(result![1]!.mediaItem.title).toBe('No Runtime');
   });
 });
 
@@ -449,7 +449,7 @@ describe('useSortedList — my-rating', () => {
     ];
 
     const result = renderSorted('my-rating', 'desc', items);
-    expect(result.map((i) => i.mediaItem.title)).toEqual([
+    expect(result!.map((i) => i.mediaItem.title)).toEqual([
       'High Rated',
       'Mid Rated',
       'Low Rated',
@@ -469,8 +469,8 @@ describe('useSortedList — my-rating', () => {
     ];
 
     const result = renderSorted('my-rating', 'desc', items);
-    expect(result[0].mediaItem.title).toBe('Rated');
-    expect(result[1].mediaItem.title).toBe('Unrated');
+    expect(result![0]!.mediaItem.title).toBe('Rated');
+    expect(result![1]!.mediaItem.title).toBe('Unrated');
   });
 });
 
@@ -487,7 +487,7 @@ describe('useSortedList — recently-added', () => {
     ];
 
     const result = renderSorted('recently-added', 'desc', items);
-    expect(result.map((i) => i.mediaItem.title)).toEqual([
+    expect(result!.map((i) => i.mediaItem.title)).toEqual([
       'Last Added',
       'Middle',
       'First Added',
@@ -501,8 +501,8 @@ describe('useSortedList — recently-added', () => {
     ];
 
     const result = renderSorted('recently-added', 'asc', items);
-    expect(result[0].mediaItem.title).toBe('First Added');
-    expect(result[1].mediaItem.title).toBe('Last Added');
+    expect(result![0]!.mediaItem.title).toBe('First Added');
+    expect(result![1]!.mediaItem.title).toBe('Last Added');
   });
 });
 
@@ -528,8 +528,8 @@ describe('useSortedList — tie-breaking', () => {
 
     const result = renderSorted('runtime', 'asc', items);
     // TV show (no season, no episode) should sort before season (has season)
-    expect(result[0].type).toBe('tv');
-    expect(result[1].type).toBe('season');
+    expect(result![0]!.type).toBe('tv');
+    expect(result![1]!.type).toBe('season');
   });
 
   it('places season entry before episode entry when values are equal', () => {
@@ -547,8 +547,8 @@ describe('useSortedList — tie-breaking', () => {
     ];
 
     const result = renderSorted('runtime', 'asc', items);
-    expect(result[0].type).toBe('season');
-    expect(result[1].type).toBe('episode');
+    expect(result![0]!.type).toBe('season');
+    expect(result![1]!.type).toBe('episode');
   });
 
   it('falls back to alphabetical title order when all tie-breaking criteria match', () => {
@@ -562,8 +562,8 @@ describe('useSortedList — tie-breaking', () => {
     ];
 
     const result = renderSorted('runtime', 'asc', items);
-    expect(result[0].mediaItem.title).toBe('Alpha Film');
-    expect(result[1].mediaItem.title).toBe('Zorro Film');
+    expect(result![0]!.mediaItem.title).toBe('Alpha Film');
+    expect(result![1]!.mediaItem.title).toBe('Zorro Film');
   });
 
   it('orders episodes by seasonAndEpisodeNumber when tied on the sort property', () => {
@@ -581,8 +581,8 @@ describe('useSortedList — tie-breaking', () => {
     ];
 
     const result = renderSorted('runtime', 'asc', items);
-    expect(result[0].episode.episodeNumber).toBe(1);
-    expect(result[1].episode.episodeNumber).toBe(3);
+    expect(result![0]!.episode!.episodeNumber).toBe(1);
+    expect(result![1]!.episode!.episodeNumber).toBe(3);
   });
 
   it('orders seasons by seasonNumber when tied on the sort property', () => {
@@ -600,8 +600,8 @@ describe('useSortedList — tie-breaking', () => {
     ];
 
     const result = renderSorted('runtime', 'asc', items);
-    expect(result[0].season.seasonNumber).toBe(1);
-    expect(result[1].season.seasonNumber).toBe(3);
+    expect(result![0]!.season!.seasonNumber).toBe(1);
+    expect(result![1]!.season!.seasonNumber).toBe(3);
   });
 });
 
@@ -630,7 +630,7 @@ describe('useSortedList — recommended', () => {
     ];
 
     const result = renderSorted('recommended', 'asc', items);
-    expect(result.map((i) => i.mediaItem.title)).toEqual(['C', 'A', 'B']);
+    expect(result!.map((i) => i.mediaItem.title)).toEqual(['C', 'A', 'B']);
   });
 
   it('uses estimatedRating alone when tmdbRating is null', () => {
@@ -646,8 +646,8 @@ describe('useSortedList — recommended', () => {
     ];
 
     const result = renderSorted('recommended', 'asc', items);
-    expect(result[0].mediaItem.title).toBe('High Est');
-    expect(result[1].mediaItem.title).toBe('Low Est');
+    expect(result![0]!.mediaItem.title).toBe('High Est');
+    expect(result![1]!.mediaItem.title).toBe('Low Est');
   });
 
   it('pushes items with null estimatedRating to the end', () => {
@@ -663,8 +663,8 @@ describe('useSortedList — recommended', () => {
     ];
 
     const result = renderSorted('recommended', 'asc', items);
-    expect(result[0].mediaItem.title).toBe('Has Score');
-    expect(result[1].mediaItem.title).toBe('No Score');
+    expect(result![0]!.mediaItem.title).toBe('Has Score');
+    expect(result![1]!.mediaItem.title).toBe('No Score');
   });
 
   it('falls back to alphabetical when both items have null estimatedRating', () => {
@@ -680,8 +680,8 @@ describe('useSortedList — recommended', () => {
     ];
 
     const result = renderSorted('recommended', 'asc', items);
-    expect(result[0].mediaItem.title).toBe('Alpha');
-    expect(result[1].mediaItem.title).toBe('Zorro');
+    expect(result![0]!.mediaItem.title).toBe('Alpha');
+    expect(result![1]!.mediaItem.title).toBe('Zorro');
   });
 
   it('falls back to alphabetical when both items have equal scores', () => {
@@ -697,8 +697,8 @@ describe('useSortedList — recommended', () => {
     ];
 
     const result = renderSorted('recommended', 'asc', items);
-    expect(result[0].mediaItem.title).toBe('Alpha');
-    expect(result[1].mediaItem.title).toBe('Zorro');
+    expect(result![0]!.mediaItem.title).toBe('Alpha');
+    expect(result![1]!.mediaItem.title).toBe('Zorro');
   });
 
   it('always sorts recommended in descending score order regardless of sortOrder param', () => {
@@ -718,8 +718,8 @@ describe('useSortedList — recommended', () => {
     const resultDesc = renderSorted('recommended', 'desc', [...itemsDesc]);
 
     // Both orderings should produce the same result (score desc)
-    expect(resultAsc[0].mediaItem.title).toBe('High');
-    expect(resultDesc[0].mediaItem.title).toBe('High');
+    expect(resultAsc![0]!.mediaItem.title).toBe('High');
+    expect(resultDesc![0]!.mediaItem.title).toBe('High');
   });
 });
 
@@ -756,7 +756,7 @@ describe('useSortedList — platform-recommended platformSeen filtering', () => 
     const result = renderSorted('platform-recommended', 'desc', items);
     // Only unseen items should remain; seen item 'Seen B' is filtered out
     expect(result).toHaveLength(2);
-    expect(result.map((i) => i.mediaItem.title)).toEqual([
+    expect(result!.map((i) => i.mediaItem.title)).toEqual([
       'Unseen A',
       'Unseen C',
     ]);
@@ -810,7 +810,7 @@ describe('useSortedList — platform-recommended platformSeen filtering', () => 
     // Using 'title' sort — platformSeen filtering should NOT apply
     const result = renderSorted('title', 'asc', items);
     expect(result).toHaveLength(2);
-    expect(result.map((i) => i.mediaItem.title)).toEqual([
+    expect(result!.map((i) => i.mediaItem.title)).toEqual([
       'Seen Movie',
       'Unseen Movie',
     ]);
@@ -853,7 +853,7 @@ describe('useSortedList — both null values alphabetical tie-break', () => {
     ];
 
     const result = renderSorted('recently-watched', 'desc', items);
-    expect(result[0].mediaItem.title).toBe('Alpha');
-    expect(result[1].mediaItem.title).toBe('Zorro');
+    expect(result![0]!.mediaItem.title).toBe('Alpha');
+    expect(result![1]!.mediaItem.title).toBe('Zorro');
   });
 });

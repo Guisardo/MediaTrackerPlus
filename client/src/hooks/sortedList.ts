@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { ListItemsResponse, ListSortBy, ListSortOrder } from 'mediatracker-api';
 
-const pastDateOrUndefined = (date?: string) => {
+const pastDateOrUndefined = (date?: string | null) => {
   if (date && date > new Date().toISOString()) {
     return undefined;
   }
@@ -9,7 +9,7 @@ const pastDateOrUndefined = (date?: string) => {
   return date;
 };
 
-const futureDateOrUndefined = (date?: string) => {
+const futureDateOrUndefined = (date?: string | null) => {
   if (date && date < new Date().toISOString()) {
     return undefined;
   }
@@ -21,17 +21,17 @@ export const useSortedList = (args: {
   sortOrder: ListSortOrder;
   sortBy: ListSortBy;
   listItems?: ListItemsResponse;
-}) => {
+}): ListItemsResponse | undefined => {
   const { sortBy, sortOrder, listItems } = args;
 
   return useMemo(() => {
     if (!listItems) {
-      return;
+      return undefined;
     }
 
     const sortFunctionFactory = <T>(
-      property: (listItem: ListItem) => T,
-      comparator: (a: T, b: T) => number
+      property: (listItem: ListItem) => T | null | undefined,
+      comparator: (a: NonNullable<T>, b: NonNullable<T>) => number
     ) => {
       return (a: ListItem, b: ListItem): number => {
         const propertyA = property(a);
@@ -74,8 +74,8 @@ export const useSortedList = (args: {
           // Order episodes
           if (a.episode && b.episode) {
             return (
-              a.episode.seasonAndEpisodeNumber -
-              b.episode.seasonAndEpisodeNumber
+              (a.episode.seasonAndEpisodeNumber ?? 0) -
+              (b.episode.seasonAndEpisodeNumber ?? 0)
             );
           }
 
@@ -88,10 +88,18 @@ export const useSortedList = (args: {
         }
 
         if (sortOrder === 'asc') {
-          return comparator(propertyA, propertyB);
-        } else if (sortOrder === 'desc') {
-          return comparator(propertyB, propertyA);
+          const left = propertyA as NonNullable<T>;
+          const right = propertyB as NonNullable<T>;
+          return comparator(left, right);
         }
+
+        if (sortOrder === 'desc') {
+          const left = propertyB as NonNullable<T>;
+          const right = propertyA as NonNullable<T>;
+          return comparator(left, right);
+        }
+
+        return 0;
       };
     };
 

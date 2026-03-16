@@ -18,7 +18,6 @@ const mediaItems: MediaItemBase[] = [
     title: 'title 1',
     mediaType: 'movie',
     source: 'user',
-    lockedAt: null,
   },
   {
     id: 2,

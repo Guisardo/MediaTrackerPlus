@@ -37,15 +37,7 @@ class ListRepository extends repository<List>({
   tableName: 'list',
   primaryColumnName: 'id',
 }) {
-  public async update(args: {
-    name: string;
-    description?: string;
-    privacy?: ListPrivacy;
-    sortBy?: ListSortBy;
-    sortOrder?: ListSortOrder;
-    id: number;
-    userId: number;
-  }): Promise<List> {
+  public override async update(args: Partial<List>): Promise<Partial<List> | undefined> {
     const { userId, name, description, privacy, sortBy, sortOrder, id } = args;
 
     if (id == undefined || userId == undefined) {
@@ -93,7 +85,7 @@ class ListRepository extends repository<List>({
     });
   }
 
-  public async create(args: {
+  public override async create(args: {
     name: string;
     description?: string;
     privacy?: ListPrivacy;
@@ -102,7 +94,7 @@ class ListRepository extends repository<List>({
     userId: number;
     isWatchlist?: boolean;
     traktId?: number;
-  }): Promise<List> {
+  }): Promise<List | undefined> {
     const {
       userId,
       name,
@@ -144,7 +136,7 @@ class ListRepository extends repository<List>({
     };
   }
 
-  public async delete(args: {
+  public override async delete(args: {
     listId: number;
     userId: number;
   }): Promise<number> {
@@ -169,7 +161,7 @@ class ListRepository extends repository<List>({
   public async details(args: {
     listId: number;
     userId: number;
-  }): Promise<ListDetailsResponse> {
+  }): Promise<ListDetailsResponse | undefined> {
     const { listId, userId } = args;
 
     const res = await Database.knex('list')

@@ -62,7 +62,7 @@ export const userStatisticsSummary = async (
   userId: number,
   date: false | string = false
 ) => {
-  const res = await Database.knex('seen')
+  const res = (await Database.knex('seen')
     .sum({
       runtime: Database.knex.raw(`CASE
                            WHEN "episode"."runtime" IS NOT NULL THEN "episode"."runtime"
@@ -105,7 +105,15 @@ export const userStatisticsSummary = async (
 
     .leftJoin('mediaItem', 'mediaItem.id', 'seen.mediaItemId')
     .leftJoin('episode', 'episode.id', 'seen.episodeId')
-    .groupBy('mediaItem.mediaType');
+    .groupBy('mediaItem.mediaType')) as Array<{
+    mediaType: MediaType;
+    runtime: number;
+    numberOfPages: number;
+    duration: number;
+    episodes: number;
+    items: number;
+    plays: number;
+  }>;
 
   return _(res)
     .keyBy('mediaType')
@@ -125,7 +133,7 @@ export const userGenreStatistics = async (
   userId: number,
   date: false | string = false
 ) => {
-  const res = await Database.knex('seen')
+  const res = (await Database.knex('seen')
     .select('mediaItem.mediaType')
     .select('mediaItem.genres')
     .count({
@@ -152,7 +160,11 @@ export const userGenreStatistics = async (
 
     .leftJoin('mediaItem', 'mediaItem.id', 'seen.mediaItemId')
     .leftJoin('episode', 'episode.id', 'seen.episodeId')
-    .groupBy('mediaItem.genres');
+    .groupBy('mediaItem.genres')) as Array<{
+    mediaType: MediaType;
+    genres: string;
+    genre_count: number;
+  }>;
 
   const result = convertGenreResponse(res);
   return result;

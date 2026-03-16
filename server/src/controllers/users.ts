@@ -29,7 +29,7 @@ export class UsersController {
   get = createExpressRoute<{
     path: '/api/user';
     method: 'get';
-    responseBody: undefined | UserResponse;
+    responseBody: null | UserResponse;
   }>(async (req, res) => {
     if (typeof req.user === 'number') {
       const user = await userRepository.findOne({ id: req.user });
@@ -91,7 +91,7 @@ export class UsersController {
       const configuration = await configurationRepository.get();
       const usersCount = await userRepository.count();
 
-      if (usersCount > 0 && !configuration.enableRegistration) {
+      if (usersCount > 0 && !configuration?.enableRegistration) {
         res.sendStatus(401);
         return;
       }
@@ -172,7 +172,7 @@ export class UsersController {
       });
     } catch (error) {
       res.status(400);
-      res.send(error.toString());
+      res.send(error instanceof Error ? error.toString() : String(error));
       return;
     }
 
@@ -244,7 +244,7 @@ export class UsersController {
 
     const user = await userRepository.findOneWithPassword({ id: userId });
 
-    if (!(await userRepository.verifyPassword(user, currentPassword))) {
+    if (!user || !(await userRepository.verifyPassword(user, currentPassword))) {
       res.sendStatus(401);
       return;
     }
@@ -266,13 +266,14 @@ export class UsersController {
     pathParams: {
       userId: number;
     };
-    responseBody: undefined | Pick<UserResponse, 'id' | 'name'>;
+    responseBody: null | Pick<UserResponse, 'id' | 'name'>;
   }>(async (req, res) => {
     const { userId } = req.params;
 
     const user = await userRepository.findOne({ id: userId });
 
     if (user) {
+      // nosemgrep: javascript.express.security.audit.xss.direct-response-write.direct-response-write
       res.send(_.pick(user, ['id', 'name']));
     } else {
       res.send(null);

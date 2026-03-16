@@ -40,10 +40,10 @@ export class ConfigurationController {
     const numberOfUsers = await userRepository.count();
 
     res.send({
-      ..._.omit(configuration, 'id'),
+      ...(configuration ? _.omit(configuration, 'id') : {}),
       noUsers: numberOfUsers === 0,
       demo: Config.DEMO,
       version: Config.version,
-    });
+    } as Omit<Configuration, 'id'> & { noUsers: boolean; demo: boolean; version: string });
   });
 }

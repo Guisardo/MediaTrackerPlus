@@ -118,12 +118,12 @@ export const hasPoster = (mediaItem: MediaItemItemsResponse) => {
   return mediaItem.posterSmall != undefined;
 };
 
-export const hideEpisodeTitle = (user: UserResponse) => {
-  return user.hideEpisodeTitleForUnseenEpisodes;
+export const hideEpisodeTitle = (user?: UserResponse | null) => {
+  return user?.hideEpisodeTitleForUnseenEpisodes === true;
 };
 
-export const hideSeasonOverview = (user: UserResponse) => {
-  return user.hideOverviewForUnseenSeasons;
+export const hideSeasonOverview = (user?: UserResponse | null) => {
+  return user?.hideOverviewForUnseenSeasons === true;
 };
 
 export const hasProgress = (mediaItem: MediaItemItemsResponse) => {
@@ -145,7 +145,7 @@ export const canMetadataBeUpdated = (mediaItem: MediaItemItemsResponse) => {
 };
 
 export const listDescription = (list?: {
-  description?: string;
+  description?: string | null;
   isWatchlist: boolean;
 }) => {
   return list?.isWatchlist

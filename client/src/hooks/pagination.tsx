@@ -11,7 +11,9 @@ export const usePagination = (args: {
     initialValue: 1,
     resetPage: false,
   });
-  const [page, setPage] = useState(Number.parseInt(currentValue.toString()));
+  const [page, setPage] = useState(
+    Number.parseInt(String(currentValue ?? 1), 10)
+  );
   const [searchParams, setSearchParams] = useSearchParams();
   const numberOfPages = Math.ceil(args.totalItems / args.itemsPerPage);
 

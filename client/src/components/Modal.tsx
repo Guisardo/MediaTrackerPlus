@@ -20,7 +20,7 @@ interface OpenModalRef {
   open: () => void;
 }
 class OpenModalRefClass implements OpenModalRef {
-  public _openModal: () => void;
+  public _openModal?: () => void;
 
   public open() {
     this._openModal && this._openModal();

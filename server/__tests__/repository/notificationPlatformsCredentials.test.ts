@@ -134,9 +134,9 @@ describe('notificationPlatformsCredentialsRepository', () => {
         value: 'my-gotify-token',
       });
 
-      const found = await notificationPlatformsCredentialsRepository.findOne({
+      const found = (await notificationPlatformsCredentialsRepository.findOne({
         id,
-      });
+      }))!;
 
       expect(found).toBeDefined();
       expect(found.id).toBe(id);
@@ -151,11 +151,11 @@ describe('notificationPlatformsCredentialsRepository', () => {
         value: 'https://discord.example.com/hook',
       });
 
-      const found = await notificationPlatformsCredentialsRepository.findOne({
+      const found = (await notificationPlatformsCredentialsRepository.findOne({
         userId: Data.user.id,
         platformName: 'discord',
         name: 'webhookUrl',
-      });
+      }))!;
 
       expect(found).toBeDefined();
       expect(found.platformName).toBe('discord');
@@ -286,7 +286,7 @@ describe('notificationPlatformsCredentialsRepository', () => {
       });
 
       const updated =
-        await notificationPlatformsCredentialsRepository.findOne({ id });
+        (await notificationPlatformsCredentialsRepository.findOne({ id }))!;
 
       expect(updated.value).toBe('new-token');
     });
@@ -305,7 +305,7 @@ describe('notificationPlatformsCredentialsRepository', () => {
       });
 
       const updated =
-        await notificationPlatformsCredentialsRepository.findOne({ id });
+        (await notificationPlatformsCredentialsRepository.findOne({ id }))!;
 
       expect(updated.platformName).toBe('ntfy');
     });
@@ -324,7 +324,7 @@ describe('notificationPlatformsCredentialsRepository', () => {
       });
 
       const updated =
-        await notificationPlatformsCredentialsRepository.findOne({ id });
+        (await notificationPlatformsCredentialsRepository.findOne({ id }))!;
 
       expect(updated.name).toBe('token');
     });
@@ -349,9 +349,9 @@ describe('notificationPlatformsCredentialsRepository', () => {
       });
 
       const user2Record =
-        await notificationPlatformsCredentialsRepository.findOne({
+        (await notificationPlatformsCredentialsRepository.findOne({
           id: idUser2,
-        });
+        }))!;
 
       expect(user2Record.value).toBe('user2-value');
     });
@@ -560,7 +560,7 @@ describe('notificationPlatformsCredentialsRepository', () => {
         await notificationPlatformsCredentialsRepository.get(Data.user.id);
 
       expect(user1Result['ntfy']).toEqual({ topic: 'user1-ntfy' });
-      expect(user1Result['ntfy']['topic']).not.toBe('user2-ntfy');
+      expect(user1Result['ntfy']!['topic']).not.toBe('user2-ntfy');
     });
 
     test('reflects an updated value after update()', async () => {
@@ -579,7 +579,7 @@ describe('notificationPlatformsCredentialsRepository', () => {
       const result =
         await notificationPlatformsCredentialsRepository.get(Data.user.id);
 
-      expect(result['gotify']['token']).toBe('after-update');
+      expect(result['gotify']!['token']).toBe('after-update');
     });
 
     test('no longer includes credentials for a platform after they have been deleted', async () => {

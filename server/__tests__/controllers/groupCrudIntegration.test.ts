@@ -492,7 +492,7 @@ describe('Group CRUD and Membership Integration Tests', () => {
 
       // Capture the setImmediate callback to execute it manually
       const originalSetImmediate = global.setImmediate;
-      let capturedCallback: (() => void) | null = null;
+      let capturedCallback: (() => void) | undefined = undefined;
 
       global.setImmediate = jest.fn((callback) => {
         capturedCallback = callback as () => void;
@@ -511,7 +511,7 @@ describe('Group CRUD and Membership Integration Tests', () => {
         global.setImmediate = originalSetImmediate;
 
         // Execute the cleanup callback
-        await (capturedCallback as () => Promise<void>)();
+        await (capturedCallback as unknown as () => Promise<void>)();
 
         // Verify all related rows are physically deleted
         const cacheRows = await Database.knex('groupPlatformRating')
@@ -661,7 +661,7 @@ describe('Group CRUD and Membership Integration Tests', () => {
         .mockResolvedValue(undefined);
 
       const originalSetImmediate = global.setImmediate;
-      let capturedCallback: (() => void) | null = null;
+      let capturedCallback: (() => void) | undefined = undefined;
 
       global.setImmediate = jest.fn((callback) => {
         capturedCallback = callback as () => void;
@@ -680,7 +680,7 @@ describe('Group CRUD and Membership Integration Tests', () => {
 
         // Execute the setImmediate callback
         global.setImmediate = originalSetImmediate;
-        await (capturedCallback as () => Promise<void>)();
+        await (capturedCallback as unknown as () => Promise<void>)();
 
         expect(recalcSpy).toHaveBeenCalledWith(groupId);
       } finally {
@@ -801,7 +801,7 @@ describe('Group CRUD and Membership Integration Tests', () => {
         .mockResolvedValue(undefined);
 
       const originalSetImmediate = global.setImmediate;
-      let capturedCallback: (() => void) | null = null;
+      let capturedCallback: (() => void) | undefined = undefined;
 
       global.setImmediate = jest.fn((callback) => {
         capturedCallback = callback as () => void;
@@ -819,7 +819,7 @@ describe('Group CRUD and Membership Integration Tests', () => {
 
         // Execute the setImmediate callback
         global.setImmediate = originalSetImmediate;
-        await (capturedCallback as () => Promise<void>)();
+        await (capturedCallback as unknown as () => Promise<void>)();
 
         expect(recalcSpy).toHaveBeenCalledWith(groupId);
       } finally {
@@ -1200,7 +1200,7 @@ describe('Group CRUD and Membership Integration Tests', () => {
       expect(group2.memberCount).toBe(2);
 
       // Step 7: Delete the group
-      let cleanupCallback: (() => void) | null = null;
+      let cleanupCallback: (() => void) | undefined = undefined;
       global.setImmediate = jest.fn((callback) => {
         cleanupCallback = callback as () => void;
         return 1 as unknown as NodeJS.Immediate;
@@ -1230,7 +1230,7 @@ describe('Group CRUD and Membership Integration Tests', () => {
         // Step 8: Execute async cleanup
         global.setImmediate = originalSetImmediate;
         expect(cleanupCallback).toBeDefined();
-        await (cleanupCallback as () => Promise<void>)();
+        await (cleanupCallback as unknown as () => Promise<void>)();
 
         // Verify physical cleanup
         const groupRow = await Database.knex('userGroup')

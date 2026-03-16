@@ -7,18 +7,24 @@ class EpisodeRepository extends repository<TvEpisode>({
   primaryColumnName: 'id',
   booleanColumnNames: ['isSpecialEpisode'],
 }) {
-  public async create(value: Partial<TvEpisode>) {
+  public override async create(value: Partial<TvEpisode>) {
     return await super.create({
       ...value,
-      seasonAndEpisodeNumber: value.seasonNumber * 1000 + value.episodeNumber,
-    } as unknown);
+      seasonAndEpisodeNumber:
+        value.seasonNumber != null && value.episodeNumber != null
+          ? value.seasonNumber * 1000 + value.episodeNumber
+          : undefined,
+    } as Partial<TvEpisode>);
   }
 
-  public async createMany(values: Partial<TvEpisode>[]) {
+  public override async createMany(values: Partial<TvEpisode>[]) {
     return await super.createMany(
       values.map((value) => ({
         ...value,
-        seasonAndEpisodeNumber: value.seasonNumber * 1000 + value.episodeNumber,
+        seasonAndEpisodeNumber:
+          value.seasonNumber != null && value.episodeNumber != null
+            ? value.seasonNumber * 1000 + value.episodeNumber
+            : undefined,
       }))
     );
   }

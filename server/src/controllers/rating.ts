@@ -13,6 +13,7 @@ import { listItemRepository } from 'src/repository/listItemRepository';
 import { userRepository } from 'src/repository/user';
 import { Database } from 'src/dbconfig';
 import { recalculateGroupPlatformRatingsForUser } from 'src/repository/groupPlatformRatingCache';
+import { definedOrNull } from 'src/repository/repository';
 
 /**
  * Lazy-initialized singleton for RecommendationService.
@@ -234,8 +235,8 @@ export class RatingController {
     const userRating: UserRating = {
       date: new Date().getTime(),
       mediaItemId: mediaItemId,
-      episodeId: episodeId || null,
-      seasonId: seasonId || null,
+      episodeId: definedOrNull(episodeId),
+      seasonId: definedOrNull(seasonId),
       review: review,
       userId: userId,
       rating: rating,
@@ -245,8 +246,8 @@ export class RatingController {
       where: {
         userId: userId,
         mediaItemId: mediaItemId,
-        seasonId: seasonId || null,
-        episodeId: episodeId || null,
+        seasonId: definedOrNull(seasonId),
+        episodeId: definedOrNull(episodeId),
       },
       value: userRating,
     });
@@ -311,7 +312,7 @@ export class RatingController {
           userRepository
             .findOne({ id: userId })
             .then((user) => {
-              if (user.addRecommendedToWatchlist === false) {
+              if (!user || user.addRecommendedToWatchlist === false) {
                 return;
               }
               return getRecommendationService().then((service) =>

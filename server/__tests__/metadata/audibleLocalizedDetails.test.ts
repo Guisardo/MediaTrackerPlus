@@ -238,8 +238,8 @@ describe('Audible.localizedDetails', () => {
 
       const result = await audible.localizedDetails({ audibleId: 'B001ABC123' }, 'de');
 
-      expect(result.title).toBe('Der grosse Gatsby');
-      expect(result.overview).toBe('Ein grosser amerikanischer Roman.');
+      expect(result!.title).toBe('Der grosse Gatsby');
+      expect(result!.overview).toBe('Ein grosser amerikanischer Roman.');
     });
 
     test('returns null when product has no title in response', async () => {

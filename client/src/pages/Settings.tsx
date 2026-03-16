@@ -19,6 +19,10 @@ export const SettingsPage: FunctionComponent = () => {
   const { user } = useUser();
   const { configuration } = useConfiguration();
 
+  if (!user || !configuration) {
+    return <Trans>Loading</Trans>;
+  }
+
   return (
     <>
       <Routes>
@@ -35,7 +39,7 @@ export const SettingsPage: FunctionComponent = () => {
           <Route path="notifications" element={<SettingsNotificationsPage />} />
           <Route path="preferences" element={<SettingsPreferencesPage />} />
 
-          {Boolean(user.admin) && (
+          {user.admin === true && (
             <>
               <Route
                 path="configuration"
@@ -106,13 +110,15 @@ const SettingsPageLayout: FunctionComponent = () => {
 const useRoutesTitle = () => {
   const { user } = useUser();
   const { configuration } = useConfiguration();
+  const demoMode = configuration?.demo === true;
+  const isAdmin = user?.admin === true;
 
   return [
     {
       path: 'about',
       name: t`About`,
     },
-    ...(!configuration.demo
+    ...(!demoMode
       ? [
           {
             path: 'password',
@@ -132,7 +138,7 @@ const useRoutesTitle = () => {
       path: 'preferences',
       name: t`Preferences`,
     },
-    ...(user.admin
+    ...(isAdmin
       ? [
           {
             path: 'configuration',

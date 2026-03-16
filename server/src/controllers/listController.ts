@@ -88,7 +88,7 @@ export class ListController {
     });
 
     if (list) {
-      res.json(list);
+      res.json(list as List);
     } else {
       res.sendStatus(400);
     }

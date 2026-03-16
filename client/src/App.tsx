@@ -46,13 +46,13 @@ export const throwOnErrorEnvelope = (data: unknown) => {
 export const queryClient = new QueryClient({
   defaultOptions: {
     mutations: {
-      mutationFn: (a) => {
+      mutationFn: async (a) => {
         console.log(a);
         return null;
       },
     },
     queries: {
-      queryFn: (x) => {
+      queryFn: async (x) => {
         console.log(x);
         return null;
       },

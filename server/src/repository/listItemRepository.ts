@@ -7,6 +7,7 @@ import { repository } from 'src/repository/repository';
 import { logger } from 'src/logger';
 import { mediaItemRepository } from 'src/repository/mediaItem';
 import { recalculateGroupPlatformRatingsForUser } from 'src/repository/groupPlatformRatingCache';
+import { definedOrNull } from 'src/repository/repository';
 
 class ListItemRepository extends repository<ListItem>({
   tableName: 'listItem',
@@ -95,8 +96,9 @@ class ListItemRepository extends repository<ListItem>({
     const existingItems = await trx('listItem').where({
       listId: listId,
       mediaItemId: mediaItemId,
-      seasonId: episodeId == undefined ? seasonId || null : null,
-      episodeId: episodeId || null,
+      seasonId:
+        episodeId == undefined ? definedOrNull(seasonId) : null,
+      episodeId: definedOrNull(episodeId),
     });
 
     if (existingItems.length > 0) {
@@ -106,8 +108,9 @@ class ListItemRepository extends repository<ListItem>({
     await trx('listItem').insert({
       listId: listId,
       mediaItemId: mediaItemId,
-      seasonId: episodeId == undefined ? seasonId || null : null,
-      episodeId: episodeId || null,
+      seasonId:
+        episodeId == undefined ? definedOrNull(seasonId) : null,
+      episodeId: definedOrNull(episodeId),
       addedAt: new Date().getTime(),
     });
 
@@ -120,8 +123,8 @@ class ListItemRepository extends repository<ListItem>({
     const listItem = await trx('listItem')
       .where({
         mediaItemId: mediaItemId,
-        seasonId: seasonId || null,
-        episodeId: episodeId || null,
+        seasonId: definedOrNull(seasonId),
+        episodeId: definedOrNull(episodeId),
         listId: listId,
       })
       .first();

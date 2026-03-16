@@ -33,6 +33,11 @@ export class CalendarController {
 
     const { start, end } = req.query;
 
+    if (typeof start !== 'string' || typeof end !== 'string') {
+      res.sendStatus(400);
+      return;
+    }
+
     res.send(
       await getCalendarItems({
         userId,

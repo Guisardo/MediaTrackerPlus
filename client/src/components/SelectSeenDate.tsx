@@ -63,7 +63,11 @@ export const SelectSeenDateComponent: FunctionComponent<{
   mediaItem: MediaItemItemsResponse;
   episode?: TvEpisode;
   closeModal?: () => void;
-  onSelected: (args?: { date?: Date; seenAt?: LastSeenAt }) => void;
+  onSelected: (
+    args:
+      | { date: Date; seenAt?: never }
+      | { seenAt: LastSeenAt; date?: Date }
+  ) => void;
 }> = (props) => {
   const { mediaItem, episode, onSelected, closeModal } = props;
   const dateInputRef = useRef<HTMLInputElement>(null);
@@ -128,8 +132,15 @@ export const SelectSeenDateComponent: FunctionComponent<{
           onSubmit={(e) => {
             e.preventDefault();
 
-            const [year, month, day] = dateInputRef.current.value.split('-');
-            const [hours, minutes] = timeInputRef.current.value.split(':');
+            const dateValue = dateInputRef.current?.value;
+            const timeValue = timeInputRef.current?.value;
+
+            if (!dateValue || !timeValue) {
+              return;
+            }
+
+            const [year, month, day] = dateValue.split('-');
+            const [hours, minutes] = timeValue.split(':');
 
             onSelected({
               date: new Date(
@@ -160,7 +171,11 @@ export const SelectSeenDateComponent: FunctionComponent<{
             <Trans>Select date</Trans>
           </Button>
         </form>
-        <Button variant="destructive" className="m-2" onClick={() => closeModal()}>
+        <Button
+          variant="destructive"
+          className="m-2"
+          onClick={() => closeModal?.()}
+        >
           <Trans>Cancel</Trans>
         </Button>
       </div>

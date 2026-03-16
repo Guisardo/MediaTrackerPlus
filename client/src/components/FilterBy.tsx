@@ -4,24 +4,33 @@ import { t } from '@lingui/macro';
 import { MediaType } from 'mediatracker-api';
 import { isAudiobook, isBook, isVideoGame, reverseMap } from 'src/utils';
 import { useMenuComponent } from 'src/hooks/menu';
-import { useSearchParams } from 'react-router-dom';
+
+type FilterKey =
+  | 'all'
+  | 'onlyWithUserRating'
+  | 'onlyWithoutUserRating'
+  | 'onlyOnWatchlist'
+  | 'onlySeenItems';
 
 const useFilterTextMap = (mediaType: MediaType, isStatisticsPage: boolean) => {
-  return {
+  const filterTextMap: Partial<Record<FilterKey, string>> = {
     all: t`All`,
     onlyWithUserRating: t`Rated`,
     onlyWithoutUserRating: t`Unrated`,
-    onlyOnWatchlist: isStatisticsPage ? null : t`On watchlist`,
-    onlySeenItems: isStatisticsPage
-      ? null
-      : isAudiobook(mediaType)
+  };
+
+  if (!isStatisticsPage) {
+    filterTextMap.onlyOnWatchlist = t`On watchlist`;
+    filterTextMap.onlySeenItems = isAudiobook(mediaType)
       ? t`Listened`
       : isBook(mediaType)
       ? t`Read`
       : isVideoGame(mediaType)
       ? t`Played`
-      : t`Watched`,
-  };
+      : t`Watched`;
+  }
+
+  return filterTextMap as Record<FilterKey, string>;
 };
 
 export const useFilterBy = (
@@ -39,12 +48,17 @@ export const useFilterBy = (
     handleFilterChange: handleFilterChange,
   });
 
+  const selectedFilter = selectedValue
+    ? filterTextReverseMap[selectedValue]
+    : 'all';
+
   return {
-    filter: isStatisticsPage
-      ? { [filterTextReverseMap[selectedValue]]: true, onlySeenItems: true }
-      : {
-          [filterTextReverseMap[selectedValue]]: true,
-        },
+    filter:
+      isStatisticsPage && selectedFilter === 'all'
+        ? { all: true, onlySeenItems: true }
+        : {
+            [selectedFilter]: true,
+          },
     FilterByComponent: () => {
       return (
         <Menu>

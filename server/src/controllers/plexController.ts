@@ -33,7 +33,7 @@ export class PlexController {
           tvdbId,
         });
 
-        if (episode) {
+        if (mediaItem && episode) {
           logger.debug(
             `adding episode ${mediaItem.title} ${episode.seasonNumber}x${episode.episodeNumber} to seen history of user ${userId} with Plex webhook`
           );
@@ -88,6 +88,11 @@ type PlexPayload = {
   };
 };
 
+type PlexMatchGroups = {
+  provider: 'imdb' | 'tmdb' | 'tvdb';
+  id: string;
+};
+
 const getPlexPayload = async (req: Request) => {
   return await new Promise<PlexPayload>((resolve, reject) => {
     const bb = busboy({ headers: req.headers });
@@ -106,9 +111,11 @@ const getPlexPayload = async (req: Request) => {
 const parsePlexPayload = (payload: PlexPayload) => {
   const externalIds = payload.Metadata.Guid.map(
     (item) =>
-      item.id.match(/^(?<provider>imdb|tmdb|tvdb):\/\/(?<id>\w+)$/)?.groups
+      item.id.match(/^(?<provider>imdb|tmdb|tvdb):\/\/(?<id>\w+)$/)?.groups as
+        | PlexMatchGroups
+        | undefined
   )
-    .filter(Boolean)
+    .filter((match): match is PlexMatchGroups => match !== undefined)
     .map((match) => ({
       [match.provider]: match.id,
     }))

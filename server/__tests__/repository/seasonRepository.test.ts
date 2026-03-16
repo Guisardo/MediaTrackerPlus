@@ -116,7 +116,7 @@ describe('tvSeasonRepository', () => {
         numberOfEpisodes: 5,
       });
 
-      const found = await tvSeasonRepository.findOne({ id });
+      const found = (await tvSeasonRepository.findOne({ id }))!;
 
       expect(found.isSpecialSeason).toBe(true);
       expect(typeof found.isSpecialSeason).toBe('boolean');
@@ -131,7 +131,7 @@ describe('tvSeasonRepository', () => {
         numberOfEpisodes: 10,
       });
 
-      const found = await tvSeasonRepository.findOne({ id });
+      const found = (await tvSeasonRepository.findOne({ id }))!;
 
       expect(found.isSpecialSeason).toBe(false);
       expect(typeof found.isSpecialSeason).toBe('boolean');
@@ -182,7 +182,7 @@ describe('tvSeasonRepository', () => {
         numberOfEpisodes: 6,
       });
 
-      const found = await tvSeasonRepository.findOne({ id });
+      const found = (await tvSeasonRepository.findOne({ id }))!;
 
       expect(found).toBeDefined();
       expect(found.id).toBe(id);
@@ -204,10 +204,10 @@ describe('tvSeasonRepository', () => {
         numberOfEpisodes: 8,
       });
 
-      const found = await tvSeasonRepository.findOne({
+      const found = (await tvSeasonRepository.findOne({
         tvShowId: Data.tvShow.id,
         seasonNumber: 5,
-      });
+      }))!;
 
       expect(found).toBeDefined();
       expect(found.tvShowId).toBe(Data.tvShow.id);
@@ -223,7 +223,7 @@ describe('tvSeasonRepository', () => {
         numberOfEpisodes: 3,
       });
 
-      const found = await tvSeasonRepository.findOne({ id });
+      const found = (await tvSeasonRepository.findOne({ id }))!;
 
       expect(typeof found.isSpecialSeason).toBe('boolean');
     });
@@ -341,7 +341,7 @@ describe('tvSeasonRepository', () => {
 
       await tvSeasonRepository.update({ id, title: 'New Title' });
 
-      const updated = await tvSeasonRepository.findOne({ id });
+      const updated = (await tvSeasonRepository.findOne({ id }))!;
 
       expect(updated.title).toBe('New Title');
     });
@@ -357,7 +357,7 @@ describe('tvSeasonRepository', () => {
 
       await tvSeasonRepository.update({ id, numberOfEpisodes: 13 });
 
-      const updated = await tvSeasonRepository.findOne({ id });
+      const updated = (await tvSeasonRepository.findOne({ id }))!;
 
       expect(updated.numberOfEpisodes).toBe(13);
     });
@@ -374,7 +374,7 @@ describe('tvSeasonRepository', () => {
 
       await tvSeasonRepository.update({ id, releaseDate: '2021-06-01' });
 
-      const updated = await tvSeasonRepository.findOne({ id });
+      const updated = (await tvSeasonRepository.findOne({ id }))!;
 
       expect(updated.releaseDate).toBe('2021-06-01');
     });
@@ -393,7 +393,7 @@ describe('tvSeasonRepository', () => {
         description: 'A brand new description.',
       });
 
-      const updated = await tvSeasonRepository.findOne({ id });
+      const updated = (await tvSeasonRepository.findOne({ id }))!;
 
       expect(updated.description).toBe('A brand new description.');
     });
@@ -416,7 +416,7 @@ describe('tvSeasonRepository', () => {
 
       await tvSeasonRepository.update({ id: idA, title: 'Season A - Updated' });
 
-      const seasonB = await tvSeasonRepository.findOne({ id: idB });
+      const seasonB = (await tvSeasonRepository.findOne({ id: idB }))!;
 
       expect(seasonB.title).toBe('Season B');
     });

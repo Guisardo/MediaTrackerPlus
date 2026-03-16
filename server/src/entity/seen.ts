@@ -1,10 +1,10 @@
 export type Seen = {
   id?: number;
-  date?: number;
+  date?: number | null;
   mediaItemId: number;
-  episodeId?: number;
+  episodeId?: number | null;
   userId: number;
-  duration?: number;
+  duration?: number | null;
 };
 
 export const seenColumns = <const>[

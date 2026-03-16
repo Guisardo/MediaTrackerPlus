@@ -25,7 +25,7 @@ function resolveMetadataLanguage(
   }
 
   // Tier 2 fallback: use first configured language
-  return availableLanguages[0];
+  return availableLanguages[0] ?? null;
 }
 
 /**

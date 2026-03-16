@@ -1,6 +1,10 @@
 import _ from 'lodash';
 
-import { omitUndefinedValues, repository } from 'src/repository/repository';
+import {
+  definedOrUndefined,
+  omitUndefinedValues,
+  repository,
+} from 'src/repository/repository';
 import { splitCreatorField } from 'src/utils/normalizeCreators';
 import {
   getItemsKnex,
@@ -291,33 +295,35 @@ class MediaItemRepository extends repository<MediaItemBase>({
     return getDetailsKnex(params);
   }
 
-  public deserialize(value: Partial<MediaItemBase>): MediaItemBase {
+  public override deserialize(value: Partial<MediaItemBase>): MediaItemBase {
     return super.deserialize({
       ...value,
-      genres: (value.genres as unknown as string)?.split(',') || null,
-      narrators: splitCreatorField(
-        (value.narrators as unknown as string) || null
-      ),
-      authors: splitCreatorField(
-        (value.authors as unknown as string) || null
-      ),
+      genres: definedOrUndefined((value.genres as unknown as string)?.split(',')),
+      narrators: splitCreatorField((value.narrators as unknown as string) || null),
+      authors: splitCreatorField((value.authors as unknown as string) || null),
       platform: value.platform
         ? JSON.parse(value.platform as unknown as string)
-        : null,
+        : undefined,
     });
   }
 
-  public serialize(value: Partial<MediaItemBase>) {
-    return super.serialize({
+  public override serialize(value: Partial<MediaItemBase>) {
+    const serializedValue = {
       ...value,
       genres: value.genres?.join(','),
       authors: value.authors?.join(','),
       narrators: value.narrators?.join(','),
       platform: value.platform ? JSON.stringify(value.platform) : null,
-    } as unknown) as Record<string, unknown>;
+    } as unknown as Partial<MediaItemBase>;
+
+    return super.serialize(serializedValue) as Record<string, unknown>;
   }
 
-  public async delete(where?: { id: number }) {
+  public override async delete(where?: { id: number }) {
+    if (!where?.id) {
+      return 0;
+    }
+
     const mediaItemId = where.id;
 
     return await Database.knex.transaction(async (trx) => {
@@ -332,7 +338,7 @@ class MediaItemRepository extends repository<MediaItemBase>({
     });
   }
 
-  public async update(
+  public override async update(
     mediaItem: MediaItemBaseWithSeasons
   ): Promise<MediaItemBaseWithSeasons> {
     if (!mediaItem.id) {
@@ -363,8 +369,26 @@ class MediaItemRepository extends repository<MediaItemBase>({
           : new Date().getTime(),
       };
 
+      const serializedMediaItem = this.serialize(
+        this.stripValue({
+          ...mediaItem,
+          posterId: mediaItem.externalPosterUrl ? mediaItem.posterId : undefined,
+          backdropId: mediaItem.externalBackdropUrl
+            ? mediaItem.backdropId
+            : undefined,
+        })
+      );
+
+      if (!mediaItem.externalPosterUrl) {
+        serializedMediaItem.posterId = null;
+      }
+
+      if (!mediaItem.externalBackdropUrl) {
+        serializedMediaItem.backdropId = null;
+      }
+
       await trx(this.tableName)
-        .update(this.serialize(this.stripValue(mediaItem)))
+        .update(serializedMediaItem)
         .where({
           id: mediaItem.id,
         });
@@ -388,7 +412,7 @@ class MediaItemRepository extends repository<MediaItemBase>({
 
             const newSeason = omitUndefinedValues(
               tvSeasonRepository.stripValue(
-                tvSeasonRepository.serialize(season)
+                tvSeasonRepository.serialize(season) as Partial<TvSeason>
               )
             );
 
@@ -417,7 +441,7 @@ class MediaItemRepository extends repository<MediaItemBase>({
 
                 const newEpisode = omitUndefinedValues(
                   tvEpisodeRepository.stripValue(
-                    tvEpisodeRepository.serialize(episode)
+                    tvEpisodeRepository.serialize(episode) as Partial<TvEpisode>
                   )
                 );
 
@@ -443,7 +467,7 @@ class MediaItemRepository extends repository<MediaItemBase>({
     });
   }
 
-  public async create(mediaItem: MediaItemBaseWithSeasons) {
+  public override async create(mediaItem: MediaItemBaseWithSeasons) {
     if (mediaItem.releaseDate && !isValid(parseISO(mediaItem.releaseDate))) {
       logger.error(`Invalid date format for ${mediaItem.id}`);
       mediaItem.releaseDate = undefined;
@@ -486,21 +510,25 @@ class MediaItemRepository extends repository<MediaItemBase>({
         }
       });
 
-      if (result.seasons?.length > 0) {
+      const seasons = result.seasons ?? [];
+
+      if (seasons.length > 0) {
         const seasonsId = await Database.knex
           .batchInsert(
             'season',
-            result.seasons.map((season) => _.omit(season, 'episodes')),
+            seasons.map((season) => _.omit(season, 'episodes')),
             30
           )
           .transacting(trx)
           .returning('id');
 
-        result.seasons = _.merge(result.seasons, seasonsId);
+        result.seasons = _.merge(seasons, seasonsId);
 
         for (const season of result.seasons) {
-          if (season.episodes?.length > 0) {
-            season.episodes = season.episodes?.map((episode) => ({
+          const episodes = season.episodes ?? [];
+
+          if (episodes.length > 0) {
+            season.episodes = episodes.map((episode) => ({
               ...episode,
               tvShowId: result.id,
               seasonId: season.id,
@@ -532,10 +560,14 @@ class MediaItemRepository extends repository<MediaItemBase>({
     });
   }
 
-  public async createMany(mediaItem: MediaItemBaseWithSeasons[]) {
-    return await Promise.all(
-      mediaItem.map((mediaItem) => this.create(mediaItem))
+  public override async createMany(values: Partial<MediaItemBase>[]) {
+    const createdItems = await Promise.all(
+      (values as MediaItemBaseWithSeasons[]).map((mediaItem) =>
+        this.create(mediaItem)
+      )
     );
+
+    return createdItems.map((mediaItem) => mediaItem.id);
   }
 
   public async seasonsWithEpisodes(mediaItem: MediaItemBase) {
@@ -549,7 +581,11 @@ class MediaItemRepository extends repository<MediaItemBase>({
 
     const groupedEpisodes = _.groupBy(episodes, (episode) => episode.seasonId);
 
-    seasons.forEach((season) => (season.episodes = groupedEpisodes[season.id]));
+    seasons.forEach((season) => {
+      if (season.id != null) {
+        season.episodes = groupedEpisodes[season.id];
+      }
+    });
 
     return seasons;
   }
@@ -567,7 +603,7 @@ class MediaItemRepository extends repository<MediaItemBase>({
     mediaType: MediaType;
   }) {
     const totalNumberOfIds = externalIdColumnNames.reduce(
-      (sum, id) => sum + params[id]?.length,
+      (sum, id) => sum + (params[id]?.length ?? 0),
       0
     );
 
@@ -577,24 +613,35 @@ class MediaItemRepository extends repository<MediaItemBase>({
           .where({ mediaType: params.mediaType })
           .andWhere((qb) => {
             externalIdColumnNames.forEach((id) => {
-              if (params[id]?.length > 0) {
-                qb.orWhereIn(id, params[id]);
+              const values = params[id];
+
+              if (values && values.length > 0) {
+                qb.orWhereIn(id, values);
               }
             });
           })
       ).map((item) => this.deserialize(item));
     }
 
-    const splittedExternalIds = externalIdColumnNames
-      .flatMap((id) =>
-        params[id]
-          ? _.chunk(params[id] as (string | number)[], 100).map((values) => ({
-              columnName: id,
-              values: values,
-            }))
-          : undefined
-      )
-      .filter(Boolean);
+    const splittedExternalIds = externalIdColumnNames.reduce<
+      Array<{ columnName: (typeof externalIdColumnNames)[number]; values: Array<string | number> }>
+    >((items, id) => {
+      const values = params[id];
+
+      if (!values || values.length === 0) {
+        return items;
+      }
+
+      values.forEach(() => undefined);
+      items.push(
+        ..._.chunk(values as Array<string | number>, 100).map((chunk) => ({
+          columnName: id,
+          values: chunk,
+        }))
+      );
+
+      return items;
+    }, []);
 
     return (
       await Database.knex.transaction(async (trx) => {
@@ -658,9 +705,9 @@ class MediaItemRepository extends repository<MediaItemBase>({
     mediaType: MediaType;
     title: string;
     releaseYear?: number;
-  }): Promise<MediaItemBase> {
+  }): Promise<MediaItemBase | undefined> {
     if (typeof params.title !== 'string') {
-      return;
+      return undefined;
     }
 
     const qb = Database.knex<MediaItemBase>(this.tableName)
@@ -683,16 +730,18 @@ class MediaItemRepository extends repository<MediaItemBase>({
       ]);
     }
 
-    return this.deserialize(await qb.first());
+    const result = await qb.first();
+
+    return result ? this.deserialize(result) : undefined;
   }
 
   public async findByExactTitle(params: {
     mediaType: MediaType;
     title: string;
     releaseYear?: number;
-  }): Promise<MediaItemBase> {
+  }): Promise<MediaItemBase | undefined> {
     if (typeof params.title !== 'string') {
-      return;
+      return undefined;
     }
 
     const qb = Database.knex<MediaItemBase>(this.tableName)
@@ -767,6 +816,10 @@ class MediaItemRepository extends repository<MediaItemBase>({
     return _(res)
       .uniqBy('id')
       .filter((item) => {
+        if (!item.releaseDate) {
+          return false;
+        }
+
         const releaseDate = parseISO(item.releaseDate);
         return releaseDate > from && releaseDate < to;
       })
@@ -834,7 +887,7 @@ class MediaItemRepository extends repository<MediaItemBase>({
 
   public async unlock(mediaItemId: number) {
     await Database.knex<MediaItemBase>(this.tableName)
-      .update({ lockedAt: null })
+      .update({ lockedAt: Database.knex.raw('NULL') })
       .where('id', mediaItemId);
   }
 
@@ -870,8 +923,8 @@ class MediaItemRepository extends repository<MediaItemBase>({
             const [res] = await trx<MediaItemBase>('mediaItem')
               .insert({
                 ...this.serialize(omitUndefinedValues(this.stripValue(item))),
-                posterId: item.externalPosterUrl ? getImageId() : null,
-                backdropId: item.externalBackdropUrl ? getImageId() : null,
+                posterId: item.externalPosterUrl ? getImageId() : undefined,
+                backdropId: item.externalBackdropUrl ? getImageId() : undefined,
                 lastTimeUpdated: Date.now(),
               })
               .returning('*');

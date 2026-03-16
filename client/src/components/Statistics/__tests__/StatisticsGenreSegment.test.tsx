@@ -140,7 +140,7 @@ describe('StatisticsGenreSegment', () => {
       { tv: [{ genre: 'Action', count: 5 }] },
       '2023'
     );
-    const clickableRow = container.querySelector('.hover\\:underline');
+    const clickableRow = container.querySelector('.hover\\:underline')!;
     fireEvent.click(clickableRow);
     expect(mockNavigate).toHaveBeenCalledWith(
       expect.objectContaining({ pathname: '/statistics/genre/tv/' })
@@ -155,7 +155,7 @@ describe('StatisticsGenreSegment', () => {
       { movie: [{ genre: 'Drama', count: 3 }] },
       '2022'
     );
-    const clickableRow = container.querySelector('.hover\\:underline');
+    const clickableRow = container.querySelector('.hover\\:underline')!;
     fireEvent.click(clickableRow);
     expect(mockNavigate).toHaveBeenCalledWith(
       expect.objectContaining({ pathname: '/statistics/genre/movie/' })
@@ -167,7 +167,7 @@ describe('StatisticsGenreSegment', () => {
       { video_game: [{ genre: 'RPG', count: 7 }] },
       '2021'
     );
-    const clickableRow = container.querySelector('.hover\\:underline');
+    const clickableRow = container.querySelector('.hover\\:underline')!;
     fireEvent.click(clickableRow);
     expect(mockNavigate).toHaveBeenCalledWith(
       expect.objectContaining({ pathname: '/statistics/genre/video_game/' })

@@ -18,11 +18,16 @@ export const CalendarPage: FunctionComponent = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ['calendar', datesSet?.startStr, datesSet?.endStr],
-    queryFn: () =>
-      mediaTrackerApi.calendar.get({
+    queryFn: () => {
+      if (!datesSet) {
+        throw new Error('Calendar range is not initialized');
+      }
+
+      return mediaTrackerApi.calendar.get({
         start: datesSet.startStr,
         end: datesSet.endStr,
-      }),
+      });
+    },
     placeholderData: keepPreviousData,
     enabled: datesSet !== undefined,
   });
@@ -113,6 +118,8 @@ const eventColor = (mediaType: MediaType) => {
       return 'orange';
     case 'video_game':
       return 'violet';
+    default:
+      return undefined;
   }
 };
 
@@ -121,7 +128,7 @@ const episodeColor = (episode: TvEpisode) => {
     ? episode.seasonNumber === 1
       ? tvShowPremiereColor
       : seasonPremiereColor
-    : null;
+    : undefined;
 };
 
 const seasonPremiereColor = 'orange';

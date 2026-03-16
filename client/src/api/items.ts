@@ -25,8 +25,13 @@ export const useItems = (args: Items.Paginated.RequestQuery) => {
   });
 
   const search = useMutation({
-    mutationFn: (query: string) =>
-      mediaTrackerApi.search.search({ mediaType: args.mediaType, q: query }),
+    mutationFn: (query: string) => {
+      if (args.mediaType == null) {
+        throw new Error('mediaType is required for search');
+      }
+
+      return mediaTrackerApi.search.search({ mediaType: args.mediaType, q: query });
+    },
   });
 
   return !selectRandom

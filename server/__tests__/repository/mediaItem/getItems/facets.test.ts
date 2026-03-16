@@ -156,15 +156,15 @@ describe('facets', () => {
     ]);
 
     // Add items to user1's library
-    await addToWatchlistAndSeen(user1.id, movie1.id, true, true);
-    await addToWatchlistAndSeen(user1.id, movie2.id, true, true);
-    await addToWatchlistAndSeen(user1.id, tvShow1.id, true, true);
-    await addToWatchlistAndSeen(user1.id, game1.id, true, false);
-    await addToWatchlistAndSeen(user1.id, book1.id, true, true);
-    await addToWatchlistAndSeen(user1.id, audiobook1.id, true, true);
+    await addToWatchlistAndSeen(user1.id, movie1.id!, true, true);
+    await addToWatchlistAndSeen(user1.id, movie2.id!, true, true);
+    await addToWatchlistAndSeen(user1.id, tvShow1.id!, true, true);
+    await addToWatchlistAndSeen(user1.id, game1.id!, true, false);
+    await addToWatchlistAndSeen(user1.id, book1.id!, true, true);
+    await addToWatchlistAndSeen(user1.id, audiobook1.id!, true, true);
 
     // Add movie3 to user2's library ONLY
-    await addToWatchlistAndSeen(user2.id, movie3.id, true, true);
+    await addToWatchlistAndSeen(user2.id, movie3.id!, true, true);
   });
 
   afterAll(clearDatabase);

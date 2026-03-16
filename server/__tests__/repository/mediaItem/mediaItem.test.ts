@@ -17,14 +17,14 @@ describe('mediaItemRepository', () => {
   test('create', async () => {
     await mediaItemRepository.create(mediaItem);
 
-    const result: MediaItemBaseWithSeasons = await mediaItemRepository.findOne({
+    const result = (await mediaItemRepository.findOne({
       id: 1,
-    });
+    }))! as MediaItemBaseWithSeasons;
     result.seasons = await mediaItemRepository.seasonsWithEpisodes(result);
 
     expect(result.posterId).toBeDefined();
     expect(result.backdropId).toBeDefined();
-    result.seasons.map((season) =>
+    result.seasons!.map((season) =>
       expect(season.posterId).toBeDefined()
     );
   });
@@ -40,9 +40,9 @@ describe('mediaItemRepository', () => {
 
     const returnedMediaItem = await mediaItemRepository.create(mediaItem);
 
-    const result: MediaItemBaseWithSeasons = await mediaItemRepository.findOne({
+    const result = (await mediaItemRepository.findOne({
       id: returnedMediaItem.id,
-    });
+    }))!;
 
     const season = await mediaItemRepository.seasonsWithEpisodes(
       returnedMediaItem
@@ -57,7 +57,7 @@ describe('mediaItemRepository', () => {
   test('update - remove images', async () => {
     const result = await mediaItemRepository.update({
       ...mediaItem,
-      seasons: mediaItem.seasons.map((season) => ({
+      seasons: mediaItem.seasons!.map((season) => ({
         ...season,
         externalPosterUrl: null,
       })),
@@ -68,7 +68,7 @@ describe('mediaItemRepository', () => {
     expect(result.posterId).toBeNull();
     expect(result.backdropId).toBeNull();
 
-    result.seasons.map((season) => expect(season.posterId).toBeNull());
+    result.seasons!.map((season) => expect(season.posterId).toBeNull());
   });
 
   test('update - add images', async () => {
@@ -77,7 +77,7 @@ describe('mediaItemRepository', () => {
     expect(result).toMatchObject(mediaItem);
     expect(result.posterId).toBeDefined();
     expect(result.backdropId).toBeDefined();
-    result.seasons.map((season) =>
+    result.seasons!.map((season) =>
       expect(season.posterId).toBeDefined()
     );
   });
@@ -85,15 +85,15 @@ describe('mediaItemRepository', () => {
   test('update', async () => {
     await mediaItemRepository.update(updatedMediaItem);
 
-    const result: MediaItemBaseWithSeasons = await mediaItemRepository.findOne({
+    const result = (await mediaItemRepository.findOne({
       id: 1,
-    });
+    }))! as MediaItemBaseWithSeasons;
     result.seasons = await mediaItemRepository.seasonsWithEpisodes(result);
 
     expect(result).toMatchObject(updatedMediaItem);
-    expect(result.seasons.at(0).posterId).toBeDefined();
-    expect(result.seasons.at(1).posterId).toBeDefined();
-    expect(result.seasons.at(3).posterId).toBeDefined();
+    expect(result.seasons!.at(0)!.posterId).toBeDefined();
+    expect(result.seasons!.at(1)!.posterId).toBeDefined();
+    expect(result.seasons!.at(3)!.posterId).toBeDefined();
   });
 
   test('seasonAndEpisodeNumber', async () => {
@@ -123,9 +123,9 @@ describe('mediaItemRepository', () => {
 
     await mediaItemRepository.create(mediaItem);
 
-    const result: MediaItemBaseWithSeasons = await mediaItemRepository.findOne({
+    const result = (await mediaItemRepository.findOne({
       id: 123,
-    });
+    }))! as MediaItemBaseWithSeasons;
 
     result.seasons = await mediaItemRepository.seasonsWithEpisodes(result);
 
@@ -171,11 +171,11 @@ describe('mediaItemRepository', () => {
       ],
     });
 
-    const result2: MediaItemBaseWithSeasons = await mediaItemRepository.findOne(
+    const result2 = (await mediaItemRepository.findOne(
       {
         id: 123,
       }
-    );
+    ))! as MediaItemBaseWithSeasons;
 
     result2.seasons = await mediaItemRepository.seasonsWithEpisodes(result2);
 
@@ -285,9 +285,9 @@ describe('mediaItemRepository', () => {
       'tv'
     );
 
-    const insertedMediaItem = await mediaItemRepository.findOne({
+    const insertedMediaItem = (await mediaItemRepository.findOne({
       imdbId: 'tt1234567',
-    });
+    }))!;
 
     expect(res[3].posterId).toBeDefined();
     expect(res[3].backdropId).toBeDefined();
@@ -318,36 +318,9 @@ const mediaItem: MediaItemBaseWithSeasons = {
   mediaType: 'tv',
   source: 'user',
   title: 'title2',
-  audibleId: null,
-  authors: null,
   externalBackdropUrl: 'backdrop',
-  developer: null,
-  genres: null,
-  igdbId: null,
-  imdbId: null,
-  language: null,
-  lockedAt: null,
-  narrators: null,
   needsDetails: false,
-  network: null,
-  numberOfSeasons: null,
-  openlibraryId: null,
-  originalTitle: null,
-  overview: null,
-  platform: null,
   externalPosterUrl: 'poster',
-  releaseDate: null,
-  runtime: null,
-  status: null,
-  tmdbId: null,
-  tmdbRating: null,
-  tvmazeId: null,
-  url: null,
-  goodreadsId: null,
-  numberOfPages: null,
-  traktId: null,
-  audibleCountryCode: null,
-  tvdbId: null,
   seasons: [
     {
       id: 1,
@@ -355,12 +328,7 @@ const mediaItem: MediaItemBaseWithSeasons = {
       numberOfEpisodes: 2,
       title: 'Season 1',
       isSpecialSeason: false,
-      description: null,
       externalPosterUrl: 'poster',
-      releaseDate: null,
-      tmdbId: null,
-      traktId: null,
-      tvdbId: null,
       tvShowId: 1,
       episodes: [
         {
@@ -373,12 +341,6 @@ const mediaItem: MediaItemBaseWithSeasons = {
           isSpecialEpisode: false,
           seasonAndEpisodeNumber: 1001,
           tvShowId: 1,
-          description: null,
-          imdbId: null,
-          tmdbId: null,
-          runtime: null,
-          traktId: null,
-          tvdbId: null,
         },
         {
           id: 2,
@@ -390,12 +352,6 @@ const mediaItem: MediaItemBaseWithSeasons = {
           isSpecialEpisode: false,
           seasonAndEpisodeNumber: 1002,
           tvShowId: 1,
-          description: null,
-          imdbId: null,
-          tmdbId: null,
-          runtime: null,
-          traktId: null,
-          tvdbId: null,
         },
       ],
     },
@@ -406,13 +362,6 @@ const mediaItem: MediaItemBaseWithSeasons = {
       title: 'Season 2',
       tvShowId: 1,
       isSpecialSeason: false,
-      description: null,
-      externalPosterUrl: null,
-      posterId: null,
-      releaseDate: null,
-      tmdbId: null,
-      traktId: null,
-      tvdbId: null,
       episodes: [
         {
           id: 3,
@@ -424,12 +373,6 @@ const mediaItem: MediaItemBaseWithSeasons = {
           isSpecialEpisode: false,
           seasonAndEpisodeNumber: 2001,
           tvShowId: 1,
-          description: null,
-          imdbId: null,
-          tmdbId: null,
-          runtime: null,
-          traktId: null,
-          tvdbId: null,
         },
       ],
     },
@@ -440,19 +383,12 @@ const mediaItem: MediaItemBaseWithSeasons = {
       title: 'Season 3',
       tvShowId: 1,
       isSpecialSeason: false,
-      description: null,
       episodes: undefined,
-      externalPosterUrl: null,
-      posterId: null,
-      releaseDate: null,
-      tmdbId: null,
-      traktId: null,
-      tvdbId: null,
     },
   ],
 };
 
-const updatedMediaItem = {
+const updatedMediaItem: MediaItemBaseWithSeasons = {
   ...mediaItem,
   overview: 'new overview',
   lastTimeUpdated: new Date().getTime(),
@@ -485,11 +421,11 @@ const updatedMediaItem = {
   tvdbId: 5442,
   url: 'url',
   seasons: [
-    mediaItem.seasons[0],
+    mediaItem.seasons![0],
     {
-      ...mediaItem.seasons[1],
+      ...mediaItem.seasons![1],
       episodes: [
-        ...mediaItem.seasons[1].episodes,
+        ...mediaItem.seasons![1].episodes!,
         {
           id: 5,
           episodeNumber: 2,
@@ -500,16 +436,12 @@ const updatedMediaItem = {
           isSpecialEpisode: false,
           seasonAndEpisodeNumber: 2002,
           tvShowId: 1,
-          description: null,
-          imdbId: null,
-          tmdbId: null,
-          runtime: null,
           traktId: 53243124,
           tvdbId: 65412,
         },
       ],
     },
-    mediaItem.seasons[2],
+    mediaItem.seasons![2],
     {
       id: 4,
       seasonNumber: 4,
@@ -517,7 +449,6 @@ const updatedMediaItem = {
       title: 'Season 4',
       tvShowId: 1,
       isSpecialSeason: false,
-      description: null,
       traktId: 3215415,
       tvdbId: 5232134,
       episodes: [
@@ -531,17 +462,11 @@ const updatedMediaItem = {
           isSpecialEpisode: false,
           seasonAndEpisodeNumber: 4001,
           tvShowId: 1,
-          description: null,
-          imdbId: null,
-          tmdbId: null,
-          runtime: null,
           traktId: 76412,
           tvdbId: 5324,
         },
       ],
       externalPosterUrl: 'poster',
-      releaseDate: null,
-      tmdbId: null,
     },
   ],
 };

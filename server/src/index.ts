@@ -37,7 +37,7 @@ GlobalConfiguration.subscribe('tmdbLang', async (value, previousValue) => {
   });
 
   await updateMediaItems({
-    mediaItems: mediaItems,
+    mediaItems,
     cancellationToken: updateMetadataCancellationToken,
     forceUpdate: true,
   });

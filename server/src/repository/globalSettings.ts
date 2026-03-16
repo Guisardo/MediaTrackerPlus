@@ -10,12 +10,14 @@ class ConfigurationRepository extends repository<Configuration>({
   primaryColumnName: 'id',
   booleanColumnNames: ['enableRegistration'],
 }) {
-  public async update(value: Partial<Configuration>) {
+  public override async update(value: Partial<Configuration>) {
     GlobalConfiguration.update(value);
 
     return await Database.knex.transaction(async (trx) => {
       const currentConfigEntry = await trx('configuration').first();
-      const currentConfig = JSON.parse(currentConfigEntry.configurationJson);
+      const currentConfig = currentConfigEntry?.configurationJson
+        ? JSON.parse(currentConfigEntry.configurationJson)
+        : {};
 
       const res = _.merge(currentConfig, value);
 
@@ -25,17 +27,17 @@ class ConfigurationRepository extends repository<Configuration>({
     });
   }
 
-  public async get(): Promise<Configuration> {
+  public async get(): Promise<Configuration | undefined> {
     const configEntry = await Database.knex('configuration').first();
 
     if (!configEntry || !configEntry.configurationJson) {
-      return;
+      return undefined;
     }
 
     return JSON.parse(configEntry.configurationJson);
   }
 
-  public async create(value: Partial<Configuration>) {
+  public override async create(value: Partial<Configuration>) {
     await Database.knex.transaction(async (trx) => {
       await trx('configuration').delete();
       await trx('configuration').insert({
@@ -101,6 +103,12 @@ export class GlobalConfiguration {
         : never
     ) => Promise<void> | void
   ) {
-    this.listeners.push({ key: key, handler: handler });
+    this.listeners.push({
+      key: key,
+      handler: handler as (
+        value: unknown,
+        previousValue: unknown
+      ) => Promise<void> | void,
+    });
   }
 }

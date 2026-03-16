@@ -2,9 +2,9 @@ export type Progress = {
   id?: number;
   date: number;
   mediaItemId: number;
-  episodeId?: number;
+  episodeId?: number | null;
   userId: number;
-  progress?: number;
+  progress?: number | null;
   duration?: number;
   action?: 'playing' | 'paused';
   device?: string;
