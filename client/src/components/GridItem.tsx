@@ -95,7 +95,7 @@ export const GridItem: FunctionComponent<{
       ? mediaItem.lastAiredEpisode ?? undefined
       : undefined;
   const runtimeMinutes = episode
-    ? episode.runtime ?? mediaItem.runtime ?? undefined
+    ? episode.runtime || mediaItem.runtime || undefined
     : season
     ? season.totalRuntime ?? undefined
     : mediaItem.totalRuntime ?? undefined;

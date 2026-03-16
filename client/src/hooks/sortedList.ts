@@ -21,12 +21,12 @@ export const useSortedList = (args: {
   sortOrder: ListSortOrder;
   sortBy: ListSortBy;
   listItems?: ListItemsResponse;
-}) => {
+}): ListItemsResponse | undefined => {
   const { sortBy, sortOrder, listItems } = args;
 
   return useMemo(() => {
     if (!listItems) {
-      return [];
+      return undefined;
     }
 
     const sortFunctionFactory = <T>(

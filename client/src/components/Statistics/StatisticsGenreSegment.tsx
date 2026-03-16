@@ -32,7 +32,7 @@ const StatisticsGenreSegment = (props: {
             const type = route.type;
             const items = data[type];
             return (
-              items.length > 0 && (
+              (items?.length ?? 0) > 0 && (
                 <Card
                   key={type}
                   className="rounded-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-sm"

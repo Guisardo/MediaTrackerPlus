@@ -1294,12 +1294,12 @@ describe('PaginatedGridItems – isStatisticsPage prop', () => {
     );
   });
 
-  it('passes isStatisticsPage=false (undefined) to useFilterBy when not set', () => {
+  it('passes isStatisticsPage=false to useFilterBy when not set', () => {
     renderPaginated({ args: { mediaType: 'movie' as any } });
 
     expect(useFilterBy).toHaveBeenCalledWith(
       'movie',
-      undefined,
+      false,
       expect.any(Function)
     );
   });

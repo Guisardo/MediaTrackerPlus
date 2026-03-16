@@ -5,7 +5,9 @@ import { mediaTrackerApi } from 'src/api/api';
 export const useGenreSeen = (
   currentYear: Statistics.StatisticsSeeninyearList.RequestQuery
 ) => {
-  const year = currentYear.year === null ? undefined : currentYear;
+  const year = (currentYear.year === null
+    ? null
+    : currentYear) as Statistics.StatisticsSeeninyearList.RequestQuery | null;
 
   const {
     error: error,
@@ -14,7 +16,9 @@ export const useGenreSeen = (
   } = useQuery({
     queryKey: ['genre', year],
     queryFn: async () =>
-      mediaTrackerApi.statistics.statisticsGenresinyearList(year),
+      mediaTrackerApi.statistics.statisticsGenresinyearList(
+        year as Statistics.StatisticsSeeninyearList.RequestQuery | undefined
+      ),
   });
 
   return {
@@ -27,7 +31,9 @@ export const useGenreSeen = (
 export const useSeen = (
   currentYear: Statistics.StatisticsSeeninyearList.RequestQuery
 ) => {
-  const year = currentYear.year === null ? undefined : currentYear;
+  const year = (currentYear.year === null
+    ? null
+    : currentYear) as Statistics.StatisticsSeeninyearList.RequestQuery | null;
 
   const {
     error: error,
@@ -36,7 +42,9 @@ export const useSeen = (
   } = useQuery({
     queryKey: ['statistics', year],
     queryFn: async () =>
-      mediaTrackerApi.statistics.statisticsSeeninyearList(year),
+      mediaTrackerApi.statistics.statisticsSeeninyearList(
+        year as Statistics.StatisticsSeeninyearList.RequestQuery | undefined
+      ),
   });
 
   return {
