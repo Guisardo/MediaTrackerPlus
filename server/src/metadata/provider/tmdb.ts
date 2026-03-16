@@ -114,14 +114,14 @@ abstract class TMDb extends MetadataProvider {
       title: '',
       externalBackdropUrl: response.backdrop_path
         ? getPosterUrl(response.backdrop_path)
-        : definedOrNull(response.backdrop_path),
+        : definedOrUndefined(response.backdrop_path),
       externalPosterUrl: response.poster_path
         ? getPosterUrl(response.poster_path)
-        : definedOrNull(response.poster_path),
+        : definedOrUndefined(response.poster_path),
       tmdbId: response.id,
       overview: definedOrUndefined(response.overview),
-      status: definedOrNull(response.status),
-      url: definedOrNull(response.homepage),
+      status: definedOrUndefined(response.status),
+      url: definedOrUndefined(response.homepage),
       genres: response.genres?.map((genre) => genre.name),
     };
   }

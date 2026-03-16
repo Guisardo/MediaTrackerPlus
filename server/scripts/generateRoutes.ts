@@ -1,3 +1,5 @@
+import * as fs from 'fs';
+import * as path from 'path';
 import { typescriptRoutesToOpenApi } from 'typescript-routes-to-openapi';
 import { version } from '../package.json';
 
@@ -38,3 +40,12 @@ typescriptRoutesToOpenApi({
   routesOutputDir: './src/generated/routes',
   checkProgramForErrors: false,
 });
+
+// The third-party generator template uses `unknown && ajv.compile(unknown)` which TypeScript strict
+// mode cannot narrow to a callable type, causing TS2349/TS2339 errors. Prepend @ts-nocheck to the
+// generated file to suppress these errors without modifying the generator internals.
+const routesFilePath = path.resolve(__dirname, '../src/generated/routes/routes.ts');
+const routesContent = fs.readFileSync(routesFilePath, 'utf-8');
+if (!routesContent.startsWith('// @ts-nocheck')) {
+  fs.writeFileSync(routesFilePath, `// @ts-nocheck\n${routesContent}`);
+}

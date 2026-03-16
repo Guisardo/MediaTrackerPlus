@@ -44,6 +44,6 @@ export class ConfigurationController {
       noUsers: numberOfUsers === 0,
       demo: Config.DEMO,
       version: Config.version,
-    });
+    } as Omit<Configuration, 'id'> & { noUsers: boolean; demo: boolean; version: string });
   });
 }
