@@ -68,7 +68,7 @@ jobs:
           context: .
           platforms: linux/amd64, linux/arm64
           push: true
-          tags: dnlwttnbrg/mediatracker-plus:${{ steps.version.outputs.version }},dnlwttnbrg/mediatracker-plus:unstable
+          tags: guisardo/mediatracker-plus:${{ steps.version.outputs.version }},guisardo/mediatracker-plus:unstable
       - if: ${{ github.event.action == 'released' }}
         name: Publish to Docker Hub
         uses: docker/build-push-action@v6
@@ -76,4 +76,4 @@ jobs:
           context: .
           platforms: linux/amd64, linux/arm64
           push: true
-          tags: dnlwttnbrg/mediatracker-plus:${{ steps.version.outputs.version }},dnlwttnbrg/mediatracker-plus:latest
+          tags: guisardo/mediatracker-plus:${{ steps.version.outputs.version }},guisardo/mediatracker-plus:latest

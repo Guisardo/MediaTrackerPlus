@@ -4,14 +4,14 @@
   "description": "Self hosted media tracker for movies, tv shows, video games, books and audiobooks",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dnlwttnbrg/MediaTrackerPlus.git"
+    "url": "https://github.com/Guisardo/MediaTrackerPlus.git"
   },
   "keywords": [
     "self hosted"
   ],
   "author": {
-    "name": "Daniel Wittenburg",
-    "url": "https://github.com/dnlwttnbrg"
+    "name": "Guisardo",
+    "url": "https://github.com/Guisardo"
   },
   "contributors": [
     {
@@ -21,9 +21,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/dnlwttnbrg/MediaTrackerPlus/issues"
+    "url": "https://github.com/Guisardo/MediaTrackerPlus/issues"
   },
-  "homepage": "https://github.com/dnlwttnbrg/MediaTrackerPlus/MediaTracker#readme",
+  "homepage": "https://github.com/Guisardo/MediaTrackerPlus#readme",
   "scripts": {
     "dev": "sh ./scripts/dev.sh",
     "test": "cross-env DATABASE_PATH=:memory: jest",
