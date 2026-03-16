@@ -1460,7 +1460,7 @@ export class QueryBuilderHelper {
     };
   }
   static firstUnwatchedEpisode<
-    TRecord extends {} = Record<string, unknown>,
+    TRecord extends object = Record<string, unknown>,
     TResult = Record<string, unknown>[]
   >(
     query: Knex.QueryBuilder<TRecord, TResult>,
