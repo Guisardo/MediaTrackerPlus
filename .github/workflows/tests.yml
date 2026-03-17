@@ -7,6 +7,7 @@ on:
       - dev
   pull_request:
     types: [opened, synchronize, reopened]
+  merge_group:
   workflow_dispatch:
 
 concurrency:
