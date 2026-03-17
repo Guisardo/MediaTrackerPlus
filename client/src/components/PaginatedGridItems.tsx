@@ -3,7 +3,6 @@ import React, {
   FunctionComponent,
   useCallback,
   useEffect,
-  useRef,
   useState,
 } from 'react';
 
@@ -35,6 +34,126 @@ import {
   PublisherSection,
   MediaTypeSection,
 } from 'src/components/Facets';
+
+type FacetData = NonNullable<ReturnType<typeof useFacetsData>['facetsData']>;
+type FacetsState = ReturnType<typeof useFacets>;
+
+const emptyFacets: FacetData = {
+  genres: [],
+  years: [],
+  languages: [],
+  creators: [],
+  publishers: [],
+  mediaTypes: [],
+};
+
+const removeSearchParam = (searchParams: URLSearchParams) =>
+  Object.fromEntries(
+    Array.from(searchParams.entries()).filter(([name]) => name !== 'search')
+  );
+
+const renderItemsSummary = (args: {
+  searchQuery?: string;
+  searchResultLength: number;
+  numberOfItemsTotal: number;
+  year?: string | number | null;
+  genre?: string | null;
+}) => {
+  const { searchQuery, searchResultLength, numberOfItemsTotal, year, genre } =
+    args;
+
+  if (searchQuery) {
+    return (
+      <Plural
+        value={searchResultLength}
+        one={
+          <Trans>
+            Found # item for query &quot;
+            <strong>{searchQuery}</strong>&quot;
+          </Trans>
+        }
+        other={
+          <Trans>
+            Found # items for query &quot;
+            <strong>{searchQuery}</strong>&quot;
+          </Trans>
+        }
+      />
+    );
+  }
+
+  return (
+    <Plural
+      value={numberOfItemsTotal}
+      one={`1 item ${year ? 'in ' + year : ''} ${genre ? 'with genre ' + genre : ''}`}
+      other={`# item ${year ? 'in ' + year : ''} ${genre ? 'with genre ' + genre : ''}`}
+    />
+  );
+};
+
+const buildFacetSections = (args: {
+  facetData: FacetData;
+  facets: FacetsState;
+  mediaType?: string;
+}) => {
+  const { facetData, facets, mediaType } = args;
+  const ratings =
+    facetData.genres.length > 0 || facetData.years.length > 0
+      ? [{ value: '1', count: 1 }]
+      : [];
+
+  return (
+    <>
+      <StatusSection
+        selectedStatus={facets.status}
+        setStatus={facets.setStatus}
+        mediaType={mediaType}
+      />
+      <GenreSection
+        genres={facetData.genres}
+        selectedGenres={facets.genres}
+        setGenres={facets.setGenres}
+      />
+      <YearSection
+        years={facetData.years}
+        yearMin={facets.yearMin}
+        yearMax={facets.yearMax}
+        setYearMin={facets.setYearMin}
+        setYearMax={facets.setYearMax}
+      />
+      <RatingSection
+        ratings={ratings}
+        ratingMin={facets.ratingMin}
+        ratingMax={facets.ratingMax}
+        setRatingMin={facets.setRatingMin}
+        setRatingMax={facets.setRatingMax}
+      />
+      <LanguageSection
+        languages={facetData.languages}
+        selectedLanguages={facets.languages}
+        setLanguages={facets.setLanguages}
+      />
+      <CreatorSection
+        creators={facetData.creators}
+        selectedCreators={facets.creators}
+        setCreators={facets.setCreators}
+        mediaType={mediaType}
+      />
+      <PublisherSection
+        publishers={facetData.publishers}
+        selectedPublishers={facets.publishers}
+        setPublishers={facets.setPublishers}
+        mediaType={mediaType}
+      />
+      <MediaTypeSection
+        mediaTypes={facetData.mediaTypes}
+        selectedMediaTypes={facets.mediaTypes}
+        setMediaTypes={facets.setMediaTypes}
+        mediaType={mediaType}
+      />
+    </>
+  );
+};
 
 const Search: FunctionComponent<{
   onSearch: (value: string) => void;
@@ -107,7 +226,13 @@ export const PaginatedGridItems: FunctionComponent<{
    */
   showFacets?: boolean;
 }> = (props) => {
-  const { args, showSortOrderControls, showSearch, gridItemAppearance, showFacets } = props;
+  const {
+    args,
+    showSortOrderControls,
+    showSearch,
+    gridItemAppearance,
+    showFacets,
+  } = props;
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState<string>();
@@ -155,8 +280,6 @@ export const PaginatedGridItems: FunctionComponent<{
   // When showFacets=false, the facets state is not used.
   const facets = useFacets(handleArgumentChange);
 
-  const mainContainerRef = useRef<HTMLDivElement>(null);
-
   // Build the items query args: merge static page args, filter (when not using
   // facets), and facet params (when showFacets=true).
   const itemsQueryArgs: Items.Paginated.RequestQuery = {
@@ -194,16 +317,15 @@ export const PaginatedGridItems: FunctionComponent<{
   } = useSearch();
 
   useEffect(() => {
-    if (searchQuery?.trim().length === 0) {
+    const trimmedSearchQuery = searchQuery?.trim();
+
+    if (trimmedSearchQuery === '') {
       setSearchQuery(undefined);
-      setSearchParams(
-        Object.fromEntries(
-          Array.from(searchParams.entries()).filter(
-            ([name]) => name !== 'search'
-          )
-        )
-      );
-    } else if (searchQuery) {
+      setSearchParams(removeSearchParam(searchParams));
+      return;
+    }
+
+    if (searchQuery) {
       setSearchParams({
         search: searchQuery,
       });
@@ -213,7 +335,6 @@ export const PaginatedGridItems: FunctionComponent<{
 
       search({ mediaType: mediaTypeArg, query: searchQuery });
       _setPage(1);
-    } else {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaTypeArg, searchQuery]);
@@ -229,73 +350,20 @@ export const PaginatedGridItems: FunctionComponent<{
       ? facets.activeFacetCount === 0
       : Object.keys(filter).length === 0);
 
-  // Empty facets response used as fallback before the API responds.
-  const emptyFacets = {
-    genres: [],
-    years: [],
-    languages: [],
-    creators: [],
-    publishers: [],
-    mediaTypes: [],
-  };
   const facetData = facetsData ?? emptyFacets;
 
   // The facet sections rendered inside both the sidebar and the mobile drawer.
-  const facetSections = showFacets ? (
-    <>
-      <StatusSection
-        selectedStatus={facets.status}
-        setStatus={facets.setStatus}
-        mediaType={filterMediaType}
-      />
-      <GenreSection
-        genres={facetData.genres}
-        selectedGenres={facets.genres}
-        setGenres={facets.setGenres}
-      />
-      <YearSection
-        years={facetData.years}
-        yearMin={facets.yearMin}
-        yearMax={facets.yearMax}
-        setYearMin={facets.setYearMin}
-        setYearMax={facets.setYearMax}
-      />
-      <RatingSection
-        ratings={facetData.genres.length > 0 || facetData.years.length > 0 ? [{ value: '1', count: 1 }] : []}
-        ratingMin={facets.ratingMin}
-        ratingMax={facets.ratingMax}
-        setRatingMin={facets.setRatingMin}
-        setRatingMax={facets.setRatingMax}
-      />
-      <LanguageSection
-        languages={facetData.languages}
-        selectedLanguages={facets.languages}
-        setLanguages={facets.setLanguages}
-      />
-      <CreatorSection
-        creators={facetData.creators}
-        selectedCreators={facets.creators}
-        setCreators={facets.setCreators}
-        mediaType={filterMediaType}
-      />
-      <PublisherSection
-        publishers={facetData.publishers}
-        selectedPublishers={facets.publishers}
-        setPublishers={facets.setPublishers}
-        mediaType={filterMediaType}
-      />
-      <MediaTypeSection
-        mediaTypes={facetData.mediaTypes}
-        selectedMediaTypes={facets.mediaTypes}
-        setMediaTypes={facets.setMediaTypes}
-        mediaType={filterMediaType}
-      />
-    </>
-  ) : null;
+  const facetSections = showFacets
+    ? buildFacetSections({
+        facetData,
+        facets,
+        mediaType: filterMediaType,
+      })
+    : null;
 
   return (
     <>
-      <div className="flex justify-center w-full" ref={mainContainerRef}>
+      <div className="flex justify-center w-full">
         {/* Desktop facet sidebar — hidden on < 1024px */}
         {showFacets && (
           <FacetPanel facets={facets}>{facetSections}</FacetPanel>
@@ -321,33 +389,13 @@ export const PaginatedGridItems: FunctionComponent<{
                 {!isLoading && (
                   <div className="flex">
                     <div>
-                      {searchQuery ? (
-                        <Plural
-                          value={searchResult?.length ?? 0}
-                          one={
-                            <Trans>
-                              Found # item for query &quot;
-                              <strong>{searchQuery}</strong>&quot;
-                            </Trans>
-                          }
-                          other={
-                            <Trans>
-                              Found # items for query &quot;
-                              <strong>{searchQuery}</strong>&quot;
-                            </Trans>
-                          }
-                        />
-                      ) : (
-                        <Plural
-                          value={numberOfItemsTotal ?? 0}
-                          one={`1 item ${args.year ? 'in ' + args.year : ''} ${
-                            args.genre ? 'with genre ' + args.genre : ''
-                          }`}
-                          other={`# item ${
-                            args.year ? 'in ' + args.year : ''
-                          } ${args.genre ? 'with genre ' + args.genre : ''}`}
-                        />
-                      )}
+                      {renderItemsSummary({
+                        searchQuery,
+                        searchResultLength: searchResult?.length ?? 0,
+                        numberOfItemsTotal: numberOfItemsTotal ?? 0,
+                        year: args.year,
+                        genre: args.genre,
+                      })}
                     </div>
 
                     {/* Mobile Filters button — shown when showFacets=true, regardless of sort controls */}

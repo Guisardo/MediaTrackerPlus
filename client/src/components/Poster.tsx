@@ -2,7 +2,6 @@ import clsx from 'clsx';
 import React, {
   FunctionComponent,
   useEffect,
-  useRef,
   useState,
 } from 'react';
 
@@ -19,22 +18,21 @@ const PosterCss: FunctionComponent<{
 
   const [imageLoaded, setImageLoaded] = useState(false);
 
-  const imgRef = useRef<HTMLImageElement>(null);
-
   useEffect(() => {
-    if (!src) {
-      setTimeout(() => setImageLoaded(true), 50);
+    if (src) {
+      return;
     }
+
+    const timeoutId = window.setTimeout(() => setImageLoaded(true), 50);
+    return () => window.clearTimeout(timeoutId);
   }, [src]);
 
   const content = (
     <>
       {src && (
         <img
-          ref={imgRef}
           src={src}
           draggable="false"
-          onChange={() => console.log('image changed')}
           onLoad={() => setImageLoaded(true)}
           onError={() => setImageLoaded(false)}
           className={clsx(
@@ -57,35 +55,31 @@ const PosterCss: FunctionComponent<{
   );
 
   return (
-    <>
+    <div
+      className={clsx(
+        'flex items-end w-full',
+        tailwindcssAspectRatioForMediaType(mediaType)
+      )}
+    >
       <div
         className={clsx(
-          'flex items-end w-full',
-          tailwindcssAspectRatioForMediaType(mediaType)
+          'relative w-full h-full transition-shadow duration-100 rounded shadow-md overflow-clip shadow-black ',
+          href && 'hover:shadow-black hover:shadow-lg',
+          tailwindcssAspectRatioForMediaType(itemMediaType)
         )}
       >
-        <div
-          className={clsx(
-            'relative w-full h-full transition-shadow duration-100 rounded shadow-md overflow-clip shadow-black ',
-            href && 'hover:shadow-black hover:shadow-lg',
-            tailwindcssAspectRatioForMediaType(itemMediaType)
-          )}
-        >
-          {href ? (
-            <>
-              <a href={href} className="block w-full h-full hover:no-underline">
-                {content}
-              </a>
-            </>
-          ) : (
-            <>{content}</>
-          )}
-          <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-            {children}
-          </div>
+        {href ? (
+          <a href={href} className="block w-full h-full hover:no-underline">
+            {content}
+          </a>
+        ) : (
+          content
+        )}
+        <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+          {children}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
@@ -99,18 +93,6 @@ const tailwindcssAspectRatioForMediaType = (mediaType?: MediaType) => {
   }
 
   return 'aspect-[2/3]';
-};
-
-const aspectRatioForMediaType = (mediaType?: MediaType) => {
-  if (mediaType === 'audiobook') {
-    return 1 / 1;
-  }
-
-  if (mediaType === 'video_game') {
-    return 3 / 4;
-  }
-
-  return 2 / 3;
 };
 
 export { PosterCss as Poster };

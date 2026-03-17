@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { ExternalIds, MediaType } from 'src/entity/mediaItem';
+import { ExternalIds, MediaItemForProvider, MediaType } from 'src/entity/mediaItem';
 import { logger } from 'src/logger';
 import { Audible } from 'src/metadata/provider/audible';
 import { OpenLibrary } from 'src/metadata/provider/openlibrary';
@@ -172,90 +172,89 @@ const searchMediaItem = async (args: {
 }) => {
   const { id, mediaType } = args;
 
+  type SearchPlanEntry = {
+    debugMessage?: string;
+    errorMessage: string;
+    lookup: () => Promise<MediaItemForProvider | undefined>;
+  };
+
+  const runSearchPlan = async (
+    searchPlan: SearchPlanEntry[]
+  ): Promise<MediaItemForProvider | undefined> => {
+    for (const entry of searchPlan) {
+      if (entry.debugMessage) {
+        logger.debug(entry.debugMessage);
+      }
+
+      try {
+        const res = await entry.lookup();
+
+        if (res) {
+          return res;
+        }
+      } catch (error) {
+        void error;
+      }
+
+      logger.error(entry.errorMessage);
+    }
+  };
+
   if (mediaType === 'tv') {
-    if (id.tmdbId) {
-      logger.debug(`searching tv show by tmdbId: ${id.tmdbId}`);
-      try {
-        const res = await new TMDbTv().findByTmdbId(id.tmdbId);
-        if (res) {
-          return res;
-        }
-        // eslint-disable-next-line no-empty
-      } catch (error) {}
-      logger.error(`unable to find tv show with tmdbId: ${id.tmdbId}`);
-    }
-    if (id.imdbId) {
-      logger.debug(`searching tv show by imdbId: ${id.imdbId}`);
-      try {
-        const res = await new TMDbTv().findByImdbId(id.imdbId);
-        if (res) {
-          return res;
-        }
-        // eslint-disable-next-line no-empty
-      } catch (error) {}
-      logger.error(`unable to find tv show with imdbId: ${id.imdbId}`);
-    }
-    if (id.tvdbId) {
-      logger.debug(`searching tv show by tvdbId: ${id.tvdbId}`);
-      try {
-        const res = await new TMDbTv().findByTvdbId(id.tvdbId);
-        if (res) {
-          return res;
-        }
-        // eslint-disable-next-line no-empty
-      } catch (error) {}
-      logger.error(`unable to find tv show with tvdbId: ${id.tvdbId}`);
-    }
-    return;
+    return runSearchPlan(
+      [
+        id.tmdbId && {
+          debugMessage: `searching tv show by tmdbId: ${id.tmdbId}`,
+          errorMessage: `unable to find tv show with tmdbId: ${id.tmdbId}`,
+          lookup: () => new TMDbTv().findByTmdbId(id.tmdbId as number),
+        },
+        id.imdbId && {
+          debugMessage: `searching tv show by imdbId: ${id.imdbId}`,
+          errorMessage: `unable to find tv show with imdbId: ${id.imdbId}`,
+          lookup: () => new TMDbTv().findByImdbId(id.imdbId as string),
+        },
+        id.tvdbId && {
+          debugMessage: `searching tv show by tvdbId: ${id.tvdbId}`,
+          errorMessage: `unable to find tv show with tvdbId: ${id.tvdbId}`,
+          lookup: () => new TMDbTv().findByTvdbId(id.tvdbId as number),
+        },
+      ].filter(Boolean) as SearchPlanEntry[]
+    );
   } else if (mediaType === 'movie') {
-    if (id.tmdbId) {
-      logger.debug(`searching movie by tmdbId: ${id.tmdbId}`);
-      try {
-        const res = await new TMDbMovie().findByTmdbId(id.tmdbId);
-        if (res) {
-          return res;
-        }
-        // eslint-disable-next-line no-empty
-      } catch (error) {}
-      logger.error(`unable to find movie with tmdbId: ${id.tmdbId}`);
-    }
-    if (id.imdbId) {
-      logger.debug(`searching movie by imdbId: ${id.imdbId}`);
-      try {
-        const res = await new TMDbMovie().findByImdbId(id.imdbId);
-        if (res) {
-          return res;
-        }
-        // eslint-disable-next-line no-empty
-      } catch (error) {}
-      logger.error(`unable to find movie with imdbId: ${id.imdbId}`);
-    }
-    return;
+    return runSearchPlan(
+      [
+        id.tmdbId && {
+          debugMessage: `searching movie by tmdbId: ${id.tmdbId}`,
+          errorMessage: `unable to find movie with tmdbId: ${id.tmdbId}`,
+          lookup: () => new TMDbMovie().findByTmdbId(id.tmdbId as number),
+        },
+        id.imdbId && {
+          debugMessage: `searching movie by imdbId: ${id.imdbId}`,
+          errorMessage: `unable to find movie with imdbId: ${id.imdbId}`,
+          lookup: () => new TMDbMovie().findByImdbId(id.imdbId as string),
+        },
+      ].filter(Boolean) as SearchPlanEntry[]
+    );
   } else if (mediaType === 'audiobook') {
     if (id.audibleId) {
-      try {
-        const res = await new Audible().findByAudibleId(id.audibleId);
-        if (res) {
-          return res;
-        }
-        // eslint-disable-next-line no-empty
-      } catch (error) {}
-      logger.error(`unable to find audiobook with audibleId: ${id.audibleId}`);
+      return runSearchPlan([
+        {
+          errorMessage: `unable to find audiobook with audibleId: ${id.audibleId}`,
+          lookup: () => new Audible().findByAudibleId(id.audibleId as string),
+        },
+      ]);
     }
   } else if (mediaType === 'book') {
     if (id.openlibraryId) {
-      try {
-        const res = await new OpenLibrary().details({
-          openlibraryId: id.openlibraryId,
-        });
-        if (res) {
-          return res;
-        }
-        // eslint-disable-next-line no-empty
-      } catch (error) {}
-      logger.error(
-        `unable to find book with openlibraryId: ${id.openlibraryId}`
-      );
+      return runSearchPlan([
+        {
+          errorMessage: `unable to find book with openlibraryId: ${id.openlibraryId}`,
+          lookup: () =>
+            new OpenLibrary().details({
+              openlibraryId: id.openlibraryId as string,
+            }),
+        },
+      ]);
     }
   }
 

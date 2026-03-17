@@ -20,6 +20,25 @@ export type GetItemsRequest = Omit<
 
 export type GetFacetsRequest = Omit<FacetQueryArgs, 'userId'>;
 
+type MembershipValidationResult =
+  | { valid: true; resolvedGroupId: number | undefined }
+  | { valid: false };
+
+type ValidItemsRequestContext = {
+  valid: true;
+  userId: number;
+  orderBy: GetItemsArgs['orderBy'];
+  sortOrder: GetItemsArgs['sortOrder'];
+  resolvedGroupId: number | undefined;
+  language: string | null;
+};
+
+type ValidFacetsRequestContext = {
+  valid: true;
+  userId: number;
+  resolvedGroupId: number | undefined;
+};
+
 /**
  * Resolves the language to use for metadata overlay, implementing three-tier fallback:
  * 1. Exact locale match from Accept-Language header against METADATA_LANGUAGES
@@ -55,7 +74,7 @@ function resolveMetadataLanguage(
 async function validateGroupMembership(
   groupId: number | undefined,
   userId: number
-): Promise<{ valid: true; resolvedGroupId: number | undefined } | { valid: false }> {
+): Promise<MembershipValidationResult> {
   if (groupId === undefined) {
     return { valid: true, resolvedGroupId: undefined };
   }
@@ -90,6 +109,147 @@ async function validateGroupMembership(
   return { valid: true, resolvedGroupId: groupId };
 }
 
+function parseGroupId(rawGroupId: unknown): number | undefined {
+  if (rawGroupId === undefined) {
+    return undefined;
+  }
+
+  const parsedGroupId = Number(rawGroupId);
+
+  return Number.isNaN(parsedGroupId) ? undefined : parsedGroupId;
+}
+
+async function buildItemsRequestContext(args: {
+  user: unknown;
+  query: Pick<GetItemsRequest, 'groupId' | 'orderBy' | 'sortOrder'>;
+  acceptLanguageHeader: string | undefined;
+}): Promise<ValidItemsRequestContext | { valid: false }> {
+  const { user, query, acceptLanguageHeader } = args;
+  const userId = Number(user);
+  const membershipResult = await validateGroupMembership(
+    parseGroupId(query.groupId),
+    userId
+  );
+
+  if (!membershipResult.valid) {
+    return { valid: false };
+  }
+
+  return {
+    valid: true,
+    userId,
+    orderBy: query.orderBy || 'title',
+    sortOrder: query.sortOrder || 'asc',
+    resolvedGroupId: membershipResult.resolvedGroupId,
+    language: resolveMetadataLanguage(acceptLanguageHeader),
+  };
+}
+
+async function buildFacetsRequestContext(args: {
+  user: unknown;
+  query: Pick<GetFacetsRequest, 'groupId'>;
+}): Promise<ValidFacetsRequestContext | { valid: false }> {
+  const userId = Number(args.user);
+  const membershipResult = await validateGroupMembership(
+    parseGroupId(args.query.groupId),
+    userId
+  );
+
+  if (!membershipResult.valid) {
+    return { valid: false };
+  }
+
+  return {
+    valid: true,
+    userId,
+    resolvedGroupId: membershipResult.resolvedGroupId,
+  };
+}
+
+function buildBaseItemsArgs(
+  query: GetItemsRequest,
+  context: ValidItemsRequestContext
+) {
+  return {
+    userId: context.userId,
+    mediaType: query.mediaType,
+    orderBy: context.orderBy,
+    sortOrder: context.sortOrder,
+    filter: query.filter,
+    onlySeenItems: query.onlySeenItems,
+    onlyOnWatchlist: query.onlyOnWatchlist,
+    onlyWithNextEpisodesToWatch: query.onlyWithNextEpisodesToWatch,
+    onlyWithNextAiring: query.onlyWithNextAiring,
+    onlyWithUserRating: query.onlyWithUserRating,
+    onlyWithoutUserRating: query.onlyWithoutUserRating,
+    onlyWithProgress: query.onlyWithProgress,
+    groupId: context.resolvedGroupId,
+    language: context.language,
+  };
+}
+
+function buildPaginatedItemsArgs(
+  query: GetItemsRequest & Pick<GetItemsArgs, 'page'>,
+  context: ValidItemsRequestContext
+): GetItemsArgs & Pick<GetItemsArgs, 'page'> {
+  return {
+    ...buildBaseItemsArgs(query, context),
+    page: query.page,
+    year: query.year,
+    genre: query.genre,
+    genres: query.genres,
+    languages: query.languages,
+    creators: query.creators,
+    publishers: query.publishers,
+    mediaTypes: query.mediaTypes,
+    yearMin: query.yearMin,
+    yearMax: query.yearMax,
+    ratingMin: query.ratingMin,
+    ratingMax: query.ratingMax,
+    status: query.status,
+  };
+}
+
+function buildRandomItemsArgs(
+  query: GetItemsRequest,
+  context: ValidItemsRequestContext
+) {
+  return {
+    ...buildBaseItemsArgs(query, context),
+    selectRandom: query.selectRandom,
+  };
+}
+
+function buildFacetArgs(
+  query: GetFacetsRequest,
+  context: ValidFacetsRequestContext
+): FacetQueryArgs {
+  return {
+    userId: context.userId,
+    mediaType: query.mediaType,
+    filter: query.filter,
+    genres: query.genres,
+    languages: query.languages,
+    creators: query.creators,
+    publishers: query.publishers,
+    mediaTypes: query.mediaTypes,
+    yearMin: query.yearMin,
+    yearMax: query.yearMax,
+    ratingMin: query.ratingMin,
+    ratingMax: query.ratingMax,
+    status: query.status,
+    onlyOnWatchlist: query.onlyOnWatchlist,
+    onlySeenItems: query.onlySeenItems,
+    onlyWithNextAiring: query.onlyWithNextAiring,
+    onlyWithNextEpisodesToWatch: query.onlyWithNextEpisodesToWatch,
+    onlyWithUserRating: query.onlyWithUserRating,
+    onlyWithoutUserRating: query.onlyWithoutUserRating,
+    onlyWithProgress: query.onlyWithProgress,
+    orderBy: query.orderBy,
+    groupId: context.resolvedGroupId,
+  };
+}
+
 export class ItemsController {
   /**
    * @description Get items
@@ -102,91 +262,28 @@ export class ItemsController {
     requestQuery: GetItemsRequest;
     responseBody: Pagination<MediaItemItemsResponse>;
   }>(async (req, res) => {
-    const userId = Number(req.user);
-
-    const {
-      filter,
-      mediaType,
-      onlyWithNextAiring,
-      onlyWithNextEpisodesToWatch,
-      page,
-      year,
-      genre,
-      onlySeenItems,
-      onlyOnWatchlist,
-      onlyWithUserRating,
-      onlyWithoutUserRating,
-      onlyWithProgress,
-      selectRandom,
-      genres,
-      languages,
-      creators,
-      publishers,
-      mediaTypes,
-      yearMin,
-      yearMax,
-      ratingMin,
-      ratingMax,
-      status,
-    } = req.query;
-
-    const orderBy = req.query.orderBy || 'title';
-    const sortOrder = req.query.sortOrder || 'asc';
-
-    const rawGroupId = req.query.groupId;
-    const parsedGroupId =
-      rawGroupId !== undefined && !isNaN(Number(rawGroupId))
-        ? Number(rawGroupId)
-        : undefined;
-
-    if (typeof page !== 'number' || page <= 0) {
+    if (typeof req.query.page !== 'number' || req.query.page <= 0) {
       res.sendStatus(400);
       return;
     }
 
-    const membershipResult = await validateGroupMembership(parsedGroupId, userId);
-    if (!membershipResult.valid) {
+    const context = await buildItemsRequestContext({
+      user: req.user,
+      query: req.query,
+      acceptLanguageHeader: req.headers['accept-language'],
+    });
+
+    if (!context.valid) {
       res.sendStatus(403);
       return;
     }
 
-    const language = resolveMetadataLanguage(req.headers['accept-language']);
-
-    const result = await mediaItemRepository.items({
-      userId,
-      orderBy,
-      sortOrder,
-      page,
-      ...(mediaType !== undefined ? { mediaType } : {}),
-      ...(filter !== undefined ? { filter } : {}),
-      ...(year !== undefined ? { year } : {}),
-      ...(genre !== undefined ? { genre } : {}),
-      ...(onlySeenItems !== undefined ? { onlySeenItems } : {}),
-      ...(onlyOnWatchlist !== undefined ? { onlyOnWatchlist } : {}),
-      ...(onlyWithNextEpisodesToWatch !== undefined
-        ? { onlyWithNextEpisodesToWatch }
-        : {}),
-      ...(onlyWithNextAiring !== undefined ? { onlyWithNextAiring } : {}),
-      ...(onlyWithUserRating !== undefined ? { onlyWithUserRating } : {}),
-      ...(onlyWithoutUserRating !== undefined
-        ? { onlyWithoutUserRating }
-        : {}),
-      ...(onlyWithProgress !== undefined ? { onlyWithProgress } : {}),
-      ...(genres !== undefined ? { genres } : {}),
-      ...(languages !== undefined ? { languages } : {}),
-      ...(creators !== undefined ? { creators } : {}),
-      ...(publishers !== undefined ? { publishers } : {}),
-      ...(mediaTypes !== undefined ? { mediaTypes } : {}),
-      ...(yearMin !== undefined ? { yearMin } : {}),
-      ...(yearMax !== undefined ? { yearMax } : {}),
-      ...(ratingMin !== undefined ? { ratingMin } : {}),
-      ...(ratingMax !== undefined ? { ratingMax } : {}),
-      ...(status !== undefined ? { status } : {}),
-      ...(membershipResult.resolvedGroupId !== undefined
-        ? { groupId: membershipResult.resolvedGroupId }
-        : {}),
-      ...(language !== null ? { language } : {}),
-    });
+    const result = (await mediaItemRepository.items(
+      buildPaginatedItemsArgs(
+        req.query as GetItemsRequest & Pick<GetItemsArgs, 'page'>,
+        context
+      )
+    )) as unknown as Pagination<MediaItemItemsResponse>;
 
     res.json(result);
   });
@@ -202,73 +299,19 @@ export class ItemsController {
     requestQuery: GetFacetsRequest;
     responseBody: FacetsResponse;
   }>(async (req, res) => {
-    const userId = Number(req.user);
+    const context = await buildFacetsRequestContext({
+      user: req.user,
+      query: req.query,
+    });
 
-    const {
-      mediaType,
-      filter,
-      genres,
-      languages,
-      creators,
-      publishers,
-      mediaTypes,
-      yearMin,
-      yearMax,
-      ratingMin,
-      ratingMax,
-      status,
-      onlyOnWatchlist,
-      onlySeenItems,
-      onlyWithNextAiring,
-      onlyWithNextEpisodesToWatch,
-      onlyWithUserRating,
-      onlyWithoutUserRating,
-      onlyWithProgress,
-      orderBy,
-    } = req.query;
-
-    const rawGroupId = req.query.groupId;
-    const parsedGroupId =
-      rawGroupId !== undefined && !isNaN(Number(rawGroupId))
-        ? Number(rawGroupId)
-        : undefined;
-
-    const membershipResult = await validateGroupMembership(parsedGroupId, userId);
-    if (!membershipResult.valid) {
+    if (!context.valid) {
       res.sendStatus(403);
       return;
     }
 
-    const result = await mediaItemRepository.facets({
-      userId,
-      ...(mediaType !== undefined ? { mediaType } : {}),
-      ...(filter !== undefined ? { filter } : {}),
-      ...(genres !== undefined ? { genres } : {}),
-      ...(languages !== undefined ? { languages } : {}),
-      ...(creators !== undefined ? { creators } : {}),
-      ...(publishers !== undefined ? { publishers } : {}),
-      ...(mediaTypes !== undefined ? { mediaTypes } : {}),
-      ...(yearMin !== undefined ? { yearMin } : {}),
-      ...(yearMax !== undefined ? { yearMax } : {}),
-      ...(ratingMin !== undefined ? { ratingMin } : {}),
-      ...(ratingMax !== undefined ? { ratingMax } : {}),
-      ...(status !== undefined ? { status } : {}),
-      ...(onlyOnWatchlist !== undefined ? { onlyOnWatchlist } : {}),
-      ...(onlySeenItems !== undefined ? { onlySeenItems } : {}),
-      ...(onlyWithNextAiring !== undefined ? { onlyWithNextAiring } : {}),
-      ...(onlyWithNextEpisodesToWatch !== undefined
-        ? { onlyWithNextEpisodesToWatch }
-        : {}),
-      ...(onlyWithUserRating !== undefined ? { onlyWithUserRating } : {}),
-      ...(onlyWithoutUserRating !== undefined
-        ? { onlyWithoutUserRating }
-        : {}),
-      ...(onlyWithProgress !== undefined ? { onlyWithProgress } : {}),
-      ...(orderBy !== undefined ? { orderBy } : {}),
-      ...(membershipResult.resolvedGroupId !== undefined
-        ? { groupId: membershipResult.resolvedGroupId }
-        : {}),
-    });
+    const result = await mediaItemRepository.facets(
+      buildFacetArgs(req.query, context)
+    );
 
     res.json(result);
   });
@@ -284,54 +327,20 @@ export class ItemsController {
     requestQuery: Omit<GetItemsRequest, 'page'>;
     responseBody: MediaItemItemsResponse[];
   }>(async (req, res) => {
-    const userId = Number(req.user);
+    const context = await buildItemsRequestContext({
+      user: req.user,
+      query: req.query,
+      acceptLanguageHeader: req.headers['accept-language'],
+    });
 
-    const {
-      filter,
-      mediaType,
-      onlyWithNextAiring,
-      onlyWithNextEpisodesToWatch,
-      onlySeenItems,
-      onlyOnWatchlist,
-      onlyWithUserRating,
-      onlyWithoutUserRating,
-      onlyWithProgress,
-      selectRandom,
-    } = req.query;
-
-    const orderBy = req.query.orderBy || 'title';
-    const sortOrder = req.query.sortOrder || 'asc';
-
-    const rawGroupId = req.query.groupId;
-    const parsedGroupId =
-      rawGroupId !== undefined && !isNaN(Number(rawGroupId))
-        ? Number(rawGroupId)
-        : undefined;
-
-    const membershipResult = await validateGroupMembership(parsedGroupId, userId);
-    if (!membershipResult.valid) {
+    if (!context.valid) {
       res.sendStatus(403);
       return;
     }
 
-    const language = resolveMetadataLanguage(req.headers['accept-language']);
-
-    const result = await mediaItemRepository.items({
-      userId: userId,
-      mediaType: mediaType,
-      orderBy: orderBy,
-      sortOrder: sortOrder,
-      filter: filter,
-      onlySeenItems: onlySeenItems,
-      onlyOnWatchlist: onlyOnWatchlist,
-      onlyWithNextEpisodesToWatch: onlyWithNextEpisodesToWatch,
-      onlyWithNextAiring: onlyWithNextAiring,
-      onlyWithUserRating: onlyWithUserRating,
-      onlyWithoutUserRating: onlyWithoutUserRating,
-      onlyWithProgress: onlyWithProgress,
-      groupId: membershipResult.resolvedGroupId,
-      language: language,
-    });
+    const result = await mediaItemRepository.items(
+      buildBaseItemsArgs(req.query, context)
+    );
 
     res.json(result);
   });
@@ -347,55 +356,20 @@ export class ItemsController {
     requestQuery: Omit<GetItemsRequest, 'page'>;
     responseBody: MediaItemItemsResponse[];
   }>(async (req, res) => {
-    const userId = Number(req.user);
+    const context = await buildItemsRequestContext({
+      user: req.user,
+      query: req.query,
+      acceptLanguageHeader: req.headers['accept-language'],
+    });
 
-    const {
-      filter,
-      mediaType,
-      onlyWithNextAiring,
-      onlyWithNextEpisodesToWatch,
-      onlySeenItems,
-      onlyOnWatchlist,
-      onlyWithUserRating,
-      onlyWithoutUserRating,
-      onlyWithProgress,
-      selectRandom,
-    } = req.query;
-
-    const orderBy = req.query.orderBy || 'title';
-    const sortOrder = req.query.sortOrder || 'asc';
-
-    const rawGroupId = req.query.groupId;
-    const parsedGroupId =
-      rawGroupId !== undefined && !isNaN(Number(rawGroupId))
-        ? Number(rawGroupId)
-        : undefined;
-
-    const membershipResult = await validateGroupMembership(parsedGroupId, userId);
-    if (!membershipResult.valid) {
+    if (!context.valid) {
       res.sendStatus(403);
       return;
     }
 
-    const language = resolveMetadataLanguage(req.headers['accept-language']);
-
-    const result = await mediaItemRepository.items({
-      userId: userId,
-      mediaType: mediaType,
-      orderBy: orderBy,
-      sortOrder: sortOrder,
-      filter: filter,
-      onlySeenItems: onlySeenItems,
-      onlyOnWatchlist: onlyOnWatchlist,
-      onlyWithNextEpisodesToWatch: onlyWithNextEpisodesToWatch,
-      onlyWithNextAiring: onlyWithNextAiring,
-      onlyWithUserRating: onlyWithUserRating,
-      onlyWithoutUserRating: onlyWithoutUserRating,
-      onlyWithProgress: onlyWithProgress,
-      selectRandom: selectRandom,
-      groupId: membershipResult.resolvedGroupId,
-      language: language,
-    });
+    const result = await mediaItemRepository.items(
+      buildRandomItemsArgs(req.query, context)
+    );
 
     res.json(result);
   });

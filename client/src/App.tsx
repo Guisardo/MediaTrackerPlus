@@ -46,16 +46,10 @@ export const throwOnErrorEnvelope = (data: unknown) => {
 export const queryClient = new QueryClient({
   defaultOptions: {
     mutations: {
-      mutationFn: async (a) => {
-        console.log(a);
-        return null;
-      },
+      mutationFn: async () => null,
     },
     queries: {
-      queryFn: async (x) => {
-        console.log(x);
-        return null;
-      },
+      queryFn: async () => null,
       placeholderData: keepPreviousData,
       select: throwOnErrorEnvelope,
     },
@@ -63,14 +57,15 @@ export const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error) => {
       if (error instanceof FetchError) {
-        console.log(error.status);
         globalSetErrorMessage(error.message);
       }
     },
   }),
 });
 
-let globalSetErrorMessage: (message: string) => void;
+const noopSetErrorMessage = () => undefined;
+
+let globalSetErrorMessage: (message: string) => void = noopSetErrorMessage;
 
 export const App: FunctionComponent = () => {
   const [errorMessage, setErrorMessage] = React.useState<string>();
@@ -79,8 +74,7 @@ export const App: FunctionComponent = () => {
   React.useEffect(() => {
     globalSetErrorMessage = setErrorMessage;
     return () => {
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      globalSetErrorMessage = () => {};
+      globalSetErrorMessage = noopSetErrorMessage;
     };
   }, []);
 
