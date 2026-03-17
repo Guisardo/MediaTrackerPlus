@@ -6,8 +6,7 @@
     "noImplicitOverride": true,
     "useUnknownInCatchVariables": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true
+    "forceConsistentCasingInFileNames": true
   },
-  "include": ["index.ts"]
+  "include": ["**/*.ts", "**/*.d.ts"]
 }

@@ -3,7 +3,14 @@ const path = require('path');
 
 const rootDir = path.resolve(__dirname, '..');
 const openApiPath = path.join(rootDir, 'server', 'openapi.json');
-const restApiPath = path.join(rootDir, 'rest-api', 'index.ts');
+const restApiEntryPath = path.join(rootDir, 'rest-api', 'index.ts');
+const restApiContractsPath = path.join(
+  rootDir,
+  'rest-api',
+  'generated',
+  'data-contracts.ts'
+);
+const restApiClientPath = path.join(rootDir, 'rest-api', 'generated', 'http-client.ts');
 
 const fail = (message) => {
   console.error(message);
@@ -14,12 +21,21 @@ if (!fs.existsSync(openApiPath)) {
   fail(`Missing generated OpenAPI document: ${openApiPath}`);
 }
 
-if (!fs.existsSync(restApiPath)) {
-  fail(`Missing generated rest-api client: ${restApiPath}`);
+if (!fs.existsSync(restApiEntryPath)) {
+  fail(`Missing rest-api entrypoint: ${restApiEntryPath}`);
+}
+
+if (!fs.existsSync(restApiContractsPath)) {
+  fail(`Missing generated rest-api contracts: ${restApiContractsPath}`);
+}
+
+if (!fs.existsSync(restApiClientPath)) {
+  fail(`Missing generated rest-api http client: ${restApiClientPath}`);
 }
 
 const openApi = JSON.parse(fs.readFileSync(openApiPath, 'utf8'));
-const restApi = fs.readFileSync(restApiPath, 'utf8');
+const restApiEntry = fs.readFileSync(restApiEntryPath, 'utf8');
+const restApiContracts = fs.readFileSync(restApiContractsPath, 'utf8');
 
 const schemaHasProperty = (schema, propertyName) => {
   if (schema == null || typeof schema !== 'object') {
@@ -74,8 +90,26 @@ if (!schemaHasProperty(schemas.MediaItemItemsResponse, 'metadataLanguage')) {
   );
 }
 
-if (!restApi.includes('metadataLanguage?: string | null;')) {
+if (!restApiContracts.includes('metadataLanguage?: string | null;')) {
   fail('Generated rest-api client is missing metadataLanguage.');
+}
+
+const requiredEntryExports = [
+  "export * from './generated/data-contracts';",
+  "export * from './generated/http-client';",
+  "export * from './generated/ItemsRoute';",
+  "export * from './generated/StatisticsRoute';",
+  'export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {',
+  'items = new ItemsApi<SecurityDataType>(this);',
+  'statistics = new StatisticsApi<SecurityDataType>(this);',
+  'group = new GroupApi<SecurityDataType>(this);',
+  'importTrakttv = new ImportTrakttvApi<SecurityDataType>(this);',
+];
+
+for (const requiredSnippet of requiredEntryExports) {
+  if (!restApiEntry.includes(requiredSnippet)) {
+    fail(`rest-api entrypoint is missing compatibility export: ${requiredSnippet}`);
+  }
 }
 
 console.log('Generated contract verification passed.');

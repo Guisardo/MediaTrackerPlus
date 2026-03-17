@@ -20,8 +20,6 @@ client/junit.xml
 
 */src/i18n/locales/*/*.ts
 
-rest-api/index.js
-
 docs/dist
 
 /tasks/
@@ -37,6 +35,10 @@ docs/dist
 /tmp
 /out-tsc
 **/generated/**
+!rest-api/generated/
+!rest-api/generated/*.js
+!rest-api/generated/*.ts
+!rest-api/index.js
 
 # Runtime data
 pids
