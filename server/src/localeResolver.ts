@@ -1,11 +1,43 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const accept = require('accept');
+type LanguagePreference = {
+  quality: number;
+  tag: string;
+};
+
+const parseAcceptLanguageHeader = (
+  acceptLanguageHeader: string
+): LanguagePreference[] =>
+  acceptLanguageHeader
+    .split(',')
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+    .map((entry) => {
+      const [tagPart, ...params] = entry.split(';');
+      const tag = tagPart.trim().toLowerCase();
+      const qualityParam = params.find((param) =>
+        param.trim().toLowerCase().startsWith('q=')
+      );
+      const quality = qualityParam
+        ? Number(qualityParam.trim().slice(2))
+        : 1;
+
+      return {
+        quality:
+          Number.isFinite(quality) && quality >= 0 && quality <= 1
+            ? quality
+            : 0,
+        tag,
+      };
+    })
+    .filter(
+      (preference) => preference.tag.length > 0 && preference.quality > 0
+    )
+    .sort((left, right) => right.quality - left.quality);
 
 /**
  * Resolves the best matching locale from an Accept-Language header against
  * the list of available languages configured in METADATA_LANGUAGES.
  *
- * Uses RFC 9110 Accept-Language header parsing via the `accept` package.
+ * Uses RFC 9110 Accept-Language quality negotiation with exact tag matching.
  *
  * @param acceptLanguageHeader - The value of the Accept-Language request header,
  *   or undefined if the header is absent.
@@ -22,23 +54,26 @@ export function resolveLocale(
     return null;
   }
 
-  const matched: string = accept.language(
-    acceptLanguageHeader,
-    availableLanguages
-  );
+  const normalizedLanguages = availableLanguages.map((language) => ({
+    normalized: language.toLowerCase(),
+    original: language,
+  }));
 
-  if (!matched) {
-    return null;
+  const preferences = parseAcceptLanguageHeader(acceptLanguageHeader);
+
+  for (const preference of preferences) {
+    if (preference.tag === '*') {
+      return normalizedLanguages[0]?.original ?? null;
+    }
+
+    const matchedLanguage = normalizedLanguages.find(
+      (language) => language.normalized === preference.tag
+    );
+
+    if (matchedLanguage) {
+      return matchedLanguage.original;
+    }
   }
 
-  // Normalize to lowercase to match how language codes are stored in the database
-  const normalized = matched.toLowerCase();
-
-  // Verify the normalized match is actually in the available languages list
-  // (it should be, but this handles edge cases from the accept package)
-  const found = availableLanguages.find(
-    (lang) => lang.toLowerCase() === normalized
-  );
-
-  return found ?? null;
+  return null;
 }

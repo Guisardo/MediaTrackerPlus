@@ -1,4 +1,3 @@
-import _, { random } from 'lodash';
 import {
   MediaItemBase,
   MediaType,
@@ -9,9 +8,13 @@ import { Database } from 'src/dbconfig';
 
 import { Seen } from 'src/entity/seen';
 import { UserRating, userRatingColumns } from 'src/entity/userRating';
-import { FacetQueryArgs, GetItemsArgs } from 'src/repository/mediaItem';
+import {
+  FacetQueryArgs,
+  GetItemsArgs,
+  Pagination,
+} from 'src/repository/mediaItem';
 import { TvEpisode, tvEpisodeColumns } from 'src/entity/tvepisode';
-import knex, { Knex } from 'knex';
+import { Knex } from 'knex';
 import { List, listItemColumns } from 'src/entity/list';
 import { Progress } from 'src/entity/progress';
 import { splitCreatorField } from 'src/utils/normalizeCreators';
@@ -64,9 +67,546 @@ const applyTranslationOverlay = async (
   });
 };
 
+type LibraryQuery = Knex.QueryBuilder<Record<string, unknown>, unknown[]>;
+
+type GetItemsKnexArgs = GetItemsArgs & {
+  language?: string | null;
+  year?: string;
+};
+
+// Knex returns aliased row objects with dynamic keys and mixed value types here.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type RawMediaItemRow = Record<string, any>;
+
+type SharedLibraryFilterArgs = Pick<
+  FacetQueryArgs,
+  | 'mediaType'
+  | 'filter'
+  | 'genres'
+  | 'languages'
+  | 'creators'
+  | 'publishers'
+  | 'mediaTypes'
+  | 'yearMin'
+  | 'yearMax'
+  | 'ratingMin'
+  | 'ratingMax'
+  | 'status'
+  | 'onlyOnWatchlist'
+  | 'onlySeenItems'
+  | 'onlyWithUserRating'
+  | 'onlyWithoutUserRating'
+>;
+
+const splitCsvFilterValue = (value?: string | null): string[] =>
+  value
+    ?.split(',')
+    .map((entry) => entry.trim())
+    .filter(Boolean) ?? [];
+
+const getWatchlistId = async (userId: number): Promise<number> => {
+  const watchlist = await Database.knex('list')
+    .select('id')
+    .where('userId', userId)
+    .where('isWatchlist', true)
+    .first();
+
+  if (watchlist === undefined) {
+    throw new Error(`user ${userId} has no watchlist`);
+  }
+
+  return watchlist.id;
+};
+
+const applyMultiValueLikeFilter = (
+  query: LibraryQuery,
+  column: string,
+  rawValue?: string | null
+) => {
+  const values = splitCsvFilterValue(rawValue);
+
+  if (values.length === 0) {
+    return;
+  }
+
+  query.andWhere((qb) => {
+    values.forEach((value, index) => {
+      if (index === 0) {
+        qb.where(column, 'LIKE', `%${value}%`);
+      } else {
+        qb.orWhere(column, 'LIKE', `%${value}%`);
+      }
+    });
+  });
+};
+
+const applyWhereInFilter = (
+  query: LibraryQuery,
+  column: string,
+  rawValue?: string | null
+) => {
+  const values = splitCsvFilterValue(rawValue);
+
+  if (values.length > 0) {
+    query.whereIn(column, values);
+  }
+};
+
+const applyCreatorFilter = (
+  query: LibraryQuery,
+  rawCreators?: string | null
+) => {
+  const creators = splitCsvFilterValue(rawCreators);
+
+  if (creators.length === 0) {
+    return;
+  }
+
+  query.andWhere((qb) => {
+    creators.forEach((creator) => {
+      qb.orWhere('mediaItem.director', 'LIKE', `%${creator}%`);
+      qb.orWhere('mediaItem.creator', 'LIKE', `%${creator}%`);
+      qb.orWhere('mediaItem.authors', 'LIKE', `%${creator}%`);
+      qb.orWhere('mediaItem.developer', 'LIKE', `%${creator}%`);
+    });
+  });
+};
+
+const applyYearRangeFilter = (
+  query: LibraryQuery,
+  yearMin?: number | null,
+  yearMax?: number | null
+) => {
+  if (yearMin != null) {
+    query.andWhere(
+      'mediaItem.releaseDate',
+      '>=',
+      new Date(yearMin, 0, 1).toISOString()
+    );
+  }
+
+  if (yearMax != null) {
+    query.andWhere(
+      'mediaItem.releaseDate',
+      '<=',
+      new Date(yearMax, 11, 31, 23, 59, 59, 999).toISOString()
+    );
+  }
+};
+
+const applyRatingRangeFilter = (
+  query: LibraryQuery,
+  ratingMin?: number | null,
+  ratingMax?: number | null
+) => {
+  if (ratingMin != null && ratingMin > 0) {
+    query
+      .whereNotNull('mediaItem.tmdbRating')
+      .andWhere('mediaItem.tmdbRating', '>=', ratingMin);
+  }
+
+  if (ratingMax != null) {
+    query.andWhere('mediaItem.tmdbRating', '<=', ratingMax);
+  }
+};
+
+const applyStatusFilter = (
+  query: LibraryQuery,
+  status: string | undefined,
+  lastSeenColumn: string
+) => {
+  const statusValues = splitCsvFilterValue(status);
+
+  if (statusValues.includes('rated')) {
+    query.whereNotNull('userRating.rating');
+  }
+
+  if (statusValues.includes('unrated')) {
+    query.whereNull('userRating.rating');
+  }
+
+  if (statusValues.includes('watchlist')) {
+    query.whereNotNull('listItem.mediaItemId');
+  }
+
+  if (statusValues.includes('seen')) {
+    query.whereNotNull(lastSeenColumn);
+  }
+};
+
+const applySharedLibraryFilters = (
+  query: LibraryQuery,
+  args: SharedLibraryFilterArgs,
+  options: {
+    isPlatformRecommended: boolean;
+    lastSeenColumn: string;
+  }
+) => {
+  const { isPlatformRecommended, lastSeenColumn } = options;
+
+  if (args.mediaType) {
+    query.andWhere('mediaItem.mediaType', args.mediaType);
+  }
+
+  if (args.filter && args.filter.trim().length > 0) {
+    query.andWhere('mediaItem.title', 'LIKE', `%${args.filter}%`);
+  }
+
+  applyMultiValueLikeFilter(query, 'mediaItem.genres', args.genres);
+  applyWhereInFilter(query, 'mediaItem.language', args.languages);
+  applyCreatorFilter(query, args.creators);
+  applyWhereInFilter(query, 'mediaItem.publisher', args.publishers);
+  applyWhereInFilter(query, 'mediaItem.mediaType', args.mediaTypes);
+  applyYearRangeFilter(query, args.yearMin, args.yearMax);
+  applyRatingRangeFilter(query, args.ratingMin, args.ratingMax);
+  applyStatusFilter(query, args.status, lastSeenColumn);
+
+  if (args.onlyOnWatchlist && !isPlatformRecommended) {
+    query.whereNotNull('listItem.mediaItemId');
+  }
+
+  if (args.onlySeenItems === true) {
+    query.whereNotNull(lastSeenColumn);
+  }
+
+  if (args.onlyWithUserRating === true) {
+    query.whereNotNull('userRating.rating');
+  }
+
+  if (args.onlyWithoutUserRating === true) {
+    query.whereNull('userRating.rating');
+  }
+};
+
+const applySeenYearFilter = (
+  query: LibraryQuery,
+  year: string | undefined,
+  yearFilter: string
+) => {
+  if (!year) {
+    return;
+  }
+
+  if (yearFilter === 'noyear') {
+    query.andWhere(
+      Database.knex.raw(
+        'strftime(\'%Y\', datetime("lastSeen2"."date" / 1000, \'unixepoch\')) is null'
+      )
+    );
+  } else if (yearFilter !== '') {
+    query.andWhere(
+      Database.knex.raw(
+        'strftime(\'%Y\', datetime("lastSeen2"."date" / 1000, \'unixepoch\')) is not null'
+      )
+    );
+  }
+};
+
+const applyPlatformRecommendedExclusions = (
+  query: LibraryQuery,
+  groupId: number | undefined
+) => {
+  if (groupId != null) {
+    query.whereRaw(
+      `NOT (
+        "mediaItem"."mediaType" != 'tv'
+        AND (
+          SELECT COUNT(DISTINCT s."userId")
+          FROM "seen" s
+          JOIN "userGroupMember" ugm ON ugm."userId" = s."userId" AND ugm."groupId" = ?
+          WHERE s."mediaItemId" = "mediaItem"."id"
+            AND s."episodeId" IS NULL
+        ) > CAST((SELECT COUNT(*) FROM "userGroupMember" WHERE "groupId" = ?) AS REAL) / 2.0
+      )`,
+      [groupId, groupId]
+    );
+    query.whereRaw(
+      `NOT (
+        "mediaItem"."mediaType" = 'tv'
+        AND (
+          SELECT COUNT(DISTINCT cu."userId")
+          FROM (
+            SELECT s."userId"
+            FROM "seen" s
+            JOIN "episode" e ON e."id" = s."episodeId"
+            JOIN "userGroupMember" ugm ON ugm."userId" = s."userId" AND ugm."groupId" = ?
+            WHERE s."mediaItemId" = "mediaItem"."id"
+              AND e."isSpecialEpisode" = 0
+            GROUP BY s."userId"
+            HAVING COUNT(DISTINCT s."episodeId") >= (
+              SELECT COUNT(*)
+              FROM "episode" e2
+              WHERE e2."tvShowId" = "mediaItem"."id"
+                AND e2."isSpecialEpisode" = 0
+            )
+          ) AS cu
+        ) > CAST((SELECT COUNT(*) FROM "userGroupMember" WHERE "groupId" = ?) AS REAL) / 2.0
+      )`,
+      [groupId, groupId]
+    );
+
+    return;
+  }
+
+  query.whereRaw(`NOT (
+    "mediaItem"."mediaType" != 'tv'
+    AND EXISTS (
+      SELECT 1 FROM "seen"
+      WHERE "seen"."mediaItemId" = "mediaItem"."id"
+        AND "seen"."episodeId" IS NULL
+    )
+  )`);
+  query.whereRaw(`NOT (
+    "mediaItem"."mediaType" = 'tv'
+    AND EXISTS (
+      SELECT 1 FROM (
+        SELECT s."userId"
+        FROM "seen" s
+        JOIN "episode" e ON e."id" = s."episodeId"
+        WHERE s."mediaItemId" = "mediaItem"."id"
+          AND e."isSpecialEpisode" = 0
+        GROUP BY s."userId"
+        HAVING COUNT(DISTINCT s."episodeId") > 0
+          AND COUNT(DISTINCT s."episodeId") >= (
+            SELECT COUNT(*)
+            FROM "episode" e2
+            WHERE e2."tvShowId" = "mediaItem"."id"
+              AND e2."isSpecialEpisode" = 0
+          )
+      ) AS "completed_users"
+    )
+  )`);
+};
+
+const applyNextAiringFilter = (
+  query: LibraryQuery,
+  args: {
+    currentDateString: string;
+    mediaType?: MediaType;
+    onlyWithNextAiring?: boolean;
+  }
+) => {
+  const { currentDateString, mediaType, onlyWithNextAiring } = args;
+
+  if (!onlyWithNextAiring) {
+    return;
+  }
+
+  if (mediaType) {
+    if (mediaType === 'tv') {
+      query.andWhere('upcomingEpisode.releaseDate', '>', currentDateString);
+    } else {
+      query.andWhere('mediaItem.releaseDate', '>', currentDateString);
+    }
+  } else {
+    query.andWhere((qb) =>
+      qb
+        .where((nestedQuery) =>
+          nestedQuery
+            .whereNot('mediaItem.mediaType', 'tv')
+            .andWhere('mediaItem.releaseDate', '>', currentDateString)
+        )
+        .orWhere((nestedQuery) =>
+          nestedQuery
+            .where('mediaItem.mediaType', 'tv')
+            .andWhere('upcomingEpisode.releaseDate', '>', currentDateString)
+        )
+    );
+  }
+
+  query.whereNotNull('listItem.mediaItemId');
+};
+
+const applyItemOrdering = (
+  query: LibraryQuery,
+  args: {
+    currentDateString: string;
+    groupId: number | undefined;
+    orderBy?: GetItemsArgs['orderBy'];
+    sortOrder?: GetItemsArgs['sortOrder'];
+  }
+) => {
+  const { currentDateString, groupId, orderBy, sortOrder } = args;
+
+  if (!orderBy || !sortOrder) {
+    return;
+  }
+
+  if (
+    sortOrder.toLowerCase() !== 'asc' &&
+    sortOrder.toLowerCase() !== 'desc'
+  ) {
+    throw new Error('Sort order should by either asc or desc');
+  }
+
+  switch (orderBy) {
+    case 'title':
+      query.orderBy('mediaItem.title', sortOrder);
+      break;
+
+    case 'releaseDate':
+      query.orderBy('mediaItem.releaseDate', sortOrder);
+      query.orderBy('mediaItem.title', 'asc');
+      break;
+
+    case 'status':
+      query.orderBy('mediaItem.status', sortOrder);
+      query.orderBy('mediaItem.title', 'asc');
+      break;
+
+    case 'mediaType':
+      query.orderBy('mediaItem.mediaType', sortOrder);
+      query.orderBy('mediaItem.title', 'asc');
+      break;
+
+    case 'unseenEpisodes':
+      query.orderBy('unseenEpisodesCount', sortOrder);
+      query.orderBy('mediaItem.title', 'asc');
+      break;
+
+    case 'lastSeen':
+      query.orderBy('lastSeenAt', sortOrder);
+      query.orderBy('mediaItem.title', 'asc');
+      break;
+
+    case 'nextAiring':
+      query.orderByRaw(`CASE
+                          WHEN "mediaItem"."mediaType" = 'tv' THEN "upcomingEpisode"."releaseDate"
+                          ELSE "mediaItem"."releaseDate"
+                        END ${sortOrder} NULLS LAST`);
+      query.orderBy('mediaItem.title', 'asc');
+      break;
+
+    case 'lastAiring':
+      query.orderByRaw(`CASE
+                          WHEN "mediaItem"."mediaType" = 'tv' THEN "lastAiredEpisode"."releaseDate"
+                          ELSE CASE
+                            WHEN "mediaItem"."releaseDate" >= '${currentDateString}' THEN NULL
+                            ELSE "mediaItem"."releaseDate"
+                          END
+                        END ${sortOrder} NULLS LAST`);
+      query.orderBy('mediaItem.title', 'asc');
+      break;
+
+    case 'progress':
+      query.orderByRaw(`CASE
+                          WHEN "mediaItem"."mediaType" = 'tv' THEN "unseenEpisodesCount"
+                          ELSE "progress"
+                        END ${sortOrder}`);
+      query.orderBy('mediaItem.title', 'asc');
+      break;
+
+    case 'recommended':
+      query.orderByRaw(
+        `CASE WHEN "listItem"."estimatedRating" IS NULL THEN 1 ELSE 0 END ASC`
+      );
+      query.orderByRaw(`CASE
+                          WHEN "listItem"."estimatedRating" IS NOT NULL AND "mediaItem"."tmdbRating" IS NOT NULL
+                            THEN ("listItem"."estimatedRating" * 0.6 + "mediaItem"."tmdbRating" * 0.4)
+                          ELSE "listItem"."estimatedRating"
+                        END DESC NULLS LAST`);
+      query.orderBy('mediaItem.title', 'asc');
+      break;
+
+    case 'platformRecommended':
+      if (groupId != null) {
+        query.orderByRaw(`CASE WHEN "gpr"."rating" IS NULL THEN 1 ELSE 0 END ASC`);
+        query.orderByRaw(`CASE
+                            WHEN "gpr"."rating" IS NOT NULL AND "mediaItem"."tmdbRating" IS NOT NULL
+                              THEN ("gpr"."rating" * 0.7 + "mediaItem"."tmdbRating" * 0.3)
+                            WHEN "gpr"."rating" IS NOT NULL
+                              THEN "gpr"."rating"
+                            ELSE "mediaItem"."tmdbRating"
+                          END DESC NULLS LAST`);
+      } else {
+        query.orderByRaw(
+          `CASE WHEN "mediaItem"."platformRating" IS NULL THEN 1 ELSE 0 END ASC`
+        );
+        query.orderByRaw(`CASE
+                            WHEN "mediaItem"."platformRating" IS NOT NULL AND "mediaItem"."tmdbRating" IS NOT NULL
+                              THEN ("mediaItem"."platformRating" * 0.7 + "mediaItem"."tmdbRating" * 0.3)
+                            WHEN "mediaItem"."platformRating" IS NOT NULL
+                              THEN "mediaItem"."platformRating"
+                            ELSE "mediaItem"."tmdbRating"
+                          END DESC NULLS LAST`);
+      }
+      query.orderBy('mediaItem.title', 'asc');
+      break;
+
+    default:
+      throw new Error(`Unsupported orderBy value: ${orderBy}`);
+  }
+};
+
+const mapImagePath = (
+  imageId: unknown,
+  suffix = ''
+): string | null => (imageId ? `/img/${imageId}${suffix}` : null);
+
+const mapUserRating = (row: RawMediaItemRow) =>
+  row['userRating.id']
+    ? {
+        id: row['userRating.id'],
+        date: row['userRating.date'],
+        mediaItemId: row['userRating.mediaItemId'],
+        rating: row['userRating.rating'],
+        review: row['userRating.review'],
+        userId: row['userRating.userId'],
+        episodeId: row['userRating.episodeId'],
+        seasonId: row['userRating.seasonId'],
+      }
+    : undefined;
+
+const mapEpisodeRow = (
+  row: RawMediaItemRow,
+  prefix: 'firstUnwatchedEpisode' | 'upcomingEpisode' | 'lastAiredEpisode',
+  presenceKey: 'id' | 'releaseDate',
+  options?: {
+    seen?: boolean;
+    includeSeen?: boolean;
+  }
+): TvEpisode | undefined => {
+  if (!row[`${prefix}.${presenceKey}`]) {
+    return undefined;
+  }
+
+  const includeSeen = options?.includeSeen ?? false;
+
+  return {
+    id: row[`${prefix}.id`],
+    title: row[`${prefix}.title`],
+    description: row[`${prefix}.description`],
+    episodeNumber: row[`${prefix}.episodeNumber`],
+    seasonNumber: row[`${prefix}.seasonNumber`],
+    releaseDate: row[`${prefix}.releaseDate`],
+    runtime: row[`${prefix}.runtime`],
+    tvShowId: row[`${prefix}.tvShowId`],
+    tmdbId: row[`${prefix}.tmdbId`],
+    imdbId: row[`${prefix}.imdbId`],
+    tvdbId: row[`${prefix}.tvdbId`],
+    traktId: row[`${prefix}.traktId`],
+    seasonId: row[`${prefix}.seasonId`],
+    isSpecialEpisode: Boolean(row[`${prefix}.isSpecialEpisode`]),
+    userRating: undefined,
+    seenHistory: undefined,
+    lastSeenAt: undefined,
+    ...(includeSeen ? { seen: options?.seen ?? false } : {}),
+  };
+};
+
+const incrementFacetCount = (map: Map<string, number>, value: string) => {
+  map.set(value, (map.get(value) || 0) + 1);
+};
+
+const mapToSortedFacetOptions = (map: Map<string, number>): FacetOption[] =>
+  Array.from(map.entries())
+    .filter(([, count]) => count > 0)
+    .map(([value, count]) => ({ value, count }))
+    .sort((a, b) => b.count - a.count);
+
 export const getItemsKnex = async (
-  args: GetItemsArgs & { page?: number; language?: string | null }
-): Promise<unknown> => {
+  args: GetItemsKnexArgs
+): Promise<Pagination<MediaItemItemsResponse> | MediaItemItemsResponse[]> => {
   const { page, language } = args;
   const { sqlQuery, sqlCountQuery, sqlPaginationQuery } = await getItemsKnexSql(
     args
@@ -116,7 +656,7 @@ export const getItemsKnex = async (
   }
 };
 
-const getItemsKnexSql = async (args: GetItemsArgs & { year?: string }) => {
+const getItemsKnexSql = async (args: GetItemsKnexArgs) => {
   const {
     onlyOnWatchlist,
     mediaType,
@@ -149,18 +689,8 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year?: string }) => {
   } = args;
 
   const currentDateString = new Date().toISOString();
-
-  const watchlist = await Database.knex('list')
-    .select('id')
-    .where('userId', userId)
-    .where('isWatchlist', true)
-    .first();
-
-  if (watchlist === undefined) {
-    throw new Error(`user ${userId} has no watchlist`);
-  }
-
-  const watchlistId = watchlist.id;
+  const watchlistId = await getWatchlistId(userId);
+  const isPlatformRecommended = orderBy === 'platformRecommended';
 
   let yearFilter = '';
 
@@ -406,7 +936,7 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year?: string }) => {
   // When platformRecommended sort with a specific group, join the group's cached ratings.
   // The LEFT JOIN is ONLY added when groupId is provided to avoid any performance impact
   // on the non-group path. gpr.rating replaces mediaItem.platformRating in the scoring formula.
-  if (orderBy === 'platformRecommended' && groupId != null) {
+  if (isPlatformRecommended && groupId != null) {
     query.leftJoin('groupPlatformRating as gpr', function () {
       this.on('gpr.mediaItemId', '=', 'mediaItem.id').andOnVal(
         'gpr.groupId',
@@ -418,7 +948,7 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year?: string }) => {
   if (Array.isArray(mediaItemIds)) {
     query.whereIn('mediaItem.id', mediaItemIds);
   } else {
-    if (orderBy === 'platformRecommended') {
+    if (isPlatformRecommended) {
       // For platform-recommended, surface items from ALL users' lists so
       // cross-content-type recommendations appear regardless of what the
       // current user personally added to their watchlist.
@@ -429,14 +959,6 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year?: string }) => {
           .whereNotNull('listItem.mediaItemId')
           .orWhereNotNull('lastSeen.mediaItemId')
       );
-
-      if (onlyOnWatchlist) {
-        query.whereNotNull('listItem.mediaItemId');
-      }
-    }
-
-    if (onlySeenItems === true) {
-      query.whereNotNull('lastSeen2.mediaItemId');
     }
 
     if (onlySeenItems === false) {
@@ -453,280 +975,52 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year?: string }) => {
         );
     }
 
-    // Platform-recommended view: exclude items already watched.
-    // When groupId is provided (group-scoped): exclude only if >50% of group members
-    // have seen the item (majority-watched threshold). Uses CAST for SQLite integer
-    // division safety.
-    // When no groupId (global): exclude if ANY platform user has seen the item.
-    if (orderBy === 'platformRecommended') {
-      if (groupId != null) {
-        // Group-scoped majority-watched exclusion.
-        // Pre-compute group member count as a scalar subquery to avoid per-item recalculation.
-        // Non-TV: exclude if >50% of group members have a seen entry (episodeId IS NULL).
-        query.whereRaw(
-          `NOT (
-            "mediaItem"."mediaType" != 'tv'
-            AND (
-              SELECT COUNT(DISTINCT s."userId")
-              FROM "seen" s
-              JOIN "userGroupMember" ugm ON ugm."userId" = s."userId" AND ugm."groupId" = ?
-              WHERE s."mediaItemId" = "mediaItem"."id"
-                AND s."episodeId" IS NULL
-            ) > CAST((SELECT COUNT(*) FROM "userGroupMember" WHERE "groupId" = ?) AS REAL) / 2.0
-          )`,
-          [groupId, groupId]
-        );
-        // TV shows: exclude if >50% of group members have completed all non-special episodes.
-        query.whereRaw(
-          `NOT (
-            "mediaItem"."mediaType" = 'tv'
-            AND (
-              SELECT COUNT(DISTINCT cu."userId")
-              FROM (
-                SELECT s."userId"
-                FROM "seen" s
-                JOIN "episode" e ON e."id" = s."episodeId"
-                JOIN "userGroupMember" ugm ON ugm."userId" = s."userId" AND ugm."groupId" = ?
-                WHERE s."mediaItemId" = "mediaItem"."id"
-                  AND e."isSpecialEpisode" = 0
-                GROUP BY s."userId"
-                HAVING COUNT(DISTINCT s."episodeId") >= (
-                  SELECT COUNT(*)
-                  FROM "episode" e2
-                  WHERE e2."tvShowId" = "mediaItem"."id"
-                    AND e2."isSpecialEpisode" = 0
-                )
-              ) AS cu
-            ) > CAST((SELECT COUNT(*) FROM "userGroupMember" WHERE "groupId" = ?) AS REAL) / 2.0
-          )`,
-          [groupId, groupId]
-        );
-      } else {
-        // Global platform exclusion: exclude if ANY user has seen the item.
-        // Non-TV: exclude if any user has a seen entry (episodeId IS NULL).
-        query.whereRaw(`NOT (
-          "mediaItem"."mediaType" != 'tv'
-          AND EXISTS (
-            SELECT 1 FROM "seen"
-            WHERE "seen"."mediaItemId" = "mediaItem"."id"
-              AND "seen"."episodeId" IS NULL
-          )
-        )`);
-        // TV shows: exclude if any user has completed all non-special episodes.
-        query.whereRaw(`NOT (
-          "mediaItem"."mediaType" = 'tv'
-          AND EXISTS (
-            SELECT 1 FROM (
-              SELECT s."userId"
-              FROM "seen" s
-              JOIN "episode" e ON e."id" = s."episodeId"
-              WHERE s."mediaItemId" = "mediaItem"."id"
-                AND e."isSpecialEpisode" = 0
-              GROUP BY s."userId"
-              HAVING COUNT(DISTINCT s."episodeId") > 0
-                AND COUNT(DISTINCT s."episodeId") >= (
-                  SELECT COUNT(*)
-                  FROM "episode" e2
-                  WHERE e2."tvShowId" = "mediaItem"."id"
-                    AND e2."isSpecialEpisode" = 0
-                )
-            ) AS "completed_users"
-          )
-        )`);
-      }
+    if (isPlatformRecommended) {
+      applyPlatformRecommendedExclusions(query, groupId);
     }
 
-    // Media type
-    if (mediaType) {
-      query.andWhere('mediaItem.mediaType', mediaType);
-    }
-
-    // Filter
-    if (filter && filter.trim().length > 0) {
-      query.andWhere('mediaItem.title', 'LIKE', `%${filter}%`);
-    }
-
-    if (year) {
-      if (yearFilter === 'noyear') {
-        query.andWhere(
-          Database.knex.raw(
-            'strftime(\'%Y\', datetime("lastSeen2"."date" / 1000, \'unixepoch\')) is null'
-          )
-        );
-      } else if (yearFilter !== '') {
-        query.andWhere(
-          Database.knex.raw(
-            'strftime(\'%Y\', datetime("lastSeen2"."date" / 1000, \'unixepoch\')) is not null'
-          )
-        );
-      }
-    }
+    applySeenYearFilter(query, year, yearFilter);
 
     if (genre) {
       query.andWhere('mediaItem.genres', 'LIKE', `%${genre}%`);
     }
 
-    // Multi-value genres filter (OR logic within dimension, CSV LIKE matching)
-    if (genres) {
-      const genreArray = genres
-        .split(',')
-        .map((g) => g.trim())
-        .filter(Boolean);
-      if (genreArray.length > 0) {
-        query.andWhere((qb) => {
-          genreArray.forEach((g, index) => {
-            if (index === 0) {
-              qb.where('mediaItem.genres', 'LIKE', `%${g}%`);
-            } else {
-              qb.orWhere('mediaItem.genres', 'LIKE', `%${g}%`);
-            }
-          });
-        });
+    applySharedLibraryFilters(
+      query,
+      {
+        mediaType,
+        filter,
+        genres,
+        languages,
+        creators,
+        publishers,
+        mediaTypes,
+        yearMin,
+        yearMax,
+        ratingMin,
+        ratingMax,
+        status,
+        onlyOnWatchlist,
+        onlySeenItems,
+        onlyWithUserRating,
+        onlyWithoutUserRating,
+      },
+      {
+        isPlatformRecommended,
+        lastSeenColumn: 'lastSeen2.mediaItemId',
       }
-    }
-
-    // Languages filter (OR logic, matches language column)
-    if (languages) {
-      const languageArray = languages
-        .split(',')
-        .map((l) => l.trim())
-        .filter(Boolean);
-      if (languageArray.length > 0) {
-        query.whereIn('mediaItem.language', languageArray);
-      }
-    }
-
-    // Creators filter (OR logic, searches across director/creator/authors/developer columns)
-    if (creators) {
-      const creatorArray = creators
-        .split(',')
-        .map((c) => c.trim())
-        .filter(Boolean);
-      if (creatorArray.length > 0) {
-        query.andWhere((qb) => {
-          creatorArray.forEach((c) => {
-            qb.orWhere('mediaItem.director', 'LIKE', `%${c}%`);
-            qb.orWhere('mediaItem.creator', 'LIKE', `%${c}%`);
-            qb.orWhere('mediaItem.authors', 'LIKE', `%${c}%`);
-            qb.orWhere('mediaItem.developer', 'LIKE', `%${c}%`);
-          });
-        });
-      }
-    }
-
-    // Publishers filter (OR logic, matches publisher column, plain string equality)
-    if (publishers) {
-      const publisherArray = publishers
-        .split(',')
-        .map((p) => p.trim())
-        .filter(Boolean);
-      if (publisherArray.length > 0) {
-        query.whereIn('mediaItem.publisher', publisherArray);
-      }
-    }
-
-    // MediaTypes filter (OR logic, matches mediaType column)
-    if (mediaTypes) {
-      const mediaTypeArray = mediaTypes
-        .split(',')
-        .map((m) => m.trim())
-        .filter(Boolean);
-      if (mediaTypeArray.length > 0) {
-        query.whereIn('mediaItem.mediaType', mediaTypeArray);
-      }
-    }
-
-    // Year range filter (inclusive bounds on releaseDate year)
-    if (yearMin !== undefined || yearMax !== undefined) {
-      if (yearMin !== undefined) {
-        query.andWhere(
-          'mediaItem.releaseDate',
-          '>=',
-          new Date(yearMin, 0, 1).toISOString()
-        );
-      }
-      if (yearMax !== undefined) {
-        query.andWhere(
-          'mediaItem.releaseDate',
-          '<=',
-          new Date(yearMax, 11, 31, 23, 59, 59, 999).toISOString()
-        );
-      }
-    }
-
-    // Rating range filter (inclusive bounds, excludes items with no rating when ratingMin > 0)
-    if (ratingMin !== undefined || ratingMax !== undefined) {
-      if (ratingMin !== undefined && ratingMin > 0) {
-        query
-          .whereNotNull('mediaItem.tmdbRating')
-          .andWhere('mediaItem.tmdbRating', '>=', ratingMin);
-      }
-      if (ratingMax !== undefined) {
-        query.andWhere('mediaItem.tmdbRating', '<=', ratingMax);
-      }
-    }
-
-    // Status filter: maps comma-separated status keys to boolean flags
-    // Applies AND logic -- item must satisfy all selected status constraints
-    if (status) {
-      const statusArray = status
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean);
-      if (statusArray.includes('rated')) {
-        query.whereNotNull('userRating.rating');
-      }
-      if (statusArray.includes('unrated')) {
-        query.whereNull('userRating.rating');
-      }
-      if (statusArray.includes('watchlist')) {
-        query.whereNotNull('listItem.mediaItemId');
-      }
-      if (statusArray.includes('seen')) {
-        query.whereNotNull('lastSeen2.mediaItemId');
-      }
-    }
-
-    // Next airing
-    if (onlyWithNextAiring) {
-      if (mediaType) {
-        if (mediaType === 'tv') {
-          query.andWhere('upcomingEpisode.releaseDate', '>', currentDateString);
-        } else {
-          query.andWhere('mediaItem.releaseDate', '>', currentDateString);
-        }
-      } else {
-        query.andWhere((qb) =>
-          qb
-            .where((qb) =>
-              qb
-                .whereNot('mediaItem.mediaType', 'tv')
-                .andWhere('mediaItem.releaseDate', '>', currentDateString)
-            )
-            .orWhere((qb) =>
-              qb
-                .where('mediaItem.mediaType', 'tv')
-                .andWhere('upcomingEpisode.releaseDate', '>', currentDateString)
-            )
-        );
-      }
-
-      query.whereNotNull('listItem.mediaItemId');
-    }
+    );
+    applyNextAiringFilter(query, {
+      currentDateString,
+      mediaType,
+      onlyWithNextAiring,
+    });
 
     // nextEpisodesToWatchSubQuery
     if (onlyWithNextEpisodesToWatch === true) {
       query
         .where('seenEpisodesCount', '>', 0)
         .andWhere('unseenEpisodesCount', '>', 0);
-    }
-
-    if (onlyWithUserRating === true) {
-      query.whereNotNull('userRating.rating');
-    }
-
-    if (onlyWithoutUserRating === true) {
-      query.whereNull('userRating.rating');
     }
 
     if (onlyWithProgress) {
@@ -748,137 +1042,12 @@ const getItemsKnexSql = async (args: GetItemsArgs & { year?: string }) => {
     }
   }
 
-  if (orderBy && sortOrder) {
-    if (
-      sortOrder.toLowerCase() !== 'asc' &&
-      sortOrder.toLowerCase() !== 'desc'
-    ) {
-      throw new Error('Sort order should by either asc or desc');
-    }
-
-    switch (orderBy) {
-      case 'title':
-        query.orderBy('mediaItem.title', sortOrder);
-        break;
-
-      case 'releaseDate':
-        query.orderBy('mediaItem.releaseDate', sortOrder);
-        query.orderBy('mediaItem.title', 'asc');
-        break;
-
-      case 'status':
-        query.orderBy('mediaItem.status', sortOrder);
-        query.orderBy('mediaItem.title', 'asc');
-        break;
-
-      case 'mediaType':
-        query.orderBy('mediaItem.mediaType', sortOrder);
-        query.orderBy('mediaItem.title', 'asc');
-
-        break;
-
-      case 'unseenEpisodes':
-        query.orderBy('unseenEpisodesCount', sortOrder);
-        query.orderBy('mediaItem.title', 'asc');
-        break;
-
-      case 'lastSeen':
-        query.orderBy('lastSeenAt', sortOrder);
-        query.orderBy('mediaItem.title', 'asc');
-        break;
-
-      case 'nextAiring':
-        query.orderByRaw(`CASE
-                            WHEN "mediaItem"."mediaType" = 'tv' THEN "upcomingEpisode"."releaseDate"
-                            ELSE "mediaItem"."releaseDate"
-                          END ${sortOrder} NULLS LAST`);
-        query.orderBy('mediaItem.title', 'asc');
-        break;
-
-      case 'lastAiring':
-        query.orderByRaw(`CASE
-                            WHEN "mediaItem"."mediaType" = 'tv' THEN "lastAiredEpisode"."releaseDate"
-                            ELSE CASE
-                              WHEN "mediaItem"."releaseDate" >= '${currentDateString}' THEN NULL
-                              ELSE "mediaItem"."releaseDate"
-                            END
-                          END ${sortOrder} NULLS LAST`);
-        query.orderBy('mediaItem.title', 'asc');
-        break;
-
-      case 'progress':
-        query.orderByRaw(`CASE
-                            WHEN "mediaItem"."mediaType" = 'tv' THEN "unseenEpisodesCount"
-                            ELSE "progress"
-                          END ${sortOrder}`);
-        query.orderBy('mediaItem.title', 'asc');
-        break;
-
-      case 'recommended':
-        query.orderByRaw(`CASE WHEN "listItem"."estimatedRating" IS NULL THEN 1 ELSE 0 END ASC`);
-        query.orderByRaw(`CASE
-                            WHEN "listItem"."estimatedRating" IS NOT NULL AND "mediaItem"."tmdbRating" IS NOT NULL
-                              THEN ("listItem"."estimatedRating" * 0.6 + "mediaItem"."tmdbRating" * 0.4)
-                            ELSE "listItem"."estimatedRating"
-                          END DESC NULLS LAST`);
-        query.orderBy('mediaItem.title', 'asc');
-        break;
-
-      // platform-recommended: community consensus (70%) weighted higher than external aggregators (30%).
-      // Uses platformRating (cached average of all user ratings on this platform) instead of estimatedRating
-      // (personal AI estimate for the current user). The 70/30 weighting reflects stronger trust in
-      // aggregated community data vs. external sources, contrasting with 'recommended' which uses
-      // 60/40 for personal estimates (single-user signal is weaker than community signal).
-      //
-      // When groupId is provided, uses gpr.rating (group-scoped cached rating from groupPlatformRating)
-      // instead of mediaItem.platformRating. The same 70/30 formula is applied.
-      //
-      // Two-tier ordering:
-      //   Tier 1 (rating IS NOT NULL): items with real community ratings — sorted by the
-      //           70/30 blend (or rating alone when tmdbRating is absent).
-      //   Tier 2 (rating IS NULL): items not yet rated — sorted by
-      //           tmdbRating as a proxy, or last (NULLS LAST) when tmdbRating is also absent.
-      case 'platformRecommended':
-        if (groupId != null) {
-          // Group-scoped: use gpr.rating (from the LEFT JOIN added above) instead of mediaItem.platformRating.
-          // Step 1: tier separation — items with a group rating signal (gpr.rating IS NOT NULL) precede
-          // items without one, mirroring the global path where platformRating IS NULL sends items to tier 2.
-          // tmdbRating is only a fallback sort within tier 2, not a tier-qualification criterion.
-          query.orderByRaw(
-            `CASE WHEN "gpr"."rating" IS NULL THEN 1 ELSE 0 END ASC`
-          );
-          // Step 2: within each tier, rank by score descending.
-          query.orderByRaw(`CASE
-                              WHEN "gpr"."rating" IS NOT NULL AND "mediaItem"."tmdbRating" IS NOT NULL
-                                THEN ("gpr"."rating" * 0.7 + "mediaItem"."tmdbRating" * 0.3)
-                              WHEN "gpr"."rating" IS NOT NULL
-                                THEN "gpr"."rating"
-                              ELSE "mediaItem"."tmdbRating"
-                            END DESC NULLS LAST`);
-        } else {
-          // Global platform path (no groupId): uses mediaItem.platformRating.
-          // Step 1: tier separation — platform-rated items always precede unrated items.
-          query.orderByRaw(
-            `CASE WHEN "mediaItem"."platformRating" IS NULL THEN 1 ELSE 0 END ASC`
-          );
-          // Step 2: within each tier, rank by score descending.
-          //   Tier 1 — (1) both ratings: 70/30 blend, (2) platformRating only: platformRating.
-          //   Tier 2 — tmdbRating fallback; items with neither rating sort last (NULLS LAST).
-          query.orderByRaw(`CASE
-                              WHEN "mediaItem"."platformRating" IS NOT NULL AND "mediaItem"."tmdbRating" IS NOT NULL
-                                THEN ("mediaItem"."platformRating" * 0.7 + "mediaItem"."tmdbRating" * 0.3)
-                              WHEN "mediaItem"."platformRating" IS NOT NULL
-                                THEN "mediaItem"."platformRating"
-                              ELSE "mediaItem"."tmdbRating"
-                            END DESC NULLS LAST`);
-        }
-        query.orderBy('mediaItem.title', 'asc');
-        break;
-
-      default:
-        throw new Error(`Unsupported orderBy value: ${orderBy}`);
-    }
-  }
+  applyItemOrdering(query, {
+    currentDateString,
+    groupId,
+    orderBy,
+    sortOrder,
+  });
 
   const sqlCountQuery = query
     .clone()
@@ -921,8 +1090,7 @@ export const generateColumnNames = <
   };
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapRawResult = (row: any): MediaItemItemsResponse => {
+const mapRawResult = (row: RawMediaItemRow): MediaItemItemsResponse => {
   return {
     id: row['mediaItem.id'],
     tmdbId: row['mediaItem.tmdbId'],
@@ -956,15 +1124,9 @@ const mapRawResult = (row: any): MediaItemItemsResponse => {
     developer: row['mediaItem.developer'],
     lastSeenAt: row['lastSeenAt'],
     progress: row['progress'],
-    poster: row['mediaItem.posterId']
-      ? `/img/${row['mediaItem.posterId']}`
-      : null,
-    posterSmall: row['mediaItem.posterId']
-      ? `/img/${row['mediaItem.posterId']}?size=small`
-      : null,
-    backdrop: row['mediaItem.backdropId']
-      ? `/img/${row['mediaItem.backdropId']}`
-      : null,
+    poster: mapImagePath(row['mediaItem.posterId']),
+    posterSmall: mapImagePath(row['mediaItem.posterId'], '?size=small'),
+    backdrop: mapImagePath(row['mediaItem.backdropId']),
     hasDetails: false,
     seen:
       row['mediaItem.mediaType'] === 'tv'
@@ -985,85 +1147,22 @@ const mapRawResult = (row: any): MediaItemItemsResponse => {
       row['mediaItem.mediaType'] === 'tv'
         ? row['lastAiredEpisode.releaseDate']
         : row['mediaItem.releaseDate'],
-    userRating: row['userRating.id']
-      ? {
-          id: row['userRating.id'],
-          date: row['userRating.date'],
-          mediaItemId: row['userRating.mediaItemId'],
-          rating: row['userRating.rating'],
-          review: row['userRating.review'],
-          userId: row['userRating.userId'],
-          episodeId: row['userRating.episodeId'],
-          seasonId: row['userRating.seasonId'],
-        }
-      : undefined,
-    firstUnwatchedEpisode: row['firstUnwatchedEpisode.id']
-      ? {
-          id: row['firstUnwatchedEpisode.id'],
-          title: row['firstUnwatchedEpisode.title'],
-          description: row['firstUnwatchedEpisode.description'],
-          episodeNumber: row['firstUnwatchedEpisode.episodeNumber'],
-          seasonNumber: row['firstUnwatchedEpisode.seasonNumber'],
-          releaseDate: row['firstUnwatchedEpisode.releaseDate'],
-          tvShowId: row['firstUnwatchedEpisode.tvShowId'],
-          tmdbId: row['firstUnwatchedEpisode.tmdbId'],
-          imdbId: row['firstUnwatchedEpisode.imdbId'],
-          tvdbId: row['firstUnwatchedEpisode.tvdbId'],
-          traktId: row['firstUnwatchedEpisode.traktId'],
-          runtime: row['firstUnwatchedEpisode.runtime'],
-          seasonId: row['firstUnwatchedEpisode.seasonId'],
-          isSpecialEpisode: Boolean(
-            row['firstUnwatchedEpisode.isSpecialEpisode']
-          ),
-          userRating: undefined,
-          seenHistory: undefined,
-          lastSeenAt: undefined,
-        }
-      : undefined,
-    upcomingEpisode: row['upcomingEpisode.releaseDate']
-      ? {
-          id: row['upcomingEpisode.id'],
-          title: row['upcomingEpisode.title'],
-          description: row['upcomingEpisode.description'],
-          episodeNumber: row['upcomingEpisode.episodeNumber'],
-          seasonNumber: row['upcomingEpisode.seasonNumber'],
-          releaseDate: row['upcomingEpisode.releaseDate'],
-          runtime: row['upcomingEpisode.runtime'],
-          tvShowId: row['upcomingEpisode.tvShowId'],
-          tmdbId: row['upcomingEpisode.tmdbId'],
-          imdbId: row['upcomingEpisode.imdbId'],
-          tvdbId: row['upcomingEpisode.tvdbId'],
-          traktId: row['upcomingEpisode.traktId'],
-          seasonId: row['upcomingEpisode.seasonId'],
-          isSpecialEpisode: Boolean(row['upcomingEpisode.isSpecialEpisode']),
-          userRating: undefined,
-          seenHistory: undefined,
-          lastSeenAt: undefined,
-          seen: false,
-        }
-      : undefined,
-    lastAiredEpisode: row['lastAiredEpisode.id']
-      ? {
-          id: row['lastAiredEpisode.id'],
-          title: row['lastAiredEpisode.title'],
-          description: row['lastAiredEpisode.description'],
-          episodeNumber: row['lastAiredEpisode.episodeNumber'],
-          seasonNumber: row['lastAiredEpisode.seasonNumber'],
-          releaseDate: row['lastAiredEpisode.releaseDate'],
-          runtime: row['lastAiredEpisode.runtime'],
-          tvShowId: row['lastAiredEpisode.tvShowId'],
-          tmdbId: row['lastAiredEpisode.tmdbId'],
-          imdbId: row['lastAiredEpisode.imdbId'],
-          tvdbId: row['lastAiredEpisode.tvdbId'],
-          traktId: row['lastAiredEpisode.traktId'],
-          seasonId: row['lastAiredEpisode.seasonId'],
-          isSpecialEpisode: Boolean(row['lastAiredEpisode.isSpecialEpisode']),
-          userRating: undefined,
-          seenHistory: undefined,
-          lastSeenAt: undefined,
-          seen: false,
-        }
-      : undefined,
+    userRating: mapUserRating(row),
+    firstUnwatchedEpisode: mapEpisodeRow(
+      row,
+      'firstUnwatchedEpisode',
+      'id'
+    ),
+    upcomingEpisode: mapEpisodeRow(
+      row,
+      'upcomingEpisode',
+      'releaseDate',
+      { seen: false, includeSeen: true }
+    ),
+    lastAiredEpisode: mapEpisodeRow(row, 'lastAiredEpisode', 'id', {
+      seen: false,
+      includeSeen: true,
+    }),
   } as unknown as MediaItemItemsResponse;
 };
 
@@ -1106,27 +1205,11 @@ export const getFacetsKnex = async (
     status,
     onlyOnWatchlist,
     onlySeenItems,
-    onlyWithNextAiring,
-    onlyWithNextEpisodesToWatch,
     onlyWithUserRating,
     onlyWithoutUserRating,
-    onlyWithProgress,
-    orderBy,
   } = args;
 
-  const currentDateString = new Date().toISOString();
-
-  const watchlist = await Database.knex('list')
-    .select('id')
-    .where('userId', userId)
-    .where('isWatchlist', true)
-    .first();
-
-  if (watchlist === undefined) {
-    throw new Error(`user ${userId} has no watchlist`);
-  }
-
-  const watchlistId = watchlist.id;
+  const watchlistId = await getWatchlistId(userId);
   const isPlatformRecommended = args.orderBy === 'platformRecommended';
 
   // Build query selecting only the columns needed for faceting
@@ -1206,142 +1289,31 @@ export const getFacetsKnex = async (
     );
   }
 
-  // Apply filters (same logic as getItemsKnexSql)
-  if (mediaType) {
-    query.andWhere('mediaItem.mediaType', mediaType);
-  }
-
-  if (filter && filter.trim().length > 0) {
-    query.andWhere('mediaItem.title', 'LIKE', `%${filter}%`);
-  }
-
-  if (genres) {
-    const genreArray = genres
-      .split(',')
-      .map((g) => g.trim())
-      .filter(Boolean);
-    if (genreArray.length > 0) {
-      query.andWhere((qb) => {
-        genreArray.forEach((g, index) => {
-          if (index === 0) {
-            qb.where('mediaItem.genres', 'LIKE', `%${g}%`);
-          } else {
-            qb.orWhere('mediaItem.genres', 'LIKE', `%${g}%`);
-          }
-        });
-      });
+  applySharedLibraryFilters(
+    query,
+    {
+      mediaType,
+      filter,
+      genres,
+      languages,
+      creators,
+      publishers,
+      mediaTypes,
+      yearMin,
+      yearMax,
+      ratingMin,
+      ratingMax,
+      status,
+      onlyOnWatchlist,
+      onlySeenItems,
+      onlyWithUserRating,
+      onlyWithoutUserRating,
+    },
+    {
+      isPlatformRecommended,
+      lastSeenColumn: 'lastSeen.mediaItemId',
     }
-  }
-
-  if (languages) {
-    const languageArray = languages
-      .split(',')
-      .map((l) => l.trim())
-      .filter(Boolean);
-    if (languageArray.length > 0) {
-      query.whereIn('mediaItem.language', languageArray);
-    }
-  }
-
-  if (creators) {
-    const creatorArray = creators
-      .split(',')
-      .map((c) => c.trim())
-      .filter(Boolean);
-    if (creatorArray.length > 0) {
-      query.andWhere((qb) => {
-        creatorArray.forEach((c) => {
-          qb.orWhere('mediaItem.director', 'LIKE', `%${c}%`);
-          qb.orWhere('mediaItem.creator', 'LIKE', `%${c}%`);
-          qb.orWhere('mediaItem.authors', 'LIKE', `%${c}%`);
-          qb.orWhere('mediaItem.developer', 'LIKE', `%${c}%`);
-        });
-      });
-    }
-  }
-
-  if (publishers) {
-    const publisherArray = publishers
-      .split(',')
-      .map((p) => p.trim())
-      .filter(Boolean);
-    if (publisherArray.length > 0) {
-      query.whereIn('mediaItem.publisher', publisherArray);
-    }
-  }
-
-  if (mediaTypes) {
-    const mediaTypeArray = mediaTypes
-      .split(',')
-      .map((m) => m.trim())
-      .filter(Boolean);
-    if (mediaTypeArray.length > 0) {
-      query.whereIn('mediaItem.mediaType', mediaTypeArray);
-    }
-  }
-
-  if (yearMin !== undefined || yearMax !== undefined) {
-    if (yearMin !== undefined) {
-      query.andWhere(
-        'mediaItem.releaseDate',
-        '>=',
-        new Date(yearMin, 0, 1).toISOString()
-      );
-    }
-    if (yearMax !== undefined) {
-      query.andWhere(
-        'mediaItem.releaseDate',
-        '<=',
-        new Date(yearMax, 11, 31, 23, 59, 59, 999).toISOString()
-      );
-    }
-  }
-
-  if (ratingMin !== undefined || ratingMax !== undefined) {
-    if (ratingMin !== undefined && ratingMin > 0) {
-      query
-        .whereNotNull('mediaItem.tmdbRating')
-        .andWhere('mediaItem.tmdbRating', '>=', ratingMin);
-    }
-    if (ratingMax !== undefined) {
-      query.andWhere('mediaItem.tmdbRating', '<=', ratingMax);
-    }
-  }
-
-  if (status) {
-    const statusArray = status
-      .split(',')
-      .map((s) => s.trim())
-      .filter(Boolean);
-    if (statusArray.includes('rated')) {
-      query.whereNotNull('userRating.rating');
-    }
-    if (statusArray.includes('unrated')) {
-      query.whereNull('userRating.rating');
-    }
-    if (statusArray.includes('watchlist')) {
-      query.whereNotNull('listItem.mediaItemId');
-    }
-    if (statusArray.includes('seen')) {
-      query.whereNotNull('lastSeen.mediaItemId');
-    }
-  }
-
-  if (onlyOnWatchlist && !isPlatformRecommended) {
-    query.whereNotNull('listItem.mediaItemId');
-  }
-
-  if (onlySeenItems === true) {
-    query.whereNotNull('lastSeen.mediaItemId');
-  }
-
-  if (onlyWithUserRating === true) {
-    query.whereNotNull('userRating.rating');
-  }
-
-  if (onlyWithoutUserRating === true) {
-    query.whereNull('userRating.rating');
-  }
+  );
 
   // Fetch all matching rows for application-layer aggregation
   const rows = await query;
@@ -1361,7 +1333,7 @@ export const getFacetsKnex = async (
       for (const genre of genreList) {
         const trimmed = genre.trim();
         if (trimmed) {
-          genreCounts.set(trimmed, (genreCounts.get(trimmed) || 0) + 1);
+          incrementFacetCount(genreCounts, trimmed);
         }
       }
     }
@@ -1370,14 +1342,14 @@ export const getFacetsKnex = async (
     if (row.releaseDate) {
       const yearStr = String(row.releaseDate).substring(0, 4);
       if (yearStr && /^\d{4}$/.test(yearStr)) {
-        yearCounts.set(yearStr, (yearCounts.get(yearStr) || 0) + 1);
+        incrementFacetCount(yearCounts, yearStr);
       }
     }
 
     // Languages
     if (row.language) {
       const lang = row.language as string;
-      languageCounts.set(lang, (languageCounts.get(lang) || 0) + 1);
+      incrementFacetCount(languageCounts, lang);
     }
 
     // Creators: aggregate from director (movies), creator (TV), authors (books/audiobooks), developer (games)
@@ -1391,7 +1363,7 @@ export const getFacetsKnex = async (
       if (field) {
         const names = splitCreatorField(field);
         for (const name of names) {
-          creatorCounts.set(name, (creatorCounts.get(name) || 0) + 1);
+          incrementFacetCount(creatorCounts, name);
         }
       }
     }
@@ -1399,30 +1371,23 @@ export const getFacetsKnex = async (
     // Publishers
     if (row.publisher) {
       const pub = row.publisher as string;
-      publisherCounts.set(pub, (publisherCounts.get(pub) || 0) + 1);
+      incrementFacetCount(publisherCounts, pub);
     }
 
     // Media types
     if (row.mediaType) {
       const mt = row.mediaType as string;
-      mediaTypeCounts.set(mt, (mediaTypeCounts.get(mt) || 0) + 1);
+      incrementFacetCount(mediaTypeCounts, mt);
     }
   }
 
-  // Convert maps to sorted arrays (descending by count), excluding zero counts
-  const mapToSortedArray = (map: Map<string, number>): FacetOption[] =>
-    Array.from(map.entries())
-      .filter(([, count]) => count > 0)
-      .map(([value, count]) => ({ value, count }))
-      .sort((a, b) => b.count - a.count);
-
   const result: FacetsResponse = {
-    genres: mapToSortedArray(genreCounts),
-    years: mapToSortedArray(yearCounts),
-    languages: mapToSortedArray(languageCounts),
-    creators: mapToSortedArray(creatorCounts),
-    publishers: mapToSortedArray(publisherCounts),
-    mediaTypes: mapToSortedArray(mediaTypeCounts),
+    genres: mapToSortedFacetOptions(genreCounts),
+    years: mapToSortedFacetOptions(yearCounts),
+    languages: mapToSortedFacetOptions(languageCounts),
+    creators: mapToSortedFacetOptions(creatorCounts),
+    publishers: mapToSortedFacetOptions(publisherCounts),
+    mediaTypes: mapToSortedFacetOptions(mediaTypeCounts),
   };
 
   // When mediaType is specified, omit mediaTypes from response (already scoped)

@@ -13,8 +13,6 @@ import { queryClient } from 'src/App';
 import { Button } from 'src/components/ui/button';
 
 const useTraktTvImport = () => {
-  const [_state, setState] = useState<ImportState>();
-
   const { data: deviceCode } = useQuery({
     queryKey: ['import', 'TraktTv', 'device-code'],
     queryFn: mediaTrackerApi.importTrakttv.deviceToken,
@@ -38,7 +36,7 @@ const useTraktTvImport = () => {
   const startOverMutation = useMutation({
     mutationFn: () => mediaTrackerApi.importTrakttv.startOver(),
     onSettled: () => {
-      setState(undefined);
+      setStateResponse(undefined);
       queryClient.removeQueries({ queryKey: ['import', 'TraktTv'] });
       queryClient.invalidateQueries({ queryKey: ['import', 'TraktTv'] });
     },
@@ -82,12 +80,10 @@ export const TraktTvImportPage: FunctionComponent = () => {
                       variant="outline"
                       size="sm"
                       className="mt-2"
-                      onClick={async () => {
-                        try {
-                          navigator.clipboard.writeText(deviceCode.userCode);
-                        } catch (error) {
-                          console.log(error);
-                        }
+                      onClick={() => {
+                        void navigator.clipboard
+                          .writeText(deviceCode.userCode)
+                          .catch(() => undefined);
                       }}
                     >
                       <Trans>Copy to clipboard</Trans>

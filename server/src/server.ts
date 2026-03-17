@@ -223,7 +223,6 @@ type ApplicationConfig = {
 export class Application {
   #server?: Server;
   #config: ApplicationConfig;
-  #sessionKey?: string;
 
   constructor(config: ApplicationConfig) {
     this.#config = config;
