@@ -24,6 +24,7 @@ docs/dist
 
 /tasks/
 /ralph/
+/archive/
 /.planning/
 /trees/
 /docs-catalog.json
@@ -127,6 +128,4 @@ lerna-debug.log
 .DS_Store
 Thumbs.db
 
-/ralph/
-/archive/
 client/junit.xml
