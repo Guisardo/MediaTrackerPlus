@@ -26,7 +26,9 @@ RUN npm ci --omit=dev
 
 FROM node:20-alpine AS runtime
 
-RUN apk add --no-cache su-exec
+RUN apk add --no-cache su-exec && \
+    addgroup -g 1000 mediatracker && \
+    adduser -D -H -u 1000 -G mediatracker mediatracker
 
 WORKDIR /storage
 VOLUME /storage
@@ -63,4 +65,7 @@ ENV NODE_ENV=production
 
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD ["node", "-e", "const http = require('node:http'); const req = http.get({ host: '127.0.0.1', port: Number(process.env.PORT || 7481), path: '/api/configuration' }, (res) => { res.resume(); process.exit(res.statusCode && res.statusCode >= 200 && res.statusCode < 400 ? 0 : 1); }); req.on('error', () => process.exit(1)); req.setTimeout(5000, () => req.destroy(new Error('timeout')));"]
 
+# The entrypoint runs as root to chown volume mount points, then drops to
+# PUID:PGID via su-exec. This is intentional — see docker/entrypoint.sh.
+# nosemgrep: dockerfile.security.missing-user-entrypoint.missing-user-entrypoint
 ENTRYPOINT ["/docker/entrypoint.sh"]

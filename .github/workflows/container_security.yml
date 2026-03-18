@@ -58,7 +58,6 @@ jobs:
       - name: Start smoke test container
         run: |
           docker run -d \
-            --rm \
             --name mediatracker-smoke \
             -e SERVER_LANG=en \
             -e TMDB_LANG=en \
