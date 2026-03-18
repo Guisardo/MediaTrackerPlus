@@ -24,7 +24,7 @@ RUN npm ci --omit=dev
 
 FROM node:20-alpine AS runtime
 
-RUN apk add --no-cache su-exec
+RUN apk upgrade --no-cache && apk add --no-cache su-exec
 
 WORKDIR /storage
 VOLUME /storage
