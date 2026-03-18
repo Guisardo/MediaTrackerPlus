@@ -26,9 +26,7 @@ RUN npm ci --omit=dev
 
 FROM node:20-alpine AS runtime
 
-RUN apk add --no-cache su-exec && \
-    addgroup -g 1000 mediatracker && \
-    adduser -D -H -u 1000 -G mediatracker mediatracker
+RUN apk add --no-cache su-exec
 
 WORKDIR /storage
 VOLUME /storage
