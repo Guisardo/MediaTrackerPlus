@@ -1,65 +1,36 @@
-# Build libvips
-FROM node:20-alpine3.20 AS node-libvips-dev
-
-ENV VIPS_VERSION=8.16.0
-ENV VIPS_ARCHIVE_FILENAME=vips-${VIPS_VERSION}.tar.xz
-ENV SHARP_FORCE_GLOBAL_LIBVIPS=true
-
-RUN apk add --no-cache meson gobject-introspection-dev wget g++ make python3 
-RUN apk add --no-cache expat-dev glib-dev libwebp-dev jpeg-dev fftw-dev orc-dev libpng-dev tiff-dev lcms2-dev
-
-WORKDIR /libvips
-WORKDIR /libvips-build
-
-RUN wget --quiet https://github.com/libvips/libvips/releases/download/v${VIPS_VERSION}/${VIPS_ARCHIVE_FILENAME}
-RUN tar xf ${VIPS_ARCHIVE_FILENAME}
-
-WORKDIR /libvips-build/vips-${VIPS_VERSION}
-
-RUN meson setup build-dir --buildtype=release --prefix=/libvips
-
-WORKDIR /libvips-build/vips-${VIPS_VERSION}/build-dir 
-RUN meson compile
-RUN meson install
-
-ENV PKG_CONFIG_PATH=/libvips/lib/pkgconfig/
-RUN pkg-config --modversion vips-cpp | grep ${VIPS_VERSION} -q
-
-# Copy libvips and install it's dependencies
-FROM alpine:3.20 AS alpine-libvips
-
-COPY --from=node-libvips-dev /libvips /libvips
-RUN apk add --no-cache expat glib libwebp jpeg fftw orc libpng tiff lcms2
-
-# Build server and client
-FROM node-libvips-dev AS build
-
-ENV SHARP_FORCE_GLOBAL_LIBVIPS=true
+FROM node:20-alpine AS build
 
 WORKDIR /app
+
+RUN apk add --no-cache python3 make g++
 
 COPY server/ /app/server
 COPY client/ /app/client
 COPY rest-api/ /app/rest-api
-COPY ["package.json", "package-lock.json*", "./"]
 
-RUN apk add --no-cache python3 g++ make
-RUN npm ci
-RUN npm run build
+RUN npm ci --prefix /app/rest-api
+RUN npm ci --prefix /app/server
+RUN npm ci --prefix /app/client
+RUN npm run build:docker --prefix /app/server
+RUN npm run build --prefix /app/client
 
-# Build server for production
-FROM node-libvips-dev AS server-build-production
-
-
+FROM node:20-alpine AS prod-deps
 WORKDIR /server
+
+RUN apk add --no-cache python3 make g++
+
 COPY ["server/package.json", "server/package-lock.json*", "./"]
-RUN apk add --no-cache python3 g++ make
 RUN npm ci --omit=dev
 
-FROM node:20-alpine3.20 AS node
-FROM alpine-libvips
+FROM node:20-alpine AS runtime
 
-RUN apk add --no-cache curl shadow
+# Upgrade OS packages to patch unfixed CVEs (e.g. zlib), then remove npm from the
+# runtime image. npm is only needed at build time; stripping it eliminates its
+# bundled vulnerable transitive deps (cross-spawn, glob, minimatch, tar, etc.)
+# that would otherwise appear in Trivy HIGH/CRITICAL findings.
+RUN apk upgrade --no-cache \
+ && apk add --no-cache su-exec \
+ && npm uninstall -g npm
 
 WORKDIR /storage
 VOLUME /storage
@@ -72,31 +43,31 @@ VOLUME /logs
 
 WORKDIR /app
 
-COPY --from=node /usr/local/bin/node /usr/local/bin/
-COPY --from=node /usr/lib/ /usr/lib/
-
-COPY --from=build /app/server/public public
-COPY --from=build /app/server/build build
-
-COPY --from=server-build-production /server/node_modules node_modules
+COPY --from=build /app/server/public ./public
+COPY --from=build /app/server/build ./build
+COPY --from=prod-deps /server/node_modules ./node_modules
 
 COPY server/package.json ./
 COPY docker/entrypoint.sh /docker/entrypoint.sh
 
+RUN chmod +x /docker/entrypoint.sh
+
 ENV PORT=7481
-EXPOSE $PORT
+EXPOSE 7481
 
 ENV PUID=1000
 ENV PGID=1000
 
-RUN groupadd --non-unique --gid 1000 abc
-RUN useradd --non-unique --create-home --uid 1000 --gid abc abc
-
-HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD curl ${HOSTNAME}:${PORT}
-
 ENV DATABASE_PATH="/storage/data.db"
 ENV ASSETS_PATH="/assets"
 ENV LOGS_PATH="/logs"
+ENV CONFIG_DIRECTORY="/storage/.mediatracker"
+ENV HOME="/home/mediatracker"
 ENV NODE_ENV=production
 
-ENTRYPOINT  ["sh", "/docker/entrypoint.sh"]
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD ["node", "-e", "const http = require('node:http'); const req = http.get({ host: '127.0.0.1', port: Number(process.env.PORT || 7481), path: '/api/configuration' }, (res) => { res.resume(); process.exit(res.statusCode && res.statusCode >= 200 && res.statusCode < 400 ? 0 : 1); }); req.on('error', () => process.exit(1)); req.setTimeout(5000, () => req.destroy(new Error('timeout')));"]
+
+# The entrypoint runs as root to chown volume mount points, then drops to
+# PUID:PGID via su-exec. This is intentional — see docker/entrypoint.sh.
+# nosemgrep: dockerfile.security.missing-user-entrypoint.missing-user-entrypoint
+ENTRYPOINT ["/docker/entrypoint.sh"]
