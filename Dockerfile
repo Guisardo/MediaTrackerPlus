@@ -11,9 +11,7 @@ COPY rest-api/ /app/rest-api
 RUN npm ci --prefix /app/rest-api
 RUN npm ci --prefix /app/server
 RUN npm ci --prefix /app/client
-RUN npm run lingui:extract --prefix /app/server
-RUN npm run lingui:compile --prefix /app/server
-RUN npm run build:server --prefix /app/server
+RUN npm run build --prefix /app/server
 RUN npm run build --prefix /app/client
 
 FROM node:20-alpine AS prod-deps
