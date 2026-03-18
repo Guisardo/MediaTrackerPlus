@@ -21,7 +21,9 @@ export const configMigrationLogs = () => logs;
 export class Config {
   static readonly version = version;
 
-  static readonly configDirectory = join(homedir(), '.mediatracker');
+  static readonly configDirectory =
+    process.env.CONFIG_DIRECTORY ||
+    join(process.env.HOME || homedir(), '.mediatracker');
 
   static readonly MIGRATIONS_DIRECTORY = resolve(__dirname, 'migrations');
 
