@@ -1,3 +1,5 @@
+import { join } from 'path';
+
 describe('Config.CONFIG_DIRECTORY env var override', () => {
   const originalConfigDirectory = process.env.CONFIG_DIRECTORY;
   const originalDatabasePath = process.env.DATABASE_PATH;
@@ -45,8 +47,8 @@ describe('Config.CONFIG_DIRECTORY env var override', () => {
     });
 
     expect(resolvedConfigDirectory).toBe('/tmp/mediatracker-config');
-    expect(resolvedAssetsPath).toBe('/tmp/mediatracker-config/img');
-    expect(resolvedLogsPath).toBe('/tmp/mediatracker-config/logs');
-    expect(resolvedDatabasePath).toBe('/tmp/mediatracker-config/data.db');
+    expect(resolvedAssetsPath).toBe(join('/tmp/mediatracker-config', 'img'));
+    expect(resolvedLogsPath).toBe(join('/tmp/mediatracker-config', 'logs'));
+    expect(resolvedDatabasePath).toBe(join('/tmp/mediatracker-config', 'data.db'));
   });
 });
