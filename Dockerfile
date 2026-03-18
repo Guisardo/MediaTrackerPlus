@@ -24,7 +24,13 @@ RUN npm ci --omit=dev
 
 FROM node:20-alpine AS runtime
 
-RUN apk upgrade --no-cache && apk add --no-cache su-exec
+# Upgrade OS packages to patch unfixed CVEs (e.g. zlib), then remove npm from the
+# runtime image. npm is only needed at build time; stripping it eliminates its
+# bundled vulnerable transitive deps (cross-spawn, glob, minimatch, tar, etc.)
+# that would otherwise appear in Trivy HIGH/CRITICAL findings.
+RUN apk upgrade --no-cache \
+ && apk add --no-cache su-exec \
+ && npm uninstall -g npm
 
 WORKDIR /storage
 VOLUME /storage
