@@ -46,6 +46,14 @@ typescriptRoutesToOpenApi({
 // generated file to suppress these errors without modifying the generator internals.
 // The eslint-disable comment must precede @ts-nocheck to prevent the ban-ts-comment rule from
 // flagging it.
+// Ensure openapi.json ends with a trailing newline so that `git diff
+// --exit-code` does not flag the file as modified after every build.
+const openApiFilePath = path.resolve(__dirname, '../openapi.json');
+const openApiContent = fs.readFileSync(openApiFilePath, 'utf-8');
+if (!openApiContent.endsWith('\n')) {
+  fs.writeFileSync(openApiFilePath, openApiContent + '\n');
+}
+
 const GENERATED_FILE_HEADER =
   '/* eslint-disable @typescript-eslint/ban-ts-comment */\n// @ts-nocheck\n';
 const routesFilePath = path.resolve(__dirname, '../src/generated/routes/routes.ts');
