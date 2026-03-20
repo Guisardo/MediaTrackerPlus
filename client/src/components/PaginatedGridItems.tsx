@@ -357,7 +357,7 @@ export const PaginatedGridItems: FunctionComponent<{
     ? buildFacetSections({
         facetData,
         facets,
-        mediaType: filterMediaType,
+        mediaType: mediaTypeArg,
       })
     : null;
 
@@ -428,7 +428,7 @@ export const PaginatedGridItems: FunctionComponent<{
                 {showFacets && (
                   <ActiveFacetChips
                     facets={facets}
-                    mediaType={filterMediaType}
+                    mediaType={mediaTypeArg}
                   />
                 )}
               </>
