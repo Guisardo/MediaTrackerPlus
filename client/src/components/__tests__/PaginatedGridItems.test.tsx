@@ -267,8 +267,18 @@ jest.mock('src/components/Facets', () => {
     (name: string) =>
     (props: any) =>
       React.createElement('div', { 'data-testid': name });
+  const activeFacetChipsMock = jest.fn((props: any) =>
+    React.createElement('div', { 'data-testid': 'active-facet-chips' })
+  );
+  const mediaTypeSectionMock = jest.fn((props: any) =>
+    React.createElement('div', { 'data-testid': 'media-type-section' })
+  );
 
   return {
+    __facetSpies: {
+      activeFacetChipsMock,
+      mediaTypeSectionMock,
+    },
     FacetPanel: ({ children, facets }: { children: React.ReactNode; facets: any }) =>
       React.createElement('div', { 'data-testid': 'facet-panel' }, children),
     FacetDrawer: ({
@@ -291,7 +301,7 @@ jest.mock('src/components/Facets', () => {
         { 'data-testid': 'facet-mobile-button', onClick },
         `Filters (${activeFacetCount})`
       ),
-    ActiveFacetChips: makeMock('active-facet-chips'),
+    ActiveFacetChips: activeFacetChipsMock,
     GenreSection: ({ genres }: any) =>
       React.createElement('div', { 'data-testid': 'genre-section', 'data-genres': JSON.stringify(genres) }),
     YearSection: makeMock('year-section'),
@@ -300,7 +310,7 @@ jest.mock('src/components/Facets', () => {
     CreatorSection: makeMock('creator-section'),
     StatusSection: makeMock('status-section'),
     PublisherSection: makeMock('publisher-section'),
-    MediaTypeSection: makeMock('media-type-section'),
+    MediaTypeSection: mediaTypeSectionMock,
   };
 });
 
@@ -329,6 +339,7 @@ import { useGroupSelectorComponent } from 'src/components/GroupSelector';
 import { useUpdateSearchParams } from 'src/hooks/updateSearchParamsHook';
 import { useFacets } from 'src/hooks/facets';
 import { PaginatedGridItems, Pagination } from 'src/components/PaginatedGridItems';
+import * as FacetsModule from 'src/components/Facets';
 
 // ---------------------------------------------------------------------------
 // Shared mock functions
@@ -336,6 +347,12 @@ import { PaginatedGridItems, Pagination } from 'src/components/PaginatedGridItem
 
 const mockSearch = jest.fn();
 const mockUpdateSearchParams = jest.fn();
+const { __facetSpies } = FacetsModule as unknown as {
+  __facetSpies: {
+    activeFacetChipsMock: jest.Mock;
+    mediaTypeSectionMock: jest.Mock;
+  };
+};
 
 // ---------------------------------------------------------------------------
 // Default facets object
@@ -930,6 +947,22 @@ describe('PaginatedGridItems – ActiveFacetChips', () => {
 
     expect(screen.queryByTestId('active-facet-chips')).not.toBeInTheDocument();
   });
+
+  it('passes undefined mediaType to ActiveFacetChips on mixed-content pages', () => {
+    renderPaginated({ showFacets: true, args: {} });
+
+    expect(
+      __facetSpies.activeFacetChipsMock.mock.calls.at(-1)?.[0]
+    ).toEqual(expect.objectContaining({ mediaType: undefined }));
+  });
+
+  it('passes concrete mediaType to ActiveFacetChips on single-type pages', () => {
+    renderPaginated({ showFacets: true, args: { mediaType: 'movie' as any } });
+
+    expect(
+      __facetSpies.activeFacetChipsMock.mock.calls.at(-1)?.[0]
+    ).toEqual(expect.objectContaining({ mediaType: 'movie' }));
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -954,6 +987,22 @@ describe('PaginatedGridItems – facet sections rendered in panel', () => {
 
     expect(screen.queryByTestId('status-section')).not.toBeInTheDocument();
     expect(screen.queryByTestId('genre-section')).not.toBeInTheDocument();
+  });
+
+  it('passes undefined mediaType to MediaTypeSection on mixed-content pages', () => {
+    renderPaginated({ showFacets: true, args: {} });
+
+    expect(
+      __facetSpies.mediaTypeSectionMock.mock.calls.at(-1)?.[0]
+    ).toEqual(expect.objectContaining({ mediaType: undefined }));
+  });
+
+  it('passes concrete mediaType to MediaTypeSection on single-type pages', () => {
+    renderPaginated({ showFacets: true, args: { mediaType: 'movie' as any } });
+
+    expect(
+      __facetSpies.mediaTypeSectionMock.mock.calls.at(-1)?.[0]
+    ).toEqual(expect.objectContaining({ mediaType: 'movie' }));
   });
 });
 
