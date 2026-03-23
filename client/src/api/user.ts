@@ -52,8 +52,19 @@ export const useUser = () => {
   const updateUserMutation = useMutation({
     mutationFn: (data: Parameters<typeof mediaTrackerApi.user.update>[0]) =>
       mediaTrackerApi.user.update(data),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['user'] });
+
+      if ('dateOfBirth' in variables) {
+        queryClient.invalidateQueries({ queryKey: ['items'] });
+        queryClient.invalidateQueries({ queryKey: ['facets'] });
+        queryClient.invalidateQueries({ queryKey: ['search'] });
+        queryClient.invalidateQueries({ queryKey: ['details'] });
+        queryClient.invalidateQueries({ queryKey: ['listItems'] });
+        queryClient.invalidateQueries({ queryKey: ['calendar'] });
+        queryClient.invalidateQueries({ queryKey: ['statistics'] });
+        queryClient.invalidateQueries({ queryKey: ['genre'] });
+      }
     },
   });
 
