@@ -9,6 +9,7 @@ import {
   AudibleCountryCode,
   MediaItemDetailsResponse,
   MediaItemItemsResponse,
+  ParentalGuidanceCategory,
   TvEpisode,
   TvSeason,
   UserRating,
@@ -49,6 +50,126 @@ import {
 } from 'src/components/AddAndRemoveFromSeenHistoryButton';
 import { hasBeenSeenAtLeastOnce } from 'src/mediaItem';
 import { Button } from 'src/components/ui/button';
+
+/**
+ * Determines whether there is any parental metadata worth rendering.
+ * At least one of the rating fields or guidance fields must be present.
+ */
+function hasParentalMetadata(mediaItem: MediaItemDetailsResponse): boolean {
+  return (
+    mediaItem.contentRatingSystem != null ||
+    mediaItem.contentRatingRegion != null ||
+    mediaItem.contentRatingLabel != null ||
+    (mediaItem.contentRatingDescriptors != null &&
+      mediaItem.contentRatingDescriptors.length > 0) ||
+    mediaItem.parentalGuidanceSummary != null ||
+    (mediaItem.parentalGuidanceCategories != null &&
+      mediaItem.parentalGuidanceCategories.length > 0)
+  );
+}
+
+const ParentalGuidanceCategoryRow: FunctionComponent<{
+  category: ParentalGuidanceCategory;
+}> = ({ category }) => (
+  <div className="mt-1">
+    <span className="font-semibold">{category.category}</span>
+    {category.severity && (
+      <span className="ml-1 text-zinc-600 dark:text-zinc-400">
+        ({category.severity})
+      </span>
+    )}
+    {category.description && (
+      <div className="text-sm text-zinc-600 dark:text-zinc-400">
+        {category.description}
+      </div>
+    )}
+  </div>
+);
+
+/**
+ * Renders the parental rating and guidance section for a details page.
+ * Only rendered when at least one parental metadata field is present.
+ */
+export const ParentalRatingSection: FunctionComponent<{
+  mediaItem: MediaItemDetailsResponse;
+}> = ({ mediaItem }) => {
+  if (!hasParentalMetadata(mediaItem)) {
+    return null;
+  }
+
+  const hasRatingInfo =
+    mediaItem.contentRatingSystem != null ||
+    mediaItem.contentRatingRegion != null ||
+    mediaItem.contentRatingLabel != null;
+
+  const hasDescriptors =
+    mediaItem.contentRatingDescriptors != null &&
+    mediaItem.contentRatingDescriptors.length > 0;
+
+  const hasGuidanceSummary = mediaItem.parentalGuidanceSummary != null;
+
+  const hasCategories =
+    mediaItem.parentalGuidanceCategories != null &&
+    mediaItem.parentalGuidanceCategories.length > 0;
+
+  return (
+    <div className="mt-3" data-testid="parental-rating-section">
+      <div className="font-bold text-base">
+        <Trans>Parental guidance</Trans>
+      </div>
+
+      {hasRatingInfo && (
+        <div className="mt-1">
+          <span className="font-bold">
+            <Trans>Rating</Trans>:{' '}
+          </span>
+          <span>
+            {[
+              mediaItem.contentRatingLabel,
+              mediaItem.contentRatingSystem,
+              mediaItem.contentRatingRegion,
+            ]
+              .filter(Boolean)
+              .join(' \u2022 ')}
+          </span>
+        </div>
+      )}
+
+      {hasDescriptors && (
+        <div className="mt-1">
+          <span className="font-bold">
+            <Trans>Descriptors</Trans>:{' '}
+          </span>
+          <span>{mediaItem.contentRatingDescriptors!.join(', ')}</span>
+        </div>
+      )}
+
+      {hasGuidanceSummary && (
+        <div className="mt-1">
+          <span className="font-bold">
+            <Trans>Guidance</Trans>:{' '}
+          </span>
+          <span className="whitespace-pre-wrap">
+            {mediaItem.parentalGuidanceSummary}
+          </span>
+        </div>
+      )}
+
+      {hasCategories && (
+        <div className="mt-1">
+          <span className="font-bold">
+            <Trans>Content categories</Trans>:
+          </span>
+          <div className="ml-2">
+            {mediaItem.parentalGuidanceCategories!.map((cat, index) => (
+              <ParentalGuidanceCategoryRow key={index} category={cat} />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const Review: FunctionComponent<{ userRating: UserRating }> = (props) => {
   const { userRating } = props;
@@ -393,6 +514,8 @@ export const DetailsPage: FunctionComponent = () => {
               {mediaItem.numberOfPages}
             </div>
           )}
+
+          <ParentalRatingSection mediaItem={mediaItem} />
 
           {isTvShow(mediaItem) && (
             <>
