@@ -37,6 +37,7 @@ import {
   useDetails,
   useUpdateMetadata,
 } from 'src/api/details';
+import { isAgeRestrictedError } from 'src/api/api';
 import { FormatDuration, RelativeTime } from 'src/components/date';
 import { Poster } from 'src/components/Poster';
 import { Modal } from 'src/components/Modal';
@@ -326,6 +327,25 @@ const ExternalLinks: FunctionComponent<{
   );
 };
 
+/**
+ * Displayed when the server returns a 403 AGE_RESTRICTED error for a details
+ * page. Purpose-built state that avoids rendering the raw error object.
+ */
+export const AgeRestrictedDetailsState: FunctionComponent = () => (
+  <div className="flex flex-col items-center justify-center mt-16 px-4 text-center">
+    <div className="text-5xl mb-4">🔒</div>
+    <div className="text-2xl font-bold mb-2">
+      <Trans>Content restricted</Trans>
+    </div>
+    <div className="text-zinc-600 dark:text-zinc-400">
+      <Trans>
+        This content is not available based on your age-based content filtering
+        preferences.
+      </Trans>
+    </div>
+  </div>
+);
+
 export const DetailsPage: FunctionComponent = () => {
   const { mediaItemId: routeMediaItemId } = useParams();
   const { mediaItem, isLoading, error } = useDetails(Number(routeMediaItemId));
@@ -340,7 +360,10 @@ export const DetailsPage: FunctionComponent = () => {
   }
 
   if (error) {
-    return <>{error}</>;
+    if (isAgeRestrictedError(error)) {
+      return <AgeRestrictedDetailsState />;
+    }
+    return <>{String(error)}</>;
   }
 
   if (!mediaItem || mediaItem.id == null) {

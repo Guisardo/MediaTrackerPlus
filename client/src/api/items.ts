@@ -10,6 +10,7 @@ type paginatedApiReturnType = {
   from: number;
   to: number;
   total: number;
+  ageGatingActive?: boolean | null;
 };
 
 export const useItems = (args: Items.Paginated.RequestQuery) => {
@@ -47,6 +48,9 @@ export const useItems = (args: Items.Paginated.RequestQuery) => {
         numberOfItemsTotal: data
           ? (data as paginatedApiReturnType).total
           : undefined,
+        ageGatingActive: data
+          ? ((data as paginatedApiReturnType).ageGatingActive ?? false)
+          : false,
         search: search.mutate,
       }
     : {
@@ -56,6 +60,7 @@ export const useItems = (args: Items.Paginated.RequestQuery) => {
         numberOfItemsTotal: data
           ? (data as MediaItemItemsResponse[]).length
           : undefined,
+        ageGatingActive: false as const,
         search: search.mutate,
       };
 };

@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { t } from '@lingui/macro';
+import { t, Trans } from '@lingui/macro';
 
 import { MediaItemItemsResponse } from 'mediatracker-api';
 import { useItems } from 'src/api/items';
@@ -33,24 +33,29 @@ export const Segment: FunctionComponent<{
 };
 
 export const HomePage: FunctionComponent = () => {
-  const { items: upcomingEpisodes } = useItems({
-    orderBy: 'nextAiring',
-    sortOrder: 'asc',
-    page: 1,
-    onlyOnWatchlist: true,
-    onlyWithNextAiring: true,
-  });
+  const { items: upcomingEpisodes, ageGatingActive: upcomingAgeGated } =
+    useItems({
+      orderBy: 'nextAiring',
+      sortOrder: 'asc',
+      page: 1,
+      onlyOnWatchlist: true,
+      onlyWithNextAiring: true,
+    });
 
-  const { items: continueWatching } = useItems({
-    mediaType: 'tv',
-    orderBy: 'lastSeen',
-    sortOrder: 'desc',
-    page: 1,
-    onlyWithNextEpisodesToWatch: true,
-    onlyOnWatchlist: true,
-  });
+  const { items: continueWatching, ageGatingActive: continueAgeGated } =
+    useItems({
+      mediaType: 'tv',
+      orderBy: 'lastSeen',
+      sortOrder: 'desc',
+      page: 1,
+      onlyWithNextEpisodesToWatch: true,
+      onlyOnWatchlist: true,
+    });
 
-  const { items: recentlyReleased } = useItems({
+  const {
+    items: recentlyReleasedRaw,
+    ageGatingActive: recentlyReleasedAgeGated,
+  } = useItems({
     orderBy: 'lastAiring',
     sortOrder: 'desc',
     page: 1,
@@ -58,7 +63,13 @@ export const HomePage: FunctionComponent = () => {
     onlySeenItems: false,
   });
 
-  const { items: unratedItems } = useItems({
+  const recentlyReleased = recentlyReleasedRaw?.filter(
+    (mediaItem) =>
+      mediaItem.lastAiring != null &&
+      new Date(mediaItem.lastAiring) > subDays(new Date(), 30)
+  );
+
+  const { items: unratedItems, ageGatingActive: unratedAgeGated } = useItems({
     orderBy: 'lastSeen',
     sortOrder: 'desc',
     page: 1,
@@ -66,10 +77,35 @@ export const HomePage: FunctionComponent = () => {
     onlyWithoutUserRating: true,
   });
 
+  // Show fallback messaging when every home section is empty because age gating
+  // removed all visible content. We only show this when at least one section
+  // has ageGatingActive so we can distinguish a genuinely-empty library from a
+  // fully-gated one.
+  const anyAgeGating =
+    upcomingAgeGated ||
+    continueAgeGated ||
+    recentlyReleasedAgeGated ||
+    unratedAgeGated;
+  const allSectionsEmpty =
+    (upcomingEpisodes?.length ?? 0) === 0 &&
+    (continueWatching?.length ?? 0) === 0 &&
+    (recentlyReleased?.length ?? 0) === 0 &&
+    (unratedItems?.length ?? 0) === 0;
+  const showAgeGatedFallback = anyAgeGating && allSectionsEmpty;
+
   return (
     <>
       <div className="px-2">
         <StatisticsSummary />
+
+        {showAgeGatedFallback && (
+          <div className="mt-8 text-center text-zinc-600 dark:text-zinc-400">
+            <Trans>
+              Content is hidden based on your age-based content filtering
+              preferences.
+            </Trans>
+          </div>
+        )}
 
         <Segment
           title={t`Upcoming`}
@@ -102,11 +138,7 @@ export const HomePage: FunctionComponent = () => {
 
         <Segment
           title={t`Recently released`}
-          items={recentlyReleased?.filter(
-            (mediaItem) =>
-              mediaItem.lastAiring != null &&
-              new Date(mediaItem.lastAiring) > subDays(new Date(), 30)
-          )}
+          items={recentlyReleased}
           gridItemArgs={{
             showRating: true,
             showLastAiring: true,
