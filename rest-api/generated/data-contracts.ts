@@ -549,8 +549,8 @@ export interface FacetOption {
 
 export type ListDetailsResponse = {
   id: number;
-  isWatchlist: boolean;
   name: string;
+  isWatchlist: boolean;
   createdAt: number;
   updatedAt: number;
   traktId?: number | null;
@@ -582,8 +582,8 @@ export type ListsResponse = ListsItemResponse[];
 
 export type ListsItemResponse = {
   id: number;
-  isWatchlist: boolean;
   name: string;
+  isWatchlist: boolean;
   createdAt: number;
   updatedAt: number;
   traktId?: number | null;
@@ -735,6 +735,7 @@ export interface UserResponse {
 export interface RequestError {
   errorMessage: string;
   MediaTrackerError: true;
+  code?: 'AGE_RESTRICTED' | null;
 }
 
 export type NotificationPlatformsResponseType =

@@ -14,6 +14,7 @@ import { TvEpisode } from 'src/entity/tvepisode';
 import { TvSeason } from 'src/entity/tvseason';
 import { UserRating } from 'src/entity/userRating';
 import { repository } from 'src/repository/repository';
+import { applyAgeGatingFilter } from 'src/utils/ageEligibility';
 
 export type ListDetailsResponse = Omit<List, 'userId'> & {
   totalRuntime: number;
@@ -260,8 +261,9 @@ class ListRepository extends repository<List>({
     listId: number;
     userId: number;
     sortBy?: ListSortBy;
+    viewerAge?: number | null;
   }): Promise<ListItemsResponse> {
-    const { listId, userId, sortBy: sortByArg } = args;
+    const { listId, userId, sortBy: sortByArg, viewerAge } = args;
 
     const { id: watchlistId } = await Database.knex('list')
       .select('id')
@@ -910,6 +912,10 @@ class ListRepository extends repository<List>({
               'mediaItemUpcomingEpisodeHelper.seasonAndEpisodeNumber'
             )
       )
+      // Age gating: exclude items whose minimumAge exceeds the viewer's age.
+      .modify((qb: Knex.QueryBuilder) => {
+        applyAgeGatingFilter(qb, viewerAge ?? null);
+      })
       .orderBy('listItem.id', 'asc');
 
     return res.map((listItem: Record<string, any>) => ({

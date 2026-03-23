@@ -6,6 +6,8 @@ import {
   ListDetailsResponse,
 } from 'src/repository/list';
 import { createExpressRoute } from 'typescript-routes-to-openapi-server';
+import { userRepository } from 'src/repository/user';
+import { computeViewerAge } from 'src/utils/ageEligibility';
 
 const VALID_LIST_SORT_BY_VALUES: ReadonlyArray<ListSortBy> = [
   'my-rating',
@@ -176,10 +178,16 @@ export class ListController {
       return;
     }
 
+    // Age gating uses the viewer's DOB, not the list owner's DOB,
+    // so shared/public lists are filtered per-viewer.
+    const selfUser = await userRepository.findOneSelf({ id: currentUser });
+    const viewerAge = computeViewerAge(selfUser?.dateOfBirth);
+
     const items = await listRepository.items({
       listId: list.id,
       userId: currentUser,
       sortBy: sortBy,
+      viewerAge: viewerAge,
     });
 
     res.json(items);

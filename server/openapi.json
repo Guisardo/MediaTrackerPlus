@@ -5413,11 +5413,11 @@
               "id": {
                 "type": "number"
               },
-              "isWatchlist": {
-                "type": "boolean"
-              },
               "name": {
                 "type": "string"
+              },
+              "isWatchlist": {
+                "type": "boolean"
               },
               "createdAt": {
                 "type": "number"
@@ -5568,11 +5568,11 @@
               "id": {
                 "type": "number"
               },
-              "isWatchlist": {
-                "type": "boolean"
-              },
               "name": {
                 "type": "string"
+              },
+              "isWatchlist": {
+                "type": "boolean"
               },
               "createdAt": {
                 "type": "number"
@@ -6195,6 +6195,14 @@
             "enum": [
               true
             ]
+          },
+          "code": {
+            "type": "string",
+            "enum": [
+              "AGE_RESTRICTED",
+              null
+            ],
+            "nullable": true
           }
         },
         "required": [
