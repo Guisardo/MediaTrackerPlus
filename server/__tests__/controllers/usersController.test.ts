@@ -649,4 +649,183 @@ describe('UsersController', () => {
       expect(data).toHaveProperty('errorMessage');
     });
   });
+
+  // -------------------------------------------------------------------------
+  // dateOfBirth — self-only field
+  // -------------------------------------------------------------------------
+
+  describe('dateOfBirth (self-only field)', () => {
+    afterEach(async () => {
+      // Clear dateOfBirth on both test users after each test.
+      await Database.knex('user').where('id', Data.user2.id).update({ dateOfBirth: null });
+      await Database.knex('user').where('id', Data.user.id).update({ dateOfBirth: null });
+    });
+
+    // ---- GET /api/user -------------------------------------------------------
+
+    test('GET /api/user returns null dateOfBirth when it has not been set', async () => {
+      const usersController = new UsersController();
+
+      const res = await request(usersController.get, {
+        userId: Data.user2.id,
+        requestQuery: {},
+      });
+
+      expect(res.statusCode).toBe(200);
+      const user = res.data as any;
+      // dateOfBirth is present in the response (possibly null) — never undefined
+      expect('dateOfBirth' in user).toBe(true);
+    });
+
+    test('GET /api/user returns the stored dateOfBirth for the authenticated user', async () => {
+      const usersController = new UsersController();
+
+      await Database.knex('user')
+        .where('id', Data.user2.id)
+        .update({ dateOfBirth: '1990-06-15' });
+
+      const res = await request(usersController.get, {
+        userId: Data.user2.id,
+        requestQuery: {},
+      });
+
+      expect(res.statusCode).toBe(200);
+      const user = res.data as any;
+      expect(user.dateOfBirth).toBe('1990-06-15');
+    });
+
+    // ---- PUT /api/user/settings — set ----------------------------------------
+
+    test('PUT /api/user/settings sets dateOfBirth and GET /api/user reflects it', async () => {
+      const usersController = new UsersController();
+
+      await request(usersController.update, {
+        userId: Data.user2.id,
+        requestBody: { dateOfBirth: '1995-03-22' },
+      });
+
+      const res = await request(usersController.get, {
+        userId: Data.user2.id,
+        requestQuery: {},
+      });
+
+      expect(res.statusCode).toBe(200);
+      const user = res.data as any;
+      expect(user.dateOfBirth).toBe('1995-03-22');
+    });
+
+    // ---- PUT /api/user/settings — update -------------------------------------
+
+    test('PUT /api/user/settings updates an existing dateOfBirth to a new value', async () => {
+      const usersController = new UsersController();
+
+      await Database.knex('user')
+        .where('id', Data.user2.id)
+        .update({ dateOfBirth: '1985-01-01' });
+
+      await request(usersController.update, {
+        userId: Data.user2.id,
+        requestBody: { dateOfBirth: '1988-12-31' },
+      });
+
+      const res = await request(usersController.get, {
+        userId: Data.user2.id,
+        requestQuery: {},
+      });
+
+      const user = res.data as any;
+      expect(user.dateOfBirth).toBe('1988-12-31');
+    });
+
+    // ---- PUT /api/user/settings — clear (null) --------------------------------
+
+    test('PUT /api/user/settings clears dateOfBirth when null is sent', async () => {
+      const usersController = new UsersController();
+
+      await Database.knex('user')
+        .where('id', Data.user2.id)
+        .update({ dateOfBirth: '2000-01-01' });
+
+      await request(usersController.update, {
+        userId: Data.user2.id,
+        requestBody: { dateOfBirth: null },
+      });
+
+      const res = await request(usersController.get, {
+        userId: Data.user2.id,
+        requestQuery: {},
+      });
+
+      const user = res.data as any;
+      expect(user.dateOfBirth === null || user.dateOfBirth === undefined).toBe(true);
+    });
+
+    // ---- dateOfBirth is NOT exposed on public projections --------------------
+
+    test('GET /api/user/:userId does not expose dateOfBirth', async () => {
+      const usersController = new UsersController();
+
+      await Database.knex('user')
+        .where('id', Data.user2.id)
+        .update({ dateOfBirth: '1991-07-04' });
+
+      const res = await request(usersController.getById, {
+        userId: Data.user.id,
+        pathParams: { userId: Data.user2.id },
+      });
+
+      expect(res.statusCode).toBe(200);
+      const user = res.data as any;
+      expect(user.dateOfBirth).toBeUndefined();
+    });
+
+    test('GET /api/users/search does not expose dateOfBirth', async () => {
+      const usersController = new UsersController();
+
+      await Database.knex('user')
+        .where('id', Data.user2.id)
+        .update({ dateOfBirth: '1991-07-04' });
+
+      const res = await request(usersController.search, {
+        userId: Data.user.id,
+        requestQuery: { query: Data.user2.name },
+      });
+
+      expect(res.statusCode).toBe(200);
+      const results = res.data as any[];
+      const found = results.find((u: any) => u.id === Data.user2.id);
+      expect(found).toBeDefined();
+      expect(found.dateOfBirth).toBeUndefined();
+    });
+
+    // ---- Registration and user creation do not require dateOfBirth ----------
+
+    test('userRepository.create succeeds without providing dateOfBirth', async () => {
+      // Verify that the DB schema allows creating a user without dateOfBirth,
+      // satisfying the acceptance criterion "Registration and existing user
+      // creation flows do not require dateOfBirth."
+      const dobUserId = await userRepository.create({
+        name: 'dobTestUser',
+        password: 'validPass1!',
+        admin: false,
+      });
+
+      try {
+        const dbUser = await Database.knex('user').where('id', dobUserId).first();
+        expect(dbUser).toBeDefined();
+        expect(dbUser.name).toBe('dobTestUser');
+        // dateOfBirth defaults to null — not required
+        expect(dbUser.dateOfBirth === null || dbUser.dateOfBirth === undefined).toBe(true);
+      } finally {
+        // Clean up
+        await Database.knex('listItem').where(
+          'listId',
+          'in',
+          Database.knex('list').where('userId', dobUserId).select('id')
+        ).delete();
+        await Database.knex('list').where('userId', dobUserId).delete();
+        await Database.knex('user').where('id', dobUserId).delete();
+      }
+    });
+  });
 });

@@ -709,6 +709,7 @@ export interface UserResponse {
   hideOverviewForUnseenSeasons?: boolean | null;
   hideEpisodeTitleForUnseenEpisodes?: boolean | null;
   addRecommendedToWatchlist?: boolean | null;
+  dateOfBirth?: string | null;
 }
 
 export interface RequestError {

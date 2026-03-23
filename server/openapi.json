@@ -3190,6 +3190,10 @@
                   "addRecommendedToWatchlist": {
                     "type": "boolean",
                     "nullable": true
+                  },
+                  "dateOfBirth": {
+                    "type": "string",
+                    "nullable": true
                   }
                 }
               }
@@ -6077,6 +6081,10 @@
           },
           "addRecommendedToWatchlist": {
             "type": "boolean",
+            "nullable": true
+          },
+          "dateOfBirth": {
+            "type": "string",
             "nullable": true
           }
         },

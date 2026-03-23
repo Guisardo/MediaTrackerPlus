@@ -2,7 +2,12 @@ import argon2 from 'argon2';
 import _ from 'lodash';
 
 import { Database } from 'src/dbconfig';
-import { User, userColumns, userNonSensitiveColumns } from 'src/entity/user';
+import {
+  User,
+  userColumns,
+  userNonSensitiveColumns,
+  userSelfColumns,
+} from 'src/entity/user';
 import { repository } from 'src/repository/repository';
 
 class UserRepository extends repository<User>({
@@ -36,6 +41,24 @@ class UserRepository extends repository<User>({
     const res = (await Database.knex<User>(this.tableName)
       .where(where)
       .select(userNonSensitiveColumns)
+      .first()) as unknown as User | undefined;
+
+    if (res) {
+      return this.deserialize(res);
+    }
+  }
+
+  /**
+   * Returns the authenticated user's own record including `dateOfBirth`.
+   * Must only be called for the currently-authenticated user — never for
+   * public or other-user queries.
+   */
+  public async findOneSelf(
+    where: Partial<User>
+  ): Promise<User | undefined> {
+    const res = (await Database.knex<User>(this.tableName)
+      .where(where)
+      .select(userSelfColumns)
       .first()) as unknown as User | undefined;
 
     if (res) {
