@@ -9,6 +9,10 @@ import { Config } from 'src/config';
 import { logger } from 'src/logger';
 import { SimilarItem } from 'src/metadata/types';
 import { definedOrNull, definedOrUndefined } from 'src/repository/repository';
+import {
+  normalizeParentalData,
+  ProviderCertification,
+} from 'src/metadata/parentalMetadata';
 
 const TMDB_API_KEY = Config.TMDB_API_KEY;
 
@@ -34,6 +38,57 @@ type PosterSize =
 
 const getPosterUrl = (p: string, size: PosterSize = 'original') => {
   return urljoin('https://image.tmdb.org/t/p/', size, path.basename(p));
+};
+
+/**
+ * Maps a TMDB movie release region to the appropriate content rating system.
+ *
+ * TMDB movie certifications use region-specific systems. US uses MPAA,
+ * GB uses BBFC, AU uses ACB, DE uses FSK. For unrecognized regions, the
+ * label is tested against MPAA as a fallback since TMDB US ratings are the
+ * most common.
+ */
+const tmdbMovieRatingSystemForRegion = (
+  region: string,
+  _label: string
+): string | null => {
+  switch (region) {
+    case 'US':
+      return 'MPAA';
+    case 'GB':
+      return 'BBFC';
+    case 'AU':
+      return 'ACB';
+    case 'DE':
+      return 'FSK';
+    default:
+      return null;
+  }
+};
+
+/**
+ * Maps a TMDB TV content rating region to the appropriate rating system.
+ *
+ * TMDB TV content ratings use region-specific systems. US uses the TV-PG
+ * system (TV-Y, TV-G, TV-PG, TV-14, TV-MA), GB uses BBFC, AU uses ACB,
+ * DE uses FSK.
+ */
+const tmdbTvRatingSystemForRegion = (
+  region: string,
+  _label: string
+): string | null => {
+  switch (region) {
+    case 'US':
+      return 'TV-PG';
+    case 'GB':
+      return 'BBFC';
+    case 'AU':
+      return 'ACB';
+    case 'DE':
+      return 'FSK';
+    default:
+      return null;
+  }
 };
 
 abstract class TMDb extends MetadataProvider {
@@ -158,7 +213,7 @@ export class TMDbMovie extends TMDb {
         params: {
           api_key: TMDB_API_KEY,
           language: GlobalConfiguration.configuration.tmdbLang,
-          append_to_response: 'credits',
+          append_to_response: 'credits,release_dates',
         },
       }
     );
@@ -247,6 +302,49 @@ export class TMDbMovie extends TMDb {
         .map((c) => c.name)
         .join(', ') || undefined;
 
+    // Normalize parental metadata from release_dates certifications.
+    // TMDB returns release_dates as a map of region → array of release entries,
+    // where each entry may have a certification string and descriptors.
+    const certifications: ProviderCertification[] = [];
+    if (item.release_dates?.results) {
+      for (const regionEntry of item.release_dates.results) {
+        const region = regionEntry.iso_3166_1;
+        for (const release of regionEntry.release_dates) {
+          if (!release.certification || release.certification.trim() === '') {
+            continue;
+          }
+          const cert = release.certification.trim();
+          // Determine the rating system for this region.
+          // US theatrical releases use MPAA; GB uses BBFC; AU uses ACB; others mapped by label.
+          const system = tmdbMovieRatingSystemForRegion(region, cert);
+          if (!system) {
+            continue;
+          }
+          certifications.push({
+            region,
+            system,
+            label: cert,
+            descriptors:
+              release.descriptors && release.descriptors.length > 0
+                ? release.descriptors
+                : null,
+          });
+        }
+      }
+    }
+
+    const parental = normalizeParentalData(certifications, {
+      adultFlag: item.adult === true,
+    });
+
+    movie.minimumAge = parental.minimumAge;
+    movie.contentRatingSystem = parental.contentRatingSystem;
+    movie.contentRatingRegion = parental.contentRatingRegion;
+    movie.contentRatingLabel = parental.contentRatingLabel;
+    movie.contentRatingDescriptors = parental.contentRatingDescriptors;
+    movie.parentalGuidanceSummary = parental.parentalGuidanceSummary;
+    movie.parentalGuidanceCategories = parental.parentalGuidanceCategories;
+
     return movie;
   }
 }
@@ -282,7 +380,7 @@ export class TMDbTv extends TMDb {
       {
         params: {
           api_key: TMDB_API_KEY,
-          append_to_response: 'external_ids',
+          append_to_response: 'external_ids,content_ratings',
           language: GlobalConfiguration.configuration.tmdbLang,
         },
       }
@@ -517,6 +615,37 @@ export class TMDbTv extends TMDb {
       };
     });
 
+    // Normalize parental metadata from content_ratings.
+    // TMDB TV content_ratings returns a list of { iso_3166_1, rating } entries
+    // where the rating is a TV content rating label for that country.
+    const certifications: ProviderCertification[] = [];
+    if (item.content_ratings?.results) {
+      for (const entry of item.content_ratings.results) {
+        const region = entry.iso_3166_1;
+        if (!entry.rating || entry.rating.trim() === '') {
+          continue;
+        }
+        const label = entry.rating.trim();
+        const system = tmdbTvRatingSystemForRegion(region, label);
+        if (!system) {
+          continue;
+        }
+        certifications.push({ region, system, label });
+      }
+    }
+
+    const parental = normalizeParentalData(certifications, {
+      adultFlag: item.adult === true,
+    });
+
+    tvShow.minimumAge = parental.minimumAge;
+    tvShow.contentRatingSystem = parental.contentRatingSystem;
+    tvShow.contentRatingRegion = parental.contentRatingRegion;
+    tvShow.contentRatingLabel = parental.contentRatingLabel;
+    tvShow.contentRatingDescriptors = parental.contentRatingDescriptors;
+    tvShow.parentalGuidanceSummary = parental.parentalGuidanceSummary;
+    tvShow.parentalGuidanceCategories = parental.parentalGuidanceCategories;
+
     return tvShow;
   }
 
@@ -610,6 +739,7 @@ namespace TMDbApi {
   }
 
   export interface TvDetailsResponse {
+    adult?: boolean;
     backdrop_path: string;
     created_by: CreatedBy[];
     episode_run_time: number[];
@@ -652,6 +782,7 @@ namespace TMDbApi {
       twitter_id?: string;
       id: number;
     };
+    content_ratings?: TvContentRatings;
   }
 
   export interface CreatedBy {
@@ -735,6 +866,40 @@ namespace TMDbApi {
     total_pages: number;
   }
 
+  /** A single release entry within a region's release_dates result. */
+  export interface MovieReleaseEntry {
+    certification: string;
+    descriptors: string[];
+    iso_639_1: string;
+    note?: string;
+    release_date: string;
+    /** Release type: 1=Premiere, 2=Limited, 3=Theatrical, 4=Digital, 5=Physical, 6=TV */
+    type: number;
+  }
+
+  /** A per-region entry in the movie release_dates append_to_response. */
+  export interface MovieReleaseDatesRegion {
+    iso_3166_1: string;
+    release_dates: MovieReleaseEntry[];
+  }
+
+  /** The release_dates append_to_response payload for movies. */
+  export interface MovieReleaseDates {
+    results: MovieReleaseDatesRegion[];
+  }
+
+  /** A single content rating entry in the TV content_ratings append_to_response. */
+  export interface TvContentRatingEntry {
+    descriptors?: string[];
+    iso_3166_1: string;
+    rating: string;
+  }
+
+  /** The content_ratings append_to_response payload for TV shows. */
+  export interface TvContentRatings {
+    results: TvContentRatingEntry[];
+  }
+
   export interface MovieDetailsResponse {
     adult: boolean;
     backdrop_path: string;
@@ -761,6 +926,7 @@ namespace TMDbApi {
     vote_average: number;
     vote_count: number;
     credits?: { crew: Crew[] };
+    release_dates?: MovieReleaseDates;
   }
 
   export interface Genre {

@@ -260,6 +260,24 @@ const movieDetailsResult = {
   tmdbRating: 7.9,
   director: 'Chris Columbus',
   needsDetails: false,
+  minimumAge: null,
+  contentRatingSystem: null,
+  contentRatingRegion: null,
+  contentRatingLabel: null,
+  contentRatingDescriptors: null,
+  parentalGuidanceSummary: null,
+  parentalGuidanceCategories: null,
+};
+
+/** Null parental fields returned by mapMovie/mapTvShow when no rating data is present. */
+const nullParentalFields = {
+  minimumAge: null,
+  contentRatingSystem: null,
+  contentRatingRegion: null,
+  contentRatingLabel: null,
+  contentRatingDescriptors: null,
+  parentalGuidanceSummary: null,
+  parentalGuidanceCategories: null,
 };
 
 const movieSearchResult = [
@@ -284,6 +302,7 @@ const movieSearchResult = [
     tmdbRating: 7.9,
     director: undefined,
     needsDetails: true,
+    ...nullParentalFields,
   },
   {
     source: 'tmdb',
@@ -306,6 +325,7 @@ const movieSearchResult = [
     tmdbRating: 7.7,
     director: undefined,
     needsDetails: true,
+    ...nullParentalFields,
   },
   {
     source: 'tmdb',
@@ -328,6 +348,7 @@ const movieSearchResult = [
     tmdbRating: 7.8,
     director: undefined,
     needsDetails: true,
+    ...nullParentalFields,
   },
   {
     source: 'tmdb',
@@ -339,7 +360,7 @@ const movieSearchResult = [
       'https://image.tmdb.org/t/p/original/sdEOH0992YZ0QSxgXNIGLq1ToUi.jpg',
     tmdbId: 672,
     overview:
-      'Cars fly, trees fight back, and a mysterious house-elf comes to warn Harry Potter at the start of his second year at Hogwarts. Adventure and danger await when bloody writing on a wall announces: The Chamber Of Secrets Has Been Opened. To save Hogwarts will require all of Harry, Ron and Hermione’s magical abilities and courage.',
+      "Cars fly, trees fight back, and a mysterious house-elf comes to warn Harry Potter at the start of his second year at Hogwarts. Adventure and danger await when bloody writing on a wall announces: The Chamber Of Secrets Has Been Opened. To save Hogwarts will require all of Harry, Ron and Hermione’s magical abilities and courage.",
     status: undefined,
     url: undefined,
     genres: undefined,
@@ -350,6 +371,7 @@ const movieSearchResult = [
     tmdbRating: 7.7,
     director: undefined,
     needsDetails: true,
+    ...nullParentalFields,
   },
   {
     source: 'tmdb',
@@ -372,6 +394,7 @@ const movieSearchResult = [
     tmdbRating: 8,
     director: undefined,
     needsDetails: true,
+    ...nullParentalFields,
   },
 ] as unknown;
 
@@ -401,6 +424,7 @@ const tvSearchResult = [
     runtime: undefined,
     seasons: undefined,
     needsDetails: true,
+    ...nullParentalFields,
   },
   {
     source: 'tmdb',
@@ -427,6 +451,7 @@ const tvSearchResult = [
     runtime: undefined,
     seasons: undefined,
     needsDetails: true,
+    ...nullParentalFields,
   },
   {
     source: 'tmdb',
@@ -453,6 +478,7 @@ const tvSearchResult = [
     runtime: undefined,
     seasons: undefined,
     needsDetails: true,
+    ...nullParentalFields,
   },
   {
     source: 'tmdb',
@@ -479,6 +505,7 @@ const tvSearchResult = [
     runtime: undefined,
     seasons: undefined,
     needsDetails: true,
+    ...nullParentalFields,
   },
   {
     source: 'tmdb',
@@ -505,6 +532,7 @@ const tvSearchResult = [
     runtime: undefined,
     seasons: undefined,
     needsDetails: true,
+    ...nullParentalFields,
   },
 ] as unknown;
 
@@ -1981,6 +2009,13 @@ const tvDetailsResult = {
     },
   ],
   needsDetails: false,
+  minimumAge: null,
+  contentRatingSystem: null,
+  contentRatingRegion: null,
+  contentRatingLabel: null,
+  contentRatingDescriptors: null,
+  parentalGuidanceSummary: null,
+  parentalGuidanceCategories: null,
 };
 
 const tmdbMovieSimilarResponse = {
