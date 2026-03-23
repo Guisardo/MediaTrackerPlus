@@ -23,6 +23,7 @@ import {
   deserializeDescriptors,
   deserializeCategories,
 } from 'src/metadata/parentalMetadata';
+import { applyAgeGatingFilter } from 'src/utils/ageEligibility';
 
 /**
  * Applies translation overlay to a list of mapped items for a given language.
@@ -611,7 +612,7 @@ const mapToSortedFacetOptions = (map: Map<string, number>): FacetOption[] =>
 export const getItemsKnex = async (
   args: GetItemsKnexArgs
 ): Promise<Pagination<MediaItemItemsResponse> | MediaItemItemsResponse[]> => {
-  const { page, language } = args;
+  const { page, language, viewerAge } = args;
   const { sqlQuery, sqlCountQuery, sqlPaginationQuery } = await getItemsKnexSql(
     args
   );
@@ -647,6 +648,7 @@ export const getItemsKnex = async (
       total: total,
       page: page,
       totalPages: totalPages,
+      ageGatingActive: viewerAge != null,
     };
   } else {
     const res = await sqlQuery;
@@ -690,6 +692,7 @@ const getItemsKnexSql = async (args: GetItemsKnexArgs) => {
     ratingMax,
     status,
     groupId,
+    viewerAge,
   } = args;
 
   const currentDateString = new Date().toISOString();
@@ -1046,6 +1049,11 @@ const getItemsKnexSql = async (args: GetItemsKnexArgs) => {
     }
   }
 
+  // Age gating: exclude items whose minimumAge exceeds the viewer's age.
+  // Applied outside the mediaItemIds/library branch so it covers both
+  // library browsing and search-by-ID fetches.
+  applyAgeGatingFilter(query, viewerAge ?? null);
+
   applyItemOrdering(query, {
     currentDateString,
     groupId,
@@ -1222,6 +1230,7 @@ export const getFacetsKnex = async (
     onlySeenItems,
     onlyWithUserRating,
     onlyWithoutUserRating,
+    viewerAge,
   } = args;
 
   const watchlistId = await getWatchlistId(userId);
@@ -1329,6 +1338,8 @@ export const getFacetsKnex = async (
       lastSeenColumn: 'lastSeen.mediaItemId',
     }
   );
+
+  applyAgeGatingFilter(query, viewerAge ?? null);
 
   // Fetch all matching rows for application-layer aggregation
   const rows = await query;

@@ -8,6 +8,7 @@
   "Failed to delete unused assets files": "Failed to delete unused assets files",
   "MediaTracker listening at {address}": "MediaTracker listening at {address}",
   "MediaTracker {0} listening at {address}": "MediaTracker {0} listening at {address}",
+  "Missing credentials for platform {0}": "Missing credentials for platform {0}",
   "New season of {0} will be released at {1}": "New season of {0} will be released at {1}",
   "New season of {0} will be released at {releaseDate}": "New season of {0} will be released at {releaseDate}",
   "Password cannot be empty": "Password cannot be empty",

@@ -911,6 +911,10 @@
                     },
                     "total": {
                       "type": "number"
+                    },
+                    "ageGatingActive": {
+                      "type": "boolean",
+                      "nullable": true
                     }
                   },
                   "required": [

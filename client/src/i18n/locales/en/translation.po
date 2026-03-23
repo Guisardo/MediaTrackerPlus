@@ -18,7 +18,7 @@ msgstr ""
 msgid "i18n/i18n.ts"
 msgstr "i18n/i18n.ts"
 
-#: src/pages/settings/Notifications.tsx:82
+#: src/pages/settings/Notifications.tsx:86
 msgid " User key"
 msgstr " User key"
 
@@ -27,7 +27,7 @@ msgstr " User key"
 #. placeholder {0}: list.itemsCount
 #: src/i18n/__tests__/i18n.test.ts:86
 #: src/i18n/__tests__/i18n.test.ts:98
-#: src/pages/ListsPage.tsx:55
+#: src/pages/ListsPage.tsx:63
 msgid "{0, plural, one {# item} other {# items}}"
 msgstr "{0, plural, one {# item} other {# items}}"
 
@@ -38,87 +38,95 @@ msgstr "{0, plural, one {# member} other {# members}}"
 
 #. placeholder {0}: filteredItems.length
 #. placeholder {0}: items.length
-#: src/pages/import/TraktTv.tsx:342
-#: src/pages/ListPage.tsx:131
+#: src/pages/import/TraktTv.tsx:338
+#: src/pages/ListPage.tsx:145
 msgid "{0, plural, one {1 item} other {# items}}"
 msgstr "{0, plural, one {1 item} other {# items}}"
 
 #. placeholder {0}: mediaItem.authors.length
-#: src/pages/Details.tsx:350
+#: src/pages/Details.tsx:364
 msgid "{0, plural, one {Author} other {Authors}}"
 msgstr "{0, plural, one {Author} other {Authors}}"
 
-#. placeholder {0}: searchResult?.length
+#. placeholder {0}: count ?? 0
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:114
+msgid "{0, plural, one {Do you want to remove # seen history entry?} other {Do you want to remove all # seen history entries?}}"
+msgstr "{0, plural, one {Do you want to remove # seen history entry?} other {Do you want to remove all # seen history entries?}}"
+
 #: src/components/PaginatedGridItems.tsx:317
-msgid "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {Found # items for query \"<1>{searchQuery}</1>\"}}"
-msgstr "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {Found # items for query \"<1>{searchQuery}</1>\"}}"
+#~ msgid "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {Found # items for query \"<1>{searchQuery}</1>\"}}"
+#~ msgstr "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {Found # items for query \"<1>{searchQuery}</1>\"}}"
 
 #. placeholder {0}: mediaItem.genres.length
-#: src/pages/Details.tsx:310
+#: src/pages/Details.tsx:324
 msgid "{0, plural, one {Genre} other {Genres}}"
 msgstr "{0, plural, one {Genre} other {Genres}}"
 
 #. placeholder {0}: listsWithItem?.length
-#: src/components/AddToListModal.tsx:151
+#: src/components/AddToListModal.tsx:157
 msgid "{0, plural, one {Listed on 1 list} other {Listed on # lists}}"
 msgstr "{0, plural, one {Listed on 1 list} other {Listed on # lists}}"
 
-#. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:576
-#: src/pages/SeenHistory.tsx:43
+#. placeholder {0}: mediaItem.seenHistory!.length
+#: src/pages/Details.tsx:590
+#: src/pages/SeenHistory.tsx:50
 msgid "{0, plural, one {Listened 1 time} other {Listened # times}}"
 msgstr "{0, plural, one {Listened 1 time} other {Listened # times}}"
 
 #. placeholder {0}: mediaItem.narrators.length
-#: src/pages/Details.tsx:364
+#: src/pages/Details.tsx:378
 msgid "{0, plural, one {Narrator} other {Narrators}}"
 msgstr "{0, plural, one {Narrator} other {Narrators}}"
 
 #. placeholder {0}: mediaItem.platform.length
-#: src/pages/Details.tsx:278
+#: src/pages/Details.tsx:292
 msgid "{0, plural, one {Platform} other {platforms}}"
 msgstr "{0, plural, one {Platform} other {platforms}}"
 
-#. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:600
-#: src/pages/SeenHistory.tsx:67
+#. placeholder {0}: mediaItem.seenHistory!.length
+#: src/pages/Details.tsx:614
+#: src/pages/SeenHistory.tsx:74
 msgid "{0, plural, one {Played 1 time} other {Played # times}}"
 msgstr "{0, plural, one {Played 1 time} other {Played # times}}"
 
-#. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:584
-#: src/pages/SeenHistory.tsx:51
+#. placeholder {0}: mediaItem.seenHistory!.length
+#: src/pages/Details.tsx:598
+#: src/pages/SeenHistory.tsx:58
 msgid "{0, plural, one {Read 1 time} other {Read # times}}"
 msgstr "{0, plural, one {Read 1 time} other {Read # times}}"
 
-#. placeholder {0}: episode.seenHistory.length
-#. placeholder {0}: mediaItem.seenHistory.length
-#: src/pages/Details.tsx:592
+#. placeholder {0}: episode.seenHistory!.length
+#. placeholder {0}: mediaItem.seenHistory!.length
+#: src/pages/Details.tsx:606
 #: src/pages/SeasonsPage.tsx:87
-#: src/pages/SeenHistory.tsx:59
+#: src/pages/SeenHistory.tsx:66
 msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
 msgstr "{0, plural, one {Seen 1 time} other {Seen # times}}"
 
 #. placeholder {0}: route.name
-#: src/components/Statistics/StatisticsGenreSegment.tsx:42
+#: src/components/Statistics/StatisticsGenreSegment.tsx:43
 msgid "{0}"
 msgstr "{0}"
 
 #: src/components/AddAndRemoveFromSeenHistoryButton.tsx:112
-msgid "{count, plural, one {Do you want to remove # seen history entry?} other {Do you want to remove all # seen history entries?}}"
-msgstr "{count, plural, one {Do you want to remove # seen history entry?} other {Do you want to remove all # seen history entries?}}"
+#~ msgid "{count, plural, one {Do you want to remove # seen history entry?} other {Do you want to remove all # seen history entries?}}"
+#~ msgstr "{count, plural, one {Do you want to remove # seen history entry?} other {Do you want to remove all # seen history entries?}}"
 
-#: src/components/SetProgress.tsx:119
+#: src/components/SetProgress.tsx:125
 msgid "{duration, plural, one {minute} other {minutes}}"
 msgstr "{duration, plural, one {minute} other {minutes}}"
 
-#. placeholder {0}: args.year ? 'in ' + args.year : ''
-#. placeholder {1}: args.genre ? 'with genre ' + args.genre : ''
-#. placeholder {2}: args.year ? 'in ' + args.year : ''
-#. placeholder {3}: args.genre ? 'with genre ' + args.genre : ''
-#: src/components/PaginatedGridItems.tsx:333
+#. placeholder {0}: year ? 'in ' + year : ''
+#. placeholder {1}: genre ? 'with genre ' + genre : ''
+#. placeholder {2}: year ? 'in ' + year : ''
+#. placeholder {3}: genre ? 'with genre ' + genre : ''
+#: src/components/PaginatedGridItems.tsx:86
 msgid "{numberOfItemsTotal, plural, one {1 item {0} {1}} other {# item {2} {3}}}"
 msgstr "{numberOfItemsTotal, plural, one {1 item {0} {1}} other {# item {2} {3}}}"
+
+#: src/components/PaginatedGridItems.tsx:67
+msgid "{searchResultLength, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {Found # items for query \"<1>{searchQuery}</1>\"}}"
+msgstr "{searchResultLength, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {Found # items for query \"<1>{searchQuery}</1>\"}}"
 
 #: src/components/SetProgress.tsx:43
 msgid "{value, plural, one {minute} other {minutes}}"
@@ -130,7 +138,7 @@ msgstr "{value, plural, one {page} other {pages}}"
 
 #. placeholder {0}: item.genre
 #. placeholder {1}: item.count
-#: src/components/Statistics/StatisticsGenreSegment.tsx:61
+#: src/components/Statistics/StatisticsGenreSegment.tsx:64
 msgid "<0>{0}</0> (<1>{1}</1>)"
 msgstr "<0>{0}</0> (<1>{1}</1>)"
 
@@ -182,11 +190,11 @@ msgstr "<0><1/> </0>reading"
 msgid "<0><1/> </0>watching"
 msgstr "<0><1/> </0>watching"
 
-#: src/pages/Settings.tsx:113
+#: src/pages/Settings.tsx:119
 msgid "About"
 msgstr "About"
 
-#: src/pages/settings/Notifications.tsx:114
+#: src/pages/settings/Notifications.tsx:118
 msgid "Access Token"
 msgstr "Access Token"
 
@@ -195,7 +203,7 @@ msgid "Active filters"
 msgstr "Active filters"
 
 #. placeholder {0}: episode ? `${mediaItem.title} ${formatEpisodeNumber(episode)}` : season ? `${mediaItem.title} ${formatSeasonNumber(season)}` : mediaItem.title
-#: src/components/AddToListModal.tsx:55
+#: src/components/AddToListModal.tsx:56
 msgid "Add \"{0}\" to list"
 msgstr "Add \"{0}\" to list"
 
@@ -206,7 +214,7 @@ msgstr "Add \"{0}\" to list"
 msgid "Add {0} to seen history"
 msgstr "Add {0} to seen history"
 
-#: src/components/AddToListModal.tsx:143
+#: src/components/AddToListModal.tsx:149
 msgid "Add episode to list"
 msgstr "Add episode to list"
 
@@ -215,7 +223,7 @@ msgid "Add episode to seen history"
 msgstr "Add episode to seen history"
 
 #: src/components/AddOrEditListButton.tsx:43
-#: src/components/AddOrEditListButton.tsx:219
+#: src/components/AddOrEditListButton.tsx:224
 msgid "Add list"
 msgstr "Add list"
 
@@ -223,11 +231,11 @@ msgstr "Add list"
 msgid "Add member"
 msgstr "Add member"
 
-#: src/pages/settings/Preferences.tsx:41
+#: src/pages/settings/Preferences.tsx:45
 msgid "Add recommendations to watchlist"
 msgstr "Add recommendations to watchlist"
 
-#: src/components/AddToListModal.tsx:145
+#: src/components/AddToListModal.tsx:151
 msgid "Add season to list"
 msgstr "Add season to list"
 
@@ -235,7 +243,7 @@ msgstr "Add season to list"
 msgid "Add season to seen history"
 msgstr "Add season to seen history"
 
-#: src/components/AddToListModal.tsx:147
+#: src/components/AddToListModal.tsx:153
 msgid "Add to list"
 msgstr "Add to list"
 
@@ -257,7 +265,7 @@ msgstr "Add to read history"
 msgid "Add to seen history"
 msgstr "Add to seen history"
 
-#: src/pages/Details.tsx:657
+#: src/pages/Details.tsx:672
 msgid "Add to watchlist"
 msgstr "Add to watchlist"
 
@@ -272,7 +280,7 @@ msgstr "Add token"
 msgid "Admin"
 msgstr "Admin"
 
-#: src/components/FilterBy.tsx:11
+#: src/components/FilterBy.tsx:17
 msgid "All"
 msgstr "All"
 
@@ -284,15 +292,15 @@ msgstr "All Users"
 msgid "All Years"
 msgstr "All Years"
 
-#: src/pages/settings/Configuration.tsx:145
+#: src/pages/settings/Configuration.tsx:151
 msgid "API keys can be acquired here"
 msgstr "API keys can be acquired here"
 
-#: src/pages/settings/Notifications.tsx:68
+#: src/pages/settings/Notifications.tsx:72
 msgid "App token"
 msgstr "App token"
 
-#: src/pages/Settings.tsx:125
+#: src/pages/Settings.tsx:131
 msgid "Application tokens"
 msgstr "Application tokens"
 
@@ -300,7 +308,7 @@ msgstr "Application tokens"
 msgid "Ascending"
 msgstr "Ascending"
 
-#: src/components/SelectSeenDate.tsx:117
+#: src/components/SelectSeenDate.tsx:121
 msgid "At release date"
 msgstr "At release date"
 
@@ -311,7 +319,7 @@ msgstr "Audible language"
 
 #: src/components/Facets/ActiveFacetChips.tsx:76
 #: src/components/Facets/MediaTypeSection.tsx:24
-#: src/components/GridItem.tsx:91
+#: src/components/GridItem.tsx:109
 msgid "Audiobook"
 msgstr "Audiobook"
 
@@ -325,21 +333,21 @@ msgstr "Audiobooks"
 msgid "Author"
 msgstr "Author"
 
-#: src/pages/settings/Preferences.tsx:42
+#: src/pages/settings/Preferences.tsx:46
 msgid "Automatically add similar items to your watchlist when you rate content"
 msgstr "Automatically add similar items to your watchlist when you rate content"
 
-#: src/pages/settings/Preferences.tsx:19
+#: src/pages/settings/Preferences.tsx:23
 msgid "Avoid episode spoilers"
 msgstr "Avoid episode spoilers"
 
-#: src/pages/settings/Preferences.tsx:30
+#: src/pages/settings/Preferences.tsx:34
 msgid "Avoid season spoilers"
 msgstr "Avoid season spoilers"
 
 #: src/components/Facets/ActiveFacetChips.tsx:74
 #: src/components/Facets/MediaTypeSection.tsx:22
-#: src/components/GridItem.tsx:92
+#: src/components/GridItem.tsx:110
 msgid "Book"
 msgstr "Book"
 
@@ -353,10 +361,11 @@ msgstr "Books"
 msgid "Calendar"
 msgstr "Calendar"
 
-#: src/components/SelectLastSeenEpisode.tsx:159
-#: src/components/SelectSeenDate.tsx:164
-#: src/components/SetProgress.tsx:129
-#: src/components/StarRating.tsx:171
+#: src/components/SelectLastSeenEpisode.tsx:90
+#: src/components/SelectLastSeenEpisode.tsx:204
+#: src/components/SelectSeenDate.tsx:179
+#: src/components/SetProgress.tsx:139
+#: src/components/StarRating.tsx:176
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -373,20 +382,20 @@ msgstr "Clear all"
 msgid "Clear all filters"
 msgstr "Clear all filters"
 
-#: src/pages/settings/Configuration.tsx:148
+#: src/pages/settings/Configuration.tsx:154
 msgid "Client ID"
 msgstr "Client ID"
 
-#: src/pages/settings/Configuration.tsx:156
+#: src/pages/settings/Configuration.tsx:162
 msgid "Client Secret"
 msgstr "Client Secret"
 
 #: src/components/AddOrEditGroupButton.tsx:70
-#: src/components/AddToListModal.tsx:105
+#: src/components/AddToListModal.tsx:110
 msgid "Close"
 msgstr "Close"
 
-#: src/pages/Settings.tsx:139
+#: src/pages/Settings.tsx:145
 msgid "Configuration"
 msgstr "Configuration"
 
@@ -402,7 +411,7 @@ msgstr "Confirm new password"
 msgid "Confirm password"
 msgstr "Confirm password"
 
-#: src/pages/import/TraktTv.tsx:93
+#: src/pages/import/TraktTv.tsx:89
 msgid "Copy to clipboard"
 msgstr "Copy to clipboard"
 
@@ -447,7 +456,7 @@ msgstr "Delete group"
 msgid "Delete group \"{0}\"? This action cannot be undone."
 msgstr "Delete group \"{0}\"? This action cannot be undone."
 
-#: src/components/AddOrEditListButton.tsx:246
+#: src/components/AddOrEditListButton.tsx:255
 msgid "Delete list"
 msgstr "Delete list"
 
@@ -455,9 +464,9 @@ msgstr "Delete list"
 msgid "Descending"
 msgstr "Descending"
 
-#: src/components/AddOrEditListButton.tsx:151
-#: src/pages/EpisodePage.tsx:53
-#: src/pages/SeasonsPage.tsx:213
+#: src/components/AddOrEditListButton.tsx:156
+#: src/pages/EpisodePage.tsx:55
+#: src/pages/SeasonsPage.tsx:221
 msgid "Description"
 msgstr "Description"
 
@@ -476,16 +485,16 @@ msgid "Do you really want to logout?"
 msgstr "Do you really want to logout?"
 
 #. placeholder {0}: list.name
-#: src/components/AddOrEditListButton.tsx:229
+#: src/components/AddOrEditListButton.tsx:238
 msgid "Do you really want to remove list \"{0}\""
 msgstr "Do you really want to remove list \"{0}\""
 
-#: src/components/SetProgress.tsx:110
+#: src/components/SetProgress.tsx:116
 msgid "Duration"
 msgstr "Duration"
 
 #: src/components/AddOrEditListButton.tsx:43
-#: src/components/AddOrEditListButton.tsx:133
+#: src/components/AddOrEditListButton.tsx:138
 msgid "Edit list"
 msgstr "Edit list"
 
@@ -493,31 +502,31 @@ msgstr "Edit list"
 msgid "Enable registration"
 msgstr "Enable registration"
 
-#: src/components/SelectLastSeenEpisode.tsx:106
+#: src/components/SelectLastSeenEpisode.tsx:139
 msgid "Episode"
 msgstr "Episode"
 
 #. placeholder {0}: formatEpisodeNumber( episodesMap[seenEntry.episodeId] )
 #. placeholder {1}: episodesMap[seenEntry.episodeId].title
-#: src/pages/SeenHistory.tsx:111
+#: src/pages/SeenHistory.tsx:118
 msgid "Episode {0} {1}"
 msgstr "Episode {0} {1}"
 
 #: src/components/ImportSummaryTable.tsx:93
-#: src/pages/Details.tsx:394
+#: src/pages/Details.tsx:408
 msgid "Episodes"
 msgstr "Episodes"
 
-#: src/pages/Details.tsx:460
+#: src/pages/Details.tsx:474
 msgid "Episodes page"
 msgstr "Episodes page"
 
-#: src/pages/import/TraktTv.tsx:143
+#: src/pages/import/TraktTv.tsx:139
 #: src/pages/LogsPage.tsx:102
 msgid "Error"
 msgstr "Error"
 
-#: src/pages/import/TraktTv.tsx:137
+#: src/pages/import/TraktTv.tsx:133
 msgid "Exporting"
 msgstr "Exporting"
 
@@ -535,7 +544,7 @@ msgstr "Failed to load group. It may have been deleted."
 msgid "Filters"
 msgstr "Filters"
 
-#: src/pages/Details.tsx:539
+#: src/pages/Details.tsx:553
 msgid "First unwatched episode"
 msgstr "First unwatched episode"
 
@@ -560,7 +569,7 @@ msgstr "Genres"
 
 #. placeholder {0}: deviceCode.verificationUrl
 #. placeholder {1}: deviceCode.userCode
-#: src/pages/import/TraktTv.tsx:66
+#: src/pages/import/TraktTv.tsx:64
 msgid "Go to <0>{0}</0> and enter following code: <1>{1}</1>"
 msgstr "Go to <0>{0}</0> and enter following code: <1>{1}</1>"
 
@@ -568,7 +577,7 @@ msgstr "Go to <0>{0}</0> and enter following code: <1>{1}</1>"
 msgid "Go to <0>https://www.goodreads.com/review/list</0> and copy RSS url from the bottom of the page"
 msgstr "Go to <0>https://www.goodreads.com/review/list</0> and copy RSS url from the bottom of the page"
 
-#: src/pages/settings/Notifications.tsx:110
+#: src/pages/settings/Notifications.tsx:114
 msgid "Gotify server url"
 msgstr "Gotify server url"
 
@@ -580,11 +589,11 @@ msgstr "Group name"
 msgid "Groups"
 msgstr "Groups"
 
-#: src/pages/settings/Preferences.tsx:31
+#: src/pages/settings/Preferences.tsx:35
 msgid "Hide overview of unseen seasons"
 msgstr "Hide overview of unseen seasons"
 
-#: src/pages/settings/Preferences.tsx:20
+#: src/pages/settings/Preferences.tsx:24
 msgid "Hide title of unseen episodes"
 msgstr "Hide title of unseen episodes"
 
@@ -598,44 +607,44 @@ msgstr "Home"
 msgid "Http"
 msgstr "Http"
 
-#: src/pages/Details.tsx:482
+#: src/pages/Details.tsx:496
 msgid "I am listening it"
 msgstr "I am listening it"
 
-#: src/pages/Details.tsx:483
+#: src/pages/Details.tsx:497
 msgid "I am playing it"
 msgstr "I am playing it"
 
-#: src/pages/Details.tsx:481
+#: src/pages/Details.tsx:495
 msgid "I am reading it"
 msgstr "I am reading it"
 
-#: src/pages/Details.tsx:480
+#: src/pages/Details.tsx:494
 msgid "I am watching it"
 msgstr "I am watching it"
 
-#: src/components/SelectSeenDate.tsx:124
+#: src/components/SelectSeenDate.tsx:128
 #: src/pages/Statistics.tsx:26
 msgid "I do not remember"
 msgstr "I do not remember"
 
-#: src/pages/Details.tsx:503
+#: src/pages/Details.tsx:517
 msgid "I finished listening it"
 msgstr "I finished listening it"
 
-#: src/pages/Details.tsx:506
+#: src/pages/Details.tsx:520
 msgid "I finished playing it"
 msgstr "I finished playing it"
 
-#: src/pages/Details.tsx:501
+#: src/pages/Details.tsx:515
 msgid "I finished reading it"
 msgstr "I finished reading it"
 
-#: src/pages/Details.tsx:500
+#: src/pages/Details.tsx:514
 msgid "I finished watching it"
 msgstr "I finished watching it"
 
-#: src/pages/settings/Configuration.tsx:129
+#: src/pages/settings/Configuration.tsx:133
 msgid "IGDB credentials"
 msgstr "IGDB credentials"
 
@@ -651,12 +660,12 @@ msgstr "Import"
 msgid "Import from"
 msgstr "Import from"
 
-#: src/pages/import/TraktTv.tsx:141
+#: src/pages/import/TraktTv.tsx:137
 msgid "Imported"
 msgstr "Imported"
 
 #: src/pages/import/Goodreads.tsx:62
-#: src/pages/import/TraktTv.tsx:142
+#: src/pages/import/TraktTv.tsx:138
 msgid "Importing"
 msgstr "Importing"
 
@@ -676,13 +685,13 @@ msgstr "Info"
 msgid "Item must match all selected statuses"
 msgstr "Item must match all selected statuses"
 
-#: src/pages/settings/Notifications.tsx:95
+#: src/pages/settings/Notifications.tsx:99
 msgid "Key"
 msgstr "Key"
 
 #: src/components/Facets/ActiveFacetChips.tsx:235
 #: src/components/Facets/LanguageSection.tsx:95
-#: src/pages/Details.tsx:341
+#: src/pages/Details.tsx:355
 msgid "Language"
 msgstr "Language"
 
@@ -690,18 +699,18 @@ msgstr "Language"
 msgid "Last airing"
 msgstr "Last airing"
 
-#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:548
+#. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
+#: src/pages/Details.tsx:562
 msgid "Last listened at {0}"
 msgstr "Last listened at {0}"
 
-#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:566
+#. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
+#: src/pages/Details.tsx:580
 msgid "Last played at {0}"
 msgstr "Last played at {0}"
 
-#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:554
+#. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
+#: src/pages/Details.tsx:568
 msgid "Last read at {0}"
 msgstr "Last read at {0}"
 
@@ -709,48 +718,48 @@ msgstr "Last read at {0}"
 msgid "Last seen"
 msgstr "Last seen"
 
-#. placeholder {0}: new Date(mediaItem.lastSeenAt).toLocaleString()
-#: src/pages/Details.tsx:560
+#. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
+#: src/pages/Details.tsx:574
 msgid "Last seen at {0}"
 msgstr "Last seen at {0}"
 
 #. placeholder {0}: item.listName
-#: src/pages/import/TraktTv.tsx:320
+#: src/pages/import/TraktTv.tsx:316
 msgid "List {0} - episodes"
 msgstr "List {0} - episodes"
 
 #. placeholder {0}: item.listName
-#: src/pages/import/TraktTv.tsx:302
+#: src/pages/import/TraktTv.tsx:298
 msgid "List {0} - movies"
 msgstr "List {0} - movies"
 
 #. placeholder {0}: item.listName
-#: src/pages/import/TraktTv.tsx:314
+#: src/pages/import/TraktTv.tsx:310
 msgid "List {0} - seasons"
 msgstr "List {0} - seasons"
 
 #. placeholder {0}: item.listName
-#: src/pages/import/TraktTv.tsx:308
+#: src/pages/import/TraktTv.tsx:304
 msgid "List {0} - shows"
 msgstr "List {0} - shows"
 
 #. placeholder {0}: list.listName
-#: src/pages/import/TraktTv.tsx:218
+#: src/pages/import/TraktTv.tsx:214
 msgid "List: {0}"
 msgstr "List: {0}"
 
 #: src/components/Facets/ActiveFacetChips.tsx:26
 #: src/components/Facets/StatusSection.tsx:33
-#: src/components/FilterBy.tsx:18
+#: src/components/FilterBy.tsx:25
 msgid "Listened"
 msgstr "Listened"
 
 #. placeholder {0}: seenEntry.dateStr
-#: src/pages/SeenHistory.tsx:89
+#: src/pages/SeenHistory.tsx:96
 msgid "Listened at {0}"
 msgstr "Listened at {0}"
 
-#: src/pages/Details.tsx:608
+#: src/pages/Details.tsx:622
 msgid "Listened history"
 msgstr "Listened history"
 
@@ -758,21 +767,25 @@ msgstr "Listened history"
 msgid "Lists"
 msgstr "Lists"
 
-#: src/components/AddToListModal.tsx:49
-#: src/components/PaginatedGridItems.tsx:384
-#: src/components/SelectLastSeenEpisode.tsx:67
-#: src/pages/Calendar.tsx:61
-#: src/pages/Details.tsx:208
-#: src/pages/EpisodePage.tsx:42
+#: src/components/AddToListModal.tsx:50
+#: src/components/PaginatedGridItems.tsx:440
+#: src/components/SelectLastSeenEpisode.tsx:100
+#: src/pages/Calendar.tsx:66
+#: src/pages/Details.tsx:216
+#: src/pages/Details.tsx:226
+#: src/pages/EpisodePage.tsx:32
 #: src/pages/GroupDetailPage.tsx:285
 #: src/pages/GroupsPage.tsx:17
-#: src/pages/import/TraktTv.tsx:116
-#: src/pages/ListPage.tsx:86
-#: src/pages/ListsPage.tsx:29
+#: src/pages/import/TraktTv.tsx:112
+#: src/pages/ListPage.tsx:93
+#: src/pages/ListsPage.tsx:30
 #: src/pages/Login.tsx:17
 #: src/pages/LogsPage.tsx:27
 #: src/pages/SeasonsPage.tsx:144
-#: src/pages/SeenHistory.tsx:30
+#: src/pages/SeasonsPage.tsx:152
+#: src/pages/SeenHistory.tsx:33
+#: src/pages/SeenHistory.tsx:41
+#: src/pages/Settings.tsx:23
 msgid "Loading"
 msgstr "Loading"
 
@@ -787,7 +800,7 @@ msgstr "Login"
 msgid "Logout"
 msgstr "Logout"
 
-#: src/pages/Settings.tsx:143
+#: src/pages/Settings.tsx:149
 msgid "Logs"
 msgstr "Logs"
 
@@ -822,7 +835,7 @@ msgstr "Minimum year"
 
 #: src/components/Facets/ActiveFacetChips.tsx:70
 #: src/components/Facets/MediaTypeSection.tsx:18
-#: src/components/GridItem.tsx:93
+#: src/components/GridItem.tsx:111
 msgid "Movie"
 msgstr "Movie"
 
@@ -842,11 +855,11 @@ msgid "My rating"
 msgstr "My rating"
 
 #: src/components/AddOrEditGroupButton.tsx:51
-#: src/components/AddOrEditListButton.tsx:137
+#: src/components/AddOrEditListButton.tsx:142
 msgid "Name"
 msgstr "Name"
 
-#: src/pages/Details.tsx:292
+#: src/pages/Details.tsx:306
 msgid "Network"
 msgstr "Network"
 
@@ -854,7 +867,7 @@ msgstr "Network"
 msgid "New group"
 msgstr "New group"
 
-#: src/components/AddOrEditListButton.tsx:133
+#: src/components/AddOrEditListButton.tsx:138
 msgid "New list"
 msgstr "New list"
 
@@ -867,7 +880,7 @@ msgstr "New password"
 msgid "Next airing"
 msgstr "Next airing"
 
-#: src/pages/Details.tsx:526
+#: src/pages/Details.tsx:540
 msgid "Next episode"
 msgstr "Next episode"
 
@@ -879,9 +892,13 @@ msgstr "Next episode to watch"
 msgid "No"
 msgstr "No"
 
-#: src/pages/SeenHistory.tsx:105
+#: src/pages/SeenHistory.tsx:112
 msgid "No date"
 msgstr "No date"
+
+#: src/components/SelectLastSeenEpisode.tsx:86
+msgid "No episodes available"
+msgstr "No episodes available"
 
 #: src/pages/GroupsPage.tsx:29
 msgid "No groups yet"
@@ -899,43 +916,43 @@ msgstr "No more logs"
 msgid "No users found"
 msgstr "No users found"
 
-#: src/pages/import/TraktTv.tsx:245
+#: src/pages/import/TraktTv.tsx:241
 msgid "Not imported items"
 msgstr "Not imported items"
 
-#: src/pages/settings/Notifications.tsx:174
+#: src/pages/settings/Notifications.tsx:182
 msgid "Notification platform"
 msgstr "Notification platform"
 
-#: src/pages/Settings.tsx:129
+#: src/pages/Settings.tsx:135
 msgid "Notifications"
 msgstr "Notifications"
 
-#: src/components/SelectSeenDate.tsx:110
+#: src/components/SelectSeenDate.tsx:114
 msgid "Now"
 msgstr "Now"
 
-#: src/pages/SeasonsPage.tsx:230
+#: src/pages/SeasonsPage.tsx:238
 msgid "Number of episodes"
 msgstr "Number of episodes"
 
-#: src/pages/Details.tsx:377
+#: src/pages/Details.tsx:391
 msgid "Number of pages"
 msgstr "Number of pages"
 
 #: src/components/Facets/ActiveFacetChips.tsx:23
 #: src/components/Facets/StatusSection.tsx:57
-#: src/components/FilterBy.tsx:14
+#: src/components/FilterBy.tsx:23
 msgid "On watchlist"
 msgstr "On watchlist"
 
-#: src/pages/Details.tsx:332
+#: src/pages/Details.tsx:346
 msgid "Overview"
 msgstr "Overview"
 
 #: src/pages/Login.tsx:53
 #: src/pages/Register.tsx:49
-#: src/pages/Settings.tsx:119
+#: src/pages/Settings.tsx:125
 msgid "Password"
 msgstr "Password"
 
@@ -947,7 +964,7 @@ msgstr "Password has been changed"
 msgid "Passwords do not match"
 msgstr "Passwords do not match"
 
-#: src/pages/settings/Notifications.tsx:186
+#: src/pages/settings/Notifications.tsx:194
 msgid "Platform"
 msgstr "Platform"
 
@@ -958,30 +975,30 @@ msgstr "Platform Recommended"
 
 #: src/components/Facets/ActiveFacetChips.tsx:32
 #: src/components/Facets/StatusSection.tsx:39
-#: src/components/FilterBy.tsx:22
+#: src/components/FilterBy.tsx:29
 msgid "Played"
 msgstr "Played"
 
 #. placeholder {0}: seenEntry.dateStr
-#: src/pages/SeenHistory.tsx:101
+#: src/pages/SeenHistory.tsx:108
 msgid "Played at {0}"
 msgstr "Played at {0}"
 
-#: src/pages/Details.tsx:616
+#: src/pages/Details.tsx:630
 msgid "Played history"
 msgstr "Played history"
 
-#: src/pages/Settings.tsx:133
+#: src/pages/Settings.tsx:139
 msgid "Preferences"
 msgstr "Preferences"
 
-#: src/pages/settings/Notifications.tsx:257
-#: src/pages/settings/Notifications.tsx:262
+#: src/pages/settings/Notifications.tsx:267
+#: src/pages/settings/Notifications.tsx:272
 msgid "Priority"
 msgstr "Priority"
 
-#: src/components/AddOrEditListButton.tsx:161
 #: src/components/AddOrEditListButton.tsx:166
+#: src/components/AddOrEditListButton.tsx:171
 msgid "Privacy"
 msgstr "Privacy"
 
@@ -990,7 +1007,7 @@ msgid "Private"
 msgstr "Private"
 
 #: src/components/OrderBy.tsx:22
-#: src/pages/Details.tsx:511
+#: src/pages/Details.tsx:525
 msgid "Progress"
 msgstr "Progress"
 
@@ -998,7 +1015,7 @@ msgstr "Progress"
 msgid "Public"
 msgstr "Public"
 
-#: src/pages/settings/Preferences.tsx:12
+#: src/pages/settings/Preferences.tsx:16
 msgid "Public reviews"
 msgstr "Public reviews"
 
@@ -1033,7 +1050,7 @@ msgstr "Random Video Game"
 
 #: src/components/Facets/ActiveFacetChips.tsx:19
 #: src/components/Facets/StatusSection.tsx:53
-#: src/components/FilterBy.tsx:12
+#: src/components/FilterBy.tsx:18
 msgid "Rated"
 msgstr "Rated"
 
@@ -1043,59 +1060,59 @@ msgstr "Rated"
 msgid "Rating"
 msgstr "Rating"
 
-#: src/pages/import/TraktTv.tsx:202
+#: src/pages/import/TraktTv.tsx:198
 msgid "Ratings"
 msgstr "Ratings"
 
-#: src/pages/import/TraktTv.tsx:294
+#: src/pages/import/TraktTv.tsx:290
 msgid "Ratings - episodes"
 msgstr "Ratings - episodes"
 
-#: src/pages/import/TraktTv.tsx:279
+#: src/pages/import/TraktTv.tsx:275
 msgid "Ratings - movies"
 msgstr "Ratings - movies"
 
-#: src/pages/import/TraktTv.tsx:289
+#: src/pages/import/TraktTv.tsx:285
 msgid "Ratings - seasons"
 msgstr "Ratings - seasons"
 
-#: src/pages/import/TraktTv.tsx:284
+#: src/pages/import/TraktTv.tsx:280
 msgid "Ratings - shows"
 msgstr "Ratings - shows"
 
 #: src/components/Facets/ActiveFacetChips.tsx:29
 #: src/components/Facets/StatusSection.tsx:36
-#: src/components/FilterBy.tsx:20
+#: src/components/FilterBy.tsx:27
 #: src/pages/import/Goodreads.tsx:68
 msgid "Read"
 msgstr "Read"
 
 #. placeholder {0}: seenEntry.dateStr
-#: src/pages/SeenHistory.tsx:93
+#: src/pages/SeenHistory.tsx:100
 msgid "Read at {0}"
 msgstr "Read at {0}"
 
-#: src/pages/Details.tsx:610
+#: src/pages/Details.tsx:624
 msgid "Read history"
 msgstr "Read history"
 
-#: src/pages/settings/Notifications.tsx:46
+#: src/pages/settings/Notifications.tsx:50
 msgid "Receive notification for all media items on your watchlist, when its release date changes"
 msgstr "Receive notification for all media items on your watchlist, when its release date changes"
 
-#: src/pages/settings/Notifications.tsx:38
+#: src/pages/settings/Notifications.tsx:42
 msgid "Receive notification for all media items on your watchlist, when its status changes"
 msgstr "Receive notification for all media items on your watchlist, when its status changes"
 
-#: src/pages/settings/Notifications.tsx:24
+#: src/pages/settings/Notifications.tsx:28
 msgid "Receive notification for all media items on your watchlist, when they are released, including new seasons for tv shows"
 msgstr "Receive notification for all media items on your watchlist, when they are released, including new seasons for tv shows"
 
-#: src/pages/settings/Notifications.tsx:54
+#: src/pages/settings/Notifications.tsx:58
 msgid "Receive notification for all tv shows on your watchlist, when its number of seasons changes"
 msgstr "Receive notification for all tv shows on your watchlist, when its number of seasons changes"
 
-#: src/pages/settings/Notifications.tsx:30
+#: src/pages/settings/Notifications.tsx:34
 msgid "Receive notification for every episode for all tv shows on your watchlist, when it's released"
 msgstr "Receive notification for every episode for all tv shows on your watchlist, when it's released"
 
@@ -1126,18 +1143,18 @@ msgstr "Recommended"
 msgid "Register"
 msgstr "Register"
 
-#: src/components/GridItem.tsx:245
+#: src/components/GridItem.tsx:261
 msgid "Release <0/>"
 msgstr "Release <0/>"
 
 #: src/components/OrderBy.tsx:15
 #: src/hooks/translations.ts:12
-#: src/pages/Details.tsx:243
-#: src/pages/EpisodePage.tsx:80
+#: src/pages/Details.tsx:257
+#: src/pages/EpisodePage.tsx:82
 msgid "Release date"
 msgstr "Release date"
 
-#: src/components/GridItem.tsx:263
+#: src/components/GridItem.tsx:277
 msgid "Released <0/>"
 msgstr "Released <0/>"
 
@@ -1147,7 +1164,7 @@ msgstr "Remove"
 
 #. placeholder {0}: mediaItem.title
 #. placeholder {1}: season ? ' ' + formatSeasonNumber(season) : episode ? ' ' + formatEpisodeNumber(episode) : ''
-#: src/components/GridItem.tsx:136
+#: src/components/GridItem.tsx:154
 msgid "Remove \"{0}{1}\" from watchlist?"
 msgstr "Remove \"{0}{1}\" from watchlist?"
 
@@ -1165,32 +1182,32 @@ msgstr "Remove {0} from this group?"
 msgid "Remove {dimensionLabel}: {value} filter"
 msgstr "Remove {dimensionLabel}: {value} filter"
 
-#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:131
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:133
 msgid "Remove episode from seen history"
 msgstr "Remove episode from seen history"
 
-#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:125
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:127
 msgid "Remove from listened history"
 msgstr "Remove from listened history"
 
-#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:127
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:129
 msgid "Remove from played history"
 msgstr "Remove from played history"
 
-#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:126
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:128
 msgid "Remove from read history"
 msgstr "Remove from read history"
 
-#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:128
-#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:135
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:130
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:137
 msgid "Remove from seen history"
 msgstr "Remove from seen history"
 
-#: src/pages/Details.tsx:681
+#: src/pages/Details.tsx:696
 msgid "Remove from watchlist"
 msgstr "Remove from watchlist"
 
-#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:133
+#: src/components/AddAndRemoveFromSeenHistoryButton.tsx:135
 msgid "Remove season from seen history"
 msgstr "Remove season from seen history"
 
@@ -1198,7 +1215,7 @@ msgstr "Remove season from seen history"
 msgid "Remove token"
 msgstr "Remove token"
 
-#: src/pages/Details.tsx:67
+#: src/pages/Details.tsx:71
 msgid "Review by <0><1>{author}</1></0> at {date}"
 msgstr "Review by <0><1>{author}</1></0> at {date}"
 
@@ -1212,8 +1229,8 @@ msgid "RSS link"
 msgstr "RSS link"
 
 #: src/hooks/translations.ts:13
-#: src/pages/Details.tsx:254
-#: src/pages/EpisodePage.tsx:71
+#: src/pages/Details.tsx:268
+#: src/pages/EpisodePage.tsx:73
 msgid "Runtime"
 msgstr "Runtime"
 
@@ -1228,20 +1245,20 @@ msgstr "S{0}"
 msgid "S{0}E{1}"
 msgstr "S{0}E{1}"
 
-#: src/pages/settings/Configuration.tsx:165
-#: src/pages/settings/Notifications.tsx:280
+#: src/pages/settings/Configuration.tsx:171
+#: src/pages/settings/Notifications.tsx:290
 msgid "Save"
 msgstr "Save"
 
-#: src/components/AddOrEditListButton.tsx:219
+#: src/components/AddOrEditListButton.tsx:224
 msgid "Save list"
 msgstr "Save list"
 
-#: src/components/StarRating.tsx:168
+#: src/components/StarRating.tsx:173
 msgid "Save review"
 msgstr "Save review"
 
-#: src/components/PaginatedGridItems.tsx:63
+#: src/components/PaginatedGridItems.tsx:182
 msgid "Search"
 msgstr "Search"
 
@@ -1249,11 +1266,11 @@ msgstr "Search"
 msgid "Search by username…"
 msgstr "Search by username…"
 
-#: src/components/PaginatedGridItems.tsx:304
+#: src/components/PaginatedGridItems.tsx:380
 msgid "Search for items or <0>import</0>"
 msgstr "Search for items or <0>import</0>"
 
-#: src/pages/ListPage.tsx:124
+#: src/pages/ListPage.tsx:138
 msgid "Search list"
 msgstr "Search list"
 
@@ -1265,17 +1282,17 @@ msgstr "Search users to add"
 msgid "Searching…"
 msgstr "Searching…"
 
-#: src/components/SelectLastSeenEpisode.tsx:83
+#: src/components/SelectLastSeenEpisode.tsx:116
 msgid "Season"
 msgstr "Season"
 
 #. placeholder {0}: season.seasonNumber
-#: src/pages/SeasonsPage.tsx:177
+#: src/pages/SeasonsPage.tsx:183
 msgid "Season {0}"
 msgstr "Season {0}"
 
 #: src/components/ImportSummaryTable.tsx:92
-#: src/pages/Details.tsx:387
+#: src/pages/Details.tsx:401
 msgid "Seasons"
 msgstr "Seasons"
 
@@ -1284,32 +1301,32 @@ msgid "Seen"
 msgstr "Seen"
 
 #. placeholder {0}: seenEntry.dateStr
-#: src/pages/SeenHistory.tsx:97
+#: src/pages/SeenHistory.tsx:104
 msgid "Seen at {0}"
 msgstr "Seen at {0}"
 
-#: src/pages/Details.tsx:613
-#: src/pages/import/TraktTv.tsx:191
+#: src/pages/Details.tsx:627
+#: src/pages/import/TraktTv.tsx:187
 msgid "Seen history"
 msgstr "Seen history"
 
-#: src/pages/import/TraktTv.tsx:274
+#: src/pages/import/TraktTv.tsx:270
 msgid "Seen history - episodes"
 msgstr "Seen history - episodes"
 
-#: src/pages/import/TraktTv.tsx:269
+#: src/pages/import/TraktTv.tsx:265
 msgid "Seen history - movies"
 msgstr "Seen history - movies"
 
-#: src/components/SelectLastSeenEpisode.tsx:135
+#: src/components/SelectLastSeenEpisode.tsx:168
 msgid "Select"
 msgstr "Select"
 
-#: src/components/SelectSeenDate.tsx:160
+#: src/components/SelectSeenDate.tsx:171
 msgid "Select date"
 msgstr "Select date"
 
-#: src/pages/settings/Notifications.tsx:265
+#: src/pages/settings/Notifications.tsx:275
 msgid "Select priority"
 msgstr "Select priority"
 
@@ -1321,27 +1338,27 @@ msgstr "Select year"
 msgid "Select Year"
 msgstr "Select Year"
 
-#: src/pages/settings/Notifications.tsx:29
+#: src/pages/settings/Notifications.tsx:33
 msgid "Send notification for episodes releases"
 msgstr "Send notification for episodes releases"
 
-#: src/pages/settings/Notifications.tsx:23
+#: src/pages/settings/Notifications.tsx:27
 msgid "Send notification for releases"
 msgstr "Send notification for releases"
 
-#: src/pages/settings/Notifications.tsx:53
+#: src/pages/settings/Notifications.tsx:57
 msgid "Send notification when number of seasons changes"
 msgstr "Send notification when number of seasons changes"
 
-#: src/pages/settings/Notifications.tsx:45
+#: src/pages/settings/Notifications.tsx:49
 msgid "Send notification when release date changes"
 msgstr "Send notification when release date changes"
 
-#: src/pages/settings/Notifications.tsx:37
+#: src/pages/settings/Notifications.tsx:41
 msgid "Send notification when status changes"
 msgstr "Send notification when status changes"
 
-#: src/App.tsx:101
+#: src/App.tsx:95
 msgid "Server error: {errorMessage}"
 msgstr "Server error: {errorMessage}"
 
@@ -1350,20 +1367,20 @@ msgstr "Server error: {errorMessage}"
 msgid "Server language"
 msgstr "Server language"
 
-#: src/pages/settings/Notifications.tsx:146
+#: src/pages/settings/Notifications.tsx:150
 msgid "Server url (only for self hosting)"
 msgstr "Server url (only for self hosting)"
 
-#: src/components/SetProgress.tsx:125
+#: src/components/SetProgress.tsx:131
 msgid "Set"
 msgstr "Set"
 
-#: src/components/SetProgress.tsx:61
-#: src/pages/Details.tsx:716
+#: src/components/SetProgress.tsx:62
+#: src/pages/Details.tsx:731
 msgid "Set progress"
 msgstr "Set progress"
 
-#: src/pages/Settings.tsx:76
+#: src/pages/Settings.tsx:80
 msgid "Settings"
 msgstr "Settings"
 
@@ -1375,7 +1392,7 @@ msgstr "Show less"
 msgid "Show more"
 msgstr "Show more"
 
-#: src/pages/settings/Preferences.tsx:13
+#: src/pages/settings/Preferences.tsx:17
 msgid "Show your reviews to other users"
 msgstr "Show your reviews to other users"
 
@@ -1383,21 +1400,21 @@ msgstr "Show your reviews to other users"
 msgid "Shows"
 msgstr "Shows"
 
-#: src/components/AddOrEditListButton.tsx:180
 #: src/components/AddOrEditListButton.tsx:185
+#: src/components/AddOrEditListButton.tsx:190
 msgid "Sort by"
 msgstr "Sort by"
 
-#: src/components/AddOrEditListButton.tsx:199
 #: src/components/AddOrEditListButton.tsx:204
+#: src/components/AddOrEditListButton.tsx:209
 msgid "Sort order"
 msgstr "Sort order"
 
-#: src/pages/Details.tsx:412
+#: src/pages/Details.tsx:426
 msgid "Source"
 msgstr "Source"
 
-#: src/pages/import/TraktTv.tsx:110
+#: src/pages/import/TraktTv.tsx:106
 msgid "Start over"
 msgstr "Start over"
 
@@ -1409,7 +1426,7 @@ msgstr "Statistics"
 #: src/components/Facets/ActiveFacetChips.tsx:293
 #: src/components/Facets/StatusSection.tsx:116
 #: src/components/OrderBy.tsx:16
-#: src/pages/Details.tsx:301
+#: src/pages/Details.tsx:315
 msgid "Status"
 msgstr "Status"
 
@@ -1418,11 +1435,11 @@ msgstr "Status"
 msgid "Summary"
 msgstr "Summary"
 
-#: src/components/AddOrEditListButton.tsx:105
+#: src/components/AddOrEditListButton.tsx:106
 msgid "There already exists a list with name \"{name}\""
 msgstr "There already exists a list with name \"{name}\""
 
-#: src/pages/SeasonsPage.tsx:152
+#: src/pages/SeasonsPage.tsx:156
 msgid "This component can only be used with tv shows"
 msgstr "This component can only be used with tv shows"
 
@@ -1440,15 +1457,15 @@ msgstr "TMDB language"
 msgid "To read"
 msgstr "To read"
 
-#: src/pages/settings/Notifications.tsx:142
+#: src/pages/settings/Notifications.tsx:146
 msgid "Topic"
 msgstr "Topic"
 
-#: src/pages/Details.tsx:265
+#: src/pages/Details.tsx:279
 msgid "Total runtime"
 msgstr "Total runtime"
 
-#: src/components/GridItem.tsx:94
+#: src/components/GridItem.tsx:112
 #: src/components/Nav.tsx:37
 #: src/components/Statistics/StatisticsGenreSegment.tsx:16
 #: src/components/Statistics/StatisticsSegment.tsx:35
@@ -1460,18 +1477,18 @@ msgstr "Tv"
 msgid "TV Show"
 msgstr "TV Show"
 
-#: src/pages/import/TraktTv.tsx:138
+#: src/pages/import/TraktTv.tsx:134
 msgid "Uninitialized"
 msgstr "Uninitialized"
 
 #: src/components/Facets/ActiveFacetChips.tsx:21
 #: src/components/Facets/StatusSection.tsx:55
-#: src/components/FilterBy.tsx:13
-#: src/pages/Home.tsx:122
+#: src/components/FilterBy.tsx:19
+#: src/pages/Home.tsx:123
 msgid "Unrated"
 msgstr "Unrated"
 
-#: src/pages/Details.tsx:402
+#: src/pages/Details.tsx:416
 msgid "Unseen episodes"
 msgstr "Unseen episodes"
 
@@ -1484,11 +1501,11 @@ msgstr "Unseen episodes count"
 msgid "Upcoming"
 msgstr "Upcoming"
 
-#: src/pages/Details.tsx:702
+#: src/pages/Details.tsx:717
 msgid "Update metadata"
 msgstr "Update metadata"
 
-#: src/pages/import/TraktTv.tsx:139
+#: src/pages/import/TraktTv.tsx:135
 msgid "Updating metadata"
 msgstr "Updating metadata"
 
@@ -1503,7 +1520,7 @@ msgstr "Version"
 
 #: src/components/Facets/ActiveFacetChips.tsx:78
 #: src/components/Facets/MediaTypeSection.tsx:26
-#: src/components/GridItem.tsx:95
+#: src/components/GridItem.tsx:113
 msgid "Video game"
 msgstr "Video game"
 
@@ -1514,7 +1531,7 @@ msgstr "Video game"
 msgid "Viewer"
 msgstr "Viewer"
 
-#: src/pages/import/TraktTv.tsx:140
+#: src/pages/import/TraktTv.tsx:136
 msgid "Waiting for authentication"
 msgstr "Waiting for authentication"
 
@@ -1524,64 +1541,64 @@ msgstr "Warning"
 
 #: src/components/Facets/ActiveFacetChips.tsx:34
 #: src/components/Facets/StatusSection.tsx:41
-#: src/components/FilterBy.tsx:23
+#: src/components/FilterBy.tsx:30
 msgid "Watched"
 msgstr "Watched"
 
 #: src/components/Nav.tsx:44
-#: src/pages/import/TraktTv.tsx:176
+#: src/pages/import/TraktTv.tsx:172
 #: src/utils.ts:157
 msgid "Watchlist"
 msgstr "Watchlist"
 
-#: src/pages/import/TraktTv.tsx:264
+#: src/pages/import/TraktTv.tsx:260
 msgid "Watchlist - episodes"
 msgstr "Watchlist - episodes"
 
-#: src/pages/import/TraktTv.tsx:249
+#: src/pages/import/TraktTv.tsx:245
 msgid "Watchlist - movies"
 msgstr "Watchlist - movies"
 
-#: src/pages/import/TraktTv.tsx:259
+#: src/pages/import/TraktTv.tsx:255
 msgid "Watchlist - season"
 msgstr "Watchlist - season"
 
-#: src/pages/import/TraktTv.tsx:254
+#: src/pages/import/TraktTv.tsx:250
 msgid "Watchlist - shows"
 msgstr "Watchlist - shows"
 
-#: src/pages/settings/Notifications.tsx:127
+#: src/pages/settings/Notifications.tsx:131
 msgid "Webhook URL"
 msgstr "Webhook URL"
 
 #. placeholder {0}: season ? `${tvShow.title} ${formatSeasonNumber(season)}` : tvShow.title
-#: src/components/SelectLastSeenEpisode.tsx:71
+#: src/components/SelectLastSeenEpisode.tsx:104
 msgid "What is the last episode of \"{0}\" you see?"
 msgstr "What is the last episode of \"{0}\" you see?"
 
 #. placeholder {0}: mediaItem.title
-#: src/components/SelectSeenDate.tsx:78
+#: src/components/SelectSeenDate.tsx:82
 msgid "When did you listen to \"{0}\"?"
 msgstr "When did you listen to \"{0}\"?"
 
 #. placeholder {0}: mediaItem.title
-#: src/components/SelectSeenDate.tsx:100
+#: src/components/SelectSeenDate.tsx:104
 msgid "When did you play \"{0}\"?"
 msgstr "When did you play \"{0}\"?"
 
 #. placeholder {0}: mediaItem.title
-#: src/components/SelectSeenDate.tsx:82
+#: src/components/SelectSeenDate.tsx:86
 msgid "When did you read \"{0}\"?"
 msgstr "When did you read \"{0}\"?"
 
 #. placeholder {0}: episode ? `${mediaItem.title} ${formatEpisodeNumber(episode)}` : mediaItem.title
 #. placeholder {0}: mediaItem.title
-#: src/components/SelectSeenDate.tsx:86
 #: src/components/SelectSeenDate.tsx:90
+#: src/components/SelectSeenDate.tsx:94
 msgid "When did you see \"{0}\"?"
 msgstr "When did you see \"{0}\"?"
 
-#: src/pages/Details.tsx:127
+#: src/pages/Details.tsx:133
 msgid "Where to watch"
 msgstr "Where to watch"
 

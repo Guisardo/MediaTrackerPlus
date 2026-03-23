@@ -57,6 +57,7 @@ describe('getItems', () => {
       'total',
       'page',
       'totalPages',
+      'ageGatingActive',
     ]);
 
     expect(typeof items.from).toStrictEqual('number');

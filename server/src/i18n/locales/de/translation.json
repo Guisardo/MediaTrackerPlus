@@ -8,6 +8,7 @@
   "Failed to delete unused assets files": "Unbenutzte Assets Dateien konnten nicht gelöscht werden",
   "MediaTracker listening at {address}": "MediaTracker hört auf {address}",
   "MediaTracker {0} listening at {address}": "MediaTracker {0} hört auf {address}",
+  "Missing credentials for platform {0}": "",
   "New season of {0} will be released at {1}": "Neue Staffel von {0} wird am {1} veröffentlicht",
   "New season of {0} will be released at {releaseDate}": "Neue Staffel von {0} wird am {releaseDate} veröffentlicht",
   "Password cannot be empty": "Passwort darf nicht leer sein",

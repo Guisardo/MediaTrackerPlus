@@ -11,14 +11,16 @@ import { Database } from 'src/dbconfig';
 import { UserGroupMember } from 'src/entity/userGroup';
 import { resolveLocale } from 'src/localeResolver';
 import { getMetadataLanguages } from 'src/metadataLanguages';
+import { userRepository } from 'src/repository/user';
+import { computeViewerAge } from 'src/utils/ageEligibility';
 
 export type GetItemsRequest = Omit<
   GetItemsArgs,
-  'userId' | 'mediaType' | 'mediaItemIds' | 'language'
+  'userId' | 'mediaType' | 'mediaItemIds' | 'language' | 'viewerAge'
 > &
   Partial<Pick<GetItemsArgs, 'mediaType'>>;
 
-export type GetFacetsRequest = Omit<FacetQueryArgs, 'userId'>;
+export type GetFacetsRequest = Omit<FacetQueryArgs, 'userId' | 'viewerAge'>;
 
 type MembershipValidationResult =
   | { valid: true; resolvedGroupId: number | undefined }
@@ -31,12 +33,14 @@ type ValidItemsRequestContext = {
   sortOrder: GetItemsArgs['sortOrder'];
   resolvedGroupId: number | undefined;
   language: string | null;
+  viewerAge: number | null;
 };
 
 type ValidFacetsRequestContext = {
   valid: true;
   userId: number;
   resolvedGroupId: number | undefined;
+  viewerAge: number | null;
 };
 
 /**
@@ -135,6 +139,9 @@ async function buildItemsRequestContext(args: {
     return { valid: false };
   }
 
+  const selfUser = await userRepository.findOneSelf({ id: userId });
+  const viewerAge = computeViewerAge(selfUser?.dateOfBirth);
+
   return {
     valid: true,
     userId,
@@ -142,6 +149,7 @@ async function buildItemsRequestContext(args: {
     sortOrder: query.sortOrder || 'asc',
     resolvedGroupId: membershipResult.resolvedGroupId,
     language: resolveMetadataLanguage(acceptLanguageHeader),
+    viewerAge,
   };
 }
 
@@ -159,10 +167,14 @@ async function buildFacetsRequestContext(args: {
     return { valid: false };
   }
 
+  const selfUser = await userRepository.findOneSelf({ id: userId });
+  const viewerAge = computeViewerAge(selfUser?.dateOfBirth);
+
   return {
     valid: true,
     userId,
     resolvedGroupId: membershipResult.resolvedGroupId,
+    viewerAge,
   };
 }
 
@@ -185,6 +197,7 @@ function buildBaseItemsArgs(
     onlyWithProgress: query.onlyWithProgress,
     groupId: context.resolvedGroupId,
     language: context.language,
+    viewerAge: context.viewerAge,
   };
 }
 
@@ -247,6 +260,7 @@ function buildFacetArgs(
     onlyWithProgress: query.onlyWithProgress,
     orderBy: query.orderBy,
     groupId: context.resolvedGroupId,
+    viewerAge: context.viewerAge,
   };
 }
 
