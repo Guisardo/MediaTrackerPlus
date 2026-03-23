@@ -250,6 +250,13 @@ export type MediaItemDetailsResponse = {
   audibleCountryCode?: AudibleCountryCode | null;
   needsDetails?: boolean | null;
   platformRating?: number | null;
+  minimumAge?: number | null;
+  contentRatingSystem?: string | null;
+  contentRatingRegion?: string | null;
+  contentRatingLabel?: string | null;
+  contentRatingDescriptors?: string[] | null;
+  parentalGuidanceSummary?: string | null;
+  parentalGuidanceCategories?: ParentalGuidanceCategory[] | null;
   seasons?: TvSeason[] | null;
 } & {
   isSearchResult?: boolean | null;
@@ -273,6 +280,12 @@ export type MediaItemDetailsResponse = {
   lists: List[];
   metadataLanguage?: string | null;
 };
+
+export interface ParentalGuidanceCategory {
+  category: string;
+  severity?: string | null;
+  description?: string | null;
+}
 
 export interface TvSeason {
   id?: number | null;
@@ -388,6 +401,13 @@ export type MediaItemItemsResponse = {
   audibleCountryCode?: AudibleCountryCode | null;
   needsDetails?: boolean | null;
   platformRating?: number | null;
+  minimumAge?: number | null;
+  contentRatingSystem?: string | null;
+  contentRatingRegion?: string | null;
+  contentRatingLabel?: string | null;
+  contentRatingDescriptors?: string[] | null;
+  parentalGuidanceSummary?: string | null;
+  parentalGuidanceCategories?: ParentalGuidanceCategory[] | null;
 } & {
   isSearchResult?: boolean | null;
   hasDetails?: boolean | null;

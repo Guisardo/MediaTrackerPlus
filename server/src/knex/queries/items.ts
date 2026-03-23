@@ -19,6 +19,10 @@ import { List, listItemColumns } from 'src/entity/list';
 import { Progress } from 'src/entity/progress';
 import { splitCreatorField } from 'src/utils/normalizeCreators';
 import { getMediaItemTranslations } from 'src/repository/translationRepository';
+import {
+  deserializeDescriptors,
+  deserializeCategories,
+} from 'src/metadata/parentalMetadata';
 
 /**
  * Applies translation overlay to a list of mapped items for a given language.
@@ -1122,6 +1126,17 @@ const mapRawResult = (row: RawMediaItemRow): MediaItemItemsResponse => {
     narrators: splitCreatorField(row['mediaItem.narrators'] ?? null),
     url: row['mediaItem.url'],
     developer: row['mediaItem.developer'],
+    minimumAge: row['mediaItem.minimumAge'] ?? null,
+    contentRatingSystem: row['mediaItem.contentRatingSystem'] ?? null,
+    contentRatingRegion: row['mediaItem.contentRatingRegion'] ?? null,
+    contentRatingLabel: row['mediaItem.contentRatingLabel'] ?? null,
+    contentRatingDescriptors: deserializeDescriptors(
+      row['mediaItem.contentRatingDescriptors']
+    ),
+    parentalGuidanceSummary: row['mediaItem.parentalGuidanceSummary'] ?? null,
+    parentalGuidanceCategories: deserializeCategories(
+      row['mediaItem.parentalGuidanceCategories']
+    ),
     lastSeenAt: row['lastSeenAt'],
     progress: row['progress'],
     poster: mapImagePath(row['mediaItem.posterId']),

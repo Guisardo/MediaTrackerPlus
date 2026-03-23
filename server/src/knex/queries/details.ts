@@ -15,6 +15,10 @@ import {
   getSeasonTranslations,
   getEpisodeTranslations,
 } from 'src/repository/translationRepository';
+import {
+  deserializeDescriptors,
+  deserializeCategories,
+} from 'src/metadata/parentalMetadata';
 
 export const getDetailsKnex = async (params: {
   mediaItemId: number;
@@ -268,6 +272,12 @@ export const getDetailsKnex = async (params: {
     ),
     authors: splitCreatorField(
       (mediaItem.authors as unknown as string) || null
+    ),
+    contentRatingDescriptors: deserializeDescriptors(
+      mediaItem.contentRatingDescriptors
+    ),
+    parentalGuidanceCategories: deserializeCategories(
+      mediaItem.parentalGuidanceCategories
     ),
     progress: progressValue !== 1 ? progressValue ?? null : null,
     seenHistory: seenHistory,

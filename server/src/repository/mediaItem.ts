@@ -29,6 +29,12 @@ import {
   MediaItemItemsResponse,
   MediaType,
 } from 'src/entity/mediaItem';
+import {
+  deserializeDescriptors,
+  deserializeCategories,
+  serializeDescriptors,
+  serializeCategories,
+} from 'src/metadata/parentalMetadata';
 import { isValid, parseISO, subDays, subMinutes } from 'date-fns';
 import { TvSeason } from 'src/entity/tvseason';
 import { ListItem } from 'src/entity/list';
@@ -304,6 +310,12 @@ class MediaItemRepository extends repository<MediaItemBase>({
       platform: value.platform
         ? JSON.parse(value.platform as unknown as string)
         : undefined,
+      contentRatingDescriptors: deserializeDescriptors(
+        value.contentRatingDescriptors
+      ),
+      parentalGuidanceCategories: deserializeCategories(
+        value.parentalGuidanceCategories
+      ),
     });
   }
 
@@ -314,6 +326,12 @@ class MediaItemRepository extends repository<MediaItemBase>({
       authors: value.authors?.join(','),
       narrators: value.narrators?.join(','),
       platform: value.platform ? JSON.stringify(value.platform) : null,
+      contentRatingDescriptors: serializeDescriptors(
+        value.contentRatingDescriptors
+      ),
+      parentalGuidanceCategories: serializeCategories(
+        value.parentalGuidanceCategories
+      ),
     } as unknown as Partial<MediaItemBase>;
 
     return super.serialize(serializedValue) as Record<string, unknown>;

@@ -4193,6 +4193,40 @@
                 "type": "number",
                 "nullable": true
               },
+              "minimumAge": {
+                "type": "number",
+                "nullable": true
+              },
+              "contentRatingSystem": {
+                "type": "string",
+                "nullable": true
+              },
+              "contentRatingRegion": {
+                "type": "string",
+                "nullable": true
+              },
+              "contentRatingLabel": {
+                "type": "string",
+                "nullable": true
+              },
+              "contentRatingDescriptors": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              },
+              "parentalGuidanceSummary": {
+                "type": "string",
+                "nullable": true
+              },
+              "parentalGuidanceCategories": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ParentalGuidanceCategory"
+                },
+                "nullable": true
+              },
               "seasons": {
                 "type": "array",
                 "items": {
@@ -4316,6 +4350,25 @@
               "lists"
             ]
           }
+        ]
+      },
+      "ParentalGuidanceCategory": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "category"
         ]
       },
       "TvSeason": {
@@ -4784,6 +4837,40 @@
               },
               "platformRating": {
                 "type": "number",
+                "nullable": true
+              },
+              "minimumAge": {
+                "type": "number",
+                "nullable": true
+              },
+              "contentRatingSystem": {
+                "type": "string",
+                "nullable": true
+              },
+              "contentRatingRegion": {
+                "type": "string",
+                "nullable": true
+              },
+              "contentRatingLabel": {
+                "type": "string",
+                "nullable": true
+              },
+              "contentRatingDescriptors": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              },
+              "parentalGuidanceSummary": {
+                "type": "string",
+                "nullable": true
+              },
+              "parentalGuidanceCategories": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ParentalGuidanceCategory"
+                },
                 "nullable": true
               }
             },
