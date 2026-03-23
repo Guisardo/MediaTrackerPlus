@@ -153,10 +153,12 @@ const sendNotificationForEpisodes = async (episodes: TvEpisode[]) => {
     return;
   }
 
-  const usersToNotify = await userRepository.findUsersWithMediaItemOnWatchlist({
-    mediaItemId: tvShow.id,
-    sendNotificationForEpisodesReleases: true,
-  });
+  const usersToNotify =
+    await userRepository.findNotificationRecipientsForMediaItem({
+      mediaItemId: tvShow.id,
+      minimumAge: tvShow.minimumAge,
+      sendNotificationForEpisodesReleases: true,
+    });
 
   const title = tvShow.title;
   {
@@ -193,10 +195,12 @@ const sendNotificationForMediaItem = async (mediaItem: MediaItemBase) => {
   }
 
   const title = mediaItem.title;
-  const usersToNotify = await userRepository.findUsersWithMediaItemOnWatchlist({
-    mediaItemId: mediaItem.id,
-    sendNotificationForReleases: true,
-  });
+  const usersToNotify =
+    await userRepository.findNotificationRecipientsForMediaItem({
+      mediaItemId: mediaItem.id,
+      minimumAge: mediaItem.minimumAge,
+      sendNotificationForReleases: true,
+    });
 
   const count = usersToNotify.length;
 

@@ -171,9 +171,13 @@ const sendNotifications = async (
     return;
   }
 
-  const users = await userRepository.usersWithMediaItemOnWatchlist(
-    oldMediaItem.id
-  );
+  // Use the updated media item's minimumAge so recipients are evaluated
+  // against current parental metadata after the refresh. Recipients without
+  // a dateOfBirth or whose age meets the threshold are included.
+  const users = await userRepository.findNotificationRecipientsForMediaItem({
+    mediaItemId: oldMediaItem.id,
+    minimumAge: newMediaItem.minimumAge,
+  });
 
   const send = async (args: {
     message: FormattedNotification;
