@@ -132,6 +132,16 @@ describe('IGDB', () => {
   });
 });
 
+const nullParentalFields = {
+  minimumAge: null,
+  contentRatingSystem: null,
+  contentRatingRegion: null,
+  contentRatingLabel: null,
+  contentRatingDescriptors: null,
+  parentalGuidanceSummary: null,
+  parentalGuidanceCategories: null,
+};
+
 const searchResult = [
   {
     needsDetails: false,
@@ -148,6 +158,7 @@ const searchResult = [
     developer: 'SIE Santa Monica Studio',
     publisher: 'Sony Interactive Entertainment',
     platform: ['PC (Microsoft Windows)', 'PlayStation 4'],
+    ...nullParentalFields,
   },
   {
     needsDetails: false,
@@ -164,6 +175,7 @@ const searchResult = [
     developer: 'SIE Santa Monica Studio',
     publisher: 'Sony Computer Entertainment, Inc. (SCEI)',
     platform: ['PlayStation 2'],
+    ...nullParentalFields,
   },
   {
     needsDetails: false,
@@ -183,6 +195,7 @@ const searchResult = [
     developer: 'Bluepoint Games',
     publisher: 'Sony Computer Entertainment, Inc. (SCEI)',
     platform: ['PlayStation 3'],
+    ...nullParentalFields,
   },
   {
     needsDetails: false,
@@ -199,6 +212,7 @@ const searchResult = [
     developer: 'SIE Santa Monica Studio',
     publisher: 'Sony Computer Entertainment, Inc. (SCEI)',
     platform: ['PlayStation 3'],
+    ...nullParentalFields,
   },
 ];
 
@@ -232,4 +246,5 @@ const detailsResult = {
   developer: 'SIE Santa Monica Studio',
   publisher: 'Sony Interactive Entertainment',
   platform: ['PC (Microsoft Windows)', 'PlayStation 4'],
+  ...nullParentalFields,
 };

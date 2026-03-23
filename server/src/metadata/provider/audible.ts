@@ -7,6 +7,10 @@ import { GlobalConfiguration } from 'src/repository/globalSettings';
 import { normalizeCreatorField } from 'src/utils/normalizeCreators';
 import { getAudibleLangMap, toTmdbLang } from 'src/metadataLanguages';
 import { logger } from 'src/logger';
+import {
+  normalizeParentalData,
+  ProviderCertification,
+} from 'src/metadata/parentalMetadata';
 
 export class Audible extends MetadataProvider {
   readonly name = 'audible';
@@ -179,6 +183,8 @@ export class Audible extends MetadataProvider {
     item: AudibleResponse.Product,
     countryCode: AudibleCountryCode
   ): MediaItemForProvider {
+    const parentalData = mapAudibleParentalData(item.is_adult_product);
+
     return {
       needsDetails: false,
       mediaType: this.mediaType,
@@ -197,9 +203,27 @@ export class Audible extends MetadataProvider {
       releaseDate: item.release_date,
       runtime: item.runtime_length_min,
       overview: item.merchandising_summary,
+      ...parentalData,
     };
   }
 }
+
+/**
+ * Convert an Audible `is_adult_product` boolean into canonical parental fields.
+ *
+ * When `isAdultProduct` is true, a coarse AUDIBLE/ADULT certification is built
+ * which maps to `minimumAge=18`. When false or undefined, all parental fields
+ * remain null (Audible does not expose detailed category guidance).
+ */
+const mapAudibleParentalData = (
+  isAdultProduct: boolean | undefined
+): ReturnType<typeof normalizeParentalData> => {
+  const certifications: ProviderCertification[] = isAdultProduct
+    ? [{ region: 'US', system: 'AUDIBLE', label: 'ADULT' }]
+    : [];
+
+  return normalizeParentalData(certifications);
+};
 
 namespace AudibleResponse {
   export interface Author {

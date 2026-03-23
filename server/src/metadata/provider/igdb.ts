@@ -8,6 +8,10 @@ import { GlobalConfiguration } from 'src/repository/globalSettings';
 import { logger } from 'src/logger';
 import { SimilarItem } from 'src/metadata/types';
 import { definedOrUndefined } from 'src/repository/repository';
+import {
+  normalizeStrictestCertification,
+  ProviderCertification,
+} from 'src/metadata/parentalMetadata';
 
 const getPosterUrl = (path: string, size: CoverSize = 't_original') => {
   return urljoin(
@@ -146,6 +150,7 @@ export class IGDB extends MetadataProvider {
 
   private mapGame(searchResult: Game): MediaItemForProvider {
     const website = searchResult.websites?.[0]?.url;
+    const parentalData = mapIgdbAgeRatings(searchResult.age_ratings);
 
     return {
       needsDetails: false,
@@ -171,27 +176,31 @@ export class IGDB extends MetadataProvider {
         .map((item) => item.company.name)
         .join(', ') || undefined,
       platform: searchResult.platforms?.map((value) => value.name),
+      ...parentalData,
     };
   }
 
   private async game(gameId: number): Promise<Game | undefined> {
     const res = (await this.get(
       'games',
-      `fields 
+      `fields
         name,
         first_release_date,
         summary,
-        cover.image_id, 
+        cover.image_id,
         involved_companies.company.name,
         involved_companies.developer,
         involved_companies.publisher,
-        platforms.name, 
-        platforms.platform_logo.id, 
-        genres.name, 
+        platforms.name,
+        platforms.platform_logo.id,
+        genres.name,
         platforms.id,
         release_dates.date,
         release_dates.platform,
-        websites.url; 
+        websites.url,
+        age_ratings.category,
+        age_ratings.rating,
+        age_ratings.content_descriptions.description;
       where id = ${gameId} & version_parent = null;`
     )) as Game[];
     if (res?.length > 0) {
@@ -301,9 +310,146 @@ interface Token {
   token_type: string;
 }
 
+/**
+ * IGDB AgeRating object returned when `age_ratings` is expanded inline.
+ */
+interface IgdbAgeRating {
+  id: number;
+  /** 1=ESRB, 2=PEGI, 3=CERO, 4=USK, 5=GRAC */
+  category: number;
+  /** Provider-specific rating integer (see IGDB_RATING_MAP). */
+  rating: number;
+  content_descriptions?: Array<{ description: string }>;
+}
+
+/**
+ * Map IGDB age_ratings category+rating pairs to canonical rating system labels.
+ *
+ * Category enum: 1=ESRB, 2=PEGI, 3=CERO, 4=USK, 5=GRAC
+ *
+ * ESRB rating enum: 6=EC, 7=E, 8=E10+, 9=T, 10=M, 11=AO
+ * PEGI rating enum: 1=3, 2=7, 3=12, 4=16, 5=18
+ * CERO rating enum: 1=A, 2=B, 3=C, 4=D, 5=Z
+ * USK rating enum:  1=0, 2=6, 3=12, 4=16, 5=18
+ * GRAC rating enum: 1=ALL, 2=12, 3=15, 4=18, 5=TESTING
+ */
+const IGDB_CATEGORY_MAP: Record<number, string> = {
+  1: 'ESRB',
+  2: 'PEGI',
+  3: 'CERO',
+  4: 'USK',
+  5: 'GRAC',
+};
+
+const IGDB_ESRB_LABEL_MAP: Record<number, string> = {
+  6: 'EC',
+  7: 'E',
+  8: 'E10+',
+  9: 'T',
+  10: 'M',
+  11: 'AO',
+};
+
+const IGDB_PEGI_LABEL_MAP: Record<number, string> = {
+  1: '3',
+  2: '7',
+  3: '12',
+  4: '16',
+  5: '18',
+};
+
+const IGDB_CERO_LABEL_MAP: Record<number, string> = {
+  1: 'A',
+  2: 'B',
+  3: 'C',
+  4: 'D',
+  5: 'Z',
+};
+
+const IGDB_USK_LABEL_MAP: Record<number, string> = {
+  1: '0',
+  2: '6',
+  3: '12',
+  4: '16',
+  5: '18',
+};
+
+const IGDB_GRAC_LABEL_MAP: Record<number, string> = {
+  1: 'ALL',
+  2: '12',
+  3: '15',
+  4: '18',
+};
+
+const IGDB_RATING_LABEL_MAPS: Record<number, Record<number, string>> = {
+  1: IGDB_ESRB_LABEL_MAP,
+  2: IGDB_PEGI_LABEL_MAP,
+  3: IGDB_CERO_LABEL_MAP,
+  4: IGDB_USK_LABEL_MAP,
+  5: IGDB_GRAC_LABEL_MAP,
+};
+
+/**
+ * IGDB region codes by category (for canonical region field).
+ * ESRB=US, PEGI=GB (representative for EU), CERO=JP, USK=DE, GRAC=KR.
+ */
+const IGDB_CATEGORY_REGION: Record<number, string> = {
+  1: 'US',
+  2: 'GB',
+  3: 'JP',
+  4: 'DE',
+  5: 'KR',
+};
+
+/**
+ * Convert IGDB inline age_ratings to ProviderCertification[] and normalize
+ * using the strictest-certification strategy (highest minimumAge wins).
+ *
+ * IGDB may return multiple rating systems per game (e.g. ESRB + PEGI).
+ * Unknown category/rating combinations are silently skipped.
+ * When no age_ratings are present all parental fields remain null.
+ */
+const mapIgdbAgeRatings = (
+  ageRatings: IgdbAgeRating[] | undefined
+): ReturnType<typeof normalizeStrictestCertification> => {
+  if (!ageRatings || ageRatings.length === 0) {
+    return normalizeStrictestCertification([]);
+  }
+
+  const certifications: ProviderCertification[] = [];
+
+  for (const ar of ageRatings) {
+    const system = IGDB_CATEGORY_MAP[ar.category];
+    if (!system) {
+      continue;
+    }
+    const labelMap = IGDB_RATING_LABEL_MAPS[ar.category];
+    if (!labelMap) {
+      continue;
+    }
+    const label = labelMap[ar.rating];
+    if (!label) {
+      continue;
+    }
+    const region = IGDB_CATEGORY_REGION[ar.category] ?? 'US';
+    const descriptors = ar.content_descriptions
+      ? ar.content_descriptions.map((d) => d.description).filter(Boolean)
+      : undefined;
+
+    certifications.push({
+      region,
+      system,
+      label,
+      descriptors: descriptors && descriptors.length > 0 ? descriptors : undefined,
+    });
+  }
+
+  return normalizeStrictestCertification(certifications);
+};
+
 interface Game {
   id: number;
-  age_ratings?: number[];
+  age_ratings?: IgdbAgeRating[];
   aggregated_rating?: number;
   aggregated_rating_count?: number;
   alternative_names?: number[];

@@ -59,6 +59,16 @@ describe('audible', () => {
   });
 });
 
+const nullParentalFields = {
+  minimumAge: null,
+  contentRatingSystem: null,
+  contentRatingRegion: null,
+  contentRatingLabel: null,
+  contentRatingDescriptors: null,
+  parentalGuidanceSummary: null,
+  parentalGuidanceCategories: null,
+};
+
 const searchResult = [
   {
     needsDetails: false,
@@ -73,9 +83,11 @@ const searchResult = [
     releaseDate: '2015-11-20',
     runtime: 498,
     overview:
-      '<p>Harry Potter is a wizard - and not only a wizard, he’s an incredibly famous wizard. Rubeus Hagrid spirits him away from his less-than-fortunate life to Hogwarts School of Witchcraft and Wizardry, setting into motion an incredible adventure....</p>',
+      '<p>Harry Potter is a wizard - and not only a wizard, he\u2019s an incredibly famous wizard. Rubeus Hagrid spirits him away from his less-than-fortunate life to Hogwarts School of Witchcraft and Wizardry, setting into motion an incredible adventure....</p>',
     audibleCountryCode: 'fr',
+    ...nullParentalFields,
   },
+
   {
     needsDetails: false,
     mediaType: 'audiobook',
@@ -91,6 +103,7 @@ const searchResult = [
     overview:
       "The Triwizard Tournament is to be held at Hogwarts. Only wizards who are over seventeen are allowed to enter - but that doesn't stop Harry dreaming that he will win the competition....",
     audibleCountryCode: 'fr',
+    ...nullParentalFields,
   },
   {
     needsDetails: false,
@@ -107,6 +120,7 @@ const searchResult = [
     overview:
       "<p>When the Knight Bus crashes through the darkness and screeches to a halt in front of him, it's the start of another far-from-ordinary year at Hogwarts for Harry Potter....</p>",
     audibleCountryCode: 'fr',
+    ...nullParentalFields,
   },
   {
     needsDetails: false,
@@ -123,6 +137,7 @@ const searchResult = [
     overview:
       "Dark times have come to Hogwarts. After the Dementors' attack on his cousin Dudley, Harry Potter knows that Voldemort will stop at nothing to find him....",
     audibleCountryCode: 'fr',
+    ...nullParentalFields,
   },
 ];
 
@@ -139,6 +154,7 @@ const detailsResult = {
   releaseDate: '2015-11-20',
   runtime: 498,
   overview:
-    '<p>Harry Potter is a wizard - and not only a wizard, he’s an incredibly famous wizard. Rubeus Hagrid spirits him away from his less-than-fortunate life to Hogwarts School of Witchcraft and Wizardry, setting into motion an incredible adventure....</p>',
+    '<p>Harry Potter is a wizard - and not only a wizard, he\u2019s an incredibly famous wizard. Rubeus Hagrid spirits him away from his less-than-fortunate life to Hogwarts School of Witchcraft and Wizardry, setting into motion an incredible adventure....</p>',
   audibleCountryCode: 'it',
+  ...nullParentalFields,
 };
