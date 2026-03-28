@@ -8,6 +8,7 @@
   "Failed to delete unused assets files": "Kunde inte ta bort oanvända resursfiler",
   "MediaTracker listening at {address}": "MediaTracker lyssnar på {address}",
   "MediaTracker {0} listening at {address}": "MediaTracker {0} lyssnar på {address}",
+  "Missing credentials for platform {0}": "",
   "New season of {0} will be released at {1}": "Ny säsong av {0} ges ut {1}",
   "New season of {0} will be released at {releaseDate}": "Ny säsong av {0} ges ut {releaseDate}",
   "Password cannot be empty": "Lösenord kan inte vara tomt",

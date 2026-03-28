@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { User, userNonSensitiveColumns } from 'src/entity/user';
+import { User, userNonSensitiveColumns, userSelfColumns } from 'src/entity/user';
 import { userRepository } from 'src/repository/user';
 import { Database } from 'src/dbconfig';
 import {
@@ -32,8 +32,9 @@ export class UsersController {
     responseBody: null | UserResponse;
   }>(async (req, res) => {
     if (typeof req.user === 'number') {
-      const user = await userRepository.findOne({ id: req.user });
-      res.send(user);
+      // Use findOneSelf to include the self-only dateOfBirth field.
+      const user = await userRepository.findOneSelf({ id: req.user });
+      res.send(user ?? null);
     } else {
       res.send(null);
     }
@@ -203,15 +204,27 @@ export class UsersController {
       Pick<
         User,
         Exclude<(typeof userNonSensitiveColumns)[number], 'id' | 'admin'>
-      >
+      > & Pick<User, 'dateOfBirth'>
     >;
   }>(async (req, res) => {
     const userId = Number(req.user);
+    // Pick the shared non-sensitive settings fields (excludes dateOfBirth).
     const newUserSettings = _.pick(req.body, userNonSensitiveColumns);
+
+    // `dateOfBirth` is self-only and not in userNonSensitiveColumns, so it
+    // must be extracted explicitly. Accept string, null, or undefined.
+    const dateOfBirthUpdate: { dateOfBirth?: string | null } = {};
+    if ('dateOfBirth' in req.body) {
+      dateOfBirthUpdate.dateOfBirth =
+        req.body.dateOfBirth === null || req.body.dateOfBirth === undefined
+          ? null
+          : String(req.body.dateOfBirth);
+    }
 
     await userRepository.update({
       id: userId,
       ...newUserSettings,
+      ...dateOfBirthUpdate,
     });
 
     res.sendStatus(200);
@@ -308,7 +321,8 @@ export class UsersController {
       .select('id', 'name')
       .limit(20);
 
-    // Return only id and name fields
+    // Return only id and name fields — safe: mapped to a plain {id, name} literal
+    // nosemgrep: javascript.express.security.audit.xss.direct-response-write.direct-response-write
     res.send(users.map(user => ({ id: user.id, name: user.name })));
   });
 }

@@ -911,6 +911,10 @@
                     },
                     "total": {
                       "type": "number"
+                    },
+                    "ageGatingActive": {
+                      "type": "boolean",
+                      "nullable": true
                     }
                   },
                   "required": [
@@ -3190,6 +3194,10 @@
                   "addRecommendedToWatchlist": {
                     "type": "boolean",
                     "nullable": true
+                  },
+                  "dateOfBirth": {
+                    "type": "string",
+                    "nullable": true
                   }
                 }
               }
@@ -4189,6 +4197,40 @@
                 "type": "number",
                 "nullable": true
               },
+              "minimumAge": {
+                "type": "number",
+                "nullable": true
+              },
+              "contentRatingSystem": {
+                "type": "string",
+                "nullable": true
+              },
+              "contentRatingRegion": {
+                "type": "string",
+                "nullable": true
+              },
+              "contentRatingLabel": {
+                "type": "string",
+                "nullable": true
+              },
+              "contentRatingDescriptors": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              },
+              "parentalGuidanceSummary": {
+                "type": "string",
+                "nullable": true
+              },
+              "parentalGuidanceCategories": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ParentalGuidanceCategory"
+                },
+                "nullable": true
+              },
               "seasons": {
                 "type": "array",
                 "items": {
@@ -4312,6 +4354,47 @@
               "lists"
             ]
           }
+        ]
+      },
+      "ParentalGuidanceCategory": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "guideItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ParentalGuidanceGuideItem"
+            },
+            "nullable": true
+          }
+        },
+        "required": [
+          "category"
+        ]
+      },
+      "ParentalGuidanceGuideItem": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "isSpoiler": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "required": [
+          "text"
         ]
       },
       "TvSeason": {
@@ -4780,6 +4863,40 @@
               },
               "platformRating": {
                 "type": "number",
+                "nullable": true
+              },
+              "minimumAge": {
+                "type": "number",
+                "nullable": true
+              },
+              "contentRatingSystem": {
+                "type": "string",
+                "nullable": true
+              },
+              "contentRatingRegion": {
+                "type": "string",
+                "nullable": true
+              },
+              "contentRatingLabel": {
+                "type": "string",
+                "nullable": true
+              },
+              "contentRatingDescriptors": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              },
+              "parentalGuidanceSummary": {
+                "type": "string",
+                "nullable": true
+              },
+              "parentalGuidanceCategories": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ParentalGuidanceCategory"
+                },
                 "nullable": true
               }
             },
@@ -5318,11 +5435,11 @@
               "id": {
                 "type": "number"
               },
-              "isWatchlist": {
-                "type": "boolean"
-              },
               "name": {
                 "type": "string"
+              },
+              "isWatchlist": {
+                "type": "boolean"
               },
               "createdAt": {
                 "type": "number"
@@ -5473,11 +5590,11 @@
               "id": {
                 "type": "number"
               },
-              "isWatchlist": {
-                "type": "boolean"
-              },
               "name": {
                 "type": "string"
+              },
+              "isWatchlist": {
+                "type": "boolean"
               },
               "createdAt": {
                 "type": "number"
@@ -6078,6 +6195,10 @@
           "addRecommendedToWatchlist": {
             "type": "boolean",
             "nullable": true
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "nullable": true
           }
         },
         "required": [
@@ -6096,6 +6217,14 @@
             "enum": [
               true
             ]
+          },
+          "code": {
+            "type": "string",
+            "enum": [
+              "AGE_RESTRICTED",
+              null
+            ],
+            "nullable": true
           }
         },
         "required": [

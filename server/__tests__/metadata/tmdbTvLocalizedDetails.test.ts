@@ -650,9 +650,20 @@ describe('TMDbTv.localizedDetails', () => {
   describe('behavioral contract vs details()', () => {
     test('details() includes originalTitle while localizedDetails() does not', async () => {
       // Call details()
+      // details() calls enrichParentalGuideFromImdb which:
+      //   1. Makes a GraphQL POST to IMDB (mocked to return null data → no early return)
+      //   2. Falls through to an HTML GET from IMDB (mocked to empty string → returns null)
+      // Both are interleaved with the TMDB get mocks below, so the order must match
+      // the actual call sequence: TMDB show → IMDB GraphQL POST → IMDB HTML GET → seasons.
+      mockedAxios.post.mockResolvedValueOnce({ data: { data: null } });
       mockedAxios.get
         .mockResolvedValueOnce({
           data: buildTmdbTvResponse(),
+          status: 200,
+        })
+        .mockResolvedValueOnce({
+          // IMDB HTML fallback: empty response → parseImdbParentalGuideHtml returns null
+          data: '',
           status: 200,
         })
         .mockResolvedValueOnce({

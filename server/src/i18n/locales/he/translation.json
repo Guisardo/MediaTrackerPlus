@@ -8,6 +8,7 @@
   "Failed to delete unused assets files": "נכשל מחיקת קבצי נכסים שאינם בשימוש",
   "MediaTracker listening at {address}": "MediaTracker מאזין בכתובת {address}",
   "MediaTracker {0} listening at {address}": "MediaTracker {0} מאזין בכתובת {address}",
+  "Missing credentials for platform {0}": "",
   "New season of {0} will be released at {1}": "עונה חדשה של {0} תצא לאור ב-{1}",
   "New season of {0} will be released at {releaseDate}": "עונה חדשה של {0} תצא לאור ב-{releaseDate}",
   "Password cannot be empty": "הסיסמה אינה יכולה להיות ריקה",

@@ -20,6 +20,31 @@ export class FetchError extends Error {
   }
 }
 
+/**
+ * Returns true when the React Query error object represents an AGE_RESTRICTED
+ * 403 response from the server (i.e., `code === 'AGE_RESTRICTED'` in the
+ * response body).
+ */
+export const isAgeRestrictedError = (error: unknown): boolean => {
+  if (!(error instanceof FetchError)) {
+    return false;
+  }
+  if (error.status !== 403 || !error.body) {
+    return false;
+  }
+  try {
+    const parsed = JSON.parse(error.body);
+    return (
+      parsed &&
+      typeof parsed === 'object' &&
+      parsed.code === 'AGE_RESTRICTED' &&
+      parsed.MediaTrackerError === true
+    );
+  } catch {
+    return false;
+  }
+};
+
 export class MediaTrackerError extends Error {
   constructor(message: string) {
     super(message);

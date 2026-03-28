@@ -4,6 +4,11 @@ import { parseISO } from 'date-fns';
 import { createExpressRoute } from 'typescript-routes-to-openapi-server';
 import { Database } from 'src/dbconfig';
 import { MediaType } from 'src/entity/mediaItem';
+import { userRepository } from 'src/repository/user';
+import {
+  computeViewerAge,
+  applyAgeGatingFilter,
+} from 'src/utils/ageEligibility';
 
 /**
  * @openapi_tags Calendar
@@ -38,13 +43,18 @@ export class CalendarController {
       return;
     }
 
-    res.send(
-      await getCalendarItems({
-        userId,
-        start: parseISO(start).toISOString(),
-        end: parseISO(end).toISOString(),
-      })
-    );
+    const selfUser = await userRepository.findOneSelf({ id: userId });
+    const viewerAge = computeViewerAge(selfUser?.dateOfBirth);
+
+    const calendarItems = await getCalendarItems({
+      userId,
+      start: parseISO(start).toISOString(),
+      end: parseISO(end).toISOString(),
+      viewerAge,
+    });
+
+    // nosemgrep: javascript.express.security.audit.xss.direct-response-write.direct-response-write
+    res.send(calendarItems);
   });
 }
 
@@ -72,8 +82,9 @@ export const getCalendarItems = async (args: {
   userId: number;
   start: string;
   end: string;
+  viewerAge?: number | null;
 }): Promise<GetCalendarItemsResponse> => {
-  const { userId, start, end } = args;
+  const { userId, start, end, viewerAge } = args;
 
   const res = await Database.knex('list')
     .select({
@@ -165,9 +176,15 @@ export const getCalendarItems = async (args: {
         .orWhereBetween('episode.releaseDate', [start, end])
         .orWhereBetween('seasonEpisode.releaseDate', [start, end])
         .orWhereBetween('mediaItemEpisode.releaseDate', [start, end])
-    );
+    )
+    // Age gating: exclude items whose minimumAge exceeds the viewer's age.
+    // Episodes inherit their parent show's minimumAge.
+    .modify((qb) => {
+      applyAgeGatingFilter(qb, viewerAge ?? null);
+    });
 
-  const mappedItems = res.map((row) => ({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const mappedItems = res.map((row: Record<string, any>) => ({
     mediaItem: {
       id: row['listItem.mediaItemId'],
       title: row['mediaItem.title'],

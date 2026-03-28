@@ -8,6 +8,7 @@
   "Failed to delete unused assets files": "Αποτυχία διαγραφής αχρησιμοποίητων αρχείων πόρων",
   "MediaTracker listening at {address}": "Το MediaTracker ακούει στη διεύθυνση {address}",
   "MediaTracker {0} listening at {address}": "Το MediaTracker {0} ακούει στη διεύθυνση {address}",
+  "Missing credentials for platform {0}": "",
   "New season of {0} will be released at {1}": "Νέα σεζόν του {0} θα κυκλοφορήσει στις {1}",
   "New season of {0} will be released at {releaseDate}": "Νέα σεζόν του {0} θα κυκλοφορήσει στις {releaseDate}",
   "Password cannot be empty": "Ο κωδικός πρόσβασης δεν μπορεί να είναι κενός",

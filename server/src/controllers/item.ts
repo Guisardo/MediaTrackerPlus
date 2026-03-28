@@ -4,6 +4,9 @@ import { mediaItemRepository } from 'src/repository/mediaItem';
 import { updateMediaItem } from 'src/updateMetadata';
 import { resolveLocale } from 'src/localeResolver';
 import { getMetadataLanguages } from 'src/metadataLanguages';
+import { userRepository } from 'src/repository/user';
+import { computeViewerAge, isAgeEligible } from 'src/utils/ageEligibility';
+import { toCodedRequestErrorObject } from 'src/requestError';
 
 /**
  * Resolves the language to use for metadata overlay, implementing three-tier fallback:
@@ -59,6 +62,24 @@ export class MediaItemController {
       await updateMediaItem(mediaItem);
     }
 
+    // Age gating: check AFTER needsDetails refresh so stale items cannot
+    // bypass restriction once parental metadata is populated.
+    // Re-fetch minimumAge because updateMediaItem may have changed it.
+    const refreshedItem = mediaItem.needsDetails
+      ? await mediaItemRepository.findOne({ id: mediaItemId })
+      : mediaItem;
+
+    const selfUser = await userRepository.findOneSelf({ id: userId });
+    const viewerAge = computeViewerAge(selfUser?.dateOfBirth);
+
+    if (!isAgeEligible(viewerAge, refreshedItem?.minimumAge ?? null)) {
+      res.status(403).send(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        toCodedRequestErrorObject('This content is age-restricted.', 'AGE_RESTRICTED') as any
+      );
+      return;
+    }
+
     const language = resolveMetadataLanguage(
       req.headers['accept-language']
     );
@@ -69,6 +90,7 @@ export class MediaItemController {
       language: language,
     });
 
+    // nosemgrep: javascript.express.security.audit.xss.direct-response-write.direct-response-write
     res.send(details);
   });
 

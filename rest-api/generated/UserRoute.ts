@@ -154,6 +154,7 @@ export namespace User {
       hideOverviewForUnseenSeasons?: boolean | null;
       hideEpisodeTitleForUnseenEpisodes?: boolean | null;
       addRecommendedToWatchlist?: boolean | null;
+      dateOfBirth?: string | null;
     };
     export type RequestHeaders = {};
     export type ResponseBody = any;

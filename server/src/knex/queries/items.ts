@@ -19,6 +19,11 @@ import { List, listItemColumns } from 'src/entity/list';
 import { Progress } from 'src/entity/progress';
 import { splitCreatorField } from 'src/utils/normalizeCreators';
 import { getMediaItemTranslations } from 'src/repository/translationRepository';
+import {
+  deserializeDescriptors,
+  deserializeCategories,
+} from 'src/metadata/parentalMetadata';
+import { applyAgeGatingFilter } from 'src/utils/ageEligibility';
 
 /**
  * Applies translation overlay to a list of mapped items for a given language.
@@ -607,7 +612,7 @@ const mapToSortedFacetOptions = (map: Map<string, number>): FacetOption[] =>
 export const getItemsKnex = async (
   args: GetItemsKnexArgs
 ): Promise<Pagination<MediaItemItemsResponse> | MediaItemItemsResponse[]> => {
-  const { page, language } = args;
+  const { page, language, viewerAge } = args;
   const { sqlQuery, sqlCountQuery, sqlPaginationQuery } = await getItemsKnexSql(
     args
   );
@@ -643,6 +648,7 @@ export const getItemsKnex = async (
       total: total,
       page: page,
       totalPages: totalPages,
+      ageGatingActive: viewerAge != null,
     };
   } else {
     const res = await sqlQuery;
@@ -654,6 +660,26 @@ export const getItemsKnex = async (
 
     return items;
   }
+};
+
+/**
+ * Applies the age-gating WHERE predicate to a library query builder.
+ *
+ * Delegates to `applyAgeGatingFilter` from `src/utils/ageEligibility`. Extracted as a
+ * named helper so both `getItemsKnexSql` and `getFacetsKnex` can reference a single,
+ * clearly labelled step — reducing cyclomatic complexity in each caller.
+ *
+ * When `viewerAge` is `null` or `undefined` (DOB unset), no filter is applied and all
+ * items remain visible regardless of their `minimumAge` value.
+ *
+ * @param query     - Knex query builder to mutate in place.
+ * @param viewerAge - Viewer's age in whole years, or `null`/`undefined` if DOB is unset.
+ */
+const applyAgeGatingToLibraryQuery = (
+  query: LibraryQuery,
+  viewerAge: number | null | undefined
+): void => {
+  applyAgeGatingFilter(query, viewerAge ?? null);
 };
 
 const getItemsKnexSql = async (args: GetItemsKnexArgs) => {
@@ -686,6 +712,7 @@ const getItemsKnexSql = async (args: GetItemsKnexArgs) => {
     ratingMax,
     status,
     groupId,
+    viewerAge,
   } = args;
 
   const currentDateString = new Date().toISOString();
@@ -1042,6 +1069,10 @@ const getItemsKnexSql = async (args: GetItemsKnexArgs) => {
     }
   }
 
+  // Age-gating is applied outside the mediaItemIds/library branch so it
+  // covers both library browsing and search-by-ID fetches.
+  applyAgeGatingToLibraryQuery(query, viewerAge);
+
   applyItemOrdering(query, {
     currentDateString,
     groupId,
@@ -1122,6 +1153,17 @@ const mapRawResult = (row: RawMediaItemRow): MediaItemItemsResponse => {
     narrators: splitCreatorField(row['mediaItem.narrators'] ?? null),
     url: row['mediaItem.url'],
     developer: row['mediaItem.developer'],
+    minimumAge: row['mediaItem.minimumAge'] ?? null,
+    contentRatingSystem: row['mediaItem.contentRatingSystem'] ?? null,
+    contentRatingRegion: row['mediaItem.contentRatingRegion'] ?? null,
+    contentRatingLabel: row['mediaItem.contentRatingLabel'] ?? null,
+    contentRatingDescriptors: deserializeDescriptors(
+      row['mediaItem.contentRatingDescriptors']
+    ),
+    parentalGuidanceSummary: row['mediaItem.parentalGuidanceSummary'] ?? null,
+    parentalGuidanceCategories: deserializeCategories(
+      row['mediaItem.parentalGuidanceCategories']
+    ),
     lastSeenAt: row['lastSeenAt'],
     progress: row['progress'],
     poster: mapImagePath(row['mediaItem.posterId']),
@@ -1207,6 +1249,7 @@ export const getFacetsKnex = async (
     onlySeenItems,
     onlyWithUserRating,
     onlyWithoutUserRating,
+    viewerAge,
   } = args;
 
   const watchlistId = await getWatchlistId(userId);
@@ -1314,6 +1357,8 @@ export const getFacetsKnex = async (
       lastSeenColumn: 'lastSeen.mediaItemId',
     }
   );
+
+  applyAgeGatingToLibraryQuery(query, viewerAge);
 
   // Fetch all matching rows for application-layer aggregation
   const rows = await query;

@@ -66,6 +66,7 @@ export class Items<SecurityDataType = unknown> {
         from: number;
         to: number;
         total: number;
+        ageGatingActive?: boolean | null;
       },
       any
     >({

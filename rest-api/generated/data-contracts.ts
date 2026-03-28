@@ -250,6 +250,13 @@ export type MediaItemDetailsResponse = {
   audibleCountryCode?: AudibleCountryCode | null;
   needsDetails?: boolean | null;
   platformRating?: number | null;
+  minimumAge?: number | null;
+  contentRatingSystem?: string | null;
+  contentRatingRegion?: string | null;
+  contentRatingLabel?: string | null;
+  contentRatingDescriptors?: string[] | null;
+  parentalGuidanceSummary?: string | null;
+  parentalGuidanceCategories?: ParentalGuidanceCategory[] | null;
   seasons?: TvSeason[] | null;
 } & {
   isSearchResult?: boolean | null;
@@ -273,6 +280,18 @@ export type MediaItemDetailsResponse = {
   lists: List[];
   metadataLanguage?: string | null;
 };
+
+export interface ParentalGuidanceCategory {
+  category: string;
+  severity?: string | null;
+  description?: string | null;
+  guideItems?: ParentalGuidanceGuideItem[] | null;
+}
+
+export interface ParentalGuidanceGuideItem {
+  text: string;
+  isSpoiler?: boolean | null;
+}
 
 export interface TvSeason {
   id?: number | null;
@@ -388,6 +407,13 @@ export type MediaItemItemsResponse = {
   audibleCountryCode?: AudibleCountryCode | null;
   needsDetails?: boolean | null;
   platformRating?: number | null;
+  minimumAge?: number | null;
+  contentRatingSystem?: string | null;
+  contentRatingRegion?: string | null;
+  contentRatingLabel?: string | null;
+  contentRatingDescriptors?: string[] | null;
+  parentalGuidanceSummary?: string | null;
+  parentalGuidanceCategories?: ParentalGuidanceCategory[] | null;
 } & {
   isSearchResult?: boolean | null;
   hasDetails?: boolean | null;
@@ -529,8 +555,8 @@ export interface FacetOption {
 
 export type ListDetailsResponse = {
   id: number;
-  isWatchlist: boolean;
   name: string;
+  isWatchlist: boolean;
   createdAt: number;
   updatedAt: number;
   traktId?: number | null;
@@ -562,8 +588,8 @@ export type ListsResponse = ListsItemResponse[];
 
 export type ListsItemResponse = {
   id: number;
-  isWatchlist: boolean;
   name: string;
+  isWatchlist: boolean;
   createdAt: number;
   updatedAt: number;
   traktId?: number | null;
@@ -709,11 +735,13 @@ export interface UserResponse {
   hideOverviewForUnseenSeasons?: boolean | null;
   hideEpisodeTitleForUnseenEpisodes?: boolean | null;
   addRecommendedToWatchlist?: boolean | null;
+  dateOfBirth?: string | null;
 }
 
 export interface RequestError {
   errorMessage: string;
   MediaTrackerError: true;
+  code?: 'AGE_RESTRICTED' | null;
 }
 
 export type NotificationPlatformsResponseType =

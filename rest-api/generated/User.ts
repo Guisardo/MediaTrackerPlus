@@ -178,6 +178,7 @@ export class User<SecurityDataType = unknown> {
       hideOverviewForUnseenSeasons?: boolean | null;
       hideEpisodeTitleForUnseenEpisodes?: boolean | null;
       addRecommendedToWatchlist?: boolean | null;
+      dateOfBirth?: string | null;
     },
     params: RequestParams = {}
   ) =>

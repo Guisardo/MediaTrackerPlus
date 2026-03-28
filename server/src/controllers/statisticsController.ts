@@ -1,8 +1,13 @@
-import _, { values } from 'lodash';
+import _ from 'lodash';
 import { createExpressRoute } from 'typescript-routes-to-openapi-server';
 
 import { Database } from 'src/dbconfig';
 import { MediaType } from 'src/entity/mediaItem';
+import { userRepository } from 'src/repository/user';
+import {
+  computeViewerAge,
+  applyAgeGatingFilter,
+} from 'src/utils/ageEligibility';
 
 /**
  * @openapi_tags Statistics
@@ -17,7 +22,10 @@ export class StatisticsController {
     responseBody: StatisticsSummaryResponse;
   }>(async (req, res) => {
     const userId = Number(req.user);
-    const statistics = await userStatisticsSummary(userId);
+    const selfUser = await userRepository.findOneSelf({ id: userId });
+    const viewerAge = computeViewerAge(selfUser?.dateOfBirth);
+    const statistics = await userStatisticsSummary(userId, false, viewerAge);
+    // nosemgrep: javascript.express.security.audit.xss.direct-response-write.direct-response-write
     res.send(statistics);
   });
 
@@ -28,7 +36,10 @@ export class StatisticsController {
     responseBody: StatisticsSummaryResponse;
   }>(async (req, res) => {
     const userId = Number(req.user);
-    const statistics = await userStatisticsSummary(userId, req.query.year);
+    const selfUser = await userRepository.findOneSelf({ id: userId });
+    const viewerAge = computeViewerAge(selfUser?.dateOfBirth);
+    const statistics = await userStatisticsSummary(userId, req.query.year, viewerAge);
+    // nosemgrep: javascript.express.security.audit.xss.direct-response-write.direct-response-write
     res.send(statistics);
   });
 
@@ -39,7 +50,10 @@ export class StatisticsController {
     responseBody: GenreSummeryResponse;
   }>(async (req, res) => {
     const userId = Number(req.user);
-    const statistics = await userGenreStatistics(userId, req.query.year);
+    const selfUser = await userRepository.findOneSelf({ id: userId });
+    const viewerAge = computeViewerAge(selfUser?.dateOfBirth);
+    const statistics = await userGenreStatistics(userId, req.query.year, viewerAge);
+    // nosemgrep: javascript.express.security.audit.xss.direct-response-write.direct-response-write
     res.send(statistics);
   });
 }
@@ -60,7 +74,8 @@ type GenreSummeryResponse = {
 
 export const userStatisticsSummary = async (
   userId: number,
-  date: false | string = false
+  date: false | string = false,
+  viewerAge: number | null = null
 ) => {
   const res = (await Database.knex('seen')
     .sum({
@@ -105,6 +120,10 @@ export const userStatisticsSummary = async (
 
     .leftJoin('mediaItem', 'mediaItem.id', 'seen.mediaItemId')
     .leftJoin('episode', 'episode.id', 'seen.episodeId')
+    // Age gating: exclude restricted items from aggregates
+    .modify((qb) => {
+      applyAgeGatingFilter(qb, viewerAge);
+    })
     .groupBy('mediaItem.mediaType')) as Array<{
     mediaType: MediaType;
     runtime: number;
@@ -131,7 +150,8 @@ export const userStatisticsSummary = async (
 
 export const userGenreStatistics = async (
   userId: number,
-  date: false | string = false
+  date: false | string = false,
+  viewerAge: number | null = null
 ) => {
   const res = (await Database.knex('seen')
     .select('mediaItem.mediaType')
@@ -160,6 +180,10 @@ export const userGenreStatistics = async (
 
     .leftJoin('mediaItem', 'mediaItem.id', 'seen.mediaItemId')
     .leftJoin('episode', 'episode.id', 'seen.episodeId')
+    // Age gating: exclude restricted items from aggregates
+    .modify((qb) => {
+      applyAgeGatingFilter(qb, viewerAge);
+    })
     .groupBy('mediaItem.genres')) as Array<{
     mediaType: MediaType;
     genres: string;

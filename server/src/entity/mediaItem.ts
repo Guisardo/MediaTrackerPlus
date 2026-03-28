@@ -53,6 +53,25 @@ export type MediaItemBase = ExternalIds & {
   needsDetails?: boolean;
   lockedAt?: number;
   platformRating?: number;
+  minimumAge?: number | null;
+  contentRatingSystem?: string | null;
+  contentRatingRegion?: string | null;
+  contentRatingLabel?: string | null;
+  contentRatingDescriptors?: string[] | null;
+  parentalGuidanceSummary?: string | null;
+  parentalGuidanceCategories?: ParentalGuidanceCategory[] | null;
+};
+
+export type ParentalGuidanceCategory = {
+  category: string;
+  severity?: string | null;
+  description?: string | null;
+  guideItems?: ParentalGuidanceGuideItem[] | null;
+};
+
+export type ParentalGuidanceGuideItem = {
+  text: string;
+  isSpoiler?: boolean | null;
 };
 
 export type MediaItemBaseWithSeasons = MediaItemBase & {
@@ -172,6 +191,13 @@ export const mediaItemColumns = <const>[
   'posterId',
   'backdropId',
   'platformRating',
+  'minimumAge',
+  'contentRatingSystem',
+  'contentRatingRegion',
+  'contentRatingLabel',
+  'contentRatingDescriptors',
+  'parentalGuidanceSummary',
+  'parentalGuidanceCategories',
 ];
 
 export const mediaItemPosterPath = (

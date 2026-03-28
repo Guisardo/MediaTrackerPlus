@@ -58,6 +58,7 @@ export namespace Items {
       from: number;
       to: number;
       total: number;
+      ageGatingActive?: boolean | null;
     };
   }
 

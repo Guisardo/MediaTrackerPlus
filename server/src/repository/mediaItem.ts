@@ -29,6 +29,12 @@ import {
   MediaItemItemsResponse,
   MediaType,
 } from 'src/entity/mediaItem';
+import {
+  deserializeDescriptors,
+  deserializeCategories,
+  serializeDescriptors,
+  serializeCategories,
+} from 'src/metadata/parentalMetadata';
 import { isValid, parseISO, subDays, subMinutes } from 'date-fns';
 import { TvSeason } from 'src/entity/tvseason';
 import { ListItem } from 'src/entity/list';
@@ -58,6 +64,12 @@ export type Pagination<T> = {
   from: number;
   to: number;
   total: number;
+  /**
+   * When `true`, the server applied age-based content filtering to this
+   * response. The UI can use this to show age-aware empty-state messaging
+   * when `total === 0` and `ageGatingActive === true`.
+   */
+  ageGatingActive?: boolean;
 };
 
 export type GetItemsArgs = {
@@ -176,6 +188,14 @@ export type GetItemsArgs = {
    * Sets metadataLanguage on each result indicating which language was applied.
    */
   language?: string | null;
+
+  /**
+   * @description The viewer's age in whole years, computed from their dateOfBirth.
+   * When set, items whose `minimumAge` exceeds this value are excluded.
+   * When null or undefined, no age gating is applied.
+   * @openapi_ignore
+   */
+  viewerAge?: number | null;
 };
 
 export type FacetQueryArgs = {
@@ -262,6 +282,14 @@ export type FacetQueryArgs = {
    * of global exclusion. Ignored for all other sort modes.
    */
   groupId?: number;
+
+  /**
+   * @description The viewer's age in whole years, computed from their dateOfBirth.
+   * When set, facet counts only include age-eligible items.
+   * When null or undefined, no age gating is applied.
+   * @openapi_ignore
+   */
+  viewerAge?: number | null;
 };
 
 class MediaItemRepository extends repository<MediaItemBase>({
@@ -304,6 +332,12 @@ class MediaItemRepository extends repository<MediaItemBase>({
       platform: value.platform
         ? JSON.parse(value.platform as unknown as string)
         : undefined,
+      contentRatingDescriptors: deserializeDescriptors(
+        value.contentRatingDescriptors
+      ),
+      parentalGuidanceCategories: deserializeCategories(
+        value.parentalGuidanceCategories
+      ),
     });
   }
 
@@ -314,6 +348,12 @@ class MediaItemRepository extends repository<MediaItemBase>({
       authors: value.authors?.join(','),
       narrators: value.narrators?.join(','),
       platform: value.platform ? JSON.stringify(value.platform) : null,
+      contentRatingDescriptors: serializeDescriptors(
+        value.contentRatingDescriptors
+      ),
+      parentalGuidanceCategories: serializeCategories(
+        value.parentalGuidanceCategories
+      ),
     } as unknown as Partial<MediaItemBase>;
 
     return super.serialize(serializedValue) as Record<string, unknown>;

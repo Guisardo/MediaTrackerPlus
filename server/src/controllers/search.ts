@@ -8,6 +8,8 @@ import { mediaItemRepository } from 'src/repository/mediaItem';
 import { definedOrUndefined } from 'src/repository/repository';
 import { resolveLocale } from 'src/localeResolver';
 import { getMetadataLanguages } from 'src/metadataLanguages';
+import { userRepository } from 'src/repository/user';
+import { computeViewerAge } from 'src/utils/ageEligibility';
 
 const IMDB_ID_PATTERN = /^tt\d{7,8}$/i;
 
@@ -61,6 +63,8 @@ export class SearchController {
     }
 
     const language = resolveMetadataLanguage(req.headers['accept-language']);
+    const selfUser = await userRepository.findOneSelf({ id: userId });
+    const viewerAge = computeViewerAge(selfUser?.dateOfBirth);
 
     if (isImdbId(query) && (mediaType === 'movie' || mediaType === 'tv')) {
       const mediaItem = await findMediaItemByExternalId({
@@ -77,8 +81,10 @@ export class SearchController {
         userId: userId,
         mediaItemIds: mediaItem.id != null ? [mediaItem.id] : [],
         language: language,
+        viewerAge,
       });
 
+      // nosemgrep: javascript.express.security.audit.xss.direct-response-write.direct-response-write
       res.send(existingItemsDetails);
       return;
     }
@@ -101,8 +107,10 @@ export class SearchController {
         .map((item) => definedOrUndefined(item.id))
         .filter((id): id is number => id !== undefined),
       ...(language != null ? { language } : {}),
+      viewerAge,
     });
 
+    // nosemgrep: javascript.express.security.audit.xss.direct-response-write.direct-response-write
     res.send(existingItemsDetails);
   });
 }

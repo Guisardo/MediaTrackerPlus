@@ -2,8 +2,17 @@ import argon2 from 'argon2';
 import _ from 'lodash';
 
 import { Database } from 'src/dbconfig';
-import { User, userColumns, userNonSensitiveColumns } from 'src/entity/user';
+import {
+  User,
+  userColumns,
+  userNonSensitiveColumns,
+  userSelfColumns,
+} from 'src/entity/user';
 import { repository } from 'src/repository/repository';
+import {
+  computeViewerAge,
+  isAgeEligible,
+} from 'src/utils/ageEligibility';
 
 class UserRepository extends repository<User>({
   tableName: 'user',
@@ -43,6 +52,24 @@ class UserRepository extends repository<User>({
     }
   }
 
+  /**
+   * Returns the authenticated user's own record including `dateOfBirth`.
+   * Must only be called for the currently-authenticated user — never for
+   * public or other-user queries.
+   */
+  public async findOneSelf(
+    where: Partial<User>
+  ): Promise<User | undefined> {
+    const res = (await Database.knex<User>(this.tableName)
+      .where(where)
+      .select(userSelfColumns)
+      .first()) as unknown as User | undefined;
+
+    if (res) {
+      return this.deserialize(res);
+    }
+  }
+
   public async findUsersWithMediaItemOnWatchlist(args: {
     mediaItemId: number;
     sendNotificationForReleases?: boolean;
@@ -72,6 +99,70 @@ class UserRepository extends repository<User>({
     }
 
     return await qb;
+  }
+
+  /**
+   * Returns users who have the given media item on their watchlist and who pass
+   * per-recipient age eligibility against `minimumAge`.
+   *
+   * Includes `dateOfBirth` in the result set (via `userSelfColumns`) so the
+   * notification pipeline can evaluate each recipient's eligibility without
+   * a second DB lookup.
+   *
+   * Rules:
+   * - Recipients with no `dateOfBirth` are always included.
+   * - Recipients whose age is below `minimumAge` are excluded.
+   * - When `minimumAge` is null/undefined (unknown metadata), all recipients
+   *   are included.
+   *
+   * Optionally filters by notification preference flags (same semantics as
+   * `findUsersWithMediaItemOnWatchlist`).
+   */
+  public async findNotificationRecipientsForMediaItem(args: {
+    mediaItemId: number;
+    minimumAge?: number | null;
+    sendNotificationForReleases?: boolean;
+    sendNotificationForEpisodesReleases?: boolean;
+  }): Promise<User[]> {
+    const {
+      mediaItemId,
+      minimumAge,
+      sendNotificationForReleases,
+      sendNotificationForEpisodesReleases,
+    } = args;
+
+    const qb = Database.knex(this.tableName)
+      .innerJoin('list', (qb) =>
+        qb.on('list.userId', 'user.id').onVal('list.isWatchlist', true)
+      )
+      .leftJoin('listItem', 'listItem.listId', 'list.id')
+      .where('listItem.mediaItemId', mediaItemId)
+      .select(
+        userSelfColumns.map((column) => this.tableName + '.' + column)
+      );
+
+    if (sendNotificationForReleases) {
+      qb.where('sendNotificationForReleases', true);
+    }
+
+    if (sendNotificationForEpisodesReleases) {
+      qb.where('sendNotificationForEpisodesReleases', true);
+    }
+
+    const users = (await qb) as User[];
+
+    // Apply per-recipient age eligibility in memory so we avoid SQL date math
+    // and reuse the canonical computeViewerAge / isAgeEligible helpers.
+    if (minimumAge == null) {
+      // Unknown metadata: all recipients are eligible
+      return users.map((u) => this.deserialize(u));
+    }
+
+    return users
+      .map((u) => this.deserialize(u))
+      .filter((user) =>
+        isAgeEligible(computeViewerAge(user.dateOfBirth), minimumAge)
+      );
   }
 
   public async usersWithMediaItemOnWatchlist(

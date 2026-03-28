@@ -296,6 +296,7 @@ export const PaginatedGridItems: FunctionComponent<{
     items,
     numberOfPages,
     numberOfItemsTotal,
+    ageGatingActive,
   } = useItems(itemsQueryArgs);
 
   // Facets API query: runs in parallel with items query when showFacets=true.
@@ -442,6 +443,14 @@ export const PaginatedGridItems: FunctionComponent<{
             </div>
           ) : (
             <>
+              {!searchQuery && ageGatingActive && items.length === 0 && (
+                <div className="flex flex-col items-center w-full mt-8 px-4 text-center text-zinc-600 dark:text-zinc-400">
+                  <Trans>
+                    Some content is hidden based on your age-based content
+                    filtering preferences.
+                  </Trans>
+                </div>
+              )}
               {(searchQuery ? searchResult : items)?.map((mediaItem) => (
                 <div key={mediaItem.id} className="w-40 mr-2 mb-2">
                   <GridItem
