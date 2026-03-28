@@ -9,6 +9,8 @@
  *  - Section renders guidance summary when provided
  *  - Section renders category breakdowns when provided
  *  - Category entries with severity and description render correctly
+ *  - Guide items render when provided
+ *  - Spoiler guide items are labeled
  *  - Category entries without severity/description still render
  *  - Multiple categories all render
  *  - Empty descriptors array does not render the descriptors row
@@ -16,7 +18,7 @@
  */
 
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { MediaItemDetailsResponse } from 'mediatracker-api';
 
 // ---------------------------------------------------------------------------
@@ -323,7 +325,7 @@ describe('ParentalRatingSection – category breakdowns', () => {
     expect(screen.getByText(/Mild/)).toBeInTheDocument();
   });
 
-  it('renders category description when provided', () => {
+  it('keeps category description collapsed by default and reveals it on toggle', () => {
     renderSection(
       makeMediaItem({
         parentalGuidanceCategories: [
@@ -335,9 +337,104 @@ describe('ParentalRatingSection – category breakdowns', () => {
         ],
       }),
     );
+
+    expect(
+      screen.queryByText(/Occasional strong language/),
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /Language/i }));
+
     expect(
       screen.getByText(/Occasional strong language/),
     ).toBeInTheDocument();
+  });
+
+  it('keeps guide items collapsed by default and reveals them on toggle', () => {
+    renderSection(
+      makeMediaItem({
+        parentalGuidanceCategories: [
+          {
+            category: 'Sex & Nudity',
+            severity: 'Moderate',
+            guideItems: [
+              {
+                text: 'A steamed-up car window implies sex.',
+                isSpoiler: false,
+              },
+            ],
+          },
+        ],
+      }),
+    );
+
+    expect(
+      screen.queryByText(/A steamed-up car window implies sex\./i),
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /Sex & Nudity/i }));
+
+    expect(
+      screen.getByText(/A steamed-up car window implies sex\./i),
+    ).toBeInTheDocument();
+  });
+
+  it('labels spoiler guide items when the category is expanded', () => {
+    renderSection(
+      makeMediaItem({
+        parentalGuidanceCategories: [
+          {
+            category: 'Violence & Gore',
+            severity: 'Severe',
+            guideItems: [
+              {
+                text: 'Several passengers drown during the finale.',
+                isSpoiler: true,
+              },
+            ],
+          },
+        ],
+      }),
+    );
+
+    expect(screen.queryByText(/spoiler/i)).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /Violence & Gore/i }));
+
+    expect(screen.getByText(/spoiler/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Several passengers drown during the finale\./i),
+    ).toBeInTheDocument();
+  });
+
+  it('toggles category guide items closed again when clicked twice', () => {
+    renderSection(
+      makeMediaItem({
+        parentalGuidanceCategories: [
+          {
+            category: 'Sex & Nudity',
+            severity: 'Moderate',
+            guideItems: [
+              {
+                text: 'A steamed-up car window implies sex.',
+                isSpoiler: false,
+              },
+            ],
+          },
+        ],
+      }),
+    );
+
+    const trigger = screen.getByRole('button', { name: /Sex & Nudity/i });
+
+    fireEvent.click(trigger);
+    expect(
+      screen.getByText(/A steamed-up car window implies sex\./i),
+    ).toBeInTheDocument();
+
+    fireEvent.click(trigger);
+    expect(
+      screen.queryByText(/A steamed-up car window implies sex\./i),
+    ).not.toBeInTheDocument();
   });
 
   it('renders a category without severity or description', () => {

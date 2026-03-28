@@ -314,6 +314,61 @@ describe('TMDb parental metadata normalization', () => {
       expect(result.contentRatingRegion).toBe('AU');
       expect(result.contentRatingLabel).toBe('M');
     });
+
+    test('enriches movie parental guide categories from IMDb when imdbId is present', async () => {
+      mockedAxios.get.mockImplementation(async (url: string) => {
+        if (url.includes('api.themoviedb.org/3/movie/110')) {
+          return {
+            data: buildMovieDetailsResponse({
+              imdb_id: 'tt0120338',
+              release_dates: {
+                results: [
+                  {
+                    iso_3166_1: 'US',
+                    release_dates: [
+                      {
+                        certification: 'PG-13',
+                        descriptors: [],
+                        iso_639_1: 'en',
+                        release_date: '2022-01-01T00:00:00.000Z',
+                        type: 3,
+                      },
+                    ],
+                  },
+                ],
+              },
+            }),
+            status: 200,
+          };
+        }
+
+        if (url.includes('imdb.com/title/tt0120338/parentalguide')) {
+          return {
+            data: buildImdbParentalGuideHtml(),
+            status: 200,
+          };
+        }
+
+        throw new Error(`Unexpected URL: ${url}`);
+      });
+
+      const result = await tmdbMovie.details({ tmdbId: 110 });
+
+      expect(result.contentRatingLabel).toBe('PG-13');
+      expect(result.parentalGuidanceCategories).toEqual([
+        {
+          category: 'Sex & Nudity',
+          severity: 'Moderate',
+          description: null,
+          guideItems: [
+            {
+              text: 'A steamed-up car window implies sex.',
+              isSpoiler: false,
+            },
+          ],
+        },
+      ]);
+    });
   });
 
   // ---------------------------------------------------------------------------
@@ -518,6 +573,59 @@ function buildMovieDetailsResponse(
     credits: { crew: [] },
     ...overrides,
   };
+}
+
+function buildImdbParentalGuideHtml(): string {
+  const payload = {
+    props: {
+      pageProps: {
+        contentData: {
+          data: {
+            title: {
+              parentsGuide: {
+                categories: [
+                  {
+                    category: {
+                      id: 'NUDITY',
+                      text: 'Sex & Nudity',
+                    },
+                    severity: {
+                      text: 'Moderate',
+                    },
+                  },
+                ],
+                nonSpoilerCategories: [
+                  {
+                    category: {
+                      id: 'NUDITY',
+                      text: 'Sex & Nudity',
+                    },
+                    guideItems: {
+                      edges: [
+                        {
+                          node: {
+                            isSpoiler: false,
+                            text: {
+                              plaidHtml: 'A steamed-up car window implies sex.',
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  },
+                ],
+                spoilerCategories: [],
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  return `<script id="__NEXT_DATA__" type="application/json">${JSON.stringify(
+    payload
+  )}</script>`;
 }
 
 function buildTvDetailsResponse(
