@@ -285,6 +285,12 @@ export interface ParentalGuidanceCategory {
   category: string;
   severity?: string | null;
   description?: string | null;
+  guideItems?: ParentalGuidanceGuideItem[] | null;
+}
+
+export interface ParentalGuidanceGuideItem {
+  text: string;
+  isSpoiler?: boolean | null;
 }
 
 export interface TvSeason {

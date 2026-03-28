@@ -4369,10 +4369,32 @@
           "description": {
             "type": "string",
             "nullable": true
+          },
+          "guideItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ParentalGuidanceGuideItem"
+            },
+            "nullable": true
           }
         },
         "required": [
           "category"
+        ]
+      },
+      "ParentalGuidanceGuideItem": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "isSpoiler": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "required": [
+          "text"
         ]
       },
       "TvSeason": {

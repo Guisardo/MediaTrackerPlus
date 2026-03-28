@@ -13,6 +13,7 @@ import {
   normalizeParentalData,
   ProviderCertification,
 } from 'src/metadata/parentalMetadata';
+import { enrichParentalGuideFromImdb } from 'src/metadata/provider/imdb';
 
 const TMDB_API_KEY = Config.TMDB_API_KEY;
 
@@ -218,7 +219,7 @@ export class TMDbMovie extends TMDb {
       }
     );
 
-    const movie = this.mapMovie(res.data);
+    const movie = await enrichParentalGuideFromImdb(this.mapMovie(res.data));
     movie.needsDetails = false;
 
     return movie;
@@ -386,7 +387,7 @@ export class TMDbTv extends TMDb {
       }
     );
 
-    const tvShow = this.mapTvShow(res.data);
+    const tvShow = await enrichParentalGuideFromImdb(this.mapTvShow(res.data));
 
     await Promise.all(
       (tvShow.seasons ?? []).map(async (season) => {

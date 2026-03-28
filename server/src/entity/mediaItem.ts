@@ -66,6 +66,12 @@ export type ParentalGuidanceCategory = {
   category: string;
   severity?: string | null;
   description?: string | null;
+  guideItems?: ParentalGuidanceGuideItem[] | null;
+};
+
+export type ParentalGuidanceGuideItem = {
+  text: string;
+  isSpoiler?: boolean | null;
 };
 
 export type MediaItemBaseWithSeasons = MediaItemBase & {

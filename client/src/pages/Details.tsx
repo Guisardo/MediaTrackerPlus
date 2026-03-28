@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import clsx from 'clsx';
 import { Plural, Trans } from '@lingui/macro';
@@ -10,6 +10,7 @@ import {
   MediaItemDetailsResponse,
   MediaItemItemsResponse,
   ParentalGuidanceCategory,
+  ParentalGuidanceGuideItem,
   TvEpisode,
   TvSeason,
   UserRating,
@@ -51,6 +52,11 @@ import {
 } from 'src/components/AddAndRemoveFromSeenHistoryButton';
 import { hasBeenSeenAtLeastOnce } from 'src/mediaItem';
 import { Button } from 'src/components/ui/button';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from 'src/components/ui/collapsible';
 
 /**
  * Determines whether there is any parental metadata worth rendering.
@@ -71,20 +77,87 @@ function hasParentalMetadata(mediaItem: MediaItemDetailsResponse): boolean {
 
 const ParentalGuidanceCategoryRow: FunctionComponent<{
   category: ParentalGuidanceCategory;
-}> = ({ category }) => (
-  <div className="mt-1">
-    <span className="font-semibold">{category.category}</span>
-    {category.severity && (
-      <span className="ml-1 text-zinc-600 dark:text-zinc-400">
-        ({category.severity})
+}> = ({ category }) => {
+  const [open, setOpen] = useState(false);
+  const guideItems =
+    category.guideItems != null && category.guideItems.length > 0
+      ? category.guideItems
+      : null;
+  const hasDetails = guideItems != null || category.description != null;
+
+  if (!hasDetails) {
+    return (
+      <div className="mt-2 rounded-md border border-zinc-200/80 p-3 dark:border-zinc-800">
+        <div>
+          <span className="font-semibold">{category.category}</span>
+          {category.severity && (
+            <span className="ml-1 text-zinc-600 dark:text-zinc-400">
+              ({category.severity})
+            </span>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <Collapsible
+      open={open}
+      onOpenChange={setOpen}
+      className="mt-2 rounded-md border border-zinc-200/80 dark:border-zinc-800"
+    >
+      <CollapsibleTrigger className="flex w-full items-center justify-between gap-3 p-3 text-left hover:bg-zinc-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:hover:bg-zinc-900/60">
+        <div>
+          <span className="font-semibold">{category.category}</span>
+          {category.severity && (
+            <span className="ml-1 text-zinc-600 dark:text-zinc-400">
+              ({category.severity})
+            </span>
+          )}
+        </div>
+
+        <span
+          className="material-icons text-base text-zinc-500 transition-transform duration-200 dark:text-zinc-400"
+          style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }}
+          aria-hidden="true"
+        >
+          expand_more
+        </span>
+      </CollapsibleTrigger>
+
+      <CollapsibleContent className="border-t border-zinc-200/80 px-3 pb-3 pt-3 dark:border-zinc-800">
+        {guideItems && (
+          <ul className="list-disc space-y-2 pl-5 text-sm text-zinc-700 dark:text-zinc-300">
+            {guideItems.map((item, index) => (
+              <ParentalGuideItemRow
+                key={`${category.category}-${index}`}
+                item={item}
+              />
+            ))}
+          </ul>
+        )}
+
+        {!guideItems && category.description && (
+          <div className="text-sm text-zinc-600 dark:text-zinc-400">
+            {category.description}
+          </div>
+        )}
+      </CollapsibleContent>
+    </Collapsible>
+  );
+};
+
+const ParentalGuideItemRow: FunctionComponent<{
+  item: ParentalGuidanceGuideItem;
+}> = ({ item }) => (
+  <li className="leading-6">
+    {item.isSpoiler && (
+      <span className="mr-2 rounded bg-amber-100 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-amber-900 dark:bg-amber-900/50 dark:text-amber-100">
+        <Trans>Spoiler</Trans>
       </span>
     )}
-    {category.description && (
-      <div className="text-sm text-zinc-600 dark:text-zinc-400">
-        {category.description}
-      </div>
-    )}
-  </div>
+    <span className="whitespace-pre-wrap">{item.text}</span>
+  </li>
 );
 
 /**
