@@ -662,6 +662,26 @@ export const getItemsKnex = async (
   }
 };
 
+/**
+ * Applies the age-gating WHERE predicate to a library query builder.
+ *
+ * Delegates to `applyAgeGatingFilter` from `src/utils/ageEligibility`. Extracted as a
+ * named helper so both `getItemsKnexSql` and `getFacetsKnex` can reference a single,
+ * clearly labelled step — reducing cyclomatic complexity in each caller.
+ *
+ * When `viewerAge` is `null` or `undefined` (DOB unset), no filter is applied and all
+ * items remain visible regardless of their `minimumAge` value.
+ *
+ * @param query     - Knex query builder to mutate in place.
+ * @param viewerAge - Viewer's age in whole years, or `null`/`undefined` if DOB is unset.
+ */
+const applyAgeGatingToLibraryQuery = (
+  query: LibraryQuery,
+  viewerAge: number | null | undefined
+): void => {
+  applyAgeGatingFilter(query, viewerAge ?? null);
+};
+
 const getItemsKnexSql = async (args: GetItemsKnexArgs) => {
   const {
     onlyOnWatchlist,
@@ -1049,10 +1069,9 @@ const getItemsKnexSql = async (args: GetItemsKnexArgs) => {
     }
   }
 
-  // Age gating: exclude items whose minimumAge exceeds the viewer's age.
-  // Applied outside the mediaItemIds/library branch so it covers both
-  // library browsing and search-by-ID fetches.
-  applyAgeGatingFilter(query, viewerAge ?? null);
+  // Age-gating is applied outside the mediaItemIds/library branch so it
+  // covers both library browsing and search-by-ID fetches.
+  applyAgeGatingToLibraryQuery(query, viewerAge);
 
   applyItemOrdering(query, {
     currentDateString,
@@ -1339,7 +1358,7 @@ export const getFacetsKnex = async (
     }
   );
 
-  applyAgeGatingFilter(query, viewerAge ?? null);
+  applyAgeGatingToLibraryQuery(query, viewerAge);
 
   // Fetch all matching rows for application-layer aggregation
   const rows = await query;

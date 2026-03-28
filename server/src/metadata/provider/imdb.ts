@@ -230,31 +230,13 @@ const mergeParentalGuide = (
     null,
 });
 
-export const parseImdbParentalGuideHtml = (
-  html: string
-): ImdbParentalGuideResult | null => {
-  const nextDataJson = extractNextDataJson(html);
-  if (!nextDataJson) {
-    return null;
-  }
-
-  let payload: ImdbParentalGuidePayload;
-
-  try {
-    payload = JSON.parse(nextDataJson) as ImdbParentalGuidePayload;
-  } catch {
-    return null;
-  }
-
-  const guide = payload.props?.pageProps?.contentData?.data?.title?.parentsGuide;
-  if (!guide) {
-    return null;
-  }
-
+const buildSummaryCategoryMap = (
+  summaries: ImdbParentsGuideCategorySummary[]
+): { orderedIds: string[]; categoryMap: Map<string, ParentalGuidanceCategory> } => {
   const orderedIds: string[] = [];
   const categoryMap = new Map<string, ParentalGuidanceCategory>();
 
-  for (const summary of guide.categories ?? []) {
+  for (const summary of summaries) {
     const categoryId = summary.category?.id;
     const categoryLabel = buildCategoryLabel(
       summary.category?.id,
@@ -273,10 +255,15 @@ export const parseImdbParentalGuideHtml = (
     });
   }
 
-  for (const detailCategory of [
-    ...(guide.nonSpoilerCategories ?? []),
-    ...(guide.spoilerCategories ?? []),
-  ]) {
+  return { orderedIds, categoryMap };
+};
+
+const mergeDetailCategoriesIntoMap = (
+  orderedIds: string[],
+  categoryMap: Map<string, ParentalGuidanceCategory>,
+  detailCategories: ImdbParentsGuideCategoryDetails[]
+): void => {
+  for (const detailCategory of detailCategories) {
     const categoryId = detailCategory.category?.id;
     const categoryLabel = buildCategoryLabel(
       detailCategory.category?.id,
@@ -305,8 +292,13 @@ export const parseImdbParentalGuideHtml = (
           : existing?.guideItems ?? null,
     });
   }
+};
 
-  const categories = orderedIds
+const collectNonEmptyCategories = (
+  orderedIds: string[],
+  categoryMap: Map<string, ParentalGuidanceCategory>
+): ParentalGuidanceCategory[] =>
+  orderedIds
     .map((categoryId) => categoryMap.get(categoryId))
     .filter((category): category is ParentalGuidanceCategory => category != null)
     .filter(
@@ -315,6 +307,38 @@ export const parseImdbParentalGuideHtml = (
         category.description != null ||
         category.guideItems != null
     );
+
+export const parseImdbParentalGuideHtml = (
+  html: string
+): ImdbParentalGuideResult | null => {
+  const nextDataJson = extractNextDataJson(html);
+  if (!nextDataJson) {
+    return null;
+  }
+
+  let payload: ImdbParentalGuidePayload;
+
+  try {
+    payload = JSON.parse(nextDataJson) as ImdbParentalGuidePayload;
+  } catch {
+    return null;
+  }
+
+  const guide = payload.props?.pageProps?.contentData?.data?.title?.parentsGuide;
+  if (!guide) {
+    return null;
+  }
+
+  const { orderedIds, categoryMap } = buildSummaryCategoryMap(
+    guide.categories ?? []
+  );
+
+  mergeDetailCategoriesIntoMap(orderedIds, categoryMap, [
+    ...(guide.nonSpoilerCategories ?? []),
+    ...(guide.spoilerCategories ?? []),
+  ]);
+
+  const categories = collectNonEmptyCategories(orderedIds, categoryMap);
 
   if (categories.length === 0) {
     return null;

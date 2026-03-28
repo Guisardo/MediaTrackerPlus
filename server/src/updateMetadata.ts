@@ -10,6 +10,7 @@ import {
 } from 'src/entity/mediaItem';
 import { TvEpisode } from 'src/entity/tvepisode';
 import { TvSeason, TvSeasonFilters } from 'src/entity/tvseason';
+import { MetadataProvider } from 'src/metadata/metadataProvider';
 import { metadataProviders } from 'src/metadata/metadataProviders';
 import { mediaItemRepository } from 'src/repository/mediaItem';
 import { durationToMilliseconds, updateAsset } from 'src/utils';
@@ -341,6 +342,141 @@ const sendNotifications = async (
   }
 };
 
+type SeasonEpisodeIdMaps = {
+  seasonIdByNumber: Map<number, number>;
+  episodeIdBySeasonAndEpisode: Map<string, number>;
+};
+
+const buildSeasonEpisodeIdMaps = (seasons: TvSeason[]): SeasonEpisodeIdMaps => {
+  const seasonIdByNumber = new Map<number, number>();
+  const episodeIdBySeasonAndEpisode = new Map<string, number>();
+
+  for (const season of seasons) {
+    if (season.id != null) {
+      seasonIdByNumber.set(season.seasonNumber, season.id);
+    }
+    if (season.episodes) {
+      for (const episode of season.episodes) {
+        if (episode.id != null) {
+          episodeIdBySeasonAndEpisode.set(
+            `${episode.seasonNumber}:${episode.episodeNumber}`,
+            episode.id
+          );
+        }
+      }
+    }
+  }
+
+  return { seasonIdByNumber, episodeIdBySeasonAndEpisode };
+};
+
+const upsertSeasonEpisodeTranslations = async (
+  seasons: MediaItemBaseWithSeasons['seasons'],
+  language: string,
+  seasonIdByNumber: Map<number, number>,
+  episodeIdBySeasonAndEpisode: Map<string, number>
+): Promise<void> => {
+  if (!seasons) {
+    return;
+  }
+
+  for (const season of seasons) {
+    const seasonId = seasonIdByNumber.get(season.seasonNumber);
+    if (seasonId != null) {
+      await upsertSeasonTranslation(seasonId, language, {
+        title: season.title ?? null,
+        description: season.description ?? null,
+      });
+    }
+
+    if (season.episodes) {
+      for (const episode of season.episodes) {
+        const episodeId = episodeIdBySeasonAndEpisode.get(
+          `${episode.seasonNumber}:${episode.episodeNumber}`
+        );
+        if (episodeId != null) {
+          await upsertEpisodeTranslation(episodeId, language, {
+            title: episode.title ?? null,
+            description: episode.description ?? null,
+          });
+        }
+      }
+    }
+  }
+};
+
+const upsertAllLocalizedTranslations = async (
+  mediaItemId: number,
+  provider: MetadataProvider,
+  oldMediaItem: MediaItemBaseWithSeasons,
+  languages: string[],
+  idMaps: SeasonEpisodeIdMaps
+): Promise<void> => {
+  for (const language of languages) {
+    try {
+      const localizedData = await provider.localizedDetails!(oldMediaItem, language);
+      if (localizedData) {
+        await upsertMediaItemTranslation(mediaItemId, language, {
+          title: localizedData.title ?? null,
+          overview: localizedData.overview ?? null,
+          genres: localizedData.genres ?? null,
+        });
+
+        if (localizedData.seasons) {
+          await upsertSeasonEpisodeTranslations(
+            localizedData.seasons,
+            language,
+            idMaps.seasonIdByNumber,
+            idMaps.episodeIdBySeasonAndEpisode
+          );
+        }
+      }
+    } catch (error) {
+      logger.error(
+        `Failed to fetch localized details for mediaItem ${mediaItemId} in language ${language}: ${error}`,
+        { err: error }
+      );
+    }
+  }
+};
+
+const upsertGameLocalizations = async (
+  mediaItemId: number,
+  provider: MetadataProvider,
+  oldMediaItem: MediaItemBaseWithSeasons,
+  languages: string[]
+): Promise<void> => {
+  try {
+    const localizations = await provider.fetchGameLocalizations!(oldMediaItem);
+
+    for (const localization of localizations) {
+      const regionLanguages = IGDB_REGION_MAP[localization.regionId];
+
+      if (regionLanguages === undefined) {
+        continue;
+      }
+
+      const targetLanguages: string[] =
+        regionLanguages === 'all'
+          ? languages
+          : regionLanguages.filter((lang) => languages.includes(lang));
+
+      for (const lang of targetLanguages) {
+        await upsertMediaItemTranslation(mediaItemId, lang, {
+          title: localization.name || null,
+          overview: null,
+          genres: null,
+        });
+      }
+    }
+  } catch (error) {
+    logger.error(
+      `Failed to fetch game localizations for mediaItem ${mediaItemId}: ${error}`,
+      { err: error }
+    );
+  }
+};
+
 export const updateMediaItem = async (
   oldMediaItem?: MediaItemBaseWithSeasons
 ) => {
@@ -391,7 +527,6 @@ export const updateMediaItem = async (
 
     if (updatedMediaItem) {
       await mediaItemRepository.update(updatedMediaItem);
-
       await downloadNewAssets(oldMediaItem, updatedMediaItem);
 
       if (!oldMediaItem.needsDetails) {
@@ -399,167 +534,52 @@ export const updateMediaItem = async (
       }
     }
 
-    // Upsert translations for all configured languages
     if (metadataProvider.localizedDetails != null && updatedMediaItem) {
       const languages = getMetadataLanguages();
 
-      // Build season/episode ID lookup maps from the merged updatedMediaItem (has DB IDs)
-      const seasonIdByNumber = new Map<number, number>();
-      const episodeIdBySeasonAndEpisode = new Map<string, number>();
+      const idMaps: SeasonEpisodeIdMaps =
+        updatedMediaItem.mediaType === 'tv' && updatedMediaItem.seasons
+          ? buildSeasonEpisodeIdMaps(updatedMediaItem.seasons as TvSeason[])
+          : { seasonIdByNumber: new Map(), episodeIdBySeasonAndEpisode: new Map() };
 
-      if (
-        updatedMediaItem.mediaType === 'tv' &&
-        updatedMediaItem.seasons
-      ) {
-        // After margeTvShow(), seasons are TvSeason[] with DB IDs resolved
-        const tvSeasons = updatedMediaItem.seasons as TvSeason[];
-        for (const season of tvSeasons) {
-          if (season.id != null) {
-            seasonIdByNumber.set(season.seasonNumber, season.id);
-          }
-          if (season.episodes) {
-            for (const episode of season.episodes) {
-              if (episode.id != null) {
-                episodeIdBySeasonAndEpisode.set(
-                  `${episode.seasonNumber}:${episode.episodeNumber}`,
-                  episode.id
-                );
-              }
-            }
-          }
-        }
-      }
-
-      // Upsert the first language's data from the base details() response
       if (languages.length > 0) {
         const firstLanguage = languages[0];
         if (!firstLanguage) {
           throw new Error('Expected at least one metadata language');
         }
+
         await upsertMediaItemTranslation(oldMediaItem.id, firstLanguage, {
           title: newMediaItem.title ?? null,
           overview: newMediaItem.overview ?? null,
           genres: newMediaItem.genres ?? null,
         });
 
-        // Upsert first language's season/episode translations from base details()
-        if (
-          updatedMediaItem.mediaType === 'tv' &&
-          newMediaItem.seasons
-        ) {
-          for (const season of newMediaItem.seasons) {
-            const seasonId = seasonIdByNumber.get(season.seasonNumber);
-            if (seasonId != null) {
-              await upsertSeasonTranslation(seasonId, firstLanguage, {
-                title: season.title ?? null,
-                description: season.description ?? null,
-              });
-            }
-
-            if (season.episodes) {
-              for (const episode of season.episodes) {
-                const episodeId = episodeIdBySeasonAndEpisode.get(
-                  `${episode.seasonNumber}:${episode.episodeNumber}`
-                );
-                if (episodeId != null) {
-                  await upsertEpisodeTranslation(episodeId, firstLanguage, {
-                    title: episode.title ?? null,
-                    description: episode.description ?? null,
-                  });
-                }
-              }
-            }
-          }
-        }
-      }
-
-      // Fetch and upsert localized details for each configured language
-      for (const language of languages) {
-        try {
-          const localizedData = await metadataProvider.localizedDetails(
-            oldMediaItem,
-            language
-          );
-          if (localizedData) {
-            await upsertMediaItemTranslation(oldMediaItem.id, language, {
-              title: localizedData.title ?? null,
-              overview: localizedData.overview ?? null,
-              genres: localizedData.genres ?? null,
-            });
-
-            // Upsert season/episode translations for TV shows
-            if (
-              updatedMediaItem.mediaType === 'tv' &&
-              localizedData.seasons
-            ) {
-              for (const season of localizedData.seasons) {
-                const seasonId = seasonIdByNumber.get(season.seasonNumber);
-                if (seasonId != null) {
-                  await upsertSeasonTranslation(seasonId, language, {
-                    title: season.title ?? null,
-                    description: season.description ?? null,
-                  });
-                }
-
-                if (season.episodes) {
-                  for (const episode of season.episodes) {
-                    const episodeId = episodeIdBySeasonAndEpisode.get(
-                      `${episode.seasonNumber}:${episode.episodeNumber}`
-                    );
-                    if (episodeId != null) {
-                      await upsertEpisodeTranslation(episodeId, language, {
-                        title: episode.title ?? null,
-                        description: episode.description ?? null,
-                      });
-                    }
-                  }
-                }
-              }
-            }
-          }
-        } catch (error) {
-          logger.error(
-            `Failed to fetch localized details for mediaItem ${oldMediaItem.id} in language ${language}: ${error}`,
-            { err: error }
+        if (updatedMediaItem.mediaType === 'tv' && newMediaItem.seasons) {
+          await upsertSeasonEpisodeTranslations(
+            newMediaItem.seasons,
+            firstLanguage,
+            idMaps.seasonIdByNumber,
+            idMaps.episodeIdBySeasonAndEpisode
           );
         }
       }
+
+      await upsertAllLocalizedTranslations(
+        oldMediaItem.id,
+        metadataProvider,
+        oldMediaItem,
+        languages,
+        idMaps
+      );
     }
 
-    // IGDB game localizations: single fetch per item, map regions to ISO codes
     if (metadataProvider.fetchGameLocalizations != null && updatedMediaItem) {
-      try {
-        const localizations =
-          await metadataProvider.fetchGameLocalizations(oldMediaItem);
-        const languages = getMetadataLanguages();
-
-        for (const localization of localizations) {
-          const regionLanguages = IGDB_REGION_MAP[localization.regionId];
-
-          if (regionLanguages === undefined) {
-            continue;
-          }
-
-          // Determine which ISO codes to store for this localization
-          const targetLanguages: string[] =
-            regionLanguages === 'all'
-              ? languages
-              : regionLanguages.filter((lang) => languages.includes(lang));
-
-          for (const lang of targetLanguages) {
-            await upsertMediaItemTranslation(oldMediaItem.id, lang, {
-              title: localization.name || null,
-              overview: null,
-              genres: null,
-            });
-          }
-        }
-      } catch (error) {
-        logger.error(
-          `Failed to fetch game localizations for mediaItem ${oldMediaItem.id}: ${error}`,
-          { err: error }
-        );
-      }
+      await upsertGameLocalizations(
+        oldMediaItem.id,
+        metadataProvider,
+        oldMediaItem,
+        getMetadataLanguages()
+      );
     }
 
     await mediaItemRepository.unlock(oldMediaItem.id);

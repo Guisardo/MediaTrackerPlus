@@ -259,6 +259,135 @@ export type ProviderCertification = {
   descriptors?: string[] | null;
 };
 
+// ---------------------------------------------------------------------------
+// Private helpers shared by both public normalization functions
+// ---------------------------------------------------------------------------
+
+type NormalizeOptions = {
+  adultFlag?: boolean;
+  guidanceSummary?: string | null;
+  guidanceCategories?: ParentalGuidanceCategory[] | null;
+};
+
+/**
+ * Construct an all-null NormalizedParentalData, optionally seeded with
+ * guidance fields from the caller's options.
+ */
+const buildEmptyParentalData = (
+  options?: NormalizeOptions
+): NormalizedParentalData => ({
+  minimumAge: null,
+  contentRatingSystem: null,
+  contentRatingRegion: null,
+  contentRatingLabel: null,
+  contentRatingDescriptors: null,
+  parentalGuidanceSummary: options?.guidanceSummary ?? null,
+  parentalGuidanceCategories: options?.guidanceCategories ?? null,
+});
+
+/**
+ * Apply the adult flag to a raw minimumAge value.
+ *
+ * When `adultFlag` is true the returned age is at least 18. If `age` is
+ * already >= 18 or `adultFlag` is falsy the original value is returned as-is
+ * (null coalesced to null).
+ */
+const applyAdultFlagToAge = (
+  age: number | null | undefined,
+  adultFlag: boolean | undefined
+): number | null => {
+  if (adultFlag && (age == null || age < 18)) {
+    return 18;
+  }
+  return age ?? null;
+};
+
+/**
+ * Build the final non-empty NormalizedParentalData from a selected
+ * ProviderCertification and a pre-computed (possibly adjusted) minimumAge.
+ */
+const buildResultFromCert = (
+  cert: ProviderCertification,
+  minimumAge: number | null,
+  options?: NormalizeOptions
+): NormalizedParentalData => ({
+  minimumAge,
+  contentRatingSystem: cert.system,
+  contentRatingRegion: cert.region,
+  contentRatingLabel: cert.label,
+  contentRatingDescriptors:
+    cert.descriptors && cert.descriptors.length > 0
+      ? cert.descriptors
+      : null,
+  parentalGuidanceSummary: options?.guidanceSummary ?? null,
+  parentalGuidanceCategories: options?.guidanceCategories ?? null,
+});
+
+/**
+ * Two-step region-precedence selection used by `normalizeParentalData`.
+ *
+ * Step 1: walk REGION_PRECEDENCE and return the first certification whose
+ *   region and system+label are all recognized.
+ * Step 2: fall back to the first certification with any recognized
+ *   system+label regardless of region.
+ *
+ * Returns `undefined` when no recognized certification is found.
+ */
+const selectBestCertificationByRegion = (
+  certifications: ProviderCertification[]
+): ProviderCertification | undefined => {
+  for (const preferredRegion of REGION_PRECEDENCE) {
+    const match = certifications.find(
+      (cert) =>
+        cert.region === preferredRegion &&
+        RATING_AGE_MAP[cert.system] != null &&
+        RATING_AGE_MAP[cert.system][cert.label] !== undefined
+    );
+    if (match) {
+      return match;
+    }
+  }
+
+  return certifications.find(
+    (cert) =>
+      RATING_AGE_MAP[cert.system] != null &&
+      RATING_AGE_MAP[cert.system][cert.label] !== undefined
+  );
+};
+
+/**
+ * Scan all certifications and return the one with the highest minimumAge
+ * together with that age value. Returns `null` when no recognized
+ * certification is found.
+ *
+ * Ties are broken by input order (first wins).
+ */
+const findStrictestCertification = (
+  certifications: ProviderCertification[]
+): { cert: ProviderCertification; age: number } | null => {
+  let strictest: { cert: ProviderCertification; age: number } | null = null;
+
+  for (const cert of certifications) {
+    const systemMap = RATING_AGE_MAP[cert.system];
+    if (!systemMap) {
+      continue;
+    }
+    const age = systemMap[cert.label];
+    if (age == null) {
+      continue;
+    }
+    if (strictest == null || age > strictest.age) {
+      strictest = { cert, age };
+    }
+  }
+
+  return strictest;
+};
+
+// ---------------------------------------------------------------------------
+// Public normalization functions
+// ---------------------------------------------------------------------------
+
 /**
  * Normalize a list of provider certifications into canonical parental fields.
  *
@@ -279,88 +408,24 @@ export type ProviderCertification = {
  */
 export const normalizeParentalData = (
   certifications: ProviderCertification[],
-  options?: {
-    adultFlag?: boolean;
-    guidanceSummary?: string | null;
-    guidanceCategories?: ParentalGuidanceCategory[] | null;
-  }
+  options?: NormalizeOptions
 ): NormalizedParentalData => {
-  const empty: NormalizedParentalData = {
-    minimumAge: null,
-    contentRatingSystem: null,
-    contentRatingRegion: null,
-    contentRatingLabel: null,
-    contentRatingDescriptors: null,
-    parentalGuidanceSummary: options?.guidanceSummary ?? null,
-    parentalGuidanceCategories: options?.guidanceCategories ?? null,
-  };
+  const empty = buildEmptyParentalData(options);
 
   if (!certifications || certifications.length === 0) {
-    // Even with no certifications, an adult flag can still gate.
-    if (options?.adultFlag) {
-      return {
-        ...empty,
-        minimumAge: 18,
-      };
-    }
-    return empty;
+    return options?.adultFlag ? { ...empty, minimumAge: 18 } : empty;
   }
 
-  // Select the best certification using region precedence.
-  let selected: ProviderCertification | undefined;
-
-  for (const preferredRegion of REGION_PRECEDENCE) {
-    selected = certifications.find(
-      (cert) =>
-        cert.region === preferredRegion &&
-        RATING_AGE_MAP[cert.system] != null &&
-        RATING_AGE_MAP[cert.system][cert.label] !== undefined
-    );
-    if (selected) {
-      break;
-    }
-  }
-
-  // Fallback: first certification with a recognized system + label.
-  if (!selected) {
-    selected = certifications.find(
-      (cert) =>
-        RATING_AGE_MAP[cert.system] != null &&
-        RATING_AGE_MAP[cert.system][cert.label] !== undefined
-    );
-  }
+  const selected = selectBestCertificationByRegion(certifications);
 
   if (!selected) {
-    // No recognized rating found. Adult flag can still gate.
-    if (options?.adultFlag) {
-      return {
-        ...empty,
-        minimumAge: 18,
-      };
-    }
-    return empty;
+    return options?.adultFlag ? { ...empty, minimumAge: 18 } : empty;
   }
 
-  const systemMap = RATING_AGE_MAP[selected.system];
-  let minimumAge = systemMap[selected.label];
+  const rawAge = RATING_AGE_MAP[selected.system][selected.label];
+  const minimumAge = applyAdultFlagToAge(rawAge, options?.adultFlag);
 
-  // Adult flag can raise but never lower the threshold.
-  if (options?.adultFlag && (minimumAge == null || minimumAge < 18)) {
-    minimumAge = 18;
-  }
-
-  return {
-    minimumAge: minimumAge ?? null,
-    contentRatingSystem: selected.system,
-    contentRatingRegion: selected.region,
-    contentRatingLabel: selected.label,
-    contentRatingDescriptors:
-      selected.descriptors && selected.descriptors.length > 0
-        ? selected.descriptors
-        : null,
-    parentalGuidanceSummary: options?.guidanceSummary ?? null,
-    parentalGuidanceCategories: options?.guidanceCategories ?? null,
-  };
+  return buildResultFromCert(selected, minimumAge, options);
 };
 
 /**
@@ -377,71 +442,21 @@ export const normalizeParentalData = (
  */
 export const normalizeStrictestCertification = (
   certifications: ProviderCertification[],
-  options?: {
-    adultFlag?: boolean;
-    guidanceSummary?: string | null;
-    guidanceCategories?: ParentalGuidanceCategory[] | null;
-  }
+  options?: NormalizeOptions
 ): NormalizedParentalData => {
-  const empty: NormalizedParentalData = {
-    minimumAge: null,
-    contentRatingSystem: null,
-    contentRatingRegion: null,
-    contentRatingLabel: null,
-    contentRatingDescriptors: null,
-    parentalGuidanceSummary: options?.guidanceSummary ?? null,
-    parentalGuidanceCategories: options?.guidanceCategories ?? null,
-  };
+  const empty = buildEmptyParentalData(options);
 
   if (!certifications || certifications.length === 0) {
-    if (options?.adultFlag) {
-      return { ...empty, minimumAge: 18 };
-    }
-    return empty;
+    return options?.adultFlag ? { ...empty, minimumAge: 18 } : empty;
   }
 
-  let strictest: {
-    cert: ProviderCertification;
-    age: number;
-  } | null = null;
-
-  for (const cert of certifications) {
-    const systemMap = RATING_AGE_MAP[cert.system];
-    if (!systemMap) {
-      continue;
-    }
-    const age = systemMap[cert.label];
-    if (age == null) {
-      continue;
-    }
-    if (strictest == null || age > strictest.age) {
-      strictest = { cert, age };
-    }
-  }
+  const strictest = findStrictestCertification(certifications);
 
   if (!strictest) {
-    if (options?.adultFlag) {
-      return { ...empty, minimumAge: 18 };
-    }
-    return empty;
+    return options?.adultFlag ? { ...empty, minimumAge: 18 } : empty;
   }
 
-  let minimumAge: number | null = strictest.age;
+  const minimumAge = applyAdultFlagToAge(strictest.age, options?.adultFlag);
 
-  if (options?.adultFlag && (minimumAge == null || minimumAge < 18)) {
-    minimumAge = 18;
-  }
-
-  return {
-    minimumAge: minimumAge ?? null,
-    contentRatingSystem: strictest.cert.system,
-    contentRatingRegion: strictest.cert.region,
-    contentRatingLabel: strictest.cert.label,
-    contentRatingDescriptors:
-      strictest.cert.descriptors && strictest.cert.descriptors.length > 0
-        ? strictest.cert.descriptors
-        : null,
-    parentalGuidanceSummary: options?.guidanceSummary ?? null,
-    parentalGuidanceCategories: options?.guidanceCategories ?? null,
-  };
+  return buildResultFromCert(strictest.cert, minimumAge, options);
 };
