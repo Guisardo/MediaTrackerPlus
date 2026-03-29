@@ -8,7 +8,7 @@
   "Failed to delete unused assets files": "Не вдалося видалити невикористовувані файли ресурсів",
   "MediaTracker listening at {address}": "MediaTracker прослуховує {address}",
   "MediaTracker {0} listening at {address}": "MediaTracker {0} прослуховує {address}",
-  "Missing credentials for platform {0}": "",
+  "Missing credentials for platform {0}": "Відсутні облікові дані для платформи {0}",
   "New season of {0} will be released at {1}": "Новий сезон {0} вийде {1}",
   "New season of {0} will be released at {releaseDate}": "Новий сезон {0} вийде {releaseDate}",
   "Password cannot be empty": "Пароль не може бути порожнім",

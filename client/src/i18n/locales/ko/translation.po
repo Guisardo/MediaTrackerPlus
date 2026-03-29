@@ -51,7 +51,7 @@ msgstr "{0, plural, one {작가} other {작가}}"
 #. placeholder {0}: count ?? 0
 #: src/components/AddAndRemoveFromSeenHistoryButton.tsx:114
 msgid "{0, plural, one {Do you want to remove # seen history entry?} other {Do you want to remove all # seen history entries?}}"
-msgstr ""
+msgstr "{0, plural, one {시청 기록 항목 #개를 삭제하시겠습니까?} other {시청 기록 항목 #개를 모두 삭제하시겠습니까?}}"
 
 #: src/components/PaginatedGridItems.tsx:317
 #~ msgid "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {Found # items for query \"<1>{searchQuery}</1>\"}}"
@@ -126,7 +126,7 @@ msgstr "{numberOfItemsTotal, plural, one {1 항목 {0} {1}} other {# 항목 {2} 
 
 #: src/components/PaginatedGridItems.tsx:67
 msgid "{searchResultLength, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {Found # items for query \"<1>{searchQuery}</1>\"}}"
-msgstr ""
+msgstr "{searchResultLength, plural, one {\"<0>{searchQuery}</0>\" 검색 결과 #개를 찾았습니다} other {\"<1>{searchQuery}</1>\" 검색 결과 #개를 찾았습니다}}"
 
 #: src/components/SetProgress.tsx:43
 msgid "{value, plural, one {minute} other {minutes}}"
@@ -282,7 +282,7 @@ msgstr "관리자"
 
 #: src/pages/settings/Preferences.tsx:106
 msgid "Age-based content filtering"
-msgstr ""
+msgstr "연령 기반 콘텐츠 필터링"
 
 #: src/components/FilterBy.tsx:17
 msgid "All"
@@ -379,7 +379,7 @@ msgstr "비밀번호 변경"
 
 #: src/pages/settings/Preferences.tsx:53
 msgid "Clear"
-msgstr ""
+msgstr "지우기"
 
 #: src/components/Facets/ActiveFacetChips.tsx:331
 #: src/components/Facets/FacetDrawer.tsx:72
@@ -421,15 +421,15 @@ msgstr "비밀번호 확인"
 
 #: src/pages/Details.tsx:197
 msgid "Content categories"
-msgstr ""
+msgstr "콘텐츠 카테고리"
 
 #: src/pages/Home.tsx:103
 msgid "Content is hidden based on your age-based content filtering preferences."
-msgstr ""
+msgstr "연령 기반 콘텐츠 필터링 설정에 따라 콘텐츠가 숨겨져 있습니다."
 
 #: src/pages/Details.tsx:373
 msgid "Content restricted"
-msgstr ""
+msgstr "제한된 콘텐츠"
 
 #: src/pages/import/TraktTv.tsx:89
 msgid "Copy to clipboard"
@@ -465,7 +465,7 @@ msgstr "현재 감상 중"
 
 #: src/pages/settings/Preferences.tsx:26
 msgid "Date of birth"
-msgstr ""
+msgstr "생년월일"
 
 #: src/pages/LogsPage.tsx:122
 msgid "Debug"
@@ -496,7 +496,7 @@ msgstr "설명"
 
 #: src/pages/Details.tsx:177
 msgid "Descriptors"
-msgstr ""
+msgstr "설명 항목"
 
 #: src/components/Facets/ActiveFacetChips.tsx:56
 #: src/components/Facets/CreatorSection.tsx:29
@@ -619,7 +619,7 @@ msgstr "그룹"
 
 #: src/pages/Details.tsx:186
 msgid "Guidance"
-msgstr ""
+msgstr "안내"
 
 #: src/pages/settings/Preferences.tsx:90
 msgid "Hide overview of unseen seasons"
@@ -930,7 +930,7 @@ msgstr "날짜 없음"
 
 #: src/components/SelectLastSeenEpisode.tsx:86
 msgid "No episodes available"
-msgstr ""
+msgstr "사용 가능한 에피소드가 없습니다"
 
 #: src/pages/GroupsPage.tsx:29
 msgid "No groups yet"
@@ -984,7 +984,7 @@ msgstr "개요"
 
 #: src/pages/Details.tsx:154
 msgid "Parental guidance"
-msgstr ""
+msgstr "보호자 안내"
 
 #: src/pages/Login.tsx:53
 #: src/pages/Register.tsx:49
@@ -1440,7 +1440,7 @@ msgstr "표시"
 
 #: src/components/PaginatedGridItems.tsx:448
 msgid "Some content is hidden based on your age-based content filtering preferences."
-msgstr ""
+msgstr "연령 기반 콘텐츠 필터링 설정에 따라 일부 콘텐츠가 숨겨져 있습니다."
 
 #: src/components/AddOrEditListButton.tsx:185
 #: src/components/AddOrEditListButton.tsx:190
@@ -1458,7 +1458,7 @@ msgstr "출처"
 
 #: src/pages/Details.tsx:118
 msgid "Spoiler"
-msgstr ""
+msgstr "스포일러"
 
 #: src/pages/import/TraktTv.tsx:106
 msgid "Start over"
@@ -1491,7 +1491,7 @@ msgstr "이 구성요소는 TV 프로그램에서만 사용할 수 있습니다.
 
 #: src/pages/Details.tsx:376
 msgid "This content is not available based on your age-based content filtering preferences."
-msgstr ""
+msgstr "연령 기반 콘텐츠 필터링 설정에 따라 이 콘텐츠를 사용할 수 없습니다."
 
 #: src/components/OrderBy.tsx:17
 #: src/hooks/translations.ts:14
@@ -1663,7 +1663,7 @@ msgstr "예"
 
 #: src/pages/settings/Preferences.tsx:17
 msgid "Your date of birth is used for age-based content filtering. This is self-only account data and is never shared with other users."
-msgstr ""
+msgstr "생년월일은 연령 기반 콘텐츠 필터링에 사용됩니다. 이 정보는 본인만 볼 수 있는 계정 데이터이며 다른 사용자와 공유되지 않습니다."
 
 #: src/pages/GroupDetailPage.tsx:319
 msgid "Your role:"

@@ -8,7 +8,7 @@
   "Failed to delete unused assets files": "Imposibil de șters fișierele de resurse neutilizate",
   "MediaTracker listening at {address}": "MediaTracker ascultă pe {address}",
   "MediaTracker {0} listening at {address}": "MediaTracker {0} ascultă pe {address}",
-  "Missing credentials for platform {0}": "",
+  "Missing credentials for platform {0}": "Lipsesc credențialele pentru platforma {0}",
   "New season of {0} will be released at {1}": "Noul sezon din {0} va fi lansat pe {1}",
   "New season of {0} will be released at {releaseDate}": "Noul sezon din {0} va fi lansat pe {releaseDate}",
   "Password cannot be empty": "Parola nu poate fi goală",

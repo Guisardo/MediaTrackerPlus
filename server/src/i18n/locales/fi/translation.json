@@ -8,7 +8,7 @@
   "Failed to delete unused assets files": "Käyttämättömien resurssitiedostojen poistaminen epäonnistui",
   "MediaTracker listening at {address}": "MediaTracker kuuntelee osoitteessa {address}",
   "MediaTracker {0} listening at {address}": "MediaTracker {0} kuuntelee osoitteessa {address}",
-  "Missing credentials for platform {0}": "",
+  "Missing credentials for platform {0}": "Alustalta {0} puuttuvat kirjautumistiedot",
   "New season of {0} will be released at {1}": "Sarjan {0} uusi kausi julkaistaan {1}",
   "New season of {0} will be released at {releaseDate}": "Sarjan {0} uusi kausi julkaistaan {releaseDate}",
   "Password cannot be empty": "Salasana ei voi olla tyhjä",

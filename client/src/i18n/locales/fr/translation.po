@@ -51,7 +51,7 @@ msgstr "{0, plural, one {Auteur} other {Auteurs}}"
 #. placeholder {0}: count ?? 0
 #: src/components/AddAndRemoveFromSeenHistoryButton.tsx:114
 msgid "{0, plural, one {Do you want to remove # seen history entry?} other {Do you want to remove all # seen history entries?}}"
-msgstr ""
+msgstr "{0, plural, one {Voulez-vous supprimer # entrée de l'historique ?} other {Voulez-vous supprimer toutes les # entrées de l'historique ?}}"
 
 #: src/components/PaginatedGridItems.tsx:317
 #~ msgid "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {Found # items for query \"<1>{searchQuery}</1>\"}}"
@@ -126,7 +126,7 @@ msgstr "{numberOfItemsTotal, plural, one {1 élément {0} {1}} other {# élémen
 
 #: src/components/PaginatedGridItems.tsx:67
 msgid "{searchResultLength, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {Found # items for query \"<1>{searchQuery}</1>\"}}"
-msgstr ""
+msgstr "{searchResultLength, plural, one {# élément trouvé pour la recherche \"<0>{searchQuery}</0>\"} other {# éléments trouvés pour la recherche \"<1>{searchQuery}</1>\"}}"
 
 #: src/components/SetProgress.tsx:43
 msgid "{value, plural, one {minute} other {minutes}}"
@@ -282,7 +282,7 @@ msgstr "Administrateur"
 
 #: src/pages/settings/Preferences.tsx:106
 msgid "Age-based content filtering"
-msgstr ""
+msgstr "Filtrage du contenu selon l'âge"
 
 #: src/components/FilterBy.tsx:17
 msgid "All"
@@ -379,7 +379,7 @@ msgstr "Changer le mot de passe"
 
 #: src/pages/settings/Preferences.tsx:53
 msgid "Clear"
-msgstr ""
+msgstr "Effacer"
 
 #: src/components/Facets/ActiveFacetChips.tsx:331
 #: src/components/Facets/FacetDrawer.tsx:72
@@ -421,15 +421,15 @@ msgstr "Confirmer le mot de passe"
 
 #: src/pages/Details.tsx:197
 msgid "Content categories"
-msgstr ""
+msgstr "Catégories de contenu"
 
 #: src/pages/Home.tsx:103
 msgid "Content is hidden based on your age-based content filtering preferences."
-msgstr ""
+msgstr "Le contenu est masqué en fonction de vos préférences de filtrage du contenu selon l'âge."
 
 #: src/pages/Details.tsx:373
 msgid "Content restricted"
-msgstr ""
+msgstr "Contenu restreint"
 
 #: src/pages/import/TraktTv.tsx:89
 msgid "Copy to clipboard"
@@ -465,7 +465,7 @@ msgstr "En cours de lecture"
 
 #: src/pages/settings/Preferences.tsx:26
 msgid "Date of birth"
-msgstr ""
+msgstr "Date de naissance"
 
 #: src/pages/LogsPage.tsx:122
 msgid "Debug"
@@ -496,7 +496,7 @@ msgstr "Description"
 
 #: src/pages/Details.tsx:177
 msgid "Descriptors"
-msgstr ""
+msgstr "Descripteurs"
 
 #: src/components/Facets/ActiveFacetChips.tsx:56
 #: src/components/Facets/CreatorSection.tsx:29
@@ -619,7 +619,7 @@ msgstr "Groupes"
 
 #: src/pages/Details.tsx:186
 msgid "Guidance"
-msgstr ""
+msgstr "Conseils"
 
 #: src/pages/settings/Preferences.tsx:90
 msgid "Hide overview of unseen seasons"
@@ -930,7 +930,7 @@ msgstr "Aucune date"
 
 #: src/components/SelectLastSeenEpisode.tsx:86
 msgid "No episodes available"
-msgstr ""
+msgstr "Aucun épisode disponible"
 
 #: src/pages/GroupsPage.tsx:29
 msgid "No groups yet"
@@ -984,7 +984,7 @@ msgstr "Aperçu"
 
 #: src/pages/Details.tsx:154
 msgid "Parental guidance"
-msgstr ""
+msgstr "Guide parental"
 
 #: src/pages/Login.tsx:53
 #: src/pages/Register.tsx:49
@@ -1440,7 +1440,7 @@ msgstr "Séries"
 
 #: src/components/PaginatedGridItems.tsx:448
 msgid "Some content is hidden based on your age-based content filtering preferences."
-msgstr ""
+msgstr "Une partie du contenu est masquée en fonction de vos préférences de filtrage du contenu selon l'âge."
 
 #: src/components/AddOrEditListButton.tsx:185
 #: src/components/AddOrEditListButton.tsx:190
@@ -1458,7 +1458,7 @@ msgstr "Source"
 
 #: src/pages/Details.tsx:118
 msgid "Spoiler"
-msgstr ""
+msgstr "Spoiler"
 
 #: src/pages/import/TraktTv.tsx:106
 msgid "Start over"
@@ -1491,7 +1491,7 @@ msgstr "Ce composant ne peut être utilisé qu'avec des séries TV"
 
 #: src/pages/Details.tsx:376
 msgid "This content is not available based on your age-based content filtering preferences."
-msgstr ""
+msgstr "Ce contenu n'est pas disponible en fonction de vos préférences de filtrage du contenu selon l'âge."
 
 #: src/components/OrderBy.tsx:17
 #: src/hooks/translations.ts:14
@@ -1663,7 +1663,7 @@ msgstr "Oui"
 
 #: src/pages/settings/Preferences.tsx:17
 msgid "Your date of birth is used for age-based content filtering. This is self-only account data and is never shared with other users."
-msgstr ""
+msgstr "Votre date de naissance est utilisée pour le filtrage du contenu selon l'âge. Il s'agit d'une donnée privée de votre compte, jamais partagée avec d'autres utilisateurs."
 
 #: src/pages/GroupDetailPage.tsx:319
 msgid "Your role:"

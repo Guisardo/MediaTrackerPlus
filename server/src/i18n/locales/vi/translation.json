@@ -8,7 +8,7 @@
   "Failed to delete unused assets files": "Không thể xóa các tệp tài nguyên không sử dụng",
   "MediaTracker listening at {address}": "MediaTracker đang lắng nghe tại {address}",
   "MediaTracker {0} listening at {address}": "MediaTracker {0} đang lắng nghe tại {address}",
-  "Missing credentials for platform {0}": "",
+  "Missing credentials for platform {0}": "Thiếu thông tin xác thực cho nền tảng {0}",
   "New season of {0} will be released at {1}": "Mùa mới của {0} sẽ được phát hành vào {1}",
   "New season of {0} will be released at {releaseDate}": "Mùa mới của {0} sẽ được phát hành vào {releaseDate}",
   "Password cannot be empty": "Mật khẩu không được để trống",

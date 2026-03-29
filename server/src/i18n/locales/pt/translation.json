@@ -8,7 +8,7 @@
   "Failed to delete unused assets files": "Falha ao apagar ficheiros de recursos não utilizados",
   "MediaTracker listening at {address}": "MediaTracker disponível em {address}",
   "MediaTracker {0} listening at {address}": "MediaTracker {0} disponível em {address}",
-  "Missing credentials for platform {0}": "",
+  "Missing credentials for platform {0}": "Credenciais em falta para a plataforma {0}",
   "New season of {0} will be released at {1}": "Nova temporada de {0} estreia a {1}",
   "New season of {0} will be released at {releaseDate}": "Nova temporada de {0} estreia a {releaseDate}",
   "Password cannot be empty": "A palavra-passe não pode estar vazia",

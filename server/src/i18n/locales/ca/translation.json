@@ -8,7 +8,7 @@
   "Failed to delete unused assets files": "No s'han pogut eliminar els fitxers d'actius no usats",
   "MediaTracker listening at {address}": "MediaTracker escoltant a {address}",
   "MediaTracker {0} listening at {address}": "MediaTracker {0} escoltant a {address}",
-  "Missing credentials for platform {0}": "",
+  "Missing credentials for platform {0}": "Falten credencials per a la plataforma {0}",
   "New season of {0} will be released at {1}": "La nova temporada de {0} es llançarà el {1}",
   "New season of {0} will be released at {releaseDate}": "La nova temporada de {0} es llançarà el {releaseDate}",
   "Password cannot be empty": "La contrasenya no pot estar buida",
