@@ -7,6 +7,8 @@ import { getMetadataLanguages } from 'src/metadataLanguages';
 import { userRepository } from 'src/repository/user';
 import { computeViewerAge, isAgeEligible } from 'src/utils/ageEligibility';
 import { toCodedRequestErrorObject } from 'src/requestError';
+import { metadataProviders } from 'src/metadata/metadataProviders';
+import { logger } from 'src/logger';
 
 /**
  * Resolves the language to use for metadata overlay, implementing three-tier fallback:
@@ -29,6 +31,34 @@ function resolveMetadataLanguage(
 
   // Tier 2 fallback: use first configured language
   return availableLanguages[0] ?? null;
+}
+
+async function enrichDetailsWithTrailers(
+  details: MediaItemDetailsResponse,
+  language: string | null
+): Promise<MediaItemDetailsResponse> {
+  if (!language) {
+    return details;
+  }
+
+  try {
+    const trailers = await metadataProviders.trailers(details, language);
+    if (trailers != null && trailers.length > 0) {
+      return {
+        ...details,
+        trailers,
+      };
+    }
+  } catch (error) {
+    logger.warn(
+      `MediaItemController.details: failed to fetch trailers for mediaItemId=${details.id ?? 'unknown'} source=${details.source} mediaType=${details.mediaType}`
+    );
+    logger.error('MediaItemController.details: trailer enrichment error', {
+      err: error,
+    });
+  }
+
+  return details;
 }
 
 /**
@@ -90,8 +120,10 @@ export class MediaItemController {
       language: language,
     });
 
+    const enrichedDetails = await enrichDetailsWithTrailers(details, language);
+
     // nosemgrep: javascript.express.security.audit.xss.direct-response-write.direct-response-write
-    res.send(details);
+    res.send(enrichedDetails);
   });
 
   /**

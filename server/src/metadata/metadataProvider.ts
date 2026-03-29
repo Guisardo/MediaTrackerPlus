@@ -1,11 +1,14 @@
-import _ from 'lodash';
-
 import {
   ExternalIds,
   MediaItemForProvider,
+  MediaTrailer,
+  MediaTrailerKind,
   MediaType,
 } from 'src/entity/mediaItem';
 import { SimilarItem } from 'src/metadata/types';
+
+export type MetadataTrailerKind = MediaTrailerKind;
+export type MetadataTrailer = MediaTrailer;
 
 export abstract class MetadataProvider<Name extends string = string> {
   public abstract readonly name: Name;
@@ -31,6 +34,16 @@ export abstract class MetadataProvider<Name extends string = string> {
    * @param ids ExternalIds
    */
   similar?(ids: ExternalIds): Promise<SimilarItem[]>;
+
+  /**
+   * Fetch playable trailer/preview candidates for the given external IDs.
+   * Results should already be normalized to the app-level contract and
+   * ordered best-first for the requested language.
+   * Optional — providers without trailer support omit this method.
+   * @param ids ExternalIds
+   * @param language BCP 47 language tag (e.g., 'en', 'es-419', 'pt-BR')
+   */
+  trailers?(ids: ExternalIds, language: string): Promise<MetadataTrailer[]>;
 
   /**
    * Fetch localized metadata for a specific language.

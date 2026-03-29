@@ -188,7 +188,22 @@ describe('useDetails', () => {
   });
 
   it('resolves mediaItem from the API', async () => {
-    const mockItem = makeMediaItem({ id: 5, title: 'Test' });
+    const mockItem = makeMediaItem({
+      id: 5,
+      title: 'Test',
+      trailers: [
+        {
+          id: 'youtube:test-trailer',
+          title: 'Official trailer',
+          kind: 'trailer',
+          language: 'en',
+          isOfficial: true,
+          provider: 'tmdb',
+          embedUrl: 'https://www.youtube.com/embed/test-trailer',
+          externalUrl: 'https://www.youtube.com/watch?v=test-trailer',
+        },
+      ],
+    });
     (mediaTrackerApi.details.get as jest.Mock).mockResolvedValue(mockItem);
 
     renderDetails(5);

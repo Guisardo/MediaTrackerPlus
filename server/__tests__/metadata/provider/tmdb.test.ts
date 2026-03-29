@@ -18,6 +18,9 @@ const tmdbTv = new TMDbTv();
 describe('TMDb', () => {
   beforeAll(runMigrations);
   afterAll(clearDatabase);
+  beforeEach(() => {
+    mockedAxios.get.mockReset();
+  });
 
   test('TMDbMovie search', async () => {
     mockedAxios.get.mockResolvedValue({
@@ -235,6 +238,117 @@ describe('TMDb', () => {
       const res = await tmdbTv.similar({ tmdbId: 4607 });
       expect(res).toHaveLength(1);
       expect(res[0].externalId).toBe('2');
+    });
+  });
+
+  describe('TMDbMovie.trailers', () => {
+    test('returns empty array when tmdbId is not provided', async () => {
+      const res = await tmdbMovie.trailers({}, 'es-419');
+      expect(res).toStrictEqual([]);
+    });
+
+    test('returns empty array on 429 rate limit', async () => {
+      mockedAxios.get.mockRejectedValueOnce({
+        response: { status: 429, headers: { 'retry-after': '3' } },
+      });
+      const res = await tmdbMovie.trailers({ tmdbId: 671 }, 'es-419');
+      expect(res).toStrictEqual([]);
+    });
+
+    test('sorts by locale preference, then official trailer, then playable fallback', async () => {
+      mockedAxios.get.mockResolvedValueOnce({
+        data: tmdbMovieVideosResponse,
+        status: 200,
+      });
+
+      const res = await tmdbMovie.trailers({ tmdbId: 671 }, 'es-419');
+
+      expect(res).toStrictEqual(tmdbMovieTrailersResult);
+      expect(res.map((item) => item.externalUrl)).toStrictEqual([
+        'https://www.youtube.com/watch?v=exact-trailer',
+        'https://www.youtube.com/watch?v=base-preview',
+        'https://www.youtube.com/watch?v=official-en-trailer',
+        'https://vimeo.com/any-preview',
+      ]);
+    });
+
+    test('deduplicates by canonical external url and keeps the best-ranked trailer', async () => {
+      mockedAxios.get.mockResolvedValueOnce({
+        data: {
+          id: 671,
+          results: [
+            {
+              id: 'lower-ranked',
+              key: 'dupe-key',
+              site: 'YouTube',
+              type: 'Teaser',
+              name: 'Spanish teaser',
+              official: false,
+              iso_639_1: 'es',
+              iso_3166_1: 'ES',
+            },
+            {
+              id: 'best-ranked',
+              key: 'dupe-key',
+              site: 'YouTube',
+              type: 'Trailer',
+              name: 'Spanish official trailer',
+              official: true,
+              iso_639_1: 'es',
+              iso_3166_1: 'MX',
+            },
+          ],
+        },
+        status: 200,
+      });
+
+      const res = await tmdbMovie.trailers({ tmdbId: 671 }, 'es');
+
+      expect(res).toHaveLength(1);
+      expect(res[0]).toMatchObject({
+        title: 'Spanish official trailer',
+        kind: 'trailer',
+        isOfficial: true,
+        externalUrl: 'https://www.youtube.com/watch?v=dupe-key',
+      });
+    });
+  });
+
+  describe('TMDbTv.trailers', () => {
+    test('returns mapped trailer candidates for tv results', async () => {
+      mockedAxios.get.mockResolvedValueOnce({
+        data: {
+          id: 4607,
+          results: [
+            {
+              id: 'tv-trailer',
+              key: 'tv-trailer-key',
+              site: 'YouTube',
+              type: 'Trailer',
+              name: 'Official trailer',
+              official: true,
+              iso_639_1: 'en',
+              iso_3166_1: 'US',
+            },
+          ],
+        },
+        status: 200,
+      });
+
+      const res = await tmdbTv.trailers({ tmdbId: 4607 }, 'en');
+
+      expect(res).toStrictEqual([
+        {
+          id: 'youtube:tv-trailer-key',
+          title: 'Official trailer',
+          kind: 'trailer',
+          language: 'en',
+          isOfficial: true,
+          provider: 'tmdb',
+          embedUrl: 'https://www.youtube.com/embed/tv-trailer-key',
+          externalUrl: 'https://www.youtube.com/watch?v=tv-trailer-key',
+        },
+      ]);
     });
   });
 });
@@ -2079,5 +2193,114 @@ const tmdbTvSimilarResult = [
     mediaType: 'tv',
     title: 'Fear the Walking Dead',
     externalRating: 7.5,
+  },
+];
+
+const tmdbMovieVideosResponse = {
+  id: 671,
+  results: [
+    {
+      id: 'exact-trailer',
+      key: 'exact-trailer',
+      site: 'YouTube',
+      type: 'Trailer',
+      name: 'Trailer exact locale',
+      official: false,
+      iso_639_1: 'es-419',
+      iso_3166_1: 'MX',
+    },
+    {
+      id: 'base-preview',
+      key: 'base-preview',
+      site: 'YouTube',
+      type: 'Teaser',
+      name: 'Teaser base language',
+      official: false,
+      iso_639_1: 'es',
+      iso_3166_1: 'ES',
+    },
+    {
+      id: 'official-en-trailer',
+      key: 'official-en-trailer',
+      site: 'YouTube',
+      type: 'Trailer',
+      name: 'Official English trailer',
+      official: true,
+      iso_639_1: 'en',
+      iso_3166_1: 'US',
+    },
+    {
+      id: 'any-preview',
+      key: 'any-preview',
+      site: 'Vimeo',
+      type: 'Clip',
+      name: 'Any preview fallback',
+      official: false,
+      iso_639_1: 'fr',
+      iso_3166_1: 'FR',
+    },
+    {
+      id: 'ignored-type',
+      key: 'ignored-type',
+      site: 'YouTube',
+      type: 'Behind the Scenes',
+      name: 'Should not be included',
+      official: true,
+      iso_639_1: 'es',
+      iso_3166_1: 'ES',
+    },
+    {
+      id: 'ignored-site',
+      key: 'ignored-site',
+      site: 'DailyMotion',
+      type: 'Trailer',
+      name: 'Unsupported site',
+      official: true,
+      iso_639_1: 'es',
+      iso_3166_1: 'ES',
+    },
+  ],
+};
+
+const tmdbMovieTrailersResult = [
+  {
+    id: 'youtube:exact-trailer',
+    title: 'Trailer exact locale',
+    kind: 'trailer',
+    language: 'es-419',
+    isOfficial: false,
+    provider: 'tmdb',
+    embedUrl: 'https://www.youtube.com/embed/exact-trailer',
+    externalUrl: 'https://www.youtube.com/watch?v=exact-trailer',
+  },
+  {
+    id: 'youtube:base-preview',
+    title: 'Teaser base language',
+    kind: 'preview',
+    language: 'es',
+    isOfficial: false,
+    provider: 'tmdb',
+    embedUrl: 'https://www.youtube.com/embed/base-preview',
+    externalUrl: 'https://www.youtube.com/watch?v=base-preview',
+  },
+  {
+    id: 'youtube:official-en-trailer',
+    title: 'Official English trailer',
+    kind: 'trailer',
+    language: 'en',
+    isOfficial: true,
+    provider: 'tmdb',
+    embedUrl: 'https://www.youtube.com/embed/official-en-trailer',
+    externalUrl: 'https://www.youtube.com/watch?v=official-en-trailer',
+  },
+  {
+    id: 'vimeo:any-preview',
+    title: 'Any preview fallback',
+    kind: 'preview',
+    language: 'fr',
+    isOfficial: false,
+    provider: 'tmdb',
+    embedUrl: 'https://player.vimeo.com/video/any-preview',
+    externalUrl: 'https://vimeo.com/any-preview',
   },
 ];
