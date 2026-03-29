@@ -35,7 +35,7 @@ import {
   serializeDescriptors,
   serializeCategories,
 } from 'src/metadata/parentalMetadata';
-import { isValid, parseISO, subDays, subMinutes } from 'date-fns';
+import { isValid, parseISO, subHours, subMinutes } from 'date-fns';
 import { TvSeason } from 'src/entity/tvseason';
 import { ListItem } from 'src/entity/list';
 import { logger } from 'src/logger';
@@ -1021,7 +1021,7 @@ class MediaItemRepository extends repository<MediaItemBase>({
   public async unlockLockedMediaItems() {
     return await Database.knex<MediaItemBase>(this.tableName)
       .update('lockedAt', null)
-      .where('lockedAt', '<=', subDays(new Date(), 1).getTime());
+      .where('lockedAt', '<=', subHours(new Date(), 24).getTime());
   }
 }
 
