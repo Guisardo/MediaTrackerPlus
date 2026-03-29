@@ -8,7 +8,7 @@
   "Failed to delete unused assets files": "删除未使用的资源文件失败",
   "MediaTracker listening at {address}": "MediaTracker 正在监听 {address}",
   "MediaTracker {0} listening at {address}": "MediaTracker {0} 正在监听 {address}",
-  "Missing credentials for platform {0}": "",
+  "Missing credentials for platform {0}": "平台 {0} 缺少凭据",
   "New season of {0} will be released at {1}": "{0} 的新季度将于 {1} 发布",
   "New season of {0} will be released at {releaseDate}": "{0} 的新季度将于 {releaseDate} 发布",
   "Password cannot be empty": "密码不能为空",

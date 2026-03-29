@@ -8,7 +8,7 @@
   "Failed to delete unused assets files": "未使用のアセットファイルの削除に失敗しました",
   "MediaTracker listening at {address}": "MediaTracker は {address} でリスニング中",
   "MediaTracker {0} listening at {address}": "MediaTracker {0} は {address} でリスニング中",
-  "Missing credentials for platform {0}": "",
+  "Missing credentials for platform {0}": "プラットフォーム {0} の認証情報がありません",
   "New season of {0} will be released at {1}": "{0} の新シーズンが {1} にリリースされます",
   "New season of {0} will be released at {releaseDate}": "{0} の新シーズンが {releaseDate} にリリースされます",
   "Password cannot be empty": "パスワードは空にできません",

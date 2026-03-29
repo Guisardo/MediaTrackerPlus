@@ -8,7 +8,7 @@
   "Failed to delete unused assets files": "فشل حذف ملفات الأصول غير المستخدمة",
   "MediaTracker listening at {address}": "MediaTracker يستمع على {address}",
   "MediaTracker {0} listening at {address}": "MediaTracker {0} يستمع على {address}",
-  "Missing credentials for platform {0}": "",
+  "Missing credentials for platform {0}": "بيانات اعتماد المنصة {0} مفقودة",
   "New season of {0} will be released at {1}": "سيصدر موسم جديد من {0} في {1}",
   "New season of {0} will be released at {releaseDate}": "سيصدر موسم جديد من {0} في {releaseDate}",
   "Password cannot be empty": "لا يمكن أن تكون كلمة المرور فارغة",

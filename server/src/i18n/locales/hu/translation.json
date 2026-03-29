@@ -8,7 +8,7 @@
   "Failed to delete unused assets files": "Nem sikerült törölni a fel nem használt eszközfájlokat",
   "MediaTracker listening at {address}": "A MediaTracker figyel: {address}",
   "MediaTracker {0} listening at {address}": "A MediaTracker {0} figyel: {address}",
-  "Missing credentials for platform {0}": "",
+  "Missing credentials for platform {0}": "Hiányzó hitelesítő adatok a(z) {0} platformhoz",
   "New season of {0} will be released at {1}": "A(z) {0} új évada {1}-n jelenik meg",
   "New season of {0} will be released at {releaseDate}": "A(z) {0} új évada {releaseDate}-n jelenik meg",
   "Password cannot be empty": "A jelszó nem lehet üres",

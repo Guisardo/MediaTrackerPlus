@@ -51,7 +51,7 @@ msgstr "{0, plural, other {著者}}"
 #. placeholder {0}: count ?? 0
 #: src/components/AddAndRemoveFromSeenHistoryButton.tsx:114
 msgid "{0, plural, one {Do you want to remove # seen history entry?} other {Do you want to remove all # seen history entries?}}"
-msgstr ""
+msgstr "{0, plural, one {視聴履歴 # 件を削除しますか？} other {視聴履歴 # 件をすべて削除しますか？}}"
 
 #: src/components/PaginatedGridItems.tsx:317
 #~ msgid "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {Found # items for query \"<1>{searchQuery}</1>\"}}"
@@ -126,7 +126,7 @@ msgstr "{numberOfItemsTotal, plural, other {# 件 {2} {3}}}"
 
 #: src/components/PaginatedGridItems.tsx:67
 msgid "{searchResultLength, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {Found # items for query \"<1>{searchQuery}</1>\"}}"
-msgstr ""
+msgstr "{searchResultLength, plural, one {\"<0>{searchQuery}</0>\" の検索結果が # 件見つかりました} other {\"<1>{searchQuery}</1>\" の検索結果が # 件見つかりました}}"
 
 #: src/components/SetProgress.tsx:43
 msgid "{value, plural, one {minute} other {minutes}}"
@@ -282,7 +282,7 @@ msgstr "管理者"
 
 #: src/pages/settings/Preferences.tsx:106
 msgid "Age-based content filtering"
-msgstr ""
+msgstr "年齢に基づくコンテンツフィルタリング"
 
 #: src/components/FilterBy.tsx:17
 msgid "All"
@@ -379,7 +379,7 @@ msgstr "パスワードを変更"
 
 #: src/pages/settings/Preferences.tsx:53
 msgid "Clear"
-msgstr ""
+msgstr "クリア"
 
 #: src/components/Facets/ActiveFacetChips.tsx:331
 #: src/components/Facets/FacetDrawer.tsx:72
@@ -421,15 +421,15 @@ msgstr "パスワードを確認"
 
 #: src/pages/Details.tsx:197
 msgid "Content categories"
-msgstr ""
+msgstr "コンテンツカテゴリ"
 
 #: src/pages/Home.tsx:103
 msgid "Content is hidden based on your age-based content filtering preferences."
-msgstr ""
+msgstr "年齢に基づくコンテンツフィルタリングの設定により、このコンテンツは非表示になっています。"
 
 #: src/pages/Details.tsx:373
 msgid "Content restricted"
-msgstr ""
+msgstr "制限されたコンテンツ"
 
 #: src/pages/import/TraktTv.tsx:89
 msgid "Copy to clipboard"
@@ -465,7 +465,7 @@ msgstr "読書中"
 
 #: src/pages/settings/Preferences.tsx:26
 msgid "Date of birth"
-msgstr ""
+msgstr "生年月日"
 
 #: src/pages/LogsPage.tsx:122
 msgid "Debug"
@@ -496,7 +496,7 @@ msgstr "説明"
 
 #: src/pages/Details.tsx:177
 msgid "Descriptors"
-msgstr ""
+msgstr "内容説明"
 
 #: src/components/Facets/ActiveFacetChips.tsx:56
 #: src/components/Facets/CreatorSection.tsx:29
@@ -619,7 +619,7 @@ msgstr "グループ"
 
 #: src/pages/Details.tsx:186
 msgid "Guidance"
-msgstr ""
+msgstr "ガイダンス"
 
 #: src/pages/settings/Preferences.tsx:90
 msgid "Hide overview of unseen seasons"
@@ -930,7 +930,7 @@ msgstr "日付なし"
 
 #: src/components/SelectLastSeenEpisode.tsx:86
 msgid "No episodes available"
-msgstr ""
+msgstr "利用可能なエピソードはありません"
 
 #: src/pages/GroupsPage.tsx:29
 msgid "No groups yet"
@@ -984,7 +984,7 @@ msgstr "概要"
 
 #: src/pages/Details.tsx:154
 msgid "Parental guidance"
-msgstr ""
+msgstr "保護者向けガイダンス"
 
 #: src/pages/Login.tsx:53
 #: src/pages/Register.tsx:49
@@ -1440,7 +1440,7 @@ msgstr "番組"
 
 #: src/components/PaginatedGridItems.tsx:448
 msgid "Some content is hidden based on your age-based content filtering preferences."
-msgstr ""
+msgstr "年齢に基づくコンテンツフィルタリングの設定により、一部のコンテンツは非表示になっています。"
 
 #: src/components/AddOrEditListButton.tsx:185
 #: src/components/AddOrEditListButton.tsx:190
@@ -1458,7 +1458,7 @@ msgstr "ソース"
 
 #: src/pages/Details.tsx:118
 msgid "Spoiler"
-msgstr ""
+msgstr "ネタバレ"
 
 #: src/pages/import/TraktTv.tsx:106
 msgid "Start over"
@@ -1491,7 +1491,7 @@ msgstr "このコンポーネントはテレビ番組でのみ使用できます
 
 #: src/pages/Details.tsx:376
 msgid "This content is not available based on your age-based content filtering preferences."
-msgstr ""
+msgstr "年齢に基づくコンテンツフィルタリングの設定により、このコンテンツは利用できません。"
 
 #: src/components/OrderBy.tsx:17
 #: src/hooks/translations.ts:14
@@ -1663,7 +1663,7 @@ msgstr "はい"
 
 #: src/pages/settings/Preferences.tsx:17
 msgid "Your date of birth is used for age-based content filtering. This is self-only account data and is never shared with other users."
-msgstr ""
+msgstr "生年月日は年齢に基づくコンテンツフィルタリングに使用されます。これは本人のみのアカウント情報であり、他のユーザーと共有されることはありません。"
 
 #: src/pages/GroupDetailPage.tsx:319
 msgid "Your role:"

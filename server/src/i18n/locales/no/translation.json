@@ -8,7 +8,7 @@
   "Failed to delete unused assets files": "Klarte ikke å slette ubrukte ressursfiler",
   "MediaTracker listening at {address}": "MediaTracker lytter på {address}",
   "MediaTracker {0} listening at {address}": "MediaTracker {0} lytter på {address}",
-  "Missing credentials for platform {0}": "",
+  "Missing credentials for platform {0}": "Manglende innloggingsinformasjon for plattform {0}",
   "New season of {0} will be released at {1}": "Ny sesong av {0} utgis {1}",
   "New season of {0} will be released at {releaseDate}": "Ny sesong av {0} utgis {releaseDate}",
   "Password cannot be empty": "Passord kan ikke være tomt",

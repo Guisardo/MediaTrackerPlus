@@ -8,7 +8,7 @@
   "Failed to delete unused assets files": "Kunne ikke slette uafspillede filer",
   "MediaTracker listening at {address}": "MediaTracker lytter på {address}",
   "MediaTracker {0} listening at {address}": "MediaTracker {0} lytter på {address}",
-  "Missing credentials for platform {0}": "",
+  "Missing credentials for platform {0}": "Manglende legitimationsoplysninger for platform {0}",
   "New season of {0} will be released at {1}": "Ny sæson af {0} vil blive udgivet den {1}",
   "New season of {0} will be released at {releaseDate}": "Ny sæson af {0} vil blive udgivet den {releaseDate}",
   "Password cannot be empty": "Kodeordet kan ikke være tomt",
