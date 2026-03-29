@@ -39,6 +39,7 @@ const mediaItems: MediaItemBase[] = [
 describe('unlockLockedMediaItems.test', () => {
   beforeAll(async () => {
     await runMigrations();
+    await Database.knex('mediaItem').delete();
     await Database.knex('mediaItem').insert(mediaItems);
   });
 

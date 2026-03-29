@@ -38,16 +38,16 @@ jobs:
       IMAGE_NAME: mediatracker-plus-validation
       IMAGE_TAG: ${{ github.sha }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.2
         with:
           fetch-depth: 0
           ref: ${{ inputs.checkout-ref || github.sha }}
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4.0.0
 
       - name: Build linux/amd64 validation image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7.0.0
         with:
           context: .
           load: true
@@ -87,8 +87,10 @@ jobs:
           exit 1
 
       - name: Scan image with Trivy
+        # Intentional issue #35 exception: keep Trivy, but disable cache to avoid transitive actions/cache usage.
         uses: aquasecurity/trivy-action@0.35.0
         with:
+          cache: false
           image-ref: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           scan-type: image
           format: table

@@ -17,9 +17,9 @@ jobs:
     runs-on: ubuntu-22.04
     name: Codecov
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.2
       - name: Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6.3.0
         with:
           node-version: 22
           cache: 'npm'
@@ -32,6 +32,7 @@ jobs:
         run: npm run lingui:compile --prefix client
       - name: Frontend test coverage
         run: npm run test:coverage --prefix client
+      # Intentional issue #35 exception: keep the official Codecov action on v5.
       - name: Upload backend coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
@@ -40,6 +41,7 @@ jobs:
           files: server/coverage/clover.xml
           flags: backend
           verbose: true
+      # Intentional issue #35 exception: keep the official Codecov action on v5.
       - name: Upload frontend coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
