@@ -13,7 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6.0.2
+
+      - name: Setup node
+        uses: actions/setup-node@v6.3.0
+        with:
+          node-version: 22
 
       - name: Install and Build 🔧
         run: |
@@ -21,7 +26,7 @@ jobs:
           npm run build --prefix docs
 
       - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@v4.2.2
+        uses: JamesIves/github-pages-deploy-action@v4.8.0
         with:
           branch: gh-pages
           folder: docs/dist
