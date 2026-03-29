@@ -3,7 +3,11 @@ import path from 'path';
 import axios from 'axios';
 
 import { MediaItemForProvider, ExternalIds } from 'src/entity/mediaItem';
-import { MetadataProvider } from 'src/metadata/metadataProvider';
+import {
+  MetadataProvider,
+  MetadataTrailer,
+  MetadataTrailerKind,
+} from 'src/metadata/metadataProvider';
 import { GlobalConfiguration } from 'src/repository/globalSettings';
 import { Config } from 'src/config';
 import { logger } from 'src/logger';
@@ -28,6 +32,13 @@ const emptyOrNullToNull = <T>(value: T | null | undefined): T | null =>
 /** Minimum vote count required to include a TMDB similar item in results. */
 const TMDB_SIMILAR_MINIMUM_VOTE_COUNT = 10;
 
+const PLAYABLE_VIDEO_TYPES = new Set([
+  'Trailer',
+  'Teaser',
+  'Clip',
+  'Featurette',
+]);
+
 type PosterSize =
   | 'w92'
   | 'w154'
@@ -39,6 +50,113 @@ type PosterSize =
 
 const getPosterUrl = (p: string, size: PosterSize = 'original') => {
   return urljoin('https://image.tmdb.org/t/p/', size, path.basename(p));
+};
+
+const getBaseLanguage = (language: string | null | undefined): string | null => {
+  if (!language) {
+    return null;
+  }
+
+  const [base] = language.toLowerCase().split('-');
+  return base || null;
+};
+
+const normalizeLanguage = (language: string | null | undefined): string | null => {
+  return language?.toLowerCase() ?? null;
+};
+
+const toTrailerKind = (type: string): MetadataTrailerKind | null => {
+  switch (type) {
+    case 'Trailer':
+      return 'trailer';
+    case 'Teaser':
+    case 'Clip':
+    case 'Featurette':
+      return 'preview';
+    default:
+      return null;
+  }
+};
+
+const toPlayableUrls = (
+  site: string,
+  key: string
+): { embedUrl: string; externalUrl: string } | null => {
+  switch (site.toLowerCase()) {
+    case 'youtube':
+      return {
+        embedUrl: `https://www.youtube.com/embed/${key}`,
+        externalUrl: `https://www.youtube.com/watch?v=${key}`,
+      };
+    case 'vimeo':
+      return {
+        embedUrl: `https://player.vimeo.com/video/${key}`,
+        externalUrl: `https://vimeo.com/${key}`,
+      };
+    default:
+      return null;
+  }
+};
+
+const trailerRank = (
+  trailer: MetadataTrailer,
+  requestedLanguage: string
+): [number, number, number, string] => {
+  const normalizedRequested = normalizeLanguage(requestedLanguage);
+  const normalizedBase = getBaseLanguage(requestedLanguage);
+  const normalizedTrailerLanguage = normalizeLanguage(trailer.language);
+  const trailerBase = getBaseLanguage(trailer.language);
+
+  let languageRank = 3;
+  if (normalizedRequested && normalizedTrailerLanguage === normalizedRequested) {
+    languageRank = 0;
+  } else if (
+    normalizedBase &&
+    trailerBase &&
+    normalizedBase === trailerBase
+  ) {
+    languageRank = 1;
+  } else if (trailer.language == null) {
+    languageRank = 2;
+  }
+
+  const fallbackRank =
+    trailer.kind === 'trailer' && trailer.isOfficial ? 0 : 1;
+  const kindRank = trailer.kind === 'trailer' ? 0 : 1;
+
+  return [languageRank, fallbackRank, kindRank, trailer.title.toLowerCase()];
+};
+
+const dedupeAndSortTrailers = (
+  trailers: MetadataTrailer[],
+  requestedLanguage: string
+): MetadataTrailer[] => {
+  const sorted = [...trailers].sort((left, right) => {
+    const leftRank = trailerRank(left, requestedLanguage);
+    const rightRank = trailerRank(right, requestedLanguage);
+
+    for (let index = 0; index < leftRank.length; index += 1) {
+      const leftValue = leftRank[index];
+      const rightValue = rightRank[index];
+      if (leftValue < rightValue) {
+        return -1;
+      }
+      if (leftValue > rightValue) {
+        return 1;
+      }
+    }
+
+    return 0;
+  });
+
+  const deduped = new Map<string, MetadataTrailer>();
+  for (const trailer of sorted) {
+    if (!deduped.has(trailer.externalUrl)) {
+      deduped.set(trailer.externalUrl, trailer);
+    }
+  }
+
+  return [...deduped.values()];
 };
 
 /**
@@ -181,6 +299,91 @@ abstract class TMDb extends MetadataProvider {
       genres: response.genres?.map((genre) => genre.name),
     };
   }
+
+  protected async fetchTmdbTrailers(
+    tmdbId: number,
+    mediaType: 'movie' | 'tv',
+    language: string
+  ): Promise<MetadataTrailer[]> {
+    const requestedBaseLanguage = getBaseLanguage(language);
+    const includeVideoLanguage = [
+      normalizeLanguage(language),
+      requestedBaseLanguage,
+      'en',
+      'null',
+    ]
+      .filter((value, index, values): value is string => {
+        return value != null && values.indexOf(value) === index;
+      })
+      .join(',');
+
+    const endpointPath = `/3/${mediaType}/${tmdbId}/videos`;
+    const url = `https://api.themoviedb.org${endpointPath}`;
+
+    let response: { data: TMDbApi.VideoResponse; status: number };
+
+    try {
+      response = await axios.get<TMDbApi.VideoResponse>(url, {
+        params: {
+          api_key: TMDB_API_KEY,
+          language,
+          include_video_language: includeVideoLanguage,
+        },
+      });
+    } catch (err: unknown) {
+      const axiosError = err as {
+        response?: { status?: number; headers?: Record<string, string> };
+      };
+      const status = axiosError?.response?.status;
+
+      if (status === 429) {
+        const retryAfter = axiosError?.response?.headers?.['retry-after'];
+        logger.warn(
+          `TMDB rate limit hit on ${endpointPath}. Retry-After: ${retryAfter ?? 'unknown'}`
+        );
+        return [];
+      }
+
+      throw new Error(
+        `TMDB API request failed with HTTP ${status ?? 'unknown'} for ${endpointPath}`
+      );
+    }
+
+    const trailers = response.data.results
+      .filter(
+        (video) =>
+          typeof video.key === 'string' &&
+          video.key.trim() !== '' &&
+          PLAYABLE_VIDEO_TYPES.has(video.type)
+      )
+      .map((video): MetadataTrailer | null => {
+        const kind = toTrailerKind(video.type);
+        if (!kind) {
+          return null;
+        }
+
+        const urls = toPlayableUrls(video.site, video.key);
+        if (!urls) {
+          return null;
+        }
+
+        const title = video.name?.trim();
+
+        return {
+          id: `${video.site.toLowerCase()}:${video.key}`,
+          title: title || `TMDb ${kind === 'trailer' ? 'Trailer' : 'Preview'}`,
+          kind,
+          language: normalizeLanguage(video.iso_639_1),
+          isOfficial: Boolean(video.official),
+          provider: this.name,
+          embedUrl: urls.embedUrl,
+          externalUrl: urls.externalUrl,
+        };
+      })
+      .filter((trailer): trailer is MetadataTrailer => trailer !== null);
+
+    return dedupeAndSortTrailers(trailers, language);
+  }
 }
 
 export class TMDbMovie extends TMDb {
@@ -263,6 +466,18 @@ export class TMDbMovie extends TMDb {
       movie.genres = null as unknown as string[];
 
     return movie;
+  }
+
+  override async trailers(
+    ids: ExternalIds,
+    language: string
+  ): Promise<MetadataTrailer[]> {
+    if (!ids.tmdbId) {
+      logger.warn(`TMDbMovie.trailers: no tmdbId provided — returning empty results`);
+      return [];
+    }
+
+    return this.fetchTmdbTrailers(ids.tmdbId, 'movie', language);
   }
 
   async findByImdbId(imdbId: string): Promise<MediaItemForProvider | undefined> {
@@ -496,6 +711,18 @@ export class TMDbTv extends TMDb {
     return this.fetchTmdbSimilar(ids.tmdbId, 'tv');
   }
 
+  override async trailers(
+    ids: ExternalIds,
+    language: string
+  ): Promise<MetadataTrailer[]> {
+    if (!ids.tmdbId) {
+      logger.warn(`TMDbTv.trailers: no tmdbId provided — returning empty results`);
+      return [];
+    }
+
+    return this.fetchTmdbTrailers(ids.tmdbId, 'tv', language);
+  }
+
   async findByImdbId(imdbId: string): Promise<MediaItemForProvider | undefined> {
     const res = await axios.get(`https://api.themoviedb.org/3/find/${imdbId}`, {
       params: {
@@ -677,6 +904,24 @@ namespace TMDbApi {
     results: SimilarResultItem[];
     total_pages: number;
     total_results: number;
+  }
+
+  export interface VideoResultItem {
+    id: string;
+    iso_639_1: string | null;
+    iso_3166_1: string | null;
+    key: string;
+    name: string;
+    official: boolean;
+    published_at?: string;
+    site: string;
+    size?: number;
+    type: string;
+  }
+
+  export interface VideoResponse {
+    id: number;
+    results: VideoResultItem[];
   }
 
   export interface SeasonDetailsResponse {

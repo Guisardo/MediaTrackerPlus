@@ -74,6 +74,19 @@ export type ParentalGuidanceGuideItem = {
   isSpoiler?: boolean | null;
 };
 
+export type MediaTrailerKind = 'trailer' | 'preview';
+
+export type MediaTrailer = {
+  id: string;
+  title: string;
+  kind: MediaTrailerKind;
+  language: string | null;
+  isOfficial: boolean;
+  provider: string;
+  embedUrl: string;
+  externalUrl: string;
+};
+
 export type MediaItemBaseWithSeasons = MediaItemBase & {
   seasons?: TvSeason[];
 };
@@ -122,6 +135,7 @@ export type MediaItemDetailsResponse = Omit<
   totalRuntime?: number;
   lists: List[];
   metadataLanguage?: string | null;
+  trailers?: MediaTrailer[];
 };
 
 export type MediaItemItemsResponse = Omit<MediaItemBase, 'lockedAt'> & {

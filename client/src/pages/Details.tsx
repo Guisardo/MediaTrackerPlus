@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import clsx from 'clsx';
 import { Plural, Trans } from '@lingui/macro';
@@ -9,6 +9,7 @@ import {
   AudibleCountryCode,
   MediaItemDetailsResponse,
   MediaItemItemsResponse,
+  MediaTrailer,
   ParentalGuidanceCategory,
   ParentalGuidanceGuideItem,
   TvEpisode,
@@ -241,6 +242,150 @@ export const ParentalRatingSection: FunctionComponent<{
           </div>
         </div>
       )}
+    </div>
+  );
+};
+
+export const TrailerSection: FunctionComponent<{
+  trailers?: MediaTrailer[] | null;
+}> = ({ trailers }) => {
+  const primaryTrailer = trailers?.[0];
+  const [selectedTrailer, setSelectedTrailer] = useState<MediaTrailer | null>(
+    primaryTrailer ?? null
+  );
+  const [isPlayerOpen, setIsPlayerOpen] = useState(false);
+
+  useEffect(() => {
+    setSelectedTrailer(primaryTrailer ?? null);
+    setIsPlayerOpen(false);
+  }, [primaryTrailer]);
+
+  if (!primaryTrailer) {
+    return null;
+  }
+
+  const alternateTrailers = trailers!.slice(1);
+
+  return (
+    <div
+      className="mt-4 rounded-xl border border-zinc-200/80 bg-zinc-50/80 p-4 dark:border-zinc-800 dark:bg-zinc-900/60"
+      data-testid="trailer-section"
+    >
+      <div className="text-base font-bold">
+        <Trans>Trailers & previews</Trans>
+      </div>
+
+      <div className="mt-2 flex flex-wrap items-center gap-2">
+        <span className="font-medium">{primaryTrailer.title}</span>
+        <span className="rounded-full bg-zinc-200 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
+          {primaryTrailer.kind === 'preview' ? (
+            <Trans>Preview</Trans>
+          ) : (
+            <Trans>Trailer</Trans>
+          )}
+        </span>
+        {primaryTrailer.isOfficial && (
+          <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold uppercase tracking-wide text-emerald-900 dark:bg-emerald-900/40 dark:text-emerald-100">
+            <Trans>Official</Trans>
+          </span>
+        )}
+        {primaryTrailer.language && (
+          <span className="text-xs text-zinc-600 dark:text-zinc-400">
+            {primaryTrailer.language}
+          </span>
+        )}
+      </div>
+
+      <div className="mt-3">
+        <Modal
+          onBeforeClosed={() => {
+            setIsPlayerOpen(false);
+          }}
+          onClosed={() => {
+            setSelectedTrailer(primaryTrailer);
+          }}
+          openModal={(openModal) => (
+            <Button
+              variant="outline"
+              size="sm"
+              data-testid="open-trailer-modal"
+              onClick={() => {
+                setSelectedTrailer(primaryTrailer);
+                setIsPlayerOpen(true);
+                openModal();
+              }}
+            >
+              {primaryTrailer.kind === 'preview' ? (
+                <Trans>Play preview</Trans>
+              ) : (
+                <Trans>Play trailer</Trans>
+              )}
+            </Button>
+          )}
+        >
+          {(closeModal) => (
+            <div className="w-[min(92vw,960px)] rounded-xl bg-white p-4 text-zinc-950 dark:bg-zinc-950 dark:text-zinc-50 sm:p-5">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <div className="text-lg font-semibold">
+                    {selectedTrailer?.title ?? primaryTrailer.title}
+                  </div>
+                  <div className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+                    {selectedTrailer?.language ?? primaryTrailer.language ?? ''}
+                  </div>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => closeModal()}
+                >
+                  <Trans>Close</Trans>
+                </Button>
+              </div>
+
+              <div className="mt-4 overflow-hidden rounded-lg bg-black">
+                {isPlayerOpen && selectedTrailer && (
+                  <iframe
+                    key={selectedTrailer.id}
+                    title={selectedTrailer.title}
+                    src={selectedTrailer.embedUrl}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="aspect-video w-full"
+                  />
+                )}
+              </div>
+
+              {alternateTrailers.length > 0 && (
+                <div className="mt-4">
+                  <div className="text-sm font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400">
+                    <Trans>More options</Trans>
+                  </div>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {[primaryTrailer, ...alternateTrailers].map((trailer) => (
+                      <Button
+                        key={trailer.id}
+                        variant="outline"
+                        size="sm"
+                        className={clsx(
+                          selectedTrailer?.id === trailer.id &&
+                            'border-green-500 text-green-600 dark:border-green-400 dark:text-green-300'
+                        )}
+                        onClick={() => {
+                          setSelectedTrailer(trailer);
+                          setIsPlayerOpen(true);
+                        }}
+                      >
+                        {trailer.title}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </Modal>
+      </div>
     </div>
   );
 };
@@ -540,6 +685,8 @@ const DetailsMetadata: FunctionComponent<{
           <span className="whitespace-pre-wrap">{mediaItem.overview}</span>
         </div>
       )}
+
+      <TrailerSection trailers={mediaItem.trailers} />
 
       {mediaItem.language && (
         <div>

@@ -4348,6 +4348,13 @@
               "metadataLanguage": {
                 "type": "string",
                 "nullable": true
+              },
+              "trailers": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/MediaTrailer"
+                },
+                "nullable": true
               }
             },
             "required": [
@@ -5110,6 +5117,52 @@
         "enum": [
           "asc",
           "desc"
+        ],
+        "type": "string"
+      },
+      "MediaTrailer": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/MediaTrailerKind"
+          },
+          "language": {
+            "type": "string",
+            "nullable": true
+          },
+          "isOfficial": {
+            "type": "boolean"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "embedUrl": {
+            "type": "string"
+          },
+          "externalUrl": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "embedUrl",
+          "externalUrl",
+          "id",
+          "isOfficial",
+          "kind",
+          "provider",
+          "title"
+        ]
+      },
+      "MediaTrailerKind": {
+        "enum": [
+          "preview",
+          "trailer"
         ],
         "type": "string"
       },

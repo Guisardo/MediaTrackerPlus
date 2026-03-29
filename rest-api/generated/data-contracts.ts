@@ -279,6 +279,7 @@ export type MediaItemDetailsResponse = {
   totalRuntime?: number | null;
   lists: List[];
   metadataLanguage?: string | null;
+  trailers?: MediaTrailer[] | null;
 };
 
 export interface ParentalGuidanceCategory {
@@ -469,6 +470,19 @@ export type ListSortBy =
   | 'title';
 
 export type ListSortOrder = 'asc' | 'desc';
+
+export interface MediaTrailer {
+  id: string;
+  title: string;
+  kind: MediaTrailerKind;
+  language?: string | null;
+  isOfficial: boolean;
+  provider: string;
+  embedUrl: string;
+  externalUrl: string;
+}
+
+export type MediaTrailerKind = 'preview' | 'trailer';
 
 export type GetItemsRequest = {
   groupId?: number | null;

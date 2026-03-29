@@ -4,7 +4,7 @@ import { IGDB } from 'src/metadata/provider/igdb';
 import { OpenLibrary } from 'src/metadata/provider/openlibrary';
 import { TMDbMovie, TMDbTv } from 'src/metadata/provider/tmdb';
 import _ from 'lodash';
-import { MetadataProvider } from 'src/metadata/metadataProvider';
+import { MetadataProvider, MetadataTrailer } from 'src/metadata/metadataProvider';
 import { SimilarItem } from 'src/metadata/types';
 
 const providers = <const>[
@@ -45,6 +45,14 @@ class MetadataProviders {
   public similar(mediaItem: MediaItemBase): Promise<SimilarItem[]> | null {
     const provider = this.get(mediaItem.mediaType, mediaItem.source);
     return provider?.similar ? provider.similar(mediaItem) : null;
+  }
+
+  public trailers(
+    mediaItem: MediaItemBase,
+    language: string
+  ): Promise<MetadataTrailer[]> | null {
+    const provider = this.get(mediaItem.mediaType, mediaItem.source);
+    return provider?.trailers ? provider.trailers(mediaItem, language) : null;
   }
 }
 
