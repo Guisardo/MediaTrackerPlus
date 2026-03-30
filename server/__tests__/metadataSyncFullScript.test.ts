@@ -14,6 +14,13 @@ import { spawnSync } from 'child_process';
 
 const sourceScriptPath = resolve(__dirname, '../../scripts/metadata-sync-full.sh');
 const shellExecutable = 'sh';
+const normalizeDirectory = (path: string) => {
+  const resolved =
+    process.platform === 'win32'
+      ? realpathSync.native(path)
+      : realpathSync(path);
+  return process.platform === 'win32' ? resolved.toLowerCase() : resolved;
+};
 
 const createTempRepo = () => {
   const rootDir = mkdtempSync(join(tmpdir(), 'mediatracker-metadata-sync-'));
@@ -97,7 +104,7 @@ describe('metadata-sync-full.sh', () => {
       [
         '#!/bin/sh',
         'printf \'%s\\n\' "$*" > "$TEST_ARGS_FILE"',
-        'node -e "process.stdout.write(process.cwd())" > "$TEST_PWD_FILE"',
+        'node -e "const fs=require(\'fs\');const cwd=process.cwd();const resolved=fs.realpathSync.native?fs.realpathSync.native(cwd):fs.realpathSync(cwd);process.stdout.write(process.platform===\'win32\'?resolved.toLowerCase():resolved)" > "$TEST_PWD_FILE"',
         'env | sort > "$TEST_ENV_FILE"',
       ].join('\n') + '\n'
     );
@@ -130,8 +137,8 @@ describe('metadata-sync-full.sh', () => {
     expect(readFileSync(envFile, 'utf8')).toContain(
       'IGDB_CLIENT_SECRET=test-client-secret'
     );
-    expect(realpathSync(readFileSync(pwdFile, 'utf8').trim())).toBe(
-      realpathSync(rootDir)
+    expect(normalizeDirectory(readFileSync(pwdFile, 'utf8').trim())).toBe(
+      normalizeDirectory(rootDir)
     );
   });
 
