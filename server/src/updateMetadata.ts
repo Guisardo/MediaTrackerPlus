@@ -114,7 +114,7 @@ const mapWithConcurrency = async <T, Result>(
 
   await Promise.all(
     Array.from({ length: Math.min(concurrency, items.length) }, async () => {
-      while (true) {
+      for (;;) {
         const currentIndex = nextIndex++;
 
         if (currentIndex >= items.length) {

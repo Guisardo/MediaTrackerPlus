@@ -12,6 +12,7 @@ import { join, resolve } from 'path';
 import { spawnSync } from 'child_process';
 
 const sourceScriptPath = resolve(__dirname, '../../scripts/metadata-sync-full.sh');
+const shellExecutable = 'sh';
 
 const createTempRepo = () => {
   const rootDir = mkdtempSync(join(tmpdir(), 'mediatracker-metadata-sync-'));
@@ -22,7 +23,7 @@ const createTempRepo = () => {
 };
 
 const runMetadataSyncScript = (rootDir: string, env?: NodeJS.ProcessEnv) =>
-  spawnSync('/bin/sh', [join(rootDir, 'scripts/metadata-sync-full.sh')], {
+  spawnSync(shellExecutable, [join(rootDir, 'scripts/metadata-sync-full.sh')], {
     cwd: rootDir,
     env: {
       ...process.env,
