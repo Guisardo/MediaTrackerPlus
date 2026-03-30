@@ -282,6 +282,42 @@ describe('RatingController', () => {
       expect(seenEntries.length).toEqual(1);
     });
 
+    test('should remove the movie from the watchlist even when it was already seen', async () => {
+      const ratingController = new RatingController();
+
+      await Database.knex('seen').insert({
+        userId: Data.user.id,
+        mediaItemId: Data.movie.id,
+        episodeId: null,
+        date: Date.now(),
+      });
+
+      await Database.knex('listItem').insert({
+        listId: Data.watchlist.id,
+        mediaItemId: Data.movie.id,
+        seasonId: null,
+        episodeId: null,
+        addedAt: Date.now(),
+      });
+
+      await request(ratingController.add, {
+        userId: Data.user.id,
+        requestBody: {
+          mediaItemId: Data.movie.id,
+          rating: 8,
+        },
+      });
+
+      const watchlistItem = await Database.knex('listItem')
+        .where('listId', Data.watchlist.id)
+        .where('mediaItemId', Data.movie.id)
+        .whereNull('episodeId')
+        .whereNull('seasonId')
+        .first();
+
+      expect(watchlistItem).toBeUndefined();
+    });
+
     test('should remove the movie from the watchlist when auto-marked as seen on rating', async () => {
       const ratingController = new RatingController();
 
@@ -331,6 +367,37 @@ describe('RatingController', () => {
         .first();
 
       expect(seenEntry).toBeDefined();
+    });
+
+    test('should keep the TV show on the watchlist when only an episode is rated', async () => {
+      const ratingController = new RatingController();
+
+      await Database.knex('listItem').insert({
+        listId: Data.watchlist.id,
+        mediaItemId: Data.tvShow.id,
+        seasonId: null,
+        episodeId: null,
+        addedAt: Date.now(),
+      });
+
+      await request(ratingController.add, {
+        userId: Data.user.id,
+        requestBody: {
+          mediaItemId: Data.tvShow.id,
+          seasonId: Data.season.id,
+          episodeId: Data.episode.id,
+          rating: 9,
+        },
+      });
+
+      const watchlistItem = await Database.knex('listItem')
+        .where('listId', Data.watchlist.id)
+        .where('mediaItemId', Data.tvShow.id)
+        .whereNull('episodeId')
+        .whereNull('seasonId')
+        .first();
+
+      expect(watchlistItem).toBeDefined();
     });
 
     test('should not create a duplicate seen entry when the episode is already seen', async () => {
@@ -417,6 +484,36 @@ describe('RatingController', () => {
         expect(seenEntries.length).toEqual(3);
       });
 
+      test('should keep the TV show on the watchlist when only a season is rated', async () => {
+        const ratingController = new RatingController();
+
+        await Database.knex('listItem').insert({
+          listId: Data.watchlist.id,
+          mediaItemId: Data.tvShow.id,
+          seasonId: null,
+          episodeId: null,
+          addedAt: Date.now(),
+        });
+
+        await request(ratingController.add, {
+          userId: Data.user.id,
+          requestBody: {
+            mediaItemId: Data.tvShow.id,
+            seasonId: Data.season.id,
+            rating: 8,
+          },
+        });
+
+        const watchlistItem = await Database.knex('listItem')
+          .where('listId', Data.watchlist.id)
+          .where('mediaItemId', Data.tvShow.id)
+          .whereNull('episodeId')
+          .whereNull('seasonId')
+          .first();
+
+        expect(watchlistItem).toBeDefined();
+      });
+
       test('should only mark unseen episodes when rating a season with partial seen history', async () => {
         const ratingController = new RatingController();
 
@@ -474,6 +571,95 @@ describe('RatingController', () => {
           ]);
 
         expect(seenEntries.length).toEqual(3);
+      });
+
+      test('should remove the TV show from the watchlist when the TV show is rated', async () => {
+        const ratingController = new RatingController();
+
+        await Database.knex('listItem').insert({
+          listId: Data.watchlist.id,
+          mediaItemId: Data.tvShow.id,
+          seasonId: null,
+          episodeId: null,
+          addedAt: Date.now(),
+        });
+
+        await request(ratingController.add, {
+          userId: Data.user.id,
+          requestBody: {
+            mediaItemId: Data.tvShow.id,
+            rating: 10,
+          },
+        });
+
+        const watchlistItem = await Database.knex('listItem')
+          .where('listId', Data.watchlist.id)
+          .where('mediaItemId', Data.tvShow.id)
+          .whereNull('episodeId')
+          .whereNull('seasonId')
+          .first();
+
+        expect(watchlistItem).toBeUndefined();
+      });
+
+      test('should remove the TV show from the watchlist even when all released episodes were already seen', async () => {
+        const ratingController = new RatingController();
+
+        await Database.knex('listItem').insert({
+          listId: Data.watchlist.id,
+          mediaItemId: Data.tvShow.id,
+          seasonId: null,
+          episodeId: null,
+          addedAt: Date.now(),
+        });
+
+        await Database.knex('seen').insert([
+          {
+            userId: Data.user.id,
+            mediaItemId: Data.tvShow.id,
+            episodeId: Data.episode.id,
+            date: Date.now(),
+          },
+          {
+            userId: Data.user.id,
+            mediaItemId: Data.tvShow.id,
+            episodeId: Data.episode2.id,
+            date: Date.now(),
+          },
+          {
+            userId: Data.user.id,
+            mediaItemId: Data.tvShow.id,
+            episodeId: Data.episode3.id,
+            date: Date.now(),
+          },
+        ]);
+
+        await request(ratingController.add, {
+          userId: Data.user.id,
+          requestBody: {
+            mediaItemId: Data.tvShow.id,
+            rating: 10,
+          },
+        });
+
+        const seenEntries = await Database.knex('seen')
+          .where('userId', Data.user.id)
+          .where('mediaItemId', Data.tvShow.id)
+          .whereIn('episodeId', [
+            Data.episode.id,
+            Data.episode2.id,
+            Data.episode3.id,
+          ]);
+
+        const watchlistItem = await Database.knex('listItem')
+          .where('listId', Data.watchlist.id)
+          .where('mediaItemId', Data.tvShow.id)
+          .whereNull('episodeId')
+          .whereNull('seasonId')
+          .first();
+
+        expect(seenEntries.length).toEqual(3);
+        expect(watchlistItem).toBeUndefined();
       });
     });
   });
