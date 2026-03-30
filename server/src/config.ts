@@ -86,6 +86,16 @@ export class Config {
   static readonly AUDIBLE_LANG_MAP: string | null =
     process.env.AUDIBLE_LANG_MAP || null;
 
+  static readonly METADATA_SYNC_FETCH_CONCURRENCY = Math.max(
+    1,
+    Number(process.env.METADATA_SYNC_FETCH_CONCURRENCY) || 4
+  );
+
+  static readonly METADATA_SYNC_BATCH_SIZE = Math.max(
+    this.METADATA_SYNC_FETCH_CONCURRENCY,
+    Number(process.env.METADATA_SYNC_BATCH_SIZE) || 12
+  );
+
   static validate() {
     if (this.SERVER_LANG && !serverLang.includes(this.SERVER_LANG)) {
       throw new Error(
@@ -102,6 +112,16 @@ export class Config {
     if (this.AUDIBLE_LANG && !audibleLang.includes(this.AUDIBLE_LANG)) {
       throw new Error(
         `AUDIBLE_LANG should be one of: ${audibleLang}, received: ${this.AUDIBLE_LANG}`
+      );
+    }
+
+    if (this.METADATA_SYNC_FETCH_CONCURRENCY < 1) {
+      throw new Error('METADATA_SYNC_FETCH_CONCURRENCY should be at least 1');
+    }
+
+    if (this.METADATA_SYNC_BATCH_SIZE < this.METADATA_SYNC_FETCH_CONCURRENCY) {
+      throw new Error(
+        'METADATA_SYNC_BATCH_SIZE should be greater than or equal to METADATA_SYNC_FETCH_CONCURRENCY'
       );
     }
   }

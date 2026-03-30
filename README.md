@@ -21,6 +21,17 @@ npm run build
 npm run start
 ```
 
+To run a one-off full metadata refresh for every provider-backed item in your
+configured database:
+
+```bash
+npm run metadata:sync:full
+```
+
+This root command loads the repo root `.env`, aborts if `.env` is missing, and
+requires installed server dependencies. For lower-level usage where you manage
+the environment yourself, run `npm run metadata:sync:full --prefix server`.
+
 ## Local development
 
 ```bash
