@@ -3,6 +3,7 @@ import {
   copyFileSync,
   mkdtempSync,
   mkdirSync,
+  realpathSync,
   readFileSync,
   rmSync,
   writeFileSync,
@@ -96,7 +97,7 @@ describe('metadata-sync-full.sh', () => {
       [
         '#!/bin/sh',
         'printf \'%s\\n\' "$*" > "$TEST_ARGS_FILE"',
-        'pwd > "$TEST_PWD_FILE"',
+        'node -e "process.stdout.write(process.cwd())" > "$TEST_PWD_FILE"',
         'env | sort > "$TEST_ENV_FILE"',
       ].join('\n') + '\n'
     );
@@ -129,7 +130,9 @@ describe('metadata-sync-full.sh', () => {
     expect(readFileSync(envFile, 'utf8')).toContain(
       'IGDB_CLIENT_SECRET=test-client-secret'
     );
-    expect(readFileSync(pwdFile, 'utf8').trim()).toBe(rootDir);
+    expect(realpathSync(readFileSync(pwdFile, 'utf8').trim())).toBe(
+      realpathSync(rootDir)
+    );
   });
 
   test('prefers the repo-pinned Node/npm when .nvmrc matches an installed nvm version', () => {
