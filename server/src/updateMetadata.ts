@@ -261,6 +261,237 @@ const downloadNewAssets = async (
   );
 };
 
+type NotificationSender = (args: {
+  message: FormattedNotification;
+  filter: (user: User) => boolean;
+}) => Promise<void>;
+
+const createNotificationSender = (users: User[]): NotificationSender => {
+  return async (args) => {
+    await Promise.all(
+      users.filter(args.filter).map((user) =>
+        Notifications.send({
+          userId: user.id,
+          message: args.message,
+        })
+      )
+    );
+  };
+};
+
+const notifyStatusChange = async (args: {
+  oldMediaItem: MediaItemBaseWithSeasons;
+  newMediaItem: MediaItemBaseWithSeasons;
+  send: NotificationSender;
+}): Promise<void> => {
+  const { oldMediaItem, newMediaItem, send } = args;
+
+  if (
+    newMediaItem.status === oldMediaItem.status ||
+    (!newMediaItem.status && !oldMediaItem.status)
+  ) {
+    return;
+  }
+
+  const status = newMediaItem.status;
+
+  await send({
+    message: formatNotification(
+      (f) =>
+        t`Status changed for ${f.mediaItemUrl(newMediaItem)}: "${status}"`
+    ),
+    filter: (user) => user.sendNotificationWhenStatusChanges === true,
+  });
+};
+
+const notifyReleaseDateChange = async (args: {
+  oldMediaItem: MediaItemBaseWithSeasons;
+  newMediaItem: MediaItemBaseWithSeasons;
+  send: NotificationSender;
+}): Promise<void> => {
+  const { oldMediaItem, newMediaItem, send } = args;
+
+  if (
+    newMediaItem.releaseDate === oldMediaItem.releaseDate ||
+    !newMediaItem.releaseDate ||
+    parseISO(newMediaItem.releaseDate) <= new Date()
+  ) {
+    return;
+  }
+
+  const releaseDate = newMediaItem.releaseDate;
+
+  await send({
+    message: formatNotification(
+      (f) =>
+        t`Release date changed for ${f.mediaItemUrl(
+          newMediaItem
+        )}: "${releaseDate}"`
+    ),
+    filter: (user) => user.sendNotificationWhenReleaseDateChanges === true,
+  });
+};
+
+const getComparableNonSpecialSeasons = (
+  seasons: MediaItemBaseWithSeasons['seasons']
+): TvSeason[] =>
+  (seasons || [])
+    .filter(TvSeasonFilters.nonSpecialSeason)
+    .sort(TvSeasonFilters.seasonNumber);
+
+const getSeasonChangeContext = (args: {
+  oldMediaItem: MediaItemBaseWithSeasons;
+  newMediaItem: MediaItemBaseWithSeasons;
+}):
+  | { kind: 'none' }
+  | { kind: 'removed'; season: TvSeason }
+  | { kind: 'added'; season: TvSeason }
+  | { kind: 'updated'; oldSeason: TvSeason; newSeason: TvSeason } => {
+  const { oldMediaItem, newMediaItem } = args;
+
+  if (
+    newMediaItem.mediaType !== 'tv' ||
+    !oldMediaItem.seasons ||
+    !newMediaItem.seasons
+  ) {
+    return { kind: 'none' };
+  }
+
+  const oldSeasons = getComparableNonSpecialSeasons(oldMediaItem.seasons);
+  const newSeasons = getComparableNonSpecialSeasons(newMediaItem.seasons);
+
+  if (newSeasons.length < oldSeasons.length) {
+    const removedSeason = oldSeasons[newSeasons.length - 1];
+    return removedSeason
+      ? { kind: 'removed', season: removedSeason }
+      : { kind: 'none' };
+  }
+
+  if (newSeasons.length > oldSeasons.length) {
+    const newSeason = newSeasons[newSeasons.length - 1];
+    return newSeason ? { kind: 'added', season: newSeason } : { kind: 'none' };
+  }
+
+  const oldSeason = oldSeasons[oldSeasons.length - 1];
+  const newSeason = newSeasons[newSeasons.length - 1];
+
+  return oldSeason && newSeason
+    ? { kind: 'updated', oldSeason, newSeason }
+    : { kind: 'none' };
+};
+
+const notifyRemovedSeason = async (args: {
+  newMediaItem: MediaItemBaseWithSeasons;
+  season: TvSeason;
+  send: NotificationSender;
+}): Promise<void> => {
+  const { newMediaItem, season, send } = args;
+
+  await send({
+    message: formatNotification(
+      (f) =>
+        t`Season ${season.seasonNumber} of ${f.mediaItemUrl(
+          newMediaItem
+        )} has been canceled`
+    ),
+    filter: (user) => user.sendNotificationWhenNumberOfSeasonsChanges === true,
+  });
+};
+
+const notifyNewSeason = async (args: {
+  newMediaItem: MediaItemBaseWithSeasons;
+  season: TvSeason;
+  send: NotificationSender;
+}): Promise<void> => {
+  const { newMediaItem, season, send } = args;
+
+  if (season.releaseDate && parseISO(season.releaseDate) > new Date()) {
+    const releaseDate = parseISO(season.releaseDate).toLocaleDateString();
+
+    await send({
+      message: formatNotification(
+        (f) =>
+          t`New season of ${f.mediaItemUrl(
+            newMediaItem
+          )} will be released at ${releaseDate}`
+      ),
+      filter: (user) => user.sendNotificationWhenNumberOfSeasonsChanges === true,
+    });
+    return;
+  }
+
+  await send({
+    message: formatNotification(
+      (f) => t`${f.mediaItemUrl(newMediaItem)} got a new season`
+    ),
+    filter: (user) => user.sendNotificationWhenNumberOfSeasonsChanges === true,
+  });
+};
+
+const notifyUpdatedSeasonReleaseDate = async (args: {
+  newMediaItem: MediaItemBaseWithSeasons;
+  oldSeason: TvSeason;
+  newSeason: TvSeason;
+  send: NotificationSender;
+}): Promise<void> => {
+  const { newMediaItem, oldSeason, newSeason, send } = args;
+
+  if (
+    oldSeason.releaseDate === newSeason.releaseDate ||
+    !newSeason.releaseDate ||
+    parseISO(newSeason.releaseDate) <= new Date()
+  ) {
+    return;
+  }
+
+  const releaseDate = parseISO(newSeason.releaseDate).toLocaleDateString();
+
+  await send({
+    message: formatNotification(
+      (f) =>
+        t`Season ${newSeason.seasonNumber} of ${f.mediaItemUrl(
+          newMediaItem
+        )} will be released at ${releaseDate}`
+    ),
+    filter: (user) => user.sendNotificationWhenNumberOfSeasonsChanges === true,
+  });
+};
+
+const notifyTvSeasonChanges = async (args: {
+  oldMediaItem: MediaItemBaseWithSeasons;
+  newMediaItem: MediaItemBaseWithSeasons;
+  send: NotificationSender;
+}): Promise<void> => {
+  const seasonChange = getSeasonChangeContext(args);
+
+  if (seasonChange.kind === 'removed') {
+    await notifyRemovedSeason({
+      newMediaItem: args.newMediaItem,
+      season: seasonChange.season,
+      send: args.send,
+    });
+    return;
+  }
+
+  if (seasonChange.kind === 'added') {
+    await notifyNewSeason({
+      newMediaItem: args.newMediaItem,
+      season: seasonChange.season,
+      send: args.send,
+    });
+    return;
+  }
+
+  if (seasonChange.kind === 'updated') {
+    await notifyUpdatedSeasonReleaseDate({
+      newMediaItem: args.newMediaItem,
+      oldSeason: seasonChange.oldSeason,
+      newSeason: seasonChange.newSeason,
+      send: args.send,
+    });
+  }
+};
+
 const sendNotifications = async (
   oldMediaItem: MediaItemBaseWithSeasons,
   newMediaItem: MediaItemBaseWithSeasons
@@ -276,167 +507,11 @@ const sendNotifications = async (
     mediaItemId: oldMediaItem.id,
     minimumAge: newMediaItem.minimumAge,
   });
+  const send = createNotificationSender(users);
 
-  const send = async (args: {
-    message: FormattedNotification;
-    filter: (user: User) => boolean;
-  }) => {
-    await Promise.all(
-      users.filter(args.filter).map((user) =>
-        Notifications.send({
-          userId: user.id,
-          message: args.message,
-        })
-      )
-    );
-  };
-
-  if (
-    newMediaItem.status !== oldMediaItem.status &&
-    !(!newMediaItem.status && !oldMediaItem.status)
-  ) {
-    const status = newMediaItem.status;
-
-    await send({
-      message: formatNotification(
-        (f) =>
-          t`Status changed for ${f.mediaItemUrl(newMediaItem)}: "${status}"`
-      ),
-      filter: (user) => user.sendNotificationWhenStatusChanges === true,
-    });
-  }
-
-  if (
-    newMediaItem.releaseDate !== oldMediaItem.releaseDate &&
-    newMediaItem.releaseDate &&
-    parseISO(newMediaItem.releaseDate) > new Date()
-  ) {
-    const releaseDate = newMediaItem.releaseDate;
-
-    await send({
-      message: formatNotification(
-        (f) =>
-          t`Release date changed for ${f.mediaItemUrl(
-            newMediaItem
-          )}: "${releaseDate}"`
-      ),
-      filter: (user) => user.sendNotificationWhenReleaseDateChanges === true,
-    });
-  }
-
-  if (
-    newMediaItem.mediaType === 'tv' &&
-    oldMediaItem.seasons &&
-    newMediaItem.seasons
-  ) {
-    const oldMediaItemNonSpecialSeasons = oldMediaItem.seasons
-      .filter(TvSeasonFilters.nonSpecialSeason)
-      .sort(TvSeasonFilters.seasonNumber);
-    const newMediaItemNonSpecialSeasons = newMediaItem.seasons
-      .filter(TvSeasonFilters.nonSpecialSeason)
-      .sort(TvSeasonFilters.seasonNumber);
-
-    if (
-      newMediaItemNonSpecialSeasons.length <
-      oldMediaItemNonSpecialSeasons.length
-    ) {
-      const removedSeason =
-        oldMediaItemNonSpecialSeasons[
-          oldMediaItemNonSpecialSeasons.length +
-            newMediaItemNonSpecialSeasons.length -
-            oldMediaItemNonSpecialSeasons.length -
-            1
-        ];
-      if (!removedSeason) {
-        return;
-      }
-
-      const seasonNumber = removedSeason.seasonNumber;
-
-      await send({
-        message: formatNotification(
-          (f) =>
-            t`Season ${seasonNumber} of ${f.mediaItemUrl(
-              newMediaItem
-            )} has been canceled`
-        ),
-        filter: (user) => user.sendNotificationWhenNumberOfSeasonsChanges === true,
-      });
-    } else if (
-      newMediaItemNonSpecialSeasons.length >
-      oldMediaItemNonSpecialSeasons.length
-    ) {
-      const newSeason =
-        newMediaItemNonSpecialSeasons[
-          oldMediaItemNonSpecialSeasons.length +
-            newMediaItemNonSpecialSeasons.length -
-            oldMediaItemNonSpecialSeasons.length -
-            1
-        ];
-      if (!newSeason) {
-        return;
-      }
-
-      if (newSeason.releaseDate) {
-        if (parseISO(newSeason.releaseDate) > new Date()) {
-          const releaseDate = parseISO(
-            newSeason.releaseDate
-          ).toLocaleDateString();
-
-          await send({
-            message: formatNotification(
-              (f) =>
-                t`New season of ${f.mediaItemUrl(
-                  newMediaItem
-                )} will be released at ${releaseDate}`
-            ),
-            filter: (user) =>
-              user.sendNotificationWhenNumberOfSeasonsChanges === true,
-          });
-        }
-      } else {
-        await send({
-          message: formatNotification(
-            (f) => t`${f.mediaItemUrl(newMediaItem)} got a new season`
-          ),
-
-          filter: (user) =>
-            user.sendNotificationWhenNumberOfSeasonsChanges === true,
-        });
-      }
-    } else if (oldMediaItemNonSpecialSeasons.length > 0) {
-      const oldMediaItemLastSeason =
-        oldMediaItemNonSpecialSeasons[oldMediaItemNonSpecialSeasons.length - 1];
-      const newMediaItemLastSeason =
-        newMediaItemNonSpecialSeasons[newMediaItemNonSpecialSeasons.length - 1];
-      if (!oldMediaItemLastSeason || !newMediaItemLastSeason) {
-        return;
-      }
-
-      if (
-        oldMediaItemLastSeason.releaseDate !==
-          newMediaItemLastSeason.releaseDate &&
-        newMediaItemLastSeason.releaseDate &&
-        parseISO(newMediaItemLastSeason.releaseDate) > new Date()
-      ) {
-        const seasonNumber = newMediaItemLastSeason.seasonNumber;
-        const releaseDate = parseISO(
-          newMediaItemLastSeason.releaseDate
-        ).toLocaleDateString();
-
-        await send({
-          message: formatNotification(
-            (f) =>
-              t`Season ${seasonNumber} of ${f.mediaItemUrl(
-                newMediaItem
-              )} will be released at ${releaseDate}`
-          ),
-          filter: (user) =>
-            user.sendNotificationWhenNumberOfSeasonsChanges === true,
-        });
-      }
-    }
-  }
+  await notifyStatusChange({ oldMediaItem, newMediaItem, send });
+  await notifyReleaseDateChange({ oldMediaItem, newMediaItem, send });
+  await notifyTvSeasonChanges({ oldMediaItem, newMediaItem, send });
 };
 
 type SeasonEpisodeIdMaps = {
@@ -671,6 +746,149 @@ const upsertPreparedGameLocalizations = async (args: {
   await upsertMediaItemTranslations(rows);
 };
 
+const logMediaItemUpdateStart = (
+  mediaItem: MediaItemBaseWithSeasons
+): void => {
+  if (mediaItem.lastTimeUpdated) {
+    const date = chalk.blue(new Date(mediaItem.lastTimeUpdated).toLocaleString());
+    logger.info(t`Updating: ${mediaItem.title} (last updated at: ${date})`);
+    return;
+  }
+
+  logger.info(t`Updating: ${mediaItem.title}`);
+};
+
+const resolveUpdateMediaItemData = async (args: {
+  oldMediaItem: MediaItemBaseWithSeasons;
+  preloaded?: UpdateMediaItemPreloadedData;
+}): Promise<{
+  metadataProvider: MetadataProvider;
+  newMediaItem: MediaItemForProvider;
+}> => {
+  const { oldMediaItem, preloaded } = args;
+  const metadataProvider =
+    preloaded?.metadataProvider ??
+    metadataProviders.get(oldMediaItem.mediaType, oldMediaItem.source);
+
+  if (!metadataProvider) {
+    throw new Error(
+      `No metadata provider "${oldMediaItem.source}" for media type ${oldMediaItem.mediaType}`
+    );
+  }
+
+  const newMediaItem =
+    preloaded?.newMediaItem ?? (await metadataProvider.details(oldMediaItem));
+
+  if (!newMediaItem) {
+    throw new Error('No metadata');
+  }
+
+  return {
+    metadataProvider,
+    newMediaItem,
+  };
+};
+
+const buildUpdatedMediaItem = async (args: {
+  oldMediaItem: MediaItemBaseWithSeasons;
+  newMediaItem: MediaItemForProvider;
+}): Promise<MediaItemBaseWithSeasons | undefined> => {
+  const { oldMediaItem, newMediaItem } = args;
+
+  if (newMediaItem.mediaType === 'tv') {
+    return await margeTvShow(oldMediaItem, newMediaItem);
+  }
+
+  return {
+    ...newMediaItem,
+    lastTimeUpdated: new Date().getTime(),
+    id: oldMediaItem.id,
+  };
+};
+
+const persistUpdatedMediaItem = async (args: {
+  oldMediaItem: MediaItemBaseWithSeasons;
+  updatedMediaItem?: MediaItemBaseWithSeasons;
+}): Promise<MediaItemBaseWithSeasons | undefined> => {
+  const { oldMediaItem, updatedMediaItem } = args;
+
+  if (!updatedMediaItem) {
+    return updatedMediaItem;
+  }
+
+  const persistedMediaItem = await mediaItemRepository.update(updatedMediaItem);
+  await downloadNewAssets(oldMediaItem, persistedMediaItem);
+
+  if (!oldMediaItem.needsDetails) {
+    await sendNotifications(oldMediaItem, persistedMediaItem);
+  }
+
+  return persistedMediaItem;
+};
+
+const applyUpdatedMediaItemLocalizations = async (args: {
+  oldMediaItem: MediaItemBaseWithSeasons;
+  metadataProvider: MetadataProvider;
+  newMediaItem: MediaItemForProvider;
+  persistedMediaItem?: MediaItemBaseWithSeasons;
+  preloaded?: UpdateMediaItemPreloadedData;
+}): Promise<void> => {
+  const {
+    oldMediaItem,
+    metadataProvider,
+    newMediaItem,
+    persistedMediaItem,
+    preloaded,
+  } = args;
+
+  if (!persistedMediaItem) {
+    return;
+  }
+
+  if (metadataProvider.localizedDetails != null) {
+    const localizedDetails =
+      preloaded?.localizedDetails ??
+      (await fetchLocalizedDetails(
+        metadataProvider,
+        oldMediaItem,
+        getMetadataLanguages()
+      ));
+
+    await upsertPreparedTranslations({
+      mediaItemId: oldMediaItem.id,
+      baseData: newMediaItem,
+      localizedDetails,
+      updatedMediaItem: persistedMediaItem,
+    });
+  }
+
+  if (metadataProvider.fetchGameLocalizations != null) {
+    const gameLocalizations =
+      preloaded?.gameLocalizations ??
+      (await fetchGameLocalizations(metadataProvider, oldMediaItem));
+
+    await upsertPreparedGameLocalizations({
+      mediaItemId: oldMediaItem.id,
+      languages: getMetadataLanguages(),
+      localizations: gameLocalizations,
+    });
+  }
+};
+
+const handleUpdateMediaItemError = async (args: {
+  oldMediaItem: MediaItemBaseWithSeasons;
+  error: unknown;
+}): Promise<never> => {
+  const { oldMediaItem, error } = args;
+
+  if (isUpstreamMetadataNotFound(error)) {
+    await touchMediaItemLastUpdated(oldMediaItem);
+    throw new MissingUpstreamMetadataError(oldMediaItem);
+  }
+
+  throw error;
+};
+
 export const updateMediaItem = async (
   oldMediaItem?: MediaItemBaseWithSeasons,
   preloaded?: UpdateMediaItemPreloadedData
@@ -679,100 +897,37 @@ export const updateMediaItem = async (
     return;
   }
 
-  const title = oldMediaItem.title;
-
-  if (oldMediaItem.lastTimeUpdated) {
-    const date = chalk.blue(
-      new Date(oldMediaItem.lastTimeUpdated).toLocaleString()
-    );
-
-    logger.info(t`Updating: ${title} (last updated at: ${date})`);
-  } else {
-    logger.info(t`Updating: ${title}`);
-  }
+  logMediaItemUpdateStart(oldMediaItem);
 
   await mediaItemRepository.lock(oldMediaItem.id);
 
   try {
-    const metadataProvider =
-      preloaded?.metadataProvider ??
-      metadataProviders.get(oldMediaItem.mediaType, oldMediaItem.source);
+    const { metadataProvider, newMediaItem } = await resolveUpdateMediaItemData({
+      oldMediaItem,
+      preloaded,
+    });
+    const updatedMediaItem = await buildUpdatedMediaItem({
+      oldMediaItem,
+      newMediaItem,
+    });
+    const persistedMediaItem = await persistUpdatedMediaItem({
+      oldMediaItem,
+      updatedMediaItem,
+    });
 
-    if (!metadataProvider) {
-      throw new Error(
-        `No metadata provider "${oldMediaItem.source}" for media type ${oldMediaItem.mediaType}`
-      );
-    }
-
-    const newMediaItem =
-      preloaded?.newMediaItem ?? (await metadataProvider.details(oldMediaItem));
-
-    if (!newMediaItem) {
-      throw new Error('No metadata');
-    }
-
-    const updatedMediaItem =
-      newMediaItem.mediaType === 'tv'
-        ? await margeTvShow(oldMediaItem, newMediaItem)
-        : {
-            ...newMediaItem,
-            lastTimeUpdated: new Date().getTime(),
-            id: oldMediaItem.id,
-          };
-
-    let persistedMediaItem = updatedMediaItem;
-
-    if (updatedMediaItem) {
-      persistedMediaItem = await mediaItemRepository.update(updatedMediaItem);
-      await downloadNewAssets(oldMediaItem, persistedMediaItem);
-
-      if (!oldMediaItem.needsDetails) {
-        await sendNotifications(oldMediaItem, persistedMediaItem);
-      }
-    }
-
-    if (persistedMediaItem) {
-      if (metadataProvider.localizedDetails != null) {
-        const localizedDetails =
-          preloaded?.localizedDetails ??
-          (await fetchLocalizedDetails(
-            metadataProvider,
-            oldMediaItem,
-            getMetadataLanguages()
-          ));
-
-        await upsertPreparedTranslations({
-          mediaItemId: oldMediaItem.id,
-          baseData: newMediaItem,
-          localizedDetails,
-          updatedMediaItem: persistedMediaItem,
-        });
-      }
-
-      if (metadataProvider.fetchGameLocalizations != null) {
-        const gameLocalizations =
-          preloaded?.gameLocalizations ??
-          (await fetchGameLocalizations(metadataProvider, oldMediaItem));
-
-        await upsertPreparedGameLocalizations({
-          mediaItemId: oldMediaItem.id,
-          languages: getMetadataLanguages(),
-          localizations: gameLocalizations,
-        });
-      }
-    }
+    await applyUpdatedMediaItemLocalizations({
+      oldMediaItem,
+      metadataProvider,
+      newMediaItem,
+      persistedMediaItem,
+      preloaded,
+    });
 
     await mediaItemRepository.unlock(oldMediaItem.id);
     return persistedMediaItem;
   } catch (error) {
     await mediaItemRepository.unlock(oldMediaItem.id);
-
-    if (isUpstreamMetadataNotFound(error)) {
-      await touchMediaItemLastUpdated(oldMediaItem);
-      throw new MissingUpstreamMetadataError(oldMediaItem);
-    }
-
-    throw error;
+    await handleUpdateMediaItemError({ oldMediaItem, error });
   }
 };
 
@@ -1013,6 +1168,162 @@ const prepareMediaItemFetch = async (
   }
 };
 
+type MetadataUpdateCounters = {
+  numberOfUpdatedItems: number;
+  numberOfSkippedItems: number;
+  numberOfFailures: number;
+};
+
+const createMetadataUpdateCounters = (): MetadataUpdateCounters => ({
+  numberOfUpdatedItems: 0,
+  numberOfSkippedItems: 0,
+  numberOfFailures: 0,
+});
+
+const shouldCancelMetadataUpdate = (
+  cancellationToken?: CancellationToken
+): boolean => {
+  if (!cancellationToken?.shouldCancel) {
+    return false;
+  }
+
+  logger.info(chalk.bold('Updating metadata canceled'));
+  return true;
+};
+
+const logMetadataUpdateError = (error: unknown): void => {
+  logger.error(chalk.red(error instanceof Error ? error.toString() : String(error)));
+};
+
+const logUpstream404Skip = (title: string): void => {
+  logger.warn(
+    chalk.yellow(
+      `Skipping ${title}: upstream metadata returned 404. Keeping local metadata and refreshing lastTimeUpdated.`
+    )
+  );
+};
+
+const handlePreparedFetchFailure = async (args: {
+  prepared: PreparedMediaItemFetch;
+  counters: MetadataUpdateCounters;
+}): Promise<boolean> => {
+  const { prepared, counters } = args;
+
+  if (!prepared.error) {
+    return false;
+  }
+
+  if (isUpstreamMetadataNotFound(prepared.error)) {
+    try {
+      await handleUpstream404WithoutPreparedApply(prepared.mediaItem);
+      logUpstream404Skip(prepared.mediaItem.title);
+      counters.numberOfSkippedItems++;
+    } catch (error) {
+      logMetadataUpdateError(error);
+      counters.numberOfFailures++;
+    }
+    return true;
+  }
+
+  logMetadataUpdateError(prepared.error);
+  counters.numberOfFailures++;
+  return true;
+};
+
+const hasPreparedMediaItemPayload = (
+  prepared: PreparedMediaItemFetch
+): prepared is PreparedMediaItemFetch &
+  Required<Pick<PreparedMediaItemFetch, 'metadataProvider' | 'newMediaItem'>> =>
+  prepared.metadataProvider != null && prepared.newMediaItem != null;
+
+const applyPreparedMediaItemUpdate = async (args: {
+  prepared: PreparedMediaItemFetch;
+  counters: MetadataUpdateCounters;
+}): Promise<void> => {
+  const { prepared, counters } = args;
+
+  if (!hasPreparedMediaItemPayload(prepared)) {
+    logger.error(
+      chalk.red(
+        `Missing prepared metadata payload for media item ${prepared.mediaItem.id}`
+      )
+    );
+    counters.numberOfFailures++;
+    return;
+  }
+
+  try {
+    await updateMediaItem(prepared.mediaItem, {
+      metadataProvider: prepared.metadataProvider,
+      newMediaItem: prepared.newMediaItem,
+      localizedDetails: prepared.localizedDetails,
+      gameLocalizations: prepared.gameLocalizations,
+    });
+    counters.numberOfUpdatedItems++;
+  } catch (error) {
+    if (error instanceof MissingUpstreamMetadataError) {
+      logUpstream404Skip(error.mediaItem.title);
+      counters.numberOfSkippedItems++;
+      return;
+    }
+
+    logMetadataUpdateError(error);
+    counters.numberOfFailures++;
+  }
+};
+
+const logMetadataUpdateSummary = (
+  counters: MetadataUpdateCounters
+): void => {
+  const {
+    numberOfUpdatedItems,
+    numberOfSkippedItems,
+    numberOfFailures,
+  } = counters;
+
+  if (
+    numberOfUpdatedItems === 0 &&
+    numberOfSkippedItems === 0 &&
+    numberOfFailures === 0
+  ) {
+    logger.info(chalk.bold.green(t`Everything up to date`));
+    return;
+  }
+
+  if (numberOfUpdatedItems > 0) {
+    logger.info(
+      chalk.bold.green(
+        plural(numberOfUpdatedItems, {
+          one: 'Updated 1 item',
+          other: 'Updated # items',
+        })
+      )
+    );
+  }
+
+  if (numberOfSkippedItems > 0) {
+    logger.warn(
+      chalk.bold.yellow(
+        plural(numberOfSkippedItems, {
+          one: 'Skipped 1 item because upstream metadata returned 404',
+          other: 'Skipped # items because upstream metadata returned 404',
+        })
+      )
+    );
+  }
+
+  if (numberOfFailures > 0) {
+    logger.error(
+      chalk.bold.red(
+        plural(numberOfFailures, {
+          one: 'Failed to update 1 item',
+          other: 'Failed to update # items',
+        })
+      )
+    );
+  }
+};
+
 export const updateMediaItems = async (args: {
   mediaItems: MediaItemBaseWithSeasons[];
   cancellationToken?: CancellationToken;
@@ -1029,9 +1340,7 @@ export const updateMediaItems = async (args: {
     )
   );
 
-  let numberOfUpdatedItems = 0;
-  let numberOfSkippedItems = 0;
-  let numberOfFailures = 0;
+  const counters = createMetadataUpdateCounters();
   const selectedMediaItems = mediaItems.filter((mediaItem) =>
     forceUpdate ? true : shouldUpdate(mediaItem)
   );
@@ -1040,8 +1349,7 @@ export const updateMediaItems = async (args: {
     selectedMediaItems,
     METADATA_SYNC_BATCH_SIZE
   )) {
-    if (cancellationToken?.shouldCancel) {
-      logger.info(chalk.bold('Updating metadata canceled'));
+    if (shouldCancelMetadataUpdate(cancellationToken)) {
       break;
     }
 
@@ -1053,124 +1361,19 @@ export const updateMediaItems = async (args: {
 
     // SQLite writes remain serialized item-by-item during apply.
     for (const prepared of preparedBatch) {
-      if (cancellationToken?.shouldCancel) {
-        logger.info(chalk.bold('Updating metadata canceled'));
+      if (shouldCancelMetadataUpdate(cancellationToken)) {
         break;
       }
 
-      if (prepared.error) {
-        if (isUpstreamMetadataNotFound(prepared.error)) {
-          try {
-            await handleUpstream404WithoutPreparedApply(prepared.mediaItem);
-            logger.warn(
-              chalk.yellow(
-                `Skipping ${prepared.mediaItem.title}: upstream metadata returned 404. Keeping local metadata and refreshing lastTimeUpdated.`
-              )
-            );
-            numberOfSkippedItems++;
-          } catch (error) {
-            logger.error(
-              chalk.red(error instanceof Error ? error.toString() : String(error))
-            );
-            numberOfFailures++;
-          }
-          continue;
-        }
-
-        logger.error(
-          chalk.red(
-            prepared.error instanceof Error
-              ? prepared.error.toString()
-              : String(prepared.error)
-          )
-        );
-        numberOfFailures++;
+      if (await handlePreparedFetchFailure({ prepared, counters })) {
         continue;
       }
 
-      if (!prepared.metadataProvider || !prepared.newMediaItem) {
-        logger.error(
-          chalk.red(
-            `Missing prepared metadata payload for media item ${prepared.mediaItem.id}`
-          )
-        );
-        numberOfFailures++;
-        continue;
-      }
-
-      try {
-        await updateMediaItem(prepared.mediaItem, {
-          metadataProvider: prepared.metadataProvider,
-          newMediaItem: prepared.newMediaItem,
-          localizedDetails: prepared.localizedDetails,
-          gameLocalizations: prepared.gameLocalizations,
-        });
-        numberOfUpdatedItems++;
-      } catch (error) {
-        if (error instanceof MissingUpstreamMetadataError) {
-          logger.warn(
-            chalk.yellow(
-              `Skipping ${error.mediaItem.title}: upstream metadata returned 404. Keeping local metadata and refreshing lastTimeUpdated.`
-            )
-          );
-          numberOfSkippedItems++;
-          continue;
-        }
-
-        logger.error(
-          chalk.red(error instanceof Error ? error.toString() : String(error))
-        );
-        numberOfFailures++;
-      }
+      await applyPreparedMediaItemUpdate({ prepared, counters });
     }
   }
 
-  if (
-    numberOfUpdatedItems === 0 &&
-    numberOfSkippedItems === 0 &&
-    numberOfFailures === 0
-  ) {
-    logger.info(chalk.bold.green(t`Everything up to date`));
-  } else {
-    if (numberOfUpdatedItems > 0) {
-      const count = numberOfUpdatedItems;
-
-      logger.info(
-        chalk.bold.green(
-          plural(count, {
-            one: 'Updated 1 item',
-            other: 'Updated # items',
-          })
-        )
-      );
-    }
-
-    if (numberOfSkippedItems > 0) {
-      const count = numberOfSkippedItems;
-
-      logger.warn(
-        chalk.bold.yellow(
-          plural(count, {
-            one: 'Skipped 1 item because upstream metadata returned 404',
-            other: 'Skipped # items because upstream metadata returned 404',
-          })
-        )
-      );
-    }
-
-    if (numberOfFailures > 0) {
-      const count = numberOfFailures;
-
-      logger.error(
-        chalk.bold.red(
-          plural(count, {
-            one: 'Failed to update 1 item',
-            other: 'Failed to update # items',
-          })
-        )
-      );
-    }
-  }
+  logMetadataUpdateSummary(counters);
 
   cancellationToken?.complected();
 };

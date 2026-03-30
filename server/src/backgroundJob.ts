@@ -27,79 +27,84 @@ export type BackgroundJobConfig = {
   demo?: boolean;
 };
 
-export const initializeBackgroundJob = async (
-  args: BackgroundJobConfig
-): Promise<Configuration> => {
-  const {
-    serverLang,
-    tmdbLang,
-    audibleLang,
-    igdbClientId,
-    igdbClientSecret,
-    demo,
-  } = args;
-
+const initializeBackgroundJobInfrastructure = async (): Promise<void> => {
   Config.migrate();
   Config.validate();
   logger.init();
   Database.init();
   await Database.runMigrations();
   await catchAndLogError(cleanupSoftDeletedGroups);
+};
 
+const logBackgroundJobEnvironment = (): void => {
   logger.info(
     `Server timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}`
   );
   logger.info(`Server time: ${new Date().toLocaleString()}`);
+};
 
-  let configuration = await configurationRepository.get();
+const buildDefaultConfiguration = (
+  args: BackgroundJobConfig
+): Configuration => ({
+  enableRegistration: true,
+  serverLang: args.serverLang || 'en',
+  tmdbLang: args.tmdbLang || 'en',
+  audibleLang: args.audibleLang || 'us',
+  igdbClientId: args.igdbClientId,
+  igdbClientSecret: args.igdbClientSecret,
+});
 
-  if (!configuration) {
-    await configurationRepository.create({
-      enableRegistration: true,
-      serverLang: serverLang || 'en',
-      tmdbLang: tmdbLang || 'en',
-      audibleLang: audibleLang || 'us',
-      igdbClientId: igdbClientId,
-      igdbClientSecret: igdbClientSecret,
-    });
+const synchronizeConfiguration = async (
+  args: BackgroundJobConfig
+): Promise<Configuration> => {
+  const fallbackConfiguration = buildDefaultConfiguration(args);
+  const currentConfiguration = await configurationRepository.get();
+
+  if (!currentConfiguration) {
+    await configurationRepository.create(fallbackConfiguration);
   } else {
     await configurationRepository.update({
-      serverLang: serverLang || configuration.serverLang,
-      tmdbLang: tmdbLang || configuration.tmdbLang,
-      audibleLang: audibleLang || configuration.audibleLang,
-      igdbClientId: igdbClientId || configuration.igdbClientId,
-      igdbClientSecret: igdbClientSecret || configuration.igdbClientSecret,
+      serverLang: args.serverLang || currentConfiguration.serverLang,
+      tmdbLang: args.tmdbLang || currentConfiguration.tmdbLang,
+      audibleLang: args.audibleLang || currentConfiguration.audibleLang,
+      igdbClientId: args.igdbClientId || currentConfiguration.igdbClientId,
+      igdbClientSecret:
+        args.igdbClientSecret || currentConfiguration.igdbClientSecret,
     });
   }
 
-  configuration = await configurationRepository.get();
-  const resolvedConfiguration = configuration ?? {
-    enableRegistration: true,
-    serverLang: serverLang || 'en',
-    tmdbLang: tmdbLang || 'en',
-    audibleLang: audibleLang || 'us',
-    igdbClientId: igdbClientId,
-    igdbClientSecret: igdbClientSecret,
-  };
+  return (await configurationRepository.get()) ?? fallbackConfiguration;
+};
 
-  setupI18n(resolvedConfiguration.serverLang || serverLang || 'en');
+const enableDemoMode = async (): Promise<void> => {
+  const demoUser = await userRepository.findOne({ name: 'demo' });
 
-  if (demo) {
-    const demoUser = await userRepository.findOne({ name: 'demo' });
-
-    if (!demoUser) {
-      await userRepository.create({
-        name: 'demo',
-        password: 'demo',
-        admin: false,
-      });
-    }
-
-    await configurationRepository.update({
-      enableRegistration: false,
+  if (!demoUser) {
+    await userRepository.create({
+      name: 'demo',
+      password: 'demo',
+      admin: false,
     });
+  }
 
-    logger.info(chalk.green.bold(t`DEMO mode enabled`));
+  await configurationRepository.update({
+    enableRegistration: false,
+  });
+
+  logger.info(chalk.green.bold(t`DEMO mode enabled`));
+};
+
+export const initializeBackgroundJob = async (
+  args: BackgroundJobConfig
+): Promise<Configuration> => {
+  await initializeBackgroundJobInfrastructure();
+  logBackgroundJobEnvironment();
+
+  const resolvedConfiguration = await synchronizeConfiguration(args);
+  setupI18n(resolvedConfiguration.serverLang || args.serverLang || 'en');
+
+  if (args.demo) {
+    await enableDemoMode();
   }
 
   return (await configurationRepository.get()) ?? resolvedConfiguration;
