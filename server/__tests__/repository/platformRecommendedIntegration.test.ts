@@ -162,7 +162,7 @@ describe('Platform Recommended Sort — end-to-end integration', () => {
       .whereIn('mediaItemId', [Data.movie.id, Data.tvShow.id, Data.videoGame.id])
       .update({ estimatedRating: null });
 
-    // autoMarkAsSeen removes non-TV items from the watchlist when they are rated.
+    // autoMarkAsSeen removes top-level rated items from the watchlist.
     // Re-insert any listItems that were deleted so each test starts with a full set.
     const existingListItems = await Database.knex('listItem')
       .whereIn('mediaItemId', [Data.movie.id, Data.tvShow.id, Data.videoGame.id])
@@ -218,7 +218,7 @@ describe('Platform Recommended Sort — end-to-end integration', () => {
 
       // autoMarkAsSeen marks the movie as seen and removes it from the watchlist.
       // Clear those side effects before querying platform-recommended results so the
-      // test focuses on sort order (not the seen/watchlist removal behaviour).
+      // test focuses on sort order, not watchlist removal behaviour.
       await Database.knex('seen').delete();
       const movieListItem = await Database.knex('listItem')
         .where({ listId: Data.watchlist.id, mediaItemId: Data.movie.id })
@@ -321,9 +321,9 @@ describe('Platform Recommended Sort — end-to-end integration', () => {
       global.setImmediate = mock3.originalSetImmediate;
     }
 
-    // autoMarkAsSeen marks rated items as seen and removes non-TV items from the
-    // watchlist. Clear those side effects before querying platform-recommended results
-    // so the test focuses on sort order driven by platformRating, not seen-state filtering.
+    // autoMarkAsSeen marks rated items as seen and removes top-level rated items
+    // from the watchlist. Restore those rows before querying platform-recommended
+    // results so the test focuses on platformRating sort order.
     await Database.knex('seen').delete();
     const movieListItemAfterRating = await Database.knex('listItem')
       .where({ listId: Data.watchlist.id, mediaItemId: Data.movie.id })
@@ -334,6 +334,18 @@ describe('Platform Recommended Sort — end-to-end integration', () => {
       await Database.knex('listItem').insert({
         listId: Data.watchlist.id,
         mediaItemId: Data.movie.id,
+        addedAt: Date.now(),
+      });
+    }
+    const tvShowListItemAfterRating = await Database.knex('listItem')
+      .where({ listId: Data.watchlist.id, mediaItemId: Data.tvShow.id })
+      .whereNull('seasonId')
+      .whereNull('episodeId')
+      .first();
+    if (!tvShowListItemAfterRating) {
+      await Database.knex('listItem').insert({
+        listId: Data.watchlist.id,
+        mediaItemId: Data.tvShow.id,
         addedAt: Date.now(),
       });
     }
