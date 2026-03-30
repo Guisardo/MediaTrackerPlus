@@ -383,6 +383,27 @@ const applyPlatformRecommendedExclusions = (
   )`);
 };
 
+const applyRatedRecommendationExclusions = (
+  query: LibraryQuery,
+  args: {
+    onlyOnWatchlist?: boolean;
+    orderBy?: string;
+  }
+) => {
+  const { onlyOnWatchlist, orderBy } = args;
+
+  if (orderBy !== 'recommended' || onlyOnWatchlist !== true) {
+    return;
+  }
+
+  query.whereRaw(
+    `NOT (
+      "listItem"."estimatedRating" IS NOT NULL
+      AND "userRating"."rating" IS NOT NULL
+    )`
+  );
+};
+
 const applyNextAiringFilter = (
   query: LibraryQuery,
   args: {
@@ -1037,6 +1058,10 @@ const getItemsKnexSql = async (args: GetItemsKnexArgs) => {
         lastSeenColumn: 'lastSeen2.mediaItemId',
       }
     );
+    applyRatedRecommendationExclusions(query, {
+      onlyOnWatchlist,
+      orderBy,
+    });
     applyNextAiringFilter(query, {
       currentDateString,
       mediaType,
@@ -1357,6 +1382,10 @@ export const getFacetsKnex = async (
       lastSeenColumn: 'lastSeen.mediaItemId',
     }
   );
+  applyRatedRecommendationExclusions(query, {
+    onlyOnWatchlist,
+    orderBy: args.orderBy,
+  });
 
   applyAgeGatingToLibraryQuery(query, viewerAge);
 

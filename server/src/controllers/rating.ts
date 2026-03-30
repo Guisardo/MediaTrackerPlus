@@ -52,9 +52,10 @@ async function getRecommendationService(): Promise<RecommendationService> {
  * - Season: creates seen entries for all non-special, released episodes in the
  *   season that the user has not already seen.
  * - TV show (no seasonId/episodeId): creates seen entries for all non-special,
- *   released episodes across the entire show that the user has not already seen.
+ *   released episodes across the entire show that the user has not already seen,
+ *   then removes the show from the user's watchlist.
  * - Non-TV media item (movie, book, game, etc.): creates a single seen entry
- *   and removes the item from the user's watchlist.
+ *   when needed and removes the item from the user's watchlist.
  *
  * No duplicate seen entries are created: each case checks for existing records
  * before inserting.
@@ -71,6 +72,13 @@ async function autoMarkAsSeen({
   episodeId?: number;
 }): Promise<void> {
   const now = Date.now();
+  const removeTopLevelWatchlistItem = async () => {
+    await listItemRepository.removeItem({
+      userId,
+      mediaItemId,
+      watchlist: true,
+    });
+  };
 
   if (episodeId) {
     const alreadySeen = await seenRepository.findOne({ userId, episodeId });
@@ -148,41 +156,41 @@ async function autoMarkAsSeen({
       .filter(TvEpisodeFilters.nonSpecialEpisodes)
       .filter(TvEpisodeFilters.releasedEpisodes);
 
-    if (filteredEpisodes.length === 0) {
-      return;
-    }
+    if (filteredEpisodes.length > 0) {
+      const alreadySeenEpisodeIds = new Set(
+        (
+          await Database.knex<Seen>('seen')
+            .where('userId', userId)
+            .whereIn(
+              'episodeId',
+              filteredEpisodes.map((e) => e.id)
+            )
+            .select('episodeId')
+        ).map((s) => s.episodeId)
+      );
 
-    const alreadySeenEpisodeIds = new Set(
-      (
-        await Database.knex<Seen>('seen')
-          .where('userId', userId)
-          .whereIn(
-            'episodeId',
-            filteredEpisodes.map((e) => e.id)
+      const unseenEpisodes = filteredEpisodes.filter(
+        (episode) => !alreadySeenEpisodeIds.has(episode.id)
+      );
+
+      if (unseenEpisodes.length > 0) {
+        logger.debug(
+          `autoMarkAsSeen: marking ${unseenEpisodes.length} episodes of TV show ${mediaItemId} as seen for user ${userId}`
+        );
+        await seenRepository.createMany(
+          unseenEpisodes.map(
+            (episode): Seen => ({
+              userId,
+              mediaItemId,
+              episodeId: episode.id,
+              date: now,
+            })
           )
-          .select('episodeId')
-      ).map((s) => s.episodeId)
-    );
-
-    const unseenEpisodes = filteredEpisodes.filter(
-      (episode) => !alreadySeenEpisodeIds.has(episode.id)
-    );
-
-    if (unseenEpisodes.length > 0) {
-      logger.debug(
-        `autoMarkAsSeen: marking ${unseenEpisodes.length} episodes of TV show ${mediaItemId} as seen for user ${userId}`
-      );
-      await seenRepository.createMany(
-        unseenEpisodes.map(
-          (episode): Seen => ({
-            userId,
-            mediaItemId,
-            episodeId: episode.id,
-            date: now,
-          })
-        )
-      );
+        );
+      }
     }
+
+    await removeTopLevelWatchlistItem();
   } else {
     const alreadySeen = await Database.knex<Seen>('seen')
       .where('userId', userId)
@@ -200,13 +208,9 @@ async function autoMarkAsSeen({
         episodeId: null,
         date: now,
       });
-
-      await listItemRepository.removeItem({
-        userId,
-        mediaItemId,
-        watchlist: true,
-      });
     }
+
+    await removeTopLevelWatchlistItem();
   }
 }
 

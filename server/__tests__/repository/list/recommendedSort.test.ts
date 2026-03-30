@@ -352,6 +352,10 @@ describe("mediaItemRepository.items({ orderBy: 'recommended' }) — SQL integrat
 
   afterAll(clearDatabase);
 
+  afterEach(async () => {
+    await Database.knex('userRating').delete();
+  });
+
   test('higher combined score sorts before lower score — Alpha (8.6) > Beta (7.0) > Gamma (null)', async () => {
     const items = await mediaItemRepository.items({
       userId: user.id,
@@ -419,5 +423,72 @@ describe("mediaItemRepository.items({ orderBy: 'recommended' }) — SQL integrat
       await Database.knex('listItem').where('mediaItemId', itemAaaa.id).delete();
       await Database.knex('mediaItem').where('id', itemAaaa.id).delete();
     }
+  });
+
+  test('recommended watchlist excludes top-level items that are already rated by the user', async () => {
+    await Database.knex('userRating').insert({
+      mediaItemId: itemAlpha.id,
+      userId: user.id,
+      rating: 5,
+      review: null,
+      date: Date.now(),
+      seasonId: null,
+      episodeId: null,
+    });
+
+    const items = await mediaItemRepository.items({
+      userId: user.id,
+      orderBy: 'recommended',
+      sortOrder: 'desc',
+      onlyOnWatchlist: true,
+    });
+
+    expect(items.map((item) => item.title)).toEqual(['Beta', 'Gamma']);
+  });
+
+  test('recommended watchlist keeps rated items visible when they are not recommendation rows', async () => {
+    await Database.knex('userRating').insert({
+      mediaItemId: itemGamma.id,
+      userId: user.id,
+      rating: 6,
+      review: null,
+      date: Date.now(),
+      seasonId: null,
+      episodeId: null,
+    });
+
+    const items = await mediaItemRepository.items({
+      userId: user.id,
+      orderBy: 'recommended',
+      sortOrder: 'desc',
+      onlyOnWatchlist: true,
+    });
+
+    expect(items.map((item) => item.title)).toEqual(['Alpha', 'Beta', 'Gamma']);
+  });
+
+  test('recommended watchlist facets exclude already rated recommendation rows', async () => {
+    await Database.knex('userRating').insert({
+      mediaItemId: itemAlpha.id,
+      userId: user.id,
+      rating: 7,
+      review: null,
+      date: Date.now(),
+      seasonId: null,
+      episodeId: null,
+    });
+
+    const facets = await mediaItemRepository.facets({
+      userId: user.id,
+      orderBy: 'recommended',
+      onlyOnWatchlist: true,
+    });
+
+    const totalMediaTypeCount = facets.mediaTypes.reduce(
+      (sum, facet) => sum + facet.count,
+      0
+    );
+
+    expect(totalMediaTypeCount).toBe(2);
   });
 });
