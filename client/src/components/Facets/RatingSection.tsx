@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useMemo } from 'react';
+import React, { FunctionComponent } from 'react';
 import { t } from '@lingui/macro';
 
 import { FacetOption } from 'mediatracker-api';
@@ -32,11 +32,9 @@ export const RatingSection: FunctionComponent<{
   ratingMin: number | null;
   /** Currently selected maximum rating (from useFacets), null if unset. */
   ratingMax: number | null;
-  /** Setter from useFacets — writes ratingMin URL param with merge strategy. */
-  setRatingMin: (value: number | null) => void;
-  /** Setter from useFacets — writes ratingMax URL param with merge strategy. */
-  setRatingMax: (value: number | null) => void;
-}> = ({ ratings, ratingMin, ratingMax, setRatingMin, setRatingMax }) => {
+  /** Setter from useFacets — writes both rating range bounds atomically. */
+  setRatingRange: (min: number | null, max: number | null) => void;
+}> = ({ ratings, ratingMin, ratingMax, setRatingRange }) => {
   if (ratings.length === 0) {
     return null;
   }
@@ -47,10 +45,8 @@ export const RatingSection: FunctionComponent<{
    * Called by FacetRangeSlider on slider commit (release) or numeric input
    * blur.  Updates both URL params atomically.
    */
-  const handleCommit = (newMin: number | null, newMax: number | null) => {
-    setRatingMin(newMin);
-    setRatingMax(newMax);
-  };
+  const handleCommit = (newMin: number | null, newMax: number | null) =>
+    setRatingRange(newMin, newMax);
 
   return (
     <FacetSection

@@ -51,8 +51,7 @@ describe('YearSection', () => {
         years: [],
         yearMin: null,
         yearMax: null,
-        setYearMin: jest.fn(),
-        setYearMax: jest.fn(),
+        setYearRange: jest.fn(),
       })
     );
     expect(container.firstChild).toBeNull();
@@ -64,8 +63,7 @@ describe('YearSection', () => {
         years: mockYears,
         yearMin: null,
         yearMax: null,
-        setYearMin: jest.fn(),
-        setYearMax: jest.fn(),
+        setYearRange: jest.fn(),
       })
     );
     expect(screen.getByTestId('facet-section')).toBeInTheDocument();
@@ -78,8 +76,7 @@ describe('YearSection', () => {
         years: mockYears,
         yearMin: null,
         yearMax: null,
-        setYearMin: jest.fn(),
-        setYearMax: jest.fn(),
+        setYearRange: jest.fn(),
       })
     );
     const slider = screen.getByTestId('facet-range-slider');
@@ -95,8 +92,7 @@ describe('YearSection', () => {
         years: mockYears,
         yearMin: null,
         yearMax: null,
-        setYearMin: jest.fn(),
-        setYearMax: jest.fn(),
+        setYearRange: jest.fn(),
       })
     );
     expect(screen.getByTestId('facet-section').getAttribute('data-active')).toBe('false');
@@ -108,8 +104,7 @@ describe('YearSection', () => {
         years: mockYears,
         yearMin: 2020,
         yearMax: null,
-        setYearMin: jest.fn(),
-        setYearMax: jest.fn(),
+        setYearRange: jest.fn(),
       })
     );
     expect(screen.getByTestId('facet-section').getAttribute('data-active')).toBe('true');
@@ -121,8 +116,7 @@ describe('YearSection', () => {
         years: mockYears,
         yearMin: null,
         yearMax: 2022,
-        setYearMin: jest.fn(),
-        setYearMax: jest.fn(),
+        setYearRange: jest.fn(),
       })
     );
     expect(screen.getByTestId('facet-section').getAttribute('data-active')).toBe('true');
@@ -134,8 +128,7 @@ describe('YearSection', () => {
         years: mockYears,
         yearMin: 2018,
         yearMax: 2023,
-        setYearMin: jest.fn(),
-        setYearMax: jest.fn(),
+        setYearRange: jest.fn(),
       })
     );
     const slider = screen.getByTestId('facet-range-slider');
@@ -143,20 +136,17 @@ describe('YearSection', () => {
     expect(slider.getAttribute('data-value-max')).toBe('2023');
   });
 
-  it('calls setYearMin and setYearMax when slider commits', () => {
-    const setYearMin = jest.fn();
-    const setYearMax = jest.fn();
+  it('calls setYearRange when slider commits', () => {
+    const setYearRange = jest.fn();
     render(
       React.createElement(YearSection, {
         years: mockYears,
         yearMin: null,
         yearMax: null,
-        setYearMin,
-        setYearMax,
+        setYearRange,
       })
     );
     screen.getByTestId('facet-range-slider').click();
-    expect(setYearMin).toHaveBeenCalledWith(2000);
-    expect(setYearMax).toHaveBeenCalledWith(2024);
+    expect(setYearRange).toHaveBeenCalledWith(2000, 2024);
   });
 });

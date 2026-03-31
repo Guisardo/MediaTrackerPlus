@@ -22,7 +22,16 @@ jest.mock('src/components/Facets/FacetSection', () => {
 jest.mock('src/components/Facets/FacetRangeSlider', () => {
   const React = require('react');
   return {
-    FacetRangeSlider: ({ min, max, step, valueMin, valueMax, minInputLabel, maxInputLabel }: any) =>
+    FacetRangeSlider: ({
+      min,
+      max,
+      step,
+      valueMin,
+      valueMax,
+      minInputLabel,
+      maxInputLabel,
+      onCommit,
+    }: any) =>
       React.createElement('div', {
         'data-testid': 'facet-range-slider',
         'data-min': min,
@@ -32,6 +41,7 @@ jest.mock('src/components/Facets/FacetRangeSlider', () => {
         'data-value-max': valueMax,
         'data-min-label': minInputLabel,
         'data-max-label': maxInputLabel,
+        onClick: () => onCommit(4.5, 8.5),
       }),
   };
 });
@@ -48,8 +58,7 @@ describe('RatingSection', () => {
         ratings: [],
         ratingMin: null,
         ratingMax: null,
-        setRatingMin: jest.fn(),
-        setRatingMax: jest.fn(),
+        setRatingRange: jest.fn(),
       })
     );
     expect(container.firstChild).toBeNull();
@@ -61,8 +70,7 @@ describe('RatingSection', () => {
         ratings: mockRatings,
         ratingMin: null,
         ratingMax: null,
-        setRatingMin: jest.fn(),
-        setRatingMax: jest.fn(),
+        setRatingRange: jest.fn(),
       })
     );
     expect(screen.getByTestId('facet-title').textContent).toBe('Rating');
@@ -74,8 +82,7 @@ describe('RatingSection', () => {
         ratings: mockRatings,
         ratingMin: 3,
         ratingMax: 8,
-        setRatingMin: jest.fn(),
-        setRatingMax: jest.fn(),
+        setRatingRange: jest.fn(),
       })
     );
     const slider = screen.getByTestId('facet-range-slider');
@@ -92,8 +99,7 @@ describe('RatingSection', () => {
         ratings: mockRatings,
         ratingMin: null,
         ratingMax: null,
-        setRatingMin: jest.fn(),
-        setRatingMax: jest.fn(),
+        setRatingRange: jest.fn(),
       })
     );
     expect(screen.getByTestId('facet-section').getAttribute('data-active')).toBe('false');
@@ -105,8 +111,7 @@ describe('RatingSection', () => {
         ratings: mockRatings,
         ratingMin: 5,
         ratingMax: null,
-        setRatingMin: jest.fn(),
-        setRatingMax: jest.fn(),
+        setRatingRange: jest.fn(),
       })
     );
     expect(screen.getByTestId('facet-section').getAttribute('data-active')).toBe('true');
@@ -118,10 +123,23 @@ describe('RatingSection', () => {
         ratings: mockRatings,
         ratingMin: null,
         ratingMax: 9,
-        setRatingMin: jest.fn(),
-        setRatingMax: jest.fn(),
+        setRatingRange: jest.fn(),
       })
     );
     expect(screen.getByTestId('facet-section').getAttribute('data-active')).toBe('true');
+  });
+
+  it('calls setRatingRange when slider commits', () => {
+    const setRatingRange = jest.fn();
+    render(
+      React.createElement(RatingSection, {
+        ratings: mockRatings,
+        ratingMin: null,
+        ratingMax: null,
+        setRatingRange,
+      })
+    );
+    screen.getByTestId('facet-range-slider').click();
+    expect(setRatingRange).toHaveBeenCalledWith(4.5, 8.5);
   });
 });

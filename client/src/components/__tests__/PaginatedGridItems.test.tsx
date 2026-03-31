@@ -361,14 +361,16 @@ const { __facetSpies } = FacetsModule as unknown as {
 const buildDefaultFacets = () => ({
   genres: [],
   setGenres: jest.fn(),
-  yearMin: undefined,
-  yearMax: undefined,
+  yearMin: null,
+  yearMax: null,
   setYearMin: jest.fn(),
   setYearMax: jest.fn(),
-  ratingMin: undefined,
-  ratingMax: undefined,
+  setYearRange: jest.fn(),
+  ratingMin: null,
+  ratingMax: null,
   setRatingMin: jest.fn(),
   setRatingMax: jest.fn(),
+  setRatingRange: jest.fn(),
   languages: [],
   setLanguages: jest.fn(),
   creators: [],
@@ -377,7 +379,7 @@ const buildDefaultFacets = () => ({
   setPublishers: jest.fn(),
   mediaTypes: [],
   setMediaTypes: jest.fn(),
-  status: undefined,
+  status: [],
   setStatus: jest.fn(),
   activeFacetCount: 0,
   clearAllFacets: jest.fn(),
@@ -1003,6 +1005,40 @@ describe('PaginatedGridItems – facet sections rendered in panel', () => {
     expect(
       __facetSpies.mediaTypeSectionMock.mock.calls.at(-1)?.[0]
     ).toEqual(expect.objectContaining({ mediaType: 'movie' }));
+  });
+
+  it('forwards numeric facet params unchanged to useItems and useFacetsData', () => {
+    (useFacets as jest.Mock).mockReturnValue({
+      ...buildDefaultFacets(),
+      facetParams: {
+        yearMin: 2010,
+        yearMax: 2020,
+        ratingMin: 6.5,
+        ratingMax: 8.5,
+      },
+    });
+
+    renderPaginated({ showFacets: true, args: { mediaType: 'movie' as any } });
+
+    expect(useItems).toHaveBeenCalledWith(
+      expect.objectContaining({
+        mediaType: 'movie',
+        yearMin: 2010,
+        yearMax: 2020,
+        ratingMin: 6.5,
+        ratingMax: 8.5,
+      })
+    );
+    expect(useFacetsData).toHaveBeenCalledWith(
+      expect.objectContaining({
+        mediaType: 'movie',
+        yearMin: 2010,
+        yearMax: 2020,
+        ratingMin: 6.5,
+        ratingMax: 8.5,
+      }),
+      true
+    );
   });
 });
 

@@ -118,15 +118,13 @@ const buildFacetSections = (args: {
         years={facetData.years}
         yearMin={facets.yearMin}
         yearMax={facets.yearMax}
-        setYearMin={facets.setYearMin}
-        setYearMax={facets.setYearMax}
+        setYearRange={facets.setYearRange}
       />
       <RatingSection
         ratings={ratings}
         ratingMin={facets.ratingMin}
         ratingMax={facets.ratingMax}
-        setRatingMin={facets.setRatingMin}
-        setRatingMax={facets.setRatingMax}
+        setRatingRange={facets.setRatingRange}
       />
       <LanguageSection
         languages={facetData.languages}

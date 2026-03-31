@@ -9,6 +9,7 @@
  *   - facetParams API object construction
  *   - setGenres, setLanguages, setCreators, setPublishers, setMediaTypes, setStatus
  *   - setYearMin, setYearMax, setRatingMin, setRatingMax
+ *   - setYearRange, setRatingRange
  *   - clearAllFacets (removes all facet params, preserves non-facet params)
  *   - handleArgumentChange is called on every setter and clearAllFacets
  */
@@ -16,7 +17,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, useLocation } from 'react-router-dom';
 
 import { useFacets } from 'src/hooks/facets';
 
@@ -73,11 +74,29 @@ const FacetsHarness: React.FC<FacetsHarnessProps> = ({
       case 'setRatingMax':
         facets.setRatingMax(action.payload as number | null);
         break;
+      case 'setYearRange': {
+        const payload = action.payload as {
+          min: number | null;
+          max: number | null;
+        };
+        facets.setYearRange(payload.min, payload.max);
+        break;
+      }
+      case 'setRatingRange': {
+        const payload = action.payload as {
+          min: number | null;
+          max: number | null;
+        };
+        facets.setRatingRange(payload.min, payload.max);
+        break;
+      }
       case 'clearAllFacets':
         facets.clearAllFacets();
         break;
     }
   };
+
+  const location = useLocation();
 
   return (
     <>
@@ -97,6 +116,7 @@ const FacetsHarness: React.FC<FacetsHarnessProps> = ({
       <span data-testid="facetParams">
         {JSON.stringify(facets.facetParams)}
       </span>
+      <span data-testid="location-search">{location.search}</span>
       {action && (
         <button onClick={handleAction}>Execute Action</button>
       )}
@@ -500,6 +520,122 @@ describe('useFacets – setRatingMin and setRatingMax', () => {
   });
 });
 
+describe('useFacets – atomic range setters', () => {
+  it('writes both year bounds in a single action, preserves unrelated params, and removes page', async () => {
+    const user = userEvent.setup();
+    renderFacets(
+      {
+        action: {
+          type: 'setYearRange',
+          payload: { min: 2015, max: 2023 },
+        },
+      },
+      '/?search=matrix&orderBy=title&page=3'
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Execute Action' }));
+
+    expect(screen.getByTestId('yearMin').textContent).toBe('2015');
+    expect(screen.getByTestId('yearMax').textContent).toBe('2023');
+
+    const search = screen.getByTestId('location-search').textContent ?? '';
+    expect(search).toContain('search=matrix');
+    expect(search).toContain('orderBy=title');
+    expect(search).toContain('yearMin=2015');
+    expect(search).toContain('yearMax=2023');
+    expect(search).not.toContain('page=');
+  });
+
+  it('supports one-sided year ranges without dropping the remaining bound', async () => {
+    const user = userEvent.setup();
+    renderFacets(
+      {
+        action: {
+          type: 'setYearRange',
+          payload: { min: 2018, max: null },
+        },
+      },
+      '/?yearMin=2010&yearMax=2024&page=2'
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Execute Action' }));
+
+    expect(screen.getByTestId('yearMin').textContent).toBe('2018');
+    expect(screen.getByTestId('yearMax').textContent).toBe('null');
+
+    const search = screen.getByTestId('location-search').textContent ?? '';
+    expect(search).toContain('yearMin=2018');
+    expect(search).not.toContain('yearMax=');
+    expect(search).not.toContain('page=');
+  });
+
+  it('writes one-sided rating ranges without dropping sibling params', async () => {
+    const user = userEvent.setup();
+    renderFacets(
+      {
+        action: {
+          type: 'setRatingRange',
+          payload: { min: null, max: 8.5 },
+        },
+      },
+      '/?genres=Action&page=5'
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Execute Action' }));
+
+    expect(screen.getByTestId('ratingMin').textContent).toBe('null');
+    expect(screen.getByTestId('ratingMax').textContent).toBe('8.5');
+
+    const search = screen.getByTestId('location-search').textContent ?? '';
+    expect(search).toContain('genres=Action');
+    expect(search).toContain('ratingMax=8.5');
+    expect(search).not.toContain('ratingMin=');
+    expect(search).not.toContain('page=');
+  });
+
+  it('clears both rating bounds in a single action', async () => {
+    const user = userEvent.setup();
+    renderFacets(
+      {
+        action: {
+          type: 'setRatingRange',
+          payload: { min: null, max: null },
+        },
+      },
+      '/?ratingMin=4.5&ratingMax=9.5&search=aliens'
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Execute Action' }));
+
+    expect(screen.getByTestId('ratingMin').textContent).toBe('null');
+    expect(screen.getByTestId('ratingMax').textContent).toBe('null');
+
+    const search = screen.getByTestId('location-search').textContent ?? '';
+    expect(search).toContain('search=aliens');
+    expect(search).not.toContain('ratingMin=');
+    expect(search).not.toContain('ratingMax=');
+  });
+
+  it('calls handleArgumentChange exactly once for one atomic range update', async () => {
+    const handleArgumentChange = jest.fn();
+    const user = userEvent.setup();
+    renderFacets(
+      {
+        handleArgumentChange,
+        action: {
+          type: 'setYearRange',
+          payload: { min: 2010, max: 2020 },
+        },
+      },
+      '/'
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Execute Action' }));
+
+    expect(handleArgumentChange).toHaveBeenCalledTimes(1);
+  });
+});
+
 // ---------------------------------------------------------------------------
 // Multi-value setters (languages, creators, publishers, mediaTypes, status)
 // ---------------------------------------------------------------------------
@@ -597,55 +733,20 @@ describe('useFacets – clearAllFacets', () => {
 
   it('preserves non-facet params (orderBy) after clearing', async () => {
     const user = userEvent.setup();
-
-    /**
-     * Dedicated harness that also reads 'orderBy' from the URL to verify it is
-     * preserved when clearAllFacets is invoked.
-     */
-    const HarnessWithOrderBy: React.FC = () => {
-      const facets = useFacets();
-      const [searchParams] = React.useState(() => new URLSearchParams(''));
-      // Read orderBy directly via another useMultiValueSearchParam instance
-      const { useMultiValueSearchParam: useParam } = (() => {
-        // inline import to avoid top-level module issues
-        const { useMultiValueSearchParam: impl } = require('src/hooks/useMultiValueSearchParam');
-        return { useMultiValueSearchParam: impl };
-      })();
-
-      const InnerHarness: React.FC = () => {
-        const facetsInner = useFacets();
-        // We can't easily read orderBy here without another hook instance,
-        // so we just verify genres and activeFacetCount.
-        return (
-          <>
-            <span data-testid="genres2">
-              {JSON.stringify(facetsInner.genres)}
-            </span>
-            <span data-testid="activeFacetCount2">
-              {String(facetsInner.activeFacetCount)}
-            </span>
-            <button onClick={() => facetsInner.clearAllFacets()}>
-              Clear
-            </button>
-          </>
-        );
-      };
-
-      return <InnerHarness />;
-    };
-
-    render(
-      <MemoryRouter initialEntries={['/?genres=Action&orderBy=title']}>
-        <HarnessWithOrderBy />
-      </MemoryRouter>
+    renderFacets(
+      { action: { type: 'clearAllFacets' } },
+      '/?genres=Action&orderBy=title'
     );
 
-    expect(screen.getByTestId('activeFacetCount2').textContent).toBe('1');
+    expect(screen.getByTestId('activeFacetCount').textContent).toBe('1');
 
-    await user.click(screen.getByRole('button', { name: 'Clear' }));
+    await user.click(screen.getByRole('button', { name: 'Execute Action' }));
 
-    expect(JSON.parse(screen.getByTestId('genres2').textContent!)).toEqual([]);
-    expect(screen.getByTestId('activeFacetCount2').textContent).toBe('0');
+    expect(JSON.parse(screen.getByTestId('genres').textContent!)).toEqual([]);
+    expect(screen.getByTestId('activeFacetCount').textContent).toBe('0');
+    expect(screen.getByTestId('location-search').textContent).toBe(
+      '?orderBy=title'
+    );
   });
 
   it('calls handleArgumentChange when clearAllFacets is invoked', async () => {

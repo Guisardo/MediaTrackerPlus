@@ -14,6 +14,9 @@ import { Slider } from '@/components/ui/slider';
  * - Typing into a numeric input updates the slider value immediately on blur;
  *   out-of-range values are clamped to [min, max] and invalid (non-numeric)
  *   inputs revert to the last committed value.
+ * - Extreme values only clear a bound when that bound was already unset.
+ *   This avoids accidentally clearing a real selection after the available
+ *   facet range narrows in response to filtering.
  *
  * ## Reuse
  * This component is reused by:
@@ -80,6 +83,21 @@ export const FacetRangeSlider: FunctionComponent<{
     setMaxInputValue(newMax.toFixed(decimalPlaces));
   }, [valueMin, valueMax, min, max, decimalPlaces]);
 
+  const normalizeCommittedBound = useCallback(
+    (
+      nextValue: number,
+      extremeValue: number,
+      currentValue: number | null
+    ): number | null => {
+      if (nextValue === extremeValue && currentValue === null) {
+        return null;
+      }
+
+      return nextValue;
+    },
+    []
+  );
+
   // --- Slider handlers ----------------------------------------------------
 
   /** Real-time update during drag — keeps the numeric inputs in sync. */
@@ -102,11 +120,11 @@ export const FacetRangeSlider: FunctionComponent<{
     (values: number[]) => {
       const [newMin, newMax] = values as [number, number];
       onCommit(
-        newMin === min ? null : newMin,
-        newMax === max ? null : newMax
+        normalizeCommittedBound(newMin, min, valueMin),
+        normalizeCommittedBound(newMax, max, valueMax)
       );
     },
-    [min, max, onCommit]
+    [min, max, normalizeCommittedBound, onCommit, valueMax, valueMin]
   );
 
   // --- Numeric input handlers ---------------------------------------------
@@ -120,8 +138,22 @@ export const FacetRangeSlider: FunctionComponent<{
     const snapped = Math.round(clamped / step) * step;
     setMinInputValue(snapped.toFixed(decimalPlaces));
     setSliderValues([snapped, sliderValues[1]]);
-    onCommit(snapped === min ? null : snapped, sliderValues[1] === max ? null : sliderValues[1]);
-  }, [min, max, step, decimalPlaces, minInputValue, sliderValues, onCommit]);
+    onCommit(
+      normalizeCommittedBound(snapped, min, valueMin),
+      normalizeCommittedBound(sliderValues[1], max, valueMax)
+    );
+  }, [
+    decimalPlaces,
+    max,
+    min,
+    minInputValue,
+    normalizeCommittedBound,
+    onCommit,
+    sliderValues,
+    step,
+    valueMax,
+    valueMin,
+  ]);
 
   const handleMaxInputBlur = useCallback(() => {
     const parsed = parseFloat(maxInputValue);
@@ -133,8 +165,22 @@ export const FacetRangeSlider: FunctionComponent<{
     const snapped = Math.round(clamped / step) * step;
     setMaxInputValue(snapped.toFixed(decimalPlaces));
     setSliderValues([sliderValues[0], snapped]);
-    onCommit(sliderValues[0] === min ? null : sliderValues[0], snapped === max ? null : snapped);
-  }, [min, max, step, decimalPlaces, maxInputValue, sliderValues, onCommit]);
+    onCommit(
+      normalizeCommittedBound(sliderValues[0], min, valueMin),
+      normalizeCommittedBound(snapped, max, valueMax)
+    );
+  }, [
+    decimalPlaces,
+    max,
+    maxInputValue,
+    min,
+    normalizeCommittedBound,
+    onCommit,
+    sliderValues,
+    step,
+    valueMax,
+    valueMin,
+  ]);
 
   const handleInputKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
