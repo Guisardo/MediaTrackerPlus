@@ -3,6 +3,7 @@ import { Data } from '__tests__/__utils__/data';
 import { clearDatabase, runMigrations } from '__tests__/__utils__/utils';
 import {
   upsertMediaItemTranslation,
+  upsertMediaItemTranslations,
   MediaItemTranslationData,
 } from 'src/repository/translationRepository';
 
@@ -340,6 +341,89 @@ describe('translationRepository', () => {
       expect(row.title).toBeNull();
       expect(row.overview).toBe('Panoramica aggiornata');
       expect(row.genres).toBeNull();
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // upsertMediaItemTranslations -- bulk upsert
+  // ---------------------------------------------------------------------------
+
+  describe('upsertMediaItemTranslations (bulk upsert)', () => {
+    test('inserts multiple translation rows in one call', async () => {
+      await upsertMediaItemTranslations([
+        {
+          mediaItemId: Data.tvShow.id,
+          language: 'en',
+          title: 'English title',
+          overview: 'English overview',
+          genres: ['Drama'],
+        },
+        {
+          mediaItemId: Data.tvShow.id,
+          language: 'es',
+          title: 'Titulo espanol',
+          overview: 'Resumen espanol',
+          genres: ['Drama'],
+        },
+        {
+          mediaItemId: Data.movie.id,
+          language: 'en',
+          title: 'Movie english title',
+          overview: null,
+          genres: null,
+        },
+      ]);
+
+      const rows = await getAllTranslations();
+      expect(rows).toHaveLength(3);
+
+      const tvShowEnglish = await getTranslation(Data.tvShow.id, 'en');
+      const tvShowSpanish = await getTranslation(Data.tvShow.id, 'es');
+      const movieEnglish = await getTranslation(Data.movie.id, 'en');
+
+      expect(tvShowEnglish?.title).toBe('English title');
+      expect(tvShowSpanish?.title).toBe('Titulo espanol');
+      expect(movieEnglish?.title).toBe('Movie english title');
+      expect(movieEnglish?.genres).toBeNull();
+    });
+
+    test('updates existing rows on conflict and keeps one row per key', async () => {
+      await upsertMediaItemTranslation(Data.tvShow.id, 'en', {
+        title: 'Old title',
+        overview: 'Old overview',
+        genres: ['Action'],
+      });
+
+      await upsertMediaItemTranslations([
+        {
+          mediaItemId: Data.tvShow.id,
+          language: 'en',
+          title: 'New title',
+          overview: 'New overview',
+          genres: ['Comedy'],
+        },
+        {
+          mediaItemId: Data.tvShow.id,
+          language: 'fr',
+          title: 'Titre francais',
+          overview: null,
+          genres: null,
+        },
+      ]);
+
+      const rows = await getAllTranslations();
+      expect(rows).toHaveLength(2);
+
+      const english = await getTranslation(Data.tvShow.id, 'en');
+      expect(english?.title).toBe('New title');
+      expect(english?.overview).toBe('New overview');
+      expect(JSON.parse(english?.genres as string)).toEqual(['Comedy']);
+    });
+
+    test('is a no-op when called with an empty array', async () => {
+      await upsertMediaItemTranslations([]);
+      const rows = await getAllTranslations();
+      expect(rows).toHaveLength(0);
     });
   });
 });

@@ -4,6 +4,8 @@ import { clearDatabase, runMigrations } from '__tests__/__utils__/utils';
 import {
   upsertSeasonTranslation,
   upsertEpisodeTranslation,
+  upsertSeasonTranslations,
+  upsertEpisodeTranslations,
   SeasonTranslationData,
   EpisodeTranslationData,
 } from 'src/repository/translationRepository';
@@ -212,6 +214,50 @@ describe('seasonEpisodeTranslationRepository', () => {
   });
 
   // ===========================================================================
+  // upsertSeasonTranslations
+  // ===========================================================================
+
+  describe('upsertSeasonTranslations', () => {
+    test('inserts and updates season translations in bulk', async () => {
+      await upsertSeasonTranslation(Data.season.id, 'en', {
+        title: 'Old season title',
+        description: 'Old season description',
+      });
+
+      await upsertSeasonTranslations([
+        {
+          seasonId: Data.season.id,
+          language: 'en',
+          title: 'New season title',
+          description: 'New season description',
+        },
+        {
+          seasonId: Data.season.id,
+          language: 'es',
+          title: 'Temporada nueva',
+          description: 'Descripcion nueva',
+        },
+      ]);
+
+      const rows = await getAllSeasonTranslations();
+      expect(rows).toHaveLength(2);
+
+      const english = await getSeasonTranslation(Data.season.id, 'en');
+      const spanish = await getSeasonTranslation(Data.season.id, 'es');
+
+      expect(english?.title).toBe('New season title');
+      expect(english?.description).toBe('New season description');
+      expect(spanish?.title).toBe('Temporada nueva');
+    });
+
+    test('is a no-op for empty arrays', async () => {
+      await upsertSeasonTranslations([]);
+      const rows = await getAllSeasonTranslations();
+      expect(rows).toHaveLength(0);
+    });
+  });
+
+  // ===========================================================================
   // upsertEpisodeTranslation
   // ===========================================================================
 
@@ -379,6 +425,50 @@ describe('seasonEpisodeTranslationRepository', () => {
         expect(row.title).toBeNull();
         expect(row.description).toBeNull();
       });
+    });
+  });
+
+  // ===========================================================================
+  // upsertEpisodeTranslations
+  // ===========================================================================
+
+  describe('upsertEpisodeTranslations', () => {
+    test('inserts and updates episode translations in bulk', async () => {
+      await upsertEpisodeTranslation(Data.episode.id, 'en', {
+        title: 'Old episode title',
+        description: 'Old episode description',
+      });
+
+      await upsertEpisodeTranslations([
+        {
+          episodeId: Data.episode.id,
+          language: 'en',
+          title: 'New episode title',
+          description: 'New episode description',
+        },
+        {
+          episodeId: Data.episode2.id,
+          language: 'en',
+          title: 'Second episode title',
+          description: 'Second episode description',
+        },
+      ]);
+
+      const rows = await getAllEpisodeTranslations();
+      expect(rows).toHaveLength(2);
+
+      const episodeOne = await getEpisodeTranslation(Data.episode.id, 'en');
+      const episodeTwo = await getEpisodeTranslation(Data.episode2.id, 'en');
+
+      expect(episodeOne?.title).toBe('New episode title');
+      expect(episodeOne?.description).toBe('New episode description');
+      expect(episodeTwo?.title).toBe('Second episode title');
+    });
+
+    test('is a no-op for empty arrays', async () => {
+      await upsertEpisodeTranslations([]);
+      const rows = await getAllEpisodeTranslations();
+      expect(rows).toHaveLength(0);
     });
   });
 });
