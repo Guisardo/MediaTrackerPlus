@@ -54,10 +54,12 @@ const makeFacets = (overrides: Partial<UseFacetsResult> = {}): UseFacetsResult =
   setYearMin: jest.fn(),
   yearMax: null,
   setYearMax: jest.fn(),
+  setYearRange: jest.fn(),
   ratingMin: null,
   setRatingMin: jest.fn(),
   ratingMax: null,
   setRatingMax: jest.fn(),
+  setRatingRange: jest.fn(),
   activeFacetCount: 0,
   clearAllFacets: jest.fn(),
   facetParams: {},
@@ -473,13 +475,11 @@ describe('ActiveFacetChips', () => {
   });
 
   it('clears both year bounds when year chip remove is clicked', async () => {
-    const setYearMin = jest.fn();
-    const setYearMax = jest.fn();
+    const setYearRange = jest.fn();
     const facets = makeFacets({
       yearMin: 2010,
       yearMax: 2020,
-      setYearMin,
-      setYearMax,
+      setYearRange,
       activeFacetCount: 1,
     });
     const user = userEvent.setup();
@@ -489,8 +489,7 @@ describe('ActiveFacetChips', () => {
       name: /remove Year/i,
     });
     await user.click(removeBtn);
-    expect(setYearMin).toHaveBeenCalledWith(null);
-    expect(setYearMax).toHaveBeenCalledWith(null);
+    expect(setYearRange).toHaveBeenCalledWith(null, null);
   });
 
   // ── Rating range chips ──────────────────────────────────────────────────
@@ -524,13 +523,11 @@ describe('ActiveFacetChips', () => {
   });
 
   it('clears both rating bounds when rating chip remove is clicked', async () => {
-    const setRatingMin = jest.fn();
-    const setRatingMax = jest.fn();
+    const setRatingRange = jest.fn();
     const facets = makeFacets({
       ratingMin: 5,
       ratingMax: 9,
-      setRatingMin,
-      setRatingMax,
+      setRatingRange,
       activeFacetCount: 1,
     });
     const user = userEvent.setup();
@@ -540,8 +537,7 @@ describe('ActiveFacetChips', () => {
       name: /remove Rating/i,
     });
     await user.click(removeBtn);
-    expect(setRatingMin).toHaveBeenCalledWith(null);
-    expect(setRatingMax).toHaveBeenCalledWith(null);
+    expect(setRatingRange).toHaveBeenCalledWith(null, null);
   });
 
   // ── Multiple facet types at once ────────────────────────────────────────

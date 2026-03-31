@@ -131,8 +131,8 @@ const FacetChip: FunctionComponent<{
  *
  * Clicking × on a chip:
  *   - Multi-value: removes that value from the selected array via its setter.
- *   - Range: clears both bounds via setYearMin(null)/setYearMax(null) or
- *     setRatingMin(null)/setRatingMax(null) for a one-click range reset.
+ *   - Range: clears both bounds via setYearRange(null, null) or
+ *     setRatingRange(null, null) for a one-click range reset.
  *   - Individual range bound removal is not supported — click × resets the
  *     whole range at once (UX simplicity).
  *
@@ -166,12 +166,10 @@ export const ActiveFacetChips: FunctionComponent<{
     setStatus,
     yearMin,
     yearMax,
-    setYearMin,
-    setYearMax,
+    setYearRange,
     ratingMin,
     ratingMax,
-    setRatingMin,
-    setRatingMax,
+    setRatingRange,
     activeFacetCount,
     clearAllFacets,
   } = facets;
@@ -303,10 +301,7 @@ export const ActiveFacetChips: FunctionComponent<{
         <FacetChip
           dimensionLabel={t`Year`}
           value={yearRangeLabel()}
-          onRemove={() => {
-            setYearMin(null);
-            setYearMax(null);
-          }}
+          onRemove={() => setYearRange(null, null)}
         />
       )}
 
@@ -315,10 +310,7 @@ export const ActiveFacetChips: FunctionComponent<{
         <FacetChip
           dimensionLabel={t`Rating`}
           value={ratingRangeLabel()}
-          onRemove={() => {
-            setRatingMin(null);
-            setRatingMax(null);
-          }}
+          onRemove={() => setRatingRange(null, null)}
         />
       )}
 

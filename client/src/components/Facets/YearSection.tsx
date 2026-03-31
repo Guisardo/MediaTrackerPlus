@@ -33,11 +33,9 @@ export const YearSection: FunctionComponent<{
   yearMin: number | null;
   /** Currently selected maximum year (from useFacets), null if unset. */
   yearMax: number | null;
-  /** Setter from useFacets — writes yearMin URL param with merge strategy. */
-  setYearMin: (value: number | null) => void;
-  /** Setter from useFacets — writes yearMax URL param with merge strategy. */
-  setYearMax: (value: number | null) => void;
-}> = ({ years, yearMin, yearMax, setYearMin, setYearMax }) => {
+  /** Setter from useFacets — writes both year range bounds atomically. */
+  setYearRange: (min: number | null, max: number | null) => void;
+}> = ({ years, yearMin, yearMax, setYearRange }) => {
   // Derive the valid year range from the facets API response.
   // The years array contains { value: "2024", count: 5 } entries.
   const { minYear, maxYear } = useMemo(() => {
@@ -71,10 +69,8 @@ export const YearSection: FunctionComponent<{
    * Called by FacetRangeSlider on slider commit (release) or numeric input
    * blur.  Updates both URL params atomically.
    */
-  const handleCommit = (newMin: number | null, newMax: number | null) => {
-    setYearMin(newMin);
-    setYearMax(newMax);
-  };
+  const handleCommit = (newMin: number | null, newMax: number | null) =>
+    setYearRange(newMin, newMax);
 
   return (
     <FacetSection

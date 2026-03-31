@@ -113,12 +113,14 @@ describe('FacetRangeSlider', () => {
     expect(numberInputs[1]).toHaveValue(2020);
   });
 
-  it('commits null when numeric input value equals the extreme on blur', async () => {
+  it('keeps an explicit bound when blur hits the current minimum after filtering', async () => {
     const onCommit = jest.fn();
     const user = userEvent.setup();
     render(
       <FacetRangeSlider
         {...defaultProps}
+        min={2010}
+        max={2025}
         onCommit={onCommit}
         valueMin={2010}
         valueMax={2025}
@@ -127,10 +129,22 @@ describe('FacetRangeSlider', () => {
 
     const minInput = screen.getByLabelText('Minimum year');
     await user.clear(minInput);
+    await user.type(minInput, '2010');
+    fireEvent.blur(minInput);
+
+    expect(onCommit).toHaveBeenCalledWith(2010, 2025);
+  });
+
+  it('commits null for an extreme bound when that bound was already unset', async () => {
+    const onCommit = jest.fn();
+    const user = userEvent.setup();
+    render(<FacetRangeSlider {...defaultProps} onCommit={onCommit} />);
+
+    const minInput = screen.getByLabelText('Minimum year');
+    await user.clear(minInput);
     await user.type(minInput, '2000');
     fireEvent.blur(minInput);
 
-    // When min input equals the overall min (2000), commit null for that bound
     expect(onCommit).toHaveBeenCalledWith(null, null);
   });
 
@@ -163,14 +177,12 @@ describe('FacetRangeSlider', () => {
     expect(numberInputs[1]).toHaveValue(2023);
   });
 
-  it('calls onCommit with null bounds when slider released at extremes', () => {
+  it('calls onCommit with null bounds when slider released at extremes from an unset state', () => {
     const onCommit = jest.fn();
     render(
       <FacetRangeSlider
         {...defaultProps}
         onCommit={onCommit}
-        valueMin={2000}
-        valueMax={2025}
       />
     );
 

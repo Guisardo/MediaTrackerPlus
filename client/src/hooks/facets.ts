@@ -41,6 +41,8 @@ export interface UseFacetsResult {
   setYearMax: (value: number | null) => void;
   setRatingMin: (value: number | null) => void;
   setRatingMax: (value: number | null) => void;
+  setYearRange: (min: number | null, max: number | null) => void;
+  setRatingRange: (min: number | null, max: number | null) => void;
 
   /** Resets all facet URL params and removes them from the URL. */
   clearAllFacets: () => void;
@@ -134,6 +136,12 @@ export const useFacets = (
   const ratingMax: number | null =
     ratingMaxRaw !== null ? Number(ratingMaxRaw) : null;
 
+  const getSearchParamsWithoutPage = useCallback(() => {
+    const currentEntries = Object.fromEntries(searchParams.entries());
+    const { page: _page, ...withoutPage } = currentEntries;
+    return withoutPage;
+  }, [searchParams]);
+
   /**
    * Generic numeric-param setter.  Merges with all existing params, always
    * preserving orderBy and sortOrder.  Removes the param when value is null.
@@ -141,10 +149,7 @@ export const useFacets = (
    */
   const setNumericParam = useCallback(
     (paramName: string, value: number | null) => {
-      const currentEntries = Object.fromEntries(searchParams.entries());
-
-      // Remove 'page' param to reset pagination to page 1.
-      const { page: _page, ...withoutPage } = currentEntries;
+      const withoutPage = getSearchParamsWithoutPage();
 
       if (value === null) {
         const { [paramName]: _removed, ...rest } = withoutPage;
@@ -160,7 +165,44 @@ export const useFacets = (
         handleArgumentChange();
       }
     },
-    [handleArgumentChange, searchParams, setSearchParams]
+    [getSearchParamsWithoutPage, handleArgumentChange, setSearchParams]
+  );
+
+  /**
+   * Generic numeric-range setter that updates both bounds in a single write.
+   * This avoids stale-searchParam races when one user action changes both
+   * range bounds at once.
+   */
+  const setNumericRange = useCallback(
+    (
+      minParamName: string,
+      minValue: number | null,
+      maxParamName: string,
+      maxValue: number | null
+    ) => {
+      const nextParams = {
+        ...getSearchParamsWithoutPage(),
+      };
+
+      if (minValue === null) {
+        delete nextParams[minParamName];
+      } else {
+        nextParams[minParamName] = minValue.toString();
+      }
+
+      if (maxValue === null) {
+        delete nextParams[maxParamName];
+      } else {
+        nextParams[maxParamName] = maxValue.toString();
+      }
+
+      setSearchParams(nextParams);
+
+      if (handleArgumentChange) {
+        handleArgumentChange();
+      }
+    },
+    [getSearchParamsWithoutPage, handleArgumentChange, setSearchParams]
   );
 
   const setYearMin = useCallback(
@@ -178,6 +220,16 @@ export const useFacets = (
   const setRatingMax = useCallback(
     (value: number | null) => setNumericParam('ratingMax', value),
     [setNumericParam]
+  );
+  const setYearRange = useCallback(
+    (min: number | null, max: number | null) =>
+      setNumericRange('yearMin', min, 'yearMax', max),
+    [setNumericRange]
+  );
+  const setRatingRange = useCallback(
+    (min: number | null, max: number | null) =>
+      setNumericRange('ratingMin', min, 'ratingMax', max),
+    [setNumericRange]
   );
 
   // ── Clear all ────────────────────────────────────────────────────────────
@@ -252,6 +304,8 @@ export const useFacets = (
     setYearMax,
     setRatingMin,
     setRatingMax,
+    setYearRange,
+    setRatingRange,
     clearAllFacets,
     genres,
     languages,
