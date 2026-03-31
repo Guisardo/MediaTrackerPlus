@@ -845,6 +845,11 @@ const applyUpdatedMediaItemLocalizations = async (args: {
     return;
   }
 
+  const mediaItemId = oldMediaItem.id;
+  if (mediaItemId == null) {
+    return;
+  }
+
   if (metadataProvider.localizedDetails != null) {
     const localizedDetails =
       preloaded?.localizedDetails ??
@@ -855,7 +860,7 @@ const applyUpdatedMediaItemLocalizations = async (args: {
       ));
 
     await upsertPreparedTranslations({
-      mediaItemId: oldMediaItem.id,
+      mediaItemId,
       baseData: newMediaItem,
       localizedDetails,
       updatedMediaItem: persistedMediaItem,
@@ -868,7 +873,7 @@ const applyUpdatedMediaItemLocalizations = async (args: {
       (await fetchGameLocalizations(metadataProvider, oldMediaItem));
 
     await upsertPreparedGameLocalizations({
-      mediaItemId: oldMediaItem.id,
+      mediaItemId,
       languages: getMetadataLanguages(),
       localizations: gameLocalizations,
     });
