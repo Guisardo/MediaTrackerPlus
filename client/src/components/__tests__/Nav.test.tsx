@@ -12,7 +12,7 @@
  * Tests verify:
  *  - All navigation links rendered when user is logged in
  *  - Each NavLink has the correct href value
- *  - The active route link receives the "underline" class
+ *  - The active route link receives the bottom-border "border-primary" class
  *  - The sidebar visibility toggle uses CSS transition classes
  *  - Dark-mode toggle renders and toggles
  *  - When user is falsy only the dark-mode toggle renders (no nav links)
@@ -41,8 +41,7 @@ jest.mock('@lingui/macro', () => ({
 jest.mock('@lingui/react', () => ({
   useLingui: () => ({
     i18n: {
-      _: (s: any) =>
-        typeof s === 'string' ? s : s?.message || s?.id || '',
+      _: (s: any) => (typeof s === 'string' ? s : s?.message || s?.id || ''),
       locale: 'en',
     },
   }),
@@ -50,7 +49,12 @@ jest.mock('@lingui/react', () => ({
   I18nProvider: ({ children }: any) => <>{children}</>,
 }));
 
-jest.mock('clsx', () => (...args: unknown[]) => args.filter(Boolean).join(' '));
+jest.mock(
+  'clsx',
+  () =>
+    (...args: unknown[]) =>
+      args.filter(Boolean).join(' ')
+);
 
 // useUser mock – default to a logged-in user
 const mockLogout = jest.fn();
@@ -106,9 +110,7 @@ const renderNav = (initialEntry = '/') => {
 describe('useRouteNames', () => {
   it('returns all 15 expected routes', () => {
     const { result } = renderHook(() => useRouteNames(), {
-      wrapper: ({ children }) => (
-        <MemoryRouter>{children}</MemoryRouter>
-      ),
+      wrapper: ({ children }) => <MemoryRouter>{children}</MemoryRouter>,
     });
 
     expect(result.current).toHaveLength(15);
@@ -164,7 +166,10 @@ describe('useRouteNames', () => {
 describe('NavComponent – logged-in user', () => {
   beforeEach(() => {
     mockUseUser.mockReturnValue({ user: LOGGED_IN_USER, logout: mockLogout });
-    mockUseDarkMode.mockReturnValue({ darkMode: false, setDarkMode: mockSetDarkMode });
+    mockUseDarkMode.mockReturnValue({
+      darkMode: false,
+      setDarkMode: mockSetDarkMode,
+    });
   });
 
   it('renders a <nav> element', () => {
@@ -175,9 +180,11 @@ describe('NavComponent – logged-in user', () => {
   it('renders navigation links for all routes', () => {
     renderNav('/');
     // There are 15 route links in the desktop nav
-    const links = screen.getAllByRole('link', { name: /^(?!Alice|Logout|Settings).+/ });
-    // At minimum the 15 NavLinks should be present (some may be in sidebar too)
-    expect(links.length).toBeGreaterThanOrEqual(15);
+    const links = screen.getAllByRole('link', {
+      name: /^(?!Alice|Logout|Settings).+/,
+    });
+    // At minimum the 15 NavLinks + 1 wordmark link should be present (some may be in sidebar too)
+    expect(links.length).toBeGreaterThanOrEqual(16);
   });
 
   it('renders a link to /tv', () => {
@@ -219,42 +226,58 @@ describe('NavComponent – logged-in user', () => {
     renderNav('/');
     expect(screen.getByRole('link', { name: 'Logout' })).toBeInTheDocument();
   });
+
+  it('renders the Media Tracker wordmark linking to home', () => {
+    renderNav('/');
+    const wordmark = screen.getByRole('link', { name: /Media Tracker home/i });
+    expect(wordmark).toBeInTheDocument();
+    expect(wordmark).toHaveAttribute('href', '/');
+  });
 });
 
 // ---------------------------------------------------------------------------
-// NavComponent – active route is underlined
+// NavComponent – active route has bottom border indicator
 // ---------------------------------------------------------------------------
 
 describe('NavComponent – active route highlighting', () => {
   beforeEach(() => {
     mockUseUser.mockReturnValue({ user: LOGGED_IN_USER, logout: mockLogout });
-    mockUseDarkMode.mockReturnValue({ darkMode: false, setDarkMode: mockSetDarkMode });
+    mockUseDarkMode.mockReturnValue({
+      darkMode: false,
+      setDarkMode: mockSetDarkMode,
+    });
   });
 
-  it('applies "underline" class to the /movies NavLink when on /movies', () => {
+  it('applies bottom border class to the /movies NavLink when on /movies', () => {
     renderNav('/movies');
 
-    // NavLink receives isActive=true and applies clsx(isActive && 'underline')
+    // NavLink receives isActive=true and applies clsx(isActive && 'border-primary')
     const moviesLinks = screen.getAllByRole('link', { name: 'Movies' });
-    const activeLink = moviesLinks.find((l) => l.className.includes('underline'));
+    const activeLink = moviesLinks.find((l) =>
+      l.className.includes('border-primary')
+    );
     expect(activeLink).toBeDefined();
   });
 
-  it('applies "underline" class to the /tv NavLink when on /tv', () => {
+  it('applies bottom border class to the /tv NavLink when on /tv', () => {
     renderNav('/tv');
 
     const tvLinks = screen.getAllByRole('link', { name: 'Tv' });
-    const activeLink = tvLinks.find((l) => l.className.includes('underline'));
+    const activeLink = tvLinks.find((l) =>
+      l.className.includes('border-primary')
+    );
     expect(activeLink).toBeDefined();
   });
 
-  it('does NOT apply "underline" to /tv NavLink when on /movies', () => {
+  it('does NOT apply bottom border to /tv NavLink when on /movies', () => {
     renderNav('/movies');
 
     const tvLinks = screen.getAllByRole('link', { name: 'Tv' });
-    // None of the Tv links should have underline (they are inactive)
-    const underlinedTvLink = tvLinks.find((l) => l.className.includes('underline'));
-    expect(underlinedTvLink).toBeUndefined();
+    // None of the Tv links should have border-primary (they are inactive)
+    const borderedTvLink = tvLinks.find((l) =>
+      l.className.includes('border-primary')
+    );
+    expect(borderedTvLink).toBeUndefined();
   });
 });
 
@@ -265,7 +288,10 @@ describe('NavComponent – active route highlighting', () => {
 describe('NavComponent – SideBar visibility toggle', () => {
   beforeEach(() => {
     mockUseUser.mockReturnValue({ user: LOGGED_IN_USER, logout: mockLogout });
-    mockUseDarkMode.mockReturnValue({ darkMode: false, setDarkMode: mockSetDarkMode });
+    mockUseDarkMode.mockReturnValue({
+      darkMode: false,
+      setDarkMode: mockSetDarkMode,
+    });
   });
 
   it('renders the sidebar panel with translate-x-full (hidden) by default', () => {
@@ -312,7 +338,9 @@ describe('NavComponent – SideBar visibility toggle', () => {
   it('renders route links inside the sidebar panel', () => {
     renderNav('/');
     // Both desktop nav and sidebar render routes — total links >= 15 (desktop) + 15 (sidebar)
-    const allNavLinks = screen.getAllByRole('link', { name: /^(?!Alice|Logout).+/ });
+    const allNavLinks = screen.getAllByRole('link', {
+      name: /^(?!Alice|Logout).+/,
+    });
     expect(allNavLinks.length).toBeGreaterThanOrEqual(15);
   });
 });
@@ -327,20 +355,29 @@ describe('NavComponent – dark mode toggle', () => {
   });
 
   it('renders mode_night icon when darkMode is false', () => {
-    mockUseDarkMode.mockReturnValue({ darkMode: false, setDarkMode: mockSetDarkMode });
+    mockUseDarkMode.mockReturnValue({
+      darkMode: false,
+      setDarkMode: mockSetDarkMode,
+    });
     renderNav('/');
     expect(screen.getAllByText('mode_night').length).toBeGreaterThanOrEqual(1);
   });
 
   it('renders light_mode icon when darkMode is true', () => {
-    mockUseDarkMode.mockReturnValue({ darkMode: true, setDarkMode: mockSetDarkMode });
+    mockUseDarkMode.mockReturnValue({
+      darkMode: true,
+      setDarkMode: mockSetDarkMode,
+    });
     renderNav('/');
     expect(screen.getAllByText('light_mode').length).toBeGreaterThanOrEqual(1);
   });
 
   it('calls setDarkMode with toggled value when dark mode icon is clicked', async () => {
     const user = userEvent.setup();
-    mockUseDarkMode.mockReturnValue({ darkMode: false, setDarkMode: mockSetDarkMode });
+    mockUseDarkMode.mockReturnValue({
+      darkMode: false,
+      setDarkMode: mockSetDarkMode,
+    });
 
     renderNav('/');
 
@@ -358,7 +395,10 @@ describe('NavComponent – dark mode toggle', () => {
 describe('NavComponent – unauthenticated (no user)', () => {
   beforeEach(() => {
     mockUseUser.mockReturnValue({ user: null, logout: mockLogout });
-    mockUseDarkMode.mockReturnValue({ darkMode: false, setDarkMode: mockSetDarkMode });
+    mockUseDarkMode.mockReturnValue({
+      darkMode: false,
+      setDarkMode: mockSetDarkMode,
+    });
   });
 
   it('does NOT render a <nav> element when user is null', () => {

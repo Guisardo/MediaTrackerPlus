@@ -8,10 +8,10 @@ import { UseFacetsResult } from 'src/hooks/facets';
  * >= 1024px (lg breakpoint).  On smaller screens it is hidden — the mobile
  * bottom-drawer variant (US-010) will handle smaller viewports.
  *
- * Renders a "Clear all filters" button at the top when at least one facet is
- * active.  Individual facet dimension sections are rendered as children so
- * downstream stories (US-011 through US-018) can add content without modifying
- * this shell.
+ * Always renders a "Filters" header at the top. When filters are active, the
+ * label includes an active count and a "Clear all" button appears.  Individual
+ * facet dimension sections are rendered as children so downstream stories
+ * (US-011 through US-018) can add content without modifying this shell.
  */
 export const FacetPanel: FunctionComponent<{
   facets: UseFacetsResult;
@@ -24,12 +24,16 @@ export const FacetPanel: FunctionComponent<{
       className="hidden lg:flex flex-col w-60 flex-shrink-0 mr-4 border border-zinc-200 dark:border-zinc-700 rounded bg-white dark:bg-zinc-800"
       aria-label="Filters"
     >
-      {/* Header row — only visible when filters are active */}
-      {activeFacetCount > 0 && (
-        <div className="flex items-center justify-between px-3 py-2 border-b border-zinc-200 dark:border-zinc-700">
-          <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
+      {/* Header row — always visible; shows active count and clear button when filters are active */}
+      <div className="flex items-center justify-between px-3 py-2 border-b border-zinc-200 dark:border-zinc-700">
+        <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
+          {activeFacetCount > 0 ? (
+            <Trans>Filters ({activeFacetCount})</Trans>
+          ) : (
             <Trans>Filters</Trans>
-          </span>
+          )}
+        </span>
+        {activeFacetCount > 0 && (
           <button
             type="button"
             onClick={clearAllFacets}
@@ -37,8 +41,8 @@ export const FacetPanel: FunctionComponent<{
           >
             <Trans>Clear all filters</Trans>
           </button>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Accordion sections injected by child stories */}
       <div className="flex-1 overflow-y-auto py-1">{children}</div>

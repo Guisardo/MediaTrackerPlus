@@ -34,7 +34,12 @@ jest.mock('@lingui/macro', () => ({
       : strings[0],
 }));
 
-jest.mock('clsx', () => (...args: unknown[]) => args.filter(Boolean).join(' '));
+jest.mock(
+  'clsx',
+  () =>
+    (...args: unknown[]) =>
+      args.filter(Boolean).join(' ')
+);
 
 // ---------------------------------------------------------------------------
 // Test harness
@@ -88,22 +93,22 @@ const openMenu = async (user: ReturnType<typeof userEvent.setup>) => {
 // ---------------------------------------------------------------------------
 
 describe('useOrderByComponent – initial render', () => {
-  it('renders the sort_by_alpha icon', () => {
+  it('renders the sort field icon', () => {
     renderHarness({ orderBy: 'title', sortOrder: 'asc' });
 
-    expect(screen.getByText('sort_by_alpha')).toBeInTheDocument();
+    expect(screen.getByTestId('sort-icon')).toBeInTheDocument();
   });
 
-  it('shows the ↑ arrow when sortOrder is asc', () => {
+  it('shows the ascending direction icon when sortOrder is asc', () => {
     renderHarness({ orderBy: 'title', sortOrder: 'asc' });
 
-    expect(screen.getByText('↑')).toBeInTheDocument();
+    expect(screen.getByTestId('sort-direction-asc')).toBeInTheDocument();
   });
 
-  it('shows the ↓ arrow when sortOrder is desc', () => {
+  it('shows the descending direction icon when sortOrder is desc', () => {
     renderHarness({ orderBy: 'title', sortOrder: 'desc' });
 
-    expect(screen.getByText('↓')).toBeInTheDocument();
+    expect(screen.getByTestId('sort-direction-desc')).toBeInTheDocument();
   });
 
   it('displays the initial orderBy label (Title) next to the icon', () => {
@@ -248,7 +253,8 @@ describe('useOrderByComponent – option selection', () => {
 
     // 'Title' appears in the trigger and the dropdown <li>; find the <li>
     const titleElements = screen.getAllByText('Title');
-    const titleOption = titleElements.find((el) => el.tagName === 'LI') || titleElements[0];
+    const titleOption =
+      titleElements.find((el) => el.tagName === 'LI') || titleElements[0];
     expect(titleOption.className).toContain('bg-zinc-300');
   });
 });
@@ -258,7 +264,7 @@ describe('useOrderByComponent – option selection', () => {
 // ---------------------------------------------------------------------------
 
 describe('useOrderByComponent – sort order toggle', () => {
-  it('calls handleFilterChange when the arrow toggle is clicked', async () => {
+  it('calls handleFilterChange when the sort direction toggle is clicked', async () => {
     const handleFilterChange = jest.fn();
     const user = userEvent.setup();
 
@@ -268,40 +274,50 @@ describe('useOrderByComponent – sort order toggle', () => {
       onFilterChange: handleFilterChange,
     });
 
-    const arrow = screen.getByText('↑');
-    await user.click(arrow);
+    const toggle = screen.getByRole('button', {
+      name: 'Toggle sort direction',
+    });
+    await user.click(toggle);
 
     expect(handleFilterChange).toHaveBeenCalledTimes(1);
   });
 
-  it('switches ↑ to ↓ after clicking the toggle when starting at asc', async () => {
+  it('switches to descending icon after clicking the toggle when starting at asc', async () => {
     const user = userEvent.setup();
     renderHarness({ orderBy: 'title', sortOrder: 'asc' });
 
-    await user.click(screen.getByText('↑'));
+    await user.click(
+      screen.getByRole('button', { name: 'Toggle sort direction' })
+    );
 
-    expect(screen.getByText('↓')).toBeInTheDocument();
+    expect(screen.getByTestId('sort-direction-desc')).toBeInTheDocument();
   });
 
-  it('switches ↓ to ↑ after clicking the toggle when starting at desc', async () => {
+  it('switches to ascending icon after clicking the toggle when starting at desc', async () => {
     const user = userEvent.setup();
     renderHarness({ orderBy: 'title', sortOrder: 'desc' });
 
-    await user.click(screen.getByText('↓'));
+    await user.click(
+      screen.getByRole('button', { name: 'Toggle sort direction' })
+    );
 
-    expect(screen.getByText('↑')).toBeInTheDocument();
+    expect(screen.getByTestId('sort-direction-asc')).toBeInTheDocument();
   });
 
   it('toggles back and forth correctly on multiple clicks', async () => {
     const user = userEvent.setup();
     renderHarness({ orderBy: 'title', sortOrder: 'asc' });
 
-    // asc → desc
-    await user.click(screen.getByText('↑'));
-    expect(screen.getByText('↓')).toBeInTheDocument();
+    // asc → desc (get fresh reference each time — OrderByComponent remounts on re-render)
+    await user.click(
+      screen.getByRole('button', { name: 'Toggle sort direction' })
+    );
+    expect(screen.getByTestId('sort-direction-desc')).toBeInTheDocument();
 
     // desc → asc
-    await user.click(screen.getByText('↓'));
-    expect(screen.getByText('↑')).toBeInTheDocument();
+    await user.click(
+      screen.getByRole('button', { name: 'Toggle sort direction' })
+    );
+    expect(screen.getByTestId('sort-direction-asc')).toBeInTheDocument();
   });
 });

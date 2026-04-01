@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useState } from 'react';
 import clsx from 'clsx';
 import { t, Trans } from '@lingui/macro';
-import { NavLink, useLocation, useSearchParams } from 'react-router-dom';
+import { NavLink, Link, useLocation, useSearchParams } from 'react-router-dom';
 
 import { useUser } from 'src/api/user';
 import { useDarkMode } from 'src/hooks/darkMode';
@@ -29,7 +29,13 @@ const CROSS_TYPE_FORWARDED_PARAMS = [
 ] as const;
 
 /** Routes for single-type content pages (facets-enabled, type-scoped). */
-const SINGLE_TYPE_PATHS = new Set(['/tv', '/movies', '/games', '/books', '/audiobooks']);
+const SINGLE_TYPE_PATHS = new Set([
+  '/tv',
+  '/movies',
+  '/games',
+  '/books',
+  '/audiobooks',
+]);
 
 export const useRouteNames = () => {
   return [
@@ -106,20 +112,26 @@ export const NavComponent: FunctionComponent = () => {
     <>
       {user ? (
         <>
-          <nav className="flex items-center">
+          <nav className="flex items-center border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-2">
+            <Link
+              to="/"
+              className="mr-4 text-base font-bold text-primary shrink-0 whitespace-nowrap tracking-tight select-none"
+              aria-label={t`Media Tracker home`}
+            >
+              Media Tracker
+            </Link>
+
             <div className="hidden md:block">
               <div className="flex flex-col md:flex-row">
                 {routes.map((route) => (
-                  <span
-                    key={route.path}
-                    className="m-1 mr-2 whitespace-nowrap"
-                  >
+                  <span key={route.path} className="m-1 mr-2 whitespace-nowrap">
                     <NavLink
                       to={getCrossTypeNavTarget(route.path)}
                       className={({ isActive }) =>
                         clsx(
-                          'text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors',
-                          isActive && 'font-semibold text-zinc-900 dark:text-zinc-50 underline'
+                          'text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors border-b-2 border-transparent pb-0.5',
+                          isActive &&
+                            'font-semibold text-zinc-900 dark:text-zinc-50 border-primary'
                         )
                       }
                     >
@@ -210,7 +222,9 @@ const SideBar: FunctionComponent<{
       <div
         className={clsx(
           'fixed top-0 bottom-0 left-0 right-0 z-10 w-full h-full bg-zinc-500 transition-opacity duration-300',
-          showSidebar ? 'opacity-30 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          showSidebar
+            ? 'opacity-30 pointer-events-auto'
+            : 'opacity-0 pointer-events-none'
         )}
         onClick={() => hideSidebar()}
         aria-hidden="true"
