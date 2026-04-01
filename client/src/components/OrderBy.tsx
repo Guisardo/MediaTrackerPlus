@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { t } from '@lingui/macro';
+import { ArrowUp, ArrowDown, ArrowUpDown } from 'lucide-react';
 
 import { MediaItemOrderBy, MediaType, SortOrder } from 'mediatracker-api';
 import { isTvShow, reverseMap } from 'src/utils';
 import { useMenuComponent } from 'src/hooks/menu';
 import { useUpdateSearchParams } from 'src/hooks/updateSearchParamsHook';
+import { Button } from '@/components/ui/button';
 
 export const useMediaTypeOrderByNames = (): Record<
   MediaItemOrderBy,
@@ -73,21 +75,30 @@ export const useOrderByComponent = (args: {
     sortOrder,
     OrderByComponent: () => (
       <Menu>
-        <div className="flex select-none">
-          <div className="flex cursor-pointer select-none">
-            <span className="material-icons">sort_by_alpha</span>&nbsp;
+        <div className="flex items-center select-none gap-1">
+          <div className="flex items-center cursor-pointer select-none gap-1">
+            <ArrowUpDown
+              className="size-4 text-zinc-700 dark:text-zinc-300"
+              data-testid="sort-icon"
+            />
             {selectedValue}
           </div>
-          <div
-            className="ml-2 cursor-pointer"
-            onClick={() => {
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-6"
+            onClick={(e) => {
+              e.stopPropagation(); // prevent bubbling into Menu's toggle handler
               args.handleFilterChange();
               updateSearchParams(sortOrder === 'asc' ? 'desc' : 'asc');
               setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
             }}
+            aria-label={t`Toggle sort direction`}
           >
-            {sortOrder === 'asc' ? '↑' : '↓'}
-          </div>
+            {sortOrder === 'asc'
+              ? <ArrowUp className="size-4" data-testid="sort-direction-asc" />
+              : <ArrowDown className="size-4" data-testid="sort-direction-desc" />}
+          </Button>
         </div>
       </Menu>
     ),

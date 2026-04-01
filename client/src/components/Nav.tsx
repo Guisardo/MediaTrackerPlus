@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useState } from 'react';
 import clsx from 'clsx';
 import { t, Trans } from '@lingui/macro';
-import { NavLink, useLocation, useSearchParams } from 'react-router-dom';
+import { NavLink, Link, useLocation, useSearchParams } from 'react-router-dom';
 
 import { useUser } from 'src/api/user';
 import { useDarkMode } from 'src/hooks/darkMode';
@@ -106,7 +106,15 @@ export const NavComponent: FunctionComponent = () => {
     <>
       {user ? (
         <>
-          <nav className="flex items-center">
+          <nav className="flex items-center border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-2">
+            <Link
+              to="/"
+              className="mr-4 text-base font-bold text-primary shrink-0 whitespace-nowrap tracking-tight select-none"
+              aria-label={t`Media Tracker home`}
+            >
+              Media Tracker
+            </Link>
+
             <div className="hidden md:block">
               <div className="flex flex-col md:flex-row">
                 {routes.map((route) => (
@@ -118,8 +126,8 @@ export const NavComponent: FunctionComponent = () => {
                       to={getCrossTypeNavTarget(route.path)}
                       className={({ isActive }) =>
                         clsx(
-                          'text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors',
-                          isActive && 'font-semibold text-zinc-900 dark:text-zinc-50 underline'
+                          'text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors border-b-2 border-transparent pb-0.5',
+                          isActive && 'font-semibold text-zinc-900 dark:text-zinc-50 border-primary'
                         )
                       }
                     >
