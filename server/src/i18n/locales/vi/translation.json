@@ -21,6 +21,7 @@
   "Running migrations": "Đang chạy các lần di chuyển",
   "Season {0} of {1} has been canceled": "Mùa {0} của {1} đã bị hủy",
   "Season {0} of {1} will be released at {2}": "Mùa {0} của {1} sẽ được phát hành vào {2}",
+  "Season {0} of {1} will be released at {releaseDate}": "",
   "Season {seasonNumber} of {0} has been canceled": "Mùa {seasonNumber} của {0} đã bị hủy",
   "Season {seasonNumber} of {0} will be released at {releaseDate}": "Mùa {seasonNumber} của {0} sẽ được phát hành vào {releaseDate}",
   "Server closed": "Máy chủ đã đóng",
@@ -29,6 +30,8 @@
   "TMDB language changed to: \"{value}\", updating metadata for all items": "Ngôn ngữ TMDB đã thay đổi sang: \"{value}\", đang cập nhật siêu dữ liệu cho tất cả các mục",
   "Test message": "Tin nhắn thử nghiệm",
   "Updating metadata": "Đang cập nhật siêu dữ liệu",
+  "Updating: {0}": "",
+  "Updating: {0} (last updated at: {date})": "",
   "Updating: {title}": "Đang cập nhật: {title}",
   "Updating: {title} (last updated at: {date}": "Đang cập nhật: {title} (cập nhật lần cuối lúc: {date}",
   "Updating: {title} (last updated at: {date})": "Đang cập nhật: {title} (cập nhật lần cuối lúc: {date})",
@@ -44,5 +47,8 @@
   "{count, plural, one {Sending notification for new episodes of {title} to # user} other {Sending notification for new episodes of {title} to # users}}": "{count, plural, other {Đang gửi thông báo về tập mới của {title} đến # người dùng}}",
   "{count, plural, one {Sending notification for {title} to # user} other {Sending notification for {title} to # users}}": "{count, plural, other {Đang gửi thông báo về {title} đến # người dùng}}",
   "{count, plural, one {Updated 1 item} other {Updated # items}}": "{count, plural, other {Đã cập nhật # mục}}",
+  "{numberOfFailures, plural, one {Failed to update 1 item} other {Failed to update # items}}": "",
+  "{numberOfSkippedItems, plural, one {Skipped 1 item because upstream metadata returned 404} other {Skipped # items because upstream metadata returned 404}}": "",
+  "{numberOfUpdatedItems, plural, one {Updated 1 item} other {Updated # items}}": "",
   "{title} has been released": "{title} đã được phát hành"
 }

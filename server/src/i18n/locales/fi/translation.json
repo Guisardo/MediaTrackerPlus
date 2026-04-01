@@ -21,6 +21,7 @@
   "Running migrations": "Suoritetaan migraatioita",
   "Season {0} of {1} has been canceled": "Sarjan {1} kausi {0} on peruutettu",
   "Season {0} of {1} will be released at {2}": "Sarjan {1} kausi {0} julkaistaan {2}",
+  "Season {0} of {1} will be released at {releaseDate}": "",
   "Season {seasonNumber} of {0} has been canceled": "Sarjan {0} kausi {seasonNumber} on peruutettu",
   "Season {seasonNumber} of {0} will be released at {releaseDate}": "Sarjan {0} kausi {seasonNumber} julkaistaan {releaseDate}",
   "Server closed": "Palvelin suljettu",
@@ -29,6 +30,8 @@
   "TMDB language changed to: \"{value}\", updating metadata for all items": "TMDB-kieleksi vaihdettu: \"{value}\", päivitetään kaikkien kohteiden metatiedot",
   "Test message": "Testiviesti",
   "Updating metadata": "Päivitetään metatietoja",
+  "Updating: {0}": "",
+  "Updating: {0} (last updated at: {date})": "",
   "Updating: {title}": "Päivitetään: {title}",
   "Updating: {title} (last updated at: {date}": "Päivitetään: {title} (viimeksi päivitetty: {date}",
   "Updating: {title} (last updated at: {date})": "Päivitetään: {title} (viimeksi päivitetty: {date})",
@@ -44,5 +47,8 @@
   "{count, plural, one {Sending notification for new episodes of {title} to # user} other {Sending notification for new episodes of {title} to # users}}": "{count, plural, one {Lähetetään ilmoitus sarjan {title} uusista jaksoista # käyttäjälle} other {Lähetetään ilmoitus sarjan {title} uusista jaksoista # käyttäjälle}}",
   "{count, plural, one {Sending notification for {title} to # user} other {Sending notification for {title} to # users}}": "{count, plural, one {Lähetetään ilmoitus kohteesta {title} # käyttäjälle} other {Lähetetään ilmoitus kohteesta {title} # käyttäjälle}}",
   "{count, plural, one {Updated 1 item} other {Updated # items}}": "{count, plural, one {1 kohde päivitetty} other {# kohdetta päivitetty}}",
+  "{numberOfFailures, plural, one {Failed to update 1 item} other {Failed to update # items}}": "",
+  "{numberOfSkippedItems, plural, one {Skipped 1 item because upstream metadata returned 404} other {Skipped # items because upstream metadata returned 404}}": "",
+  "{numberOfUpdatedItems, plural, one {Updated 1 item} other {Updated # items}}": "",
   "{title} has been released": "{title} on julkaistu"
 }

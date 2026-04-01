@@ -124,7 +124,7 @@ export const Modal = <ReturnType,>(props: {
               e.preventDefault();
             }
           }}
-          className="max-w-fit p-0 border-0 bg-transparent shadow-none"
+          className="max-w-[min(92vw,960px)] w-auto p-0 border-0 bg-transparent shadow-none overflow-hidden"
         >
           <div className="rounded-lg bg-zinc-100 dark:bg-zinc-900">
             {props.children(closeModal)}

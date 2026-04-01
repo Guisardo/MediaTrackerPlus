@@ -44,7 +44,7 @@ msgid "{0, plural, one {1 item} other {# items}}"
 msgstr "{0, plural, zero {0 عنصر} one {عنصر واحد} two {عنصران} few {# عناصر} many {# عنصراً} other {# عنصر}}"
 
 #. placeholder {0}: mediaItem.authors.length
-#: src/pages/Details.tsx:543
+#: src/pages/Details.tsx:690
 msgid "{0, plural, one {Author} other {Authors}}"
 msgstr "{0, plural, zero {مؤلف} one {مؤلف} two {مؤلفان} few {مؤلفون} many {مؤلفاً} other {مؤلف}}"
 
@@ -57,10 +57,9 @@ msgstr "{0, plural, one {هل تريد إزالة إدخال واحد من سج�
 #~ msgid "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {Found # items for query \"<1>{searchQuery}</1>\"}}"
 #~ msgstr "{0, plural, one {تم العثور على # عنصر للاستعلام \"<0>{searchQuery}</0>\"} other {تم العثور على # عناصر للاستعلام \"<1>{searchQuery}</1>\"}}"
 
-#. placeholder {0}: mediaItem.genres.length
-#: src/pages/Details.tsx:503
-msgid "{0, plural, one {Genre} other {Genres}}"
-msgstr "{0, plural, zero {نوع} one {نوع} two {نوعان} few {أنواع} many {نوعاً} other {نوع}}"
+#: src/pages/Details.tsx:662
+#~ msgid "{0, plural, one {Genre} other {Genres}}"
+#~ msgstr "{0, plural, zero {نوع} one {نوع} two {نوعان} few {أنواع} many {نوعاً} other {نوع}}"
 
 #. placeholder {0}: listsWithItem?.length
 #: src/components/AddToListModal.tsx:157
@@ -68,36 +67,40 @@ msgid "{0, plural, one {Listed on 1 list} other {Listed on # lists}}"
 msgstr "{0, plural, zero {غير مدرج في أي قائمة} one {مدرج في قائمة واحدة} two {مدرج في قائمتين} few {مدرج في # قوائم} many {مدرج في # قائمة} other {مدرج في # قائمة}}"
 
 #. placeholder {0}: mediaItem.seenHistory!.length
-#: src/pages/Details.tsx:771
+#: src/pages/Details.tsx:863
 #: src/pages/SeenHistory.tsx:50
 msgid "{0, plural, one {Listened 1 time} other {Listened # times}}"
 msgstr "{0, plural, zero {لم يُستمع إليه} one {استُمع إليه مرة واحدة} two {استُمع إليه مرتين} few {استُمع إليه # مرات} many {استُمع إليه # مرة} other {استُمع إليه # مرة}}"
 
 #. placeholder {0}: mediaItem.narrators.length
-#: src/pages/Details.tsx:557
+#: src/pages/Details.tsx:697
 msgid "{0, plural, one {Narrator} other {Narrators}}"
 msgstr "{0, plural, zero {راوٍ} one {راوٍ} two {راويان} few {رواة} many {راوياً} other {راوٍ}}"
 
+#: src/pages/Details.tsx:630
+#~ msgid "{0, plural, one {Platform} other {platforms}}"
+#~ msgstr "{0, plural, zero {منصة} one {منصة} two {منصتان} few {منصات} many {منصةً} other {منصة}}"
+
 #. placeholder {0}: mediaItem.platform.length
-#: src/pages/Details.tsx:471
-msgid "{0, plural, one {Platform} other {platforms}}"
-msgstr "{0, plural, zero {منصة} one {منصة} two {منصتان} few {منصات} many {منصةً} other {منصة}}"
+#: src/pages/Details.tsx:663
+msgid "{0, plural, one {Platform} other {Platforms}}"
+msgstr ""
 
 #. placeholder {0}: mediaItem.seenHistory!.length
-#: src/pages/Details.tsx:795
+#: src/pages/Details.tsx:872
 #: src/pages/SeenHistory.tsx:74
 msgid "{0, plural, one {Played 1 time} other {Played # times}}"
 msgstr "{0, plural, zero {لم يُلعب} one {لُعب مرة واحدة} two {لُعب مرتين} few {لُعب # مرات} many {لُعب # مرة} other {لُعب # مرة}}"
 
 #. placeholder {0}: mediaItem.seenHistory!.length
-#: src/pages/Details.tsx:779
+#: src/pages/Details.tsx:866
 #: src/pages/SeenHistory.tsx:58
 msgid "{0, plural, one {Read 1 time} other {Read # times}}"
 msgstr "{0, plural, zero {لم يُقرأ} one {قُرئ مرة واحدة} two {قُرئ مرتين} few {قُرئ # مرات} many {قُرئ # مرة} other {قُرئ # مرة}}"
 
 #. placeholder {0}: episode.seenHistory!.length
 #. placeholder {0}: mediaItem.seenHistory!.length
-#: src/pages/Details.tsx:787
+#: src/pages/Details.tsx:869
 #: src/pages/SeasonsPage.tsx:87
 #: src/pages/SeenHistory.tsx:66
 msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
@@ -198,7 +201,7 @@ msgstr "حول"
 msgid "Access Token"
 msgstr "رمز الوصول"
 
-#: src/components/Facets/ActiveFacetChips.tsx:219
+#: src/components/Facets/ActiveFacetChips.tsx:217
 msgid "Active filters"
 msgstr "المرشحات النشطة"
 
@@ -265,7 +268,7 @@ msgstr "أضف إلى سجل القراءة"
 msgid "Add to seen history"
 msgstr "أضف إلى سجل المشاهدة"
 
-#: src/pages/Details.tsx:853
+#: src/pages/Details.tsx:1053
 msgid "Add to watchlist"
 msgstr "أضف إلى قائمة المشاهدة"
 
@@ -324,6 +327,7 @@ msgstr "لغة Audible"
 #: src/components/Facets/ActiveFacetChips.tsx:76
 #: src/components/Facets/MediaTypeSection.tsx:24
 #: src/components/GridItem.tsx:109
+#: src/pages/Details.tsx:608
 msgid "Audiobook"
 msgstr "كتاب صوتي"
 
@@ -349,9 +353,11 @@ msgstr "تجنب الحرق لحلقات"
 msgid "Avoid season spoilers"
 msgstr "تجنب الحرق للمواسم"
 
+#: src/components/DetailsRelatedContentSection.tsx:29
 #: src/components/Facets/ActiveFacetChips.tsx:74
 #: src/components/Facets/MediaTypeSection.tsx:22
 #: src/components/GridItem.tsx:110
+#: src/pages/Details.tsx:607
 msgid "Book"
 msgstr "كتاب"
 
@@ -381,7 +387,7 @@ msgstr "تغيير كلمة المرور"
 msgid "Clear"
 msgstr "مسح"
 
-#: src/components/Facets/ActiveFacetChips.tsx:331
+#: src/components/Facets/ActiveFacetChips.tsx:323
 #: src/components/Facets/FacetDrawer.tsx:72
 msgid "Clear all"
 msgstr "مسح الكل"
@@ -400,6 +406,7 @@ msgstr "سر العميل"
 
 #: src/components/AddOrEditGroupButton.tsx:70
 #: src/components/AddToListModal.tsx:110
+#: src/pages/Details.tsx:343
 msgid "Close"
 msgstr "إغلاق"
 
@@ -419,7 +426,7 @@ msgstr "تأكيد كلمة المرور الجديدة"
 msgid "Confirm password"
 msgstr "تأكيد كلمة المرور"
 
-#: src/pages/Details.tsx:197
+#: src/pages/Details.tsx:237
 msgid "Content categories"
 msgstr "فئات المحتوى"
 
@@ -427,7 +434,7 @@ msgstr "فئات المحتوى"
 msgid "Content is hidden based on your age-based content filtering preferences."
 msgstr "تم إخفاء المحتوى بناءً على تفضيلاتك لتصفية المحتوى حسب العمر."
 
-#: src/pages/Details.tsx:373
+#: src/pages/Details.tsx:588
 msgid "Content restricted"
 msgstr "المحتوى مقيّد"
 
@@ -494,7 +501,7 @@ msgstr "تنازلي"
 msgid "Description"
 msgstr "الوصف"
 
-#: src/pages/Details.tsx:177
+#: src/pages/Details.tsx:217
 msgid "Descriptors"
 msgstr "الأوصاف"
 
@@ -541,11 +548,12 @@ msgid "Episode {0} {1}"
 msgstr "الحلقة {0} {1}"
 
 #: src/components/ImportSummaryTable.tsx:93
-#: src/pages/Details.tsx:589
+#: src/pages/Details.tsx:678
+#: src/pages/Details.tsx:889
 msgid "Episodes"
 msgstr "حلقات"
 
-#: src/pages/Details.tsx:655
+#: src/pages/Details.tsx:1021
 msgid "Episodes page"
 msgstr "صفحة الحلقات"
 
@@ -572,9 +580,17 @@ msgstr "فشل في تحميل المجموعة. ربما تم حذفها."
 msgid "Filters"
 msgstr "المرشحات"
 
-#: src/pages/Details.tsx:734
-msgid "First unwatched episode"
-msgstr "أول حلقة لم تُشاهَد"
+#: src/pages/Details.tsx:904
+msgid "First unwatched"
+msgstr ""
+
+#: src/pages/Details.tsx:899
+#~ msgid "First unwatched episode"
+#~ msgstr "أول حلقة لم تُشاهَد"
+
+#: src/pages/Details.tsx:609
+msgid "Game"
+msgstr ""
 
 #: src/components/Nav.tsx:39
 #: src/components/Statistics/StatisticsGenreSegment.tsx:20
@@ -586,7 +602,7 @@ msgstr "ألعاب"
 msgid "General"
 msgstr "عام"
 
-#: src/components/Facets/ActiveFacetChips.tsx:225
+#: src/components/Facets/ActiveFacetChips.tsx:223
 #: src/components/Facets/GenreSection.tsx:37
 msgid "Genre"
 msgstr "Genre"
@@ -617,7 +633,7 @@ msgstr "اسم المجموعة"
 msgid "Groups"
 msgstr "المجموعات"
 
-#: src/pages/Details.tsx:186
+#: src/pages/Details.tsx:226
 msgid "Guidance"
 msgstr "الإرشادات"
 
@@ -639,19 +655,19 @@ msgstr "الرئيسية"
 msgid "Http"
 msgstr "Http"
 
-#: src/pages/Details.tsx:677
+#: src/pages/Details.tsx:787
 msgid "I am listening it"
 msgstr "أنا أستمع إليه"
 
-#: src/pages/Details.tsx:678
+#: src/pages/Details.tsx:788
 msgid "I am playing it"
 msgstr "أنا ألعبه"
 
-#: src/pages/Details.tsx:676
+#: src/pages/Details.tsx:786
 msgid "I am reading it"
 msgstr "أنا أقرأه"
 
-#: src/pages/Details.tsx:675
+#: src/pages/Details.tsx:785
 msgid "I am watching it"
 msgstr "أنا أشاهده"
 
@@ -660,19 +676,19 @@ msgstr "أنا أشاهده"
 msgid "I do not remember"
 msgstr "لا أتذكر"
 
-#: src/pages/Details.tsx:698
+#: src/pages/Details.tsx:801
 msgid "I finished listening it"
 msgstr "انتهيت من الاستماع إليه"
 
-#: src/pages/Details.tsx:701
+#: src/pages/Details.tsx:802
 msgid "I finished playing it"
 msgstr "انتهيت من لعبه"
 
-#: src/pages/Details.tsx:696
+#: src/pages/Details.tsx:800
 msgid "I finished reading it"
 msgstr "انتهيت من قراءته"
 
-#: src/pages/Details.tsx:695
+#: src/pages/Details.tsx:799
 msgid "I finished watching it"
 msgstr "انتهيت من مشاهدته"
 
@@ -721,9 +737,9 @@ msgstr "يجب أن يتطابق العنصر مع جميع الحالات ال�
 msgid "Key"
 msgstr "المفتاح"
 
-#: src/components/Facets/ActiveFacetChips.tsx:235
+#: src/components/Facets/ActiveFacetChips.tsx:233
 #: src/components/Facets/LanguageSection.tsx:95
-#: src/pages/Details.tsx:534
+#: src/pages/Details.tsx:670
 msgid "Language"
 msgstr "اللغة"
 
@@ -732,17 +748,17 @@ msgid "Last airing"
 msgstr "آخر بث"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
-#: src/pages/Details.tsx:743
+#: src/pages/Details.tsx:845
 msgid "Last listened at {0}"
 msgstr "آخر استماع في {0}"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
-#: src/pages/Details.tsx:761
+#: src/pages/Details.tsx:854
 msgid "Last played at {0}"
 msgstr "آخر لعب في {0}"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
-#: src/pages/Details.tsx:749
+#: src/pages/Details.tsx:848
 msgid "Last read at {0}"
 msgstr "آخر قراءة في {0}"
 
@@ -751,7 +767,7 @@ msgid "Last seen"
 msgstr "آخر مشاهدة"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
-#: src/pages/Details.tsx:755
+#: src/pages/Details.tsx:851
 msgid "Last seen at {0}"
 msgstr "آخر مشاهدة في {0}"
 
@@ -780,6 +796,10 @@ msgstr "القائمة {0} - مسلسلات"
 msgid "List: {0}"
 msgstr "القائمة: {0}"
 
+#: src/pages/Details.tsx:827
+msgid "Listen history"
+msgstr ""
+
 #: src/components/Facets/ActiveFacetChips.tsx:26
 #: src/components/Facets/StatusSection.tsx:33
 #: src/components/FilterBy.tsx:25
@@ -791,7 +811,7 @@ msgstr "تم الاستماع"
 msgid "Listened at {0}"
 msgstr "استُمع في {0}"
 
-#: src/pages/Details.tsx:803
+#: src/pages/Details.tsx:876
 msgid "Listened history"
 msgstr "سجل الاستماع"
 
@@ -800,11 +820,11 @@ msgid "Lists"
 msgstr "القوائم"
 
 #: src/components/AddToListModal.tsx:50
-#: src/components/PaginatedGridItems.tsx:441
+#: src/components/PaginatedGridItems.tsx:439
 #: src/components/SelectLastSeenEpisode.tsx:100
 #: src/pages/Calendar.tsx:66
-#: src/pages/Details.tsx:392
-#: src/pages/Details.tsx:405
+#: src/pages/Details.tsx:943
+#: src/pages/Details.tsx:956
 #: src/pages/EpisodePage.tsx:32
 #: src/pages/GroupDetailPage.tsx:285
 #: src/pages/GroupsPage.tsx:17
@@ -836,11 +856,11 @@ msgstr "تسجيل الخروج"
 msgid "Logs"
 msgstr "السجلات"
 
-#: src/components/Facets/RatingSection.tsx:68
+#: src/components/Facets/RatingSection.tsx:64
 msgid "Maximum rating"
 msgstr "التقييم الأقصى"
 
-#: src/components/Facets/YearSection.tsx:92
+#: src/components/Facets/YearSection.tsx:88
 msgid "Maximum year"
 msgstr "السنة القصوى"
 
@@ -848,7 +868,7 @@ msgstr "السنة القصوى"
 msgid "Media type"
 msgstr "نوع الوسيط"
 
-#: src/components/Facets/ActiveFacetChips.tsx:281
+#: src/components/Facets/ActiveFacetChips.tsx:279
 #: src/components/Facets/MediaTypeSection.tsx:117
 msgid "Media Type"
 msgstr "نوع الوسائط"
@@ -857,17 +877,23 @@ msgstr "نوع الوسائط"
 msgid "Members"
 msgstr "الأعضاء"
 
-#: src/components/Facets/RatingSection.tsx:67
+#: src/components/Facets/RatingSection.tsx:63
 msgid "Minimum rating"
 msgstr "التقييم الأدنى"
 
-#: src/components/Facets/YearSection.tsx:91
+#: src/components/Facets/YearSection.tsx:87
 msgid "Minimum year"
 msgstr "السنة الدنيا"
 
+#: src/pages/Details.tsx:363
+msgid "More options"
+msgstr ""
+
+#: src/components/DetailsRelatedContentSection.tsx:21
 #: src/components/Facets/ActiveFacetChips.tsx:70
 #: src/components/Facets/MediaTypeSection.tsx:18
 #: src/components/GridItem.tsx:111
+#: src/pages/Details.tsx:605
 msgid "Movie"
 msgstr "فيلم"
 
@@ -891,7 +917,7 @@ msgstr "تقييمي"
 msgid "Name"
 msgstr "الاسم"
 
-#: src/pages/Details.tsx:485
+#: src/pages/Details.tsx:657
 msgid "Network"
 msgstr "الشبكة"
 
@@ -912,7 +938,7 @@ msgstr "كلمة مرور جديدة"
 msgid "Next airing"
 msgstr "البث التالي"
 
-#: src/pages/Details.tsx:721
+#: src/pages/Details.tsx:893
 msgid "Next episode"
 msgstr "الحلقة التالية"
 
@@ -968,9 +994,13 @@ msgstr "الآن"
 msgid "Number of episodes"
 msgstr "عدد الحلقات"
 
-#: src/pages/Details.tsx:570
-msgid "Number of pages"
-msgstr "عدد الصفحات"
+#: src/pages/Details.tsx:731
+#~ msgid "Number of pages"
+#~ msgstr "عدد الصفحات"
+
+#: src/pages/Details.tsx:290
+msgid "Official"
+msgstr ""
 
 #: src/components/Facets/ActiveFacetChips.tsx:23
 #: src/components/Facets/StatusSection.tsx:57
@@ -978,11 +1008,15 @@ msgstr "عدد الصفحات"
 msgid "On watchlist"
 msgstr "في قائمة المشاهدة"
 
-#: src/pages/Details.tsx:525
-msgid "Overview"
-msgstr "نظرة عامة"
+#: src/pages/Details.tsx:684
+#~ msgid "Overview"
+#~ msgstr "نظرة عامة"
 
-#: src/pages/Details.tsx:154
+#: src/pages/Details.tsx:703
+msgid "Pages"
+msgstr ""
+
+#: src/pages/Details.tsx:194
 msgid "Parental guidance"
 msgstr "الإرشاد الأبوي"
 
@@ -1009,6 +1043,18 @@ msgstr "المنصة"
 msgid "Platform Recommended"
 msgstr "موصى به من المنصة"
 
+#: src/pages/Details.tsx:830
+msgid "Play history"
+msgstr ""
+
+#: src/pages/Details.tsx:320
+msgid "Play preview"
+msgstr ""
+
+#: src/pages/Details.tsx:322
+msgid "Play trailer"
+msgstr ""
+
 #: src/components/Facets/ActiveFacetChips.tsx:32
 #: src/components/Facets/StatusSection.tsx:39
 #: src/components/FilterBy.tsx:29
@@ -1020,13 +1066,17 @@ msgstr "تم اللعب"
 msgid "Played at {0}"
 msgstr "لُعب في {0}"
 
-#: src/pages/Details.tsx:811
+#: src/pages/Details.tsx:879
 msgid "Played history"
 msgstr "سجل اللعب"
 
 #: src/pages/Settings.tsx:139
 msgid "Preferences"
 msgstr "التفضيلات"
+
+#: src/pages/Details.tsx:283
+msgid "Preview"
+msgstr ""
 
 #: src/pages/settings/Notifications.tsx:267
 #: src/pages/settings/Notifications.tsx:272
@@ -1043,7 +1093,7 @@ msgid "Private"
 msgstr "خاص"
 
 #: src/components/OrderBy.tsx:22
-#: src/pages/Details.tsx:706
+#: src/pages/Details.tsx:774
 msgid "Progress"
 msgstr "التقدم"
 
@@ -1055,7 +1105,7 @@ msgstr "عام"
 msgid "Public reviews"
 msgstr "المراجعات العامة"
 
-#: src/components/Facets/ActiveFacetChips.tsx:269
+#: src/components/Facets/ActiveFacetChips.tsx:267
 #: src/components/Facets/PublisherSection.tsx:53
 msgid "Publisher"
 msgstr "الناشر"
@@ -1090,9 +1140,9 @@ msgstr "لعبة فيديو عشوائية"
 msgid "Rated"
 msgstr "مقيَّم"
 
-#: src/components/Facets/ActiveFacetChips.tsx:316
-#: src/components/Facets/RatingSection.tsx:57
-#: src/pages/Details.tsx:160
+#: src/components/Facets/ActiveFacetChips.tsx:311
+#: src/components/Facets/RatingSection.tsx:53
+#: src/pages/Details.tsx:200
 #: src/pages/import/Goodreads.tsx:83
 msgid "Rating"
 msgstr "التقييم"
@@ -1129,7 +1179,8 @@ msgstr "مقروء"
 msgid "Read at {0}"
 msgstr "قُرئ في {0}"
 
-#: src/pages/Details.tsx:805
+#: src/pages/Details.tsx:828
+#: src/pages/Details.tsx:877
 msgid "Read history"
 msgstr "سجل القراءة"
 
@@ -1180,13 +1231,17 @@ msgstr "موصى به"
 msgid "Register"
 msgstr "تسجيل"
 
+#: src/components/DetailsRelatedContentSection.tsx:79
+msgid "Related content"
+msgstr ""
+
 #: src/components/GridItem.tsx:261
 msgid "Release <0/>"
 msgstr "الإصدار <0/>"
 
 #: src/components/OrderBy.tsx:15
 #: src/hooks/translations.ts:12
-#: src/pages/Details.tsx:436
+#: src/pages/Details.tsx:633
 #: src/pages/EpisodePage.tsx:82
 msgid "Release date"
 msgstr "تاريخ الإصدار"
@@ -1240,7 +1295,7 @@ msgstr "إزالة من سجل القراءة"
 msgid "Remove from seen history"
 msgstr "إزالة من سجل المشاهدة"
 
-#: src/pages/Details.tsx:877
+#: src/pages/Details.tsx:1077
 msgid "Remove from watchlist"
 msgstr "إزالة من قائمة المشاهدة"
 
@@ -1252,7 +1307,7 @@ msgstr "إزالة الموسم من سجل المشاهدة"
 msgid "Remove token"
 msgstr "إزالة الرمز"
 
-#: src/pages/Details.tsx:228
+#: src/pages/Details.tsx:412
 msgid "Review by <0><1>{author}</1></0> at {date}"
 msgstr "مراجعة بقلم <0><1>{author}</1></0> في {date}"
 
@@ -1266,7 +1321,7 @@ msgid "RSS link"
 msgstr "رابط RSS"
 
 #: src/hooks/translations.ts:13
-#: src/pages/Details.tsx:447
+#: src/pages/Details.tsx:640
 #: src/pages/EpisodePage.tsx:73
 msgid "Runtime"
 msgstr "وقت التشغيل"
@@ -1296,7 +1351,7 @@ msgstr "حفظ القائمة"
 msgid "Save review"
 msgstr "حفظ المراجعة"
 
-#: src/components/PaginatedGridItems.tsx:182
+#: src/components/PaginatedGridItems.tsx:180
 msgid "Search"
 msgstr "بحث"
 
@@ -1304,7 +1359,7 @@ msgstr "بحث"
 msgid "Search by username…"
 msgstr "البحث باسم المستخدم…"
 
-#: src/components/PaginatedGridItems.tsx:381
+#: src/components/PaginatedGridItems.tsx:379
 msgid "Search for items or <0>import</0>"
 msgstr "Search for items or <0>import</0>"
 
@@ -1330,7 +1385,7 @@ msgid "Season {0}"
 msgstr "الموسم {0}"
 
 #: src/components/ImportSummaryTable.tsx:92
-#: src/pages/Details.tsx:582
+#: src/pages/Details.tsx:675
 msgid "Seasons"
 msgstr "مواسم"
 
@@ -1343,7 +1398,7 @@ msgstr "مشاهَد"
 msgid "Seen at {0}"
 msgstr "شوهد في {0}"
 
-#: src/pages/Details.tsx:808
+#: src/pages/Details.tsx:878
 #: src/pages/import/TraktTv.tsx:187
 msgid "Seen history"
 msgstr "سجل المشاهدة"
@@ -1414,7 +1469,7 @@ msgid "Set"
 msgstr "تعيين"
 
 #: src/components/SetProgress.tsx:62
-#: src/pages/Details.tsx:912
+#: src/pages/Details.tsx:1112
 msgid "Set progress"
 msgstr "تعيين التقدم"
 
@@ -1438,7 +1493,7 @@ msgstr "اعرض مراجعاتك للمستخدمين الآخرين"
 msgid "Shows"
 msgstr "مسلسلات"
 
-#: src/components/PaginatedGridItems.tsx:448
+#: src/components/PaginatedGridItems.tsx:446
 msgid "Some content is hidden based on your age-based content filtering preferences."
 msgstr "بعض المحتوى مخفي بناءً على تفضيلاتك لتصفية المحتوى حسب العمر."
 
@@ -1452,11 +1507,11 @@ msgstr "الترتيب حسب"
 msgid "Sort order"
 msgstr "ترتيب الفرز"
 
-#: src/pages/Details.tsx:607
+#: src/pages/Details.tsx:707
 msgid "Source"
 msgstr "المصدر"
 
-#: src/pages/Details.tsx:118
+#: src/pages/Details.tsx:158
 msgid "Spoiler"
 msgstr "حرق للأحداث"
 
@@ -1469,10 +1524,10 @@ msgstr "ابدأ من جديد"
 msgid "Statistics"
 msgstr "إحصاءات"
 
-#: src/components/Facets/ActiveFacetChips.tsx:293
+#: src/components/Facets/ActiveFacetChips.tsx:291
 #: src/components/Facets/StatusSection.tsx:116
 #: src/components/OrderBy.tsx:16
-#: src/pages/Details.tsx:494
+#: src/pages/Details.tsx:653
 msgid "Status"
 msgstr "الحالة"
 
@@ -1489,7 +1544,7 @@ msgstr "توجد بالفعل قائمة بالاسم \"{name}\""
 msgid "This component can only be used with tv shows"
 msgstr "يمكن استخدام هذا المكوّن مع المسلسلات التلفزيونية فقط"
 
-#: src/pages/Details.tsx:376
+#: src/pages/Details.tsx:591
 msgid "This content is not available based on your age-based content filtering preferences."
 msgstr "هذا المحتوى غير متاح بناءً على تفضيلاتك لتصفية المحتوى حسب العمر."
 
@@ -1511,10 +1566,19 @@ msgstr "للقراءة"
 msgid "Topic"
 msgstr "الموضوع"
 
-#: src/pages/Details.tsx:458
+#: src/pages/Details.tsx:647
 msgid "Total runtime"
 msgstr "إجمالي وقت التشغيل"
 
+#: src/pages/Details.tsx:285
+msgid "Trailer"
+msgstr ""
+
+#: src/pages/Details.tsx:276
+msgid "Trailers & previews"
+msgstr ""
+
+#: src/components/DetailsRelatedContentSection.tsx:25
 #: src/components/GridItem.tsx:112
 #: src/components/Nav.tsx:37
 #: src/components/Statistics/StatisticsGenreSegment.tsx:16
@@ -1524,6 +1588,7 @@ msgstr "تلفزيون"
 
 #: src/components/Facets/ActiveFacetChips.tsx:72
 #: src/components/Facets/MediaTypeSection.tsx:20
+#: src/pages/Details.tsx:606
 msgid "TV Show"
 msgstr "مسلسل تلفزيوني"
 
@@ -1538,7 +1603,7 @@ msgstr "غير مُهيَّأ"
 msgid "Unrated"
 msgstr "غير مقيَّم"
 
-#: src/pages/Details.tsx:597
+#: src/pages/Details.tsx:682
 msgid "Unseen episodes"
 msgstr "حلقات لم تُشاهَد"
 
@@ -1551,7 +1616,7 @@ msgstr "عدد الحلقات غير المشاهدة"
 msgid "Upcoming"
 msgstr "قادم"
 
-#: src/pages/Details.tsx:898
+#: src/pages/Details.tsx:1098
 msgid "Update metadata"
 msgstr "تحديث البيانات الوصفية"
 
@@ -1568,6 +1633,7 @@ msgstr "اسم المستخدم"
 msgid "Version"
 msgstr "الإصدار"
 
+#: src/components/DetailsRelatedContentSection.tsx:32
 #: src/components/Facets/ActiveFacetChips.tsx:78
 #: src/components/Facets/MediaTypeSection.tsx:26
 #: src/components/GridItem.tsx:113
@@ -1588,6 +1654,10 @@ msgstr "في انتظار المصادقة"
 #: src/pages/LogsPage.tsx:107
 msgid "Warning"
 msgstr "تحذير"
+
+#: src/pages/Details.tsx:829
+msgid "Watch history"
+msgstr ""
 
 #: src/components/Facets/ActiveFacetChips.tsx:34
 #: src/components/Facets/StatusSection.tsx:41
@@ -1648,12 +1718,12 @@ msgstr "متى قرأت \"{0}\"؟"
 msgid "When did you see \"{0}\"?"
 msgstr "متى شاهدت \"{0}\"؟"
 
-#: src/pages/Details.tsx:290
+#: src/pages/Details.tsx:505
 msgid "Where to watch"
 msgstr "أين تشاهد"
 
-#: src/components/Facets/ActiveFacetChips.tsx:304
-#: src/components/Facets/YearSection.tsx:81
+#: src/components/Facets/ActiveFacetChips.tsx:302
+#: src/components/Facets/YearSection.tsx:77
 msgid "Year"
 msgstr "السنة"
 
@@ -1664,6 +1734,10 @@ msgstr "نعم"
 #: src/pages/settings/Preferences.tsx:17
 msgid "Your date of birth is used for age-based content filtering. This is self-only account data and is never shared with other users."
 msgstr "يُستخدم تاريخ ميلادك لتصفية المحتوى حسب العمر. هذه بيانات خاصة بحسابك فقط ولا تتم مشاركتها مطلقًا مع المستخدمين الآخرين."
+
+#: src/pages/Details.tsx:924
+msgid "Your rating"
+msgstr ""
 
 #: src/pages/GroupDetailPage.tsx:319
 msgid "Your role:"

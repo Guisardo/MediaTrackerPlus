@@ -21,6 +21,7 @@
   "Running migrations": "Migraties worden uitgevoerd",
   "Season {0} of {1} has been canceled": "Seizoen {0} van {1} is geannuleerd",
   "Season {0} of {1} will be released at {2}": "Seizoen {0} van {1} verschijnt op {2}",
+  "Season {0} of {1} will be released at {releaseDate}": "",
   "Season {seasonNumber} of {0} has been canceled": "Seizoen {seasonNumber} van {0} is geannuleerd",
   "Season {seasonNumber} of {0} will be released at {releaseDate}": "Seizoen {seasonNumber} van {0} verschijnt op {releaseDate}",
   "Server closed": "Server gesloten",
@@ -29,6 +30,8 @@
   "TMDB language changed to: \"{value}\", updating metadata for all items": "TMDB-taal gewijzigd naar: \"{value}\", metagegevens voor alle items worden bijgewerkt",
   "Test message": "Testbericht",
   "Updating metadata": "Metagegevens bijwerken",
+  "Updating: {0}": "",
+  "Updating: {0} (last updated at: {date})": "",
   "Updating: {title}": "Bijwerken: {title}",
   "Updating: {title} (last updated at: {date}": "Bijwerken: {title} (voor het laatst bijgewerkt op: {date}",
   "Updating: {title} (last updated at: {date})": "Bijwerken: {title} (voor het laatst bijgewerkt op: {date})",
@@ -44,5 +47,8 @@
   "{count, plural, one {Sending notification for new episodes of {title} to # user} other {Sending notification for new episodes of {title} to # users}}": "{count, plural, one {Melding verzenden voor nieuwe afleveringen van {title} naar # gebruiker} other {Melding verzenden voor nieuwe afleveringen van {title} naar # gebruikers}}",
   "{count, plural, one {Sending notification for {title} to # user} other {Sending notification for {title} to # users}}": "{count, plural, one {Melding verzenden voor {title} naar # gebruiker} other {Melding verzenden voor {title} naar # gebruikers}}",
   "{count, plural, one {Updated 1 item} other {Updated # items}}": "{count, plural, one {1 item bijgewerkt} other {# items bijgewerkt}}",
+  "{numberOfFailures, plural, one {Failed to update 1 item} other {Failed to update # items}}": "",
+  "{numberOfSkippedItems, plural, one {Skipped 1 item because upstream metadata returned 404} other {Skipped # items because upstream metadata returned 404}}": "",
+  "{numberOfUpdatedItems, plural, one {Updated 1 item} other {Updated # items}}": "",
   "{title} has been released": "{title} is uitgebracht"
 }
