@@ -1,6 +1,5 @@
 import {
   MediaItemBase,
-  mediaItemPosterPath,
   RelatedContentItem,
   RelatedContentMediaType,
 } from 'src/entity/mediaItem';
@@ -36,14 +35,13 @@ const toRelatedContentItem = (mediaItem: MediaItemBase): RelatedContentItem | nu
     return null;
   }
 
-  const hasPoster =
-    mediaItem.posterId != null || mediaItem.externalPosterUrl != null;
-
   return {
     id: mediaItem.id,
     title: mediaItem.title,
     mediaType: mediaItem.mediaType,
-    posterSmall: hasPoster ? mediaItemPosterPath(mediaItem.id, 'small') : null,
+    posterSmall: mediaItem.posterId
+      ? `/img/${mediaItem.posterId}?size=small`
+      : null,
     releaseDate: mediaItem.releaseDate,
     source: mediaItem.source,
   };

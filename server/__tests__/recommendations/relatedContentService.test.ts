@@ -45,9 +45,34 @@ describe('RelatedContentService', () => {
 
     const resolver = jest
       .fn()
-      .mockResolvedValueOnce(makeMediaItem({ id: 12, mediaType: 'movie', tmdbId: 12, title: 'Movie 12' }))
-      .mockResolvedValueOnce(makeMediaItem({ id: 33, mediaType: 'video_game', igdbId: 33, source: 'IGDB', title: 'Game 33' }))
-      .mockResolvedValueOnce(makeMediaItem({ id: 55, mediaType: 'book', openlibraryId: '/works/OL1W', source: 'OpenLibrary', title: 'Book 55' }));
+      .mockResolvedValueOnce(
+        makeMediaItem({
+          id: 12,
+          mediaType: 'movie',
+          tmdbId: 12,
+          title: 'Movie 12',
+          posterId: 'poster-12',
+        })
+      )
+      .mockResolvedValueOnce(
+        makeMediaItem({
+          id: 33,
+          mediaType: 'video_game',
+          igdbId: 33,
+          source: 'IGDB',
+          title: 'Game 33',
+          posterId: 'poster-33',
+        })
+      )
+      .mockResolvedValueOnce(
+        makeMediaItem({
+          id: 55,
+          mediaType: 'book',
+          openlibraryId: '/works/OL1W',
+          source: 'OpenLibrary',
+          title: 'Book 55',
+        })
+      );
 
     const service = new RelatedContentService({
       metadataProviders: {
@@ -70,7 +95,20 @@ describe('RelatedContentService', () => {
       id: { openlibraryId: '/works/OL1W' },
       mediaType: 'book',
     });
-    expect(result.map((item) => item.id)).toEqual([12, 33, 55]);
+    expect(result).toEqual([
+      expect.objectContaining({
+        id: 12,
+        posterSmall: '/img/poster-12?size=small',
+      }),
+      expect.objectContaining({
+        id: 33,
+        posterSmall: '/img/poster-33?size=small',
+      }),
+      expect.objectContaining({
+        id: 55,
+        posterSmall: null,
+      }),
+    ]);
   });
 
   test('dedupes by resolved mediaItem id and excludes source item', async () => {
@@ -192,5 +230,31 @@ describe('RelatedContentService', () => {
       'RelatedContentService: similarity fetch error',
       { err: similarError }
     );
+  });
+
+  test('does not expose a local poster URL when only an external poster exists', async () => {
+    const service = new RelatedContentService({
+      metadataProviders: {
+        similar: jest.fn().mockResolvedValue([makeSimilarItem('movie', '301')]),
+      },
+      findMediaItemByExternalId: jest.fn().mockResolvedValue(
+        makeMediaItem({
+          id: 301,
+          tmdbId: 301,
+          title: 'External Poster Only',
+          externalPosterUrl: 'https://image.tmdb.org/t/p/w500/example.jpg',
+          posterId: null,
+        })
+      ),
+    });
+
+    const result = await service.relatedContent({ mediaItem: makeMediaItem() });
+
+    expect(result).toEqual([
+      expect.objectContaining({
+        id: 301,
+        posterSmall: null,
+      }),
+    ]);
   });
 });
