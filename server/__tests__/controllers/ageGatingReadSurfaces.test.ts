@@ -1,3 +1,14 @@
+jest.mock('src/metadata/metadataProviders', () => ({
+  metadataProviders: {
+    trailers: jest.fn(),
+    similar: jest.fn(),
+  },
+}));
+
+jest.mock('src/metadata/findByExternalId', () => ({
+  findMediaItemByExternalId: jest.fn(),
+}));
+
 import { MediaItemController } from 'src/controllers/item';
 import { ListController } from 'src/controllers/listController';
 import { CalendarController } from 'src/controllers/calendar';
@@ -5,6 +16,16 @@ import { StatisticsController } from 'src/controllers/statisticsController';
 import { Database } from 'src/dbconfig';
 import { request } from '__tests__/__utils__/request';
 import { clearDatabase, runMigrations } from '__tests__/__utils__/utils';
+import { metadataProviders } from 'src/metadata/metadataProviders';
+import { findMediaItemByExternalId } from 'src/metadata/findByExternalId';
+
+const mockedMetadataProviders = metadataProviders as jest.Mocked<
+  typeof metadataProviders
+>;
+const mockedFindMediaItemByExternalId =
+  findMediaItemByExternalId as jest.MockedFunction<
+    typeof findMediaItemByExternalId
+  >;
 
 /**
  * Integration tests for age gating across details, list items, calendar,
@@ -280,6 +301,12 @@ describe('Age Gating - Read Surfaces (US-006)', () => {
 
   afterAll(clearDatabase);
 
+  beforeEach(() => {
+    mockedMetadataProviders.trailers.mockResolvedValue(null as never);
+    mockedMetadataProviders.similar.mockResolvedValue([]);
+    mockedFindMediaItemByExternalId.mockResolvedValue(undefined);
+  });
+
   // ---------------------------------------------------------------------------
   // GET /api/details/:mediaItemId — restricted details (403 AGE_RESTRICTED)
   // ---------------------------------------------------------------------------
@@ -338,6 +365,50 @@ describe('Age Gating - Read Surfaces (US-006)', () => {
 
       expect(res.statusCode).toBe(200);
       expect((res.data as any).title).toBe('R-Rated Thriller');
+    });
+
+    test('filters age-restricted related items for teen viewers', async () => {
+      mockedMetadataProviders.similar.mockResolvedValue([
+        {
+          externalId: '4001',
+          mediaType: 'movie',
+          title: 'Teen-safe related',
+          externalRating: 7.2,
+        },
+        {
+          externalId: '4002',
+          mediaType: 'movie',
+          title: 'Adult-only related',
+          externalRating: 8.8,
+        },
+      ]);
+      mockedFindMediaItemByExternalId
+        .mockResolvedValueOnce({
+          id: 4001,
+          title: 'Teen-safe related',
+          mediaType: 'movie',
+          source: 'tmdb',
+          tmdbId: 4001,
+          minimumAge: 13,
+        } as any)
+        .mockResolvedValueOnce({
+          id: 4002,
+          title: 'Adult-only related',
+          mediaType: 'movie',
+          source: 'tmdb',
+          tmdbId: 4002,
+          minimumAge: 17,
+        } as any);
+
+      const res = await request(detailsController.details, {
+        userId: TEEN_USER_ID,
+        pathParams: { mediaItemId: RATED_PG13_MOVIE_ID },
+      });
+
+      expect(res.statusCode).toBe(200);
+      expect((res.data as any).relatedContent).toEqual([
+        expect.objectContaining({ id: 4001 }),
+      ]);
     });
 
     test('non-existent item returns 404', async () => {

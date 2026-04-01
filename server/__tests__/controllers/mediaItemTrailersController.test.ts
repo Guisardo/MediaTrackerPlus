@@ -10,7 +10,12 @@ jest.mock('src/logger', () => ({
 jest.mock('src/metadata/metadataProviders', () => ({
   metadataProviders: {
     trailers: jest.fn(),
+    similar: jest.fn(),
   },
+}));
+
+jest.mock('src/metadata/findByExternalId', () => ({
+  findMediaItemByExternalId: jest.fn(),
 }));
 
 jest.mock('src/repository/mediaItem', () => ({
@@ -102,6 +107,7 @@ describe('MediaItemController trailer enrichment', () => {
       dateOfBirth: null,
     } as any);
     mockedMetadataProviders.trailers.mockResolvedValue(null as never);
+    mockedMetadataProviders.similar.mockResolvedValue([]);
     mutableConfig.METADATA_LANGUAGES = ['en', 'es'];
     _resetMetadataLanguagesCache();
   });

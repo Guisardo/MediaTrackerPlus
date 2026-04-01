@@ -87,6 +87,17 @@ export type MediaTrailer = {
   externalUrl: string;
 };
 
+export type RelatedContentMediaType = 'movie' | 'tv' | 'book' | 'video_game';
+
+export type RelatedContentItem = {
+  id: number;
+  title: string;
+  mediaType: RelatedContentMediaType;
+  posterSmall?: string | null;
+  releaseDate?: string;
+  source?: string;
+};
+
 export type MediaItemBaseWithSeasons = MediaItemBase & {
   seasons?: TvSeason[];
 };
@@ -136,6 +147,7 @@ export type MediaItemDetailsResponse = Omit<
   lists: List[];
   metadataLanguage?: string | null;
   trailers?: MediaTrailer[];
+  relatedContent?: RelatedContentItem[];
 };
 
 export type MediaItemItemsResponse = Omit<MediaItemBase, 'lockedAt'> & {

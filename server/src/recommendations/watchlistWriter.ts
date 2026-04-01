@@ -13,18 +13,7 @@ import { logger } from 'src/logger';
 import { mediaItemRepository } from 'src/repository/mediaItem';
 import { recalculateGroupPlatformRatingsForUser } from 'src/repository/groupPlatformRatingCache';
 import { SimilarItem } from 'src/metadata/types';
-
-const toExternalIds = (item: SimilarItem): ExternalIds => {
-  switch (item.mediaType) {
-    case 'movie':
-    case 'tv':
-      return { tmdbId: Number(item.externalId) };
-    case 'video_game':
-      return { igdbId: Number(item.externalId) };
-    case 'book':
-      return { openlibraryId: item.externalId };
-  }
-};
+import { similarItemToExternalIds } from 'src/recommendations/similarItemExternalIds';
 
 export interface WriteResult {
   added: number;
@@ -66,7 +55,7 @@ export class WatchlistWriter {
 
   private async processItem(userId: number, item: SimilarItem, estimatedRating: number): Promise<'added' | 'updated' | 'skipped'> {
     const mediaItem = await this.findMediaItemByExternalId({
-      id: toExternalIds(item),
+      id: similarItemToExternalIds(item),
       mediaType: item.mediaType as MediaType,
     });
 
