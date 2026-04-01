@@ -113,8 +113,8 @@ jest.mock('src/components/DetailsRelatedContentSection', () => ({
 jest.mock('src/components/Modal', () => ({
   Modal: ({ children, openModal }: any) => (
     <>
-      {openModal?.(() => {})}
-      {children?.(() => {})}
+      {openModal?.(() => null)}
+      {children?.(() => null)}
     </>
   ),
 }));
