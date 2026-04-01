@@ -95,9 +95,11 @@ export const useOrderByComponent = (args: {
             }}
             aria-label={t`Toggle sort direction`}
           >
-            {sortOrder === 'asc'
-              ? <ArrowUp className="size-4" data-testid="sort-direction-asc" />
-              : <ArrowDown className="size-4" data-testid="sort-direction-desc" />}
+            {sortOrder === 'asc' ? (
+              <ArrowUp className="size-4" data-testid="sort-direction-asc" />
+            ) : (
+              <ArrowDown className="size-4" data-testid="sort-direction-desc" />
+            )}
           </Button>
         </div>
       </Menu>

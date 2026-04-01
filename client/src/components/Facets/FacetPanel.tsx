@@ -27,9 +27,11 @@ export const FacetPanel: FunctionComponent<{
       {/* Header row — always visible; shows active count and clear button when filters are active */}
       <div className="flex items-center justify-between px-3 py-2 border-b border-zinc-200 dark:border-zinc-700">
         <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
-          {activeFacetCount > 0
-            ? <Trans>Filters ({activeFacetCount})</Trans>
-            : <Trans>Filters</Trans>}
+          {activeFacetCount > 0 ? (
+            <Trans>Filters ({activeFacetCount})</Trans>
+          ) : (
+            <Trans>Filters</Trans>
+          )}
         </span>
         {activeFacetCount > 0 && (
           <button
