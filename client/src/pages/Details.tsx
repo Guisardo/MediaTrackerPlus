@@ -617,59 +617,44 @@ const MediaTypeBadge: FunctionComponent<{ mediaType: string }> = ({ mediaType })
   );
 };
 
-/**
- * Builds the ordered list of label/value pairs shown in the info card.
- * Each field is only included when the underlying data is present and
- * non-empty, keeping the card compact for items with partial metadata.
- */
-function buildInfoFields(
-  mediaItem: MediaItemDetailsResponse,
-  i18n: ReturnType<typeof useLingui>['i18n']
-): { label: React.ReactNode; value: React.ReactNode }[] {
-  const fields: { label: React.ReactNode; value: React.ReactNode }[] = [];
+type InfoField = { label: React.ReactNode; value: React.ReactNode };
 
+/** Common fields present on all media types (dates, runtime, status, network, language, source). */
+function buildCommonFields(mediaItem: MediaItemDetailsResponse): InfoField[] {
+  const fields: InfoField[] = [];
   if (mediaItem.releaseDate) {
-    fields.push({
-      label: <Trans>Release date</Trans>,
-      value: parseISO(mediaItem.releaseDate).toLocaleDateString(),
-    });
+    fields.push({ label: <Trans>Release date</Trans>, value: parseISO(mediaItem.releaseDate).toLocaleDateString() });
   }
-
   if (mediaItem.runtime != null && mediaItem.runtime > 0) {
-    fields.push({
-      label: <Trans>Runtime</Trans>,
-      value: <FormatDuration milliseconds={mediaItem.runtime * 60 * 1000} />,
-    });
+    fields.push({ label: <Trans>Runtime</Trans>, value: <FormatDuration milliseconds={mediaItem.runtime * 60 * 1000} /> });
   }
-
   if (mediaItem.totalRuntime != null && mediaItem.totalRuntime > 0) {
-    fields.push({
-      label: <Trans>Total runtime</Trans>,
-      value: <FormatDuration milliseconds={mediaItem.totalRuntime * 60 * 1000} />,
-    });
+    fields.push({ label: <Trans>Total runtime</Trans>, value: <FormatDuration milliseconds={mediaItem.totalRuntime * 60 * 1000} /> });
   }
-
   if (mediaItem.status) {
     fields.push({ label: <Trans>Status</Trans>, value: mediaItem.status });
   }
-
   if (mediaItem.network) {
     fields.push({ label: <Trans>Network</Trans>, value: mediaItem.network });
   }
-
-  if (mediaItem.platform) {
-    fields.push({
-      label: (
-        <Plural value={mediaItem.platform.length} one="Platform" other="Platforms" />
-      ),
-      value: mediaItem.platform.sort().join(', '),
-    });
-  }
-
   if (mediaItem.language) {
     fields.push({ label: <Trans>Language</Trans>, value: mediaItem.language });
   }
+  if (mediaItem.source) {
+    fields.push({ label: <Trans>Source</Trans>, value: mediaItem.source });
+  }
+  return fields;
+}
 
+/** Media-type-specific fields (platform, TV episode counts, book/audiobook credits and pages). */
+function buildMediaTypeFields(mediaItem: MediaItemDetailsResponse): InfoField[] {
+  const fields: InfoField[] = [];
+  if (mediaItem.platform) {
+    fields.push({
+      label: <Plural value={mediaItem.platform.length} one="Platform" other="Platforms" />,
+      value: mediaItem.platform.sort().join(', '),
+    });
+  }
   if (isTvShow(mediaItem)) {
     if (mediaItem.numberOfSeasons != null) {
       fields.push({ label: <Trans>Seasons</Trans>, value: mediaItem.numberOfSeasons });
@@ -678,36 +663,34 @@ function buildInfoFields(
       fields.push({ label: <Trans>Episodes</Trans>, value: mediaItem.numberOfEpisodes });
     }
     if (mediaItem.unseenEpisodesCount != null && mediaItem.unseenEpisodesCount > 0) {
-      fields.push({
-        label: <Trans>Unseen episodes</Trans>,
-        value: mediaItem.unseenEpisodesCount,
-      });
+      fields.push({ label: <Trans>Unseen episodes</Trans>, value: mediaItem.unseenEpisodesCount });
     }
   }
-
   if (mediaItem.authors) {
     fields.push({
       label: <Plural value={mediaItem.authors.length} one="Author" other="Authors" />,
       value: mediaItem.authors.sort().join(', '),
     });
   }
-
   if (mediaItem.narrators) {
     fields.push({
       label: <Plural value={mediaItem.narrators.length} one="Narrator" other="Narrators" />,
       value: mediaItem.narrators.sort().join(', '),
     });
   }
-
   if (mediaItem.numberOfPages) {
     fields.push({ label: <Trans>Pages</Trans>, value: mediaItem.numberOfPages });
   }
-
-  if (mediaItem.source) {
-    fields.push({ label: <Trans>Source</Trans>, value: mediaItem.source });
-  }
-
   return fields;
+}
+
+/**
+ * Builds the ordered list of label/value pairs shown in the info card.
+ * Each field is only included when the underlying data is present and
+ * non-empty, keeping the card compact for items with partial metadata.
+ */
+function buildInfoFields(mediaItem: MediaItemDetailsResponse): InfoField[] {
+  return [...buildCommonFields(mediaItem), ...buildMediaTypeFields(mediaItem)];
 }
 
 /**
@@ -718,8 +701,7 @@ function buildInfoFields(
 const DetailsMetadata: FunctionComponent<{
   mediaItem: MediaItemDetailsResponse;
 }> = ({ mediaItem }) => {
-  const { i18n } = useLingui();
-  const infoFields = buildInfoFields(mediaItem, i18n);
+  const infoFields = buildInfoFields(mediaItem);
 
   return (
     <div className="mt-4 space-y-4">
@@ -749,6 +731,153 @@ const DetailsMetadata: FunctionComponent<{
   );
 };
 
+const sectionCard = 'rounded-xl border border-zinc-200/80 bg-zinc-50/50 p-4 dark:border-zinc-800 dark:bg-zinc-900/40';
+const sectionLabel = 'mb-3 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400';
+
+/** Progress card — shown for non-TV items that have been released (or have no release date). */
+const ProgressSection: FunctionComponent<{
+  mediaItem: MediaItemDetailsResponse;
+  mediaItemRecordId: number;
+}> = ({ mediaItem, mediaItemRecordId }) => (
+  <div className={sectionCard}>
+    <div className={sectionLabel}><Trans>Progress</Trans></div>
+    <div className="flex flex-wrap gap-2">
+      {!hasProgress(mediaItem) ? (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => addToProgress({ mediaItemId: mediaItemRecordId, progress: 0 })}
+        >
+          {isMovie(mediaItem) && <Trans>I am watching it</Trans>}
+          {isBook(mediaItem) && <Trans>I am reading it</Trans>}
+          {isAudiobook(mediaItem) && <Trans>I am listening it</Trans>}
+          {isVideoGame(mediaItem) && <Trans>I am playing it</Trans>}
+        </Button>
+      ) : (
+        <>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => addToProgress({ mediaItemId: mediaItemRecordId, progress: 1 })}
+          >
+            {isMovie(mediaItem) && <Trans>I finished watching it</Trans>}
+            {isBook(mediaItem) && <Trans>I finished reading it</Trans>}
+            {isAudiobook(mediaItem) && <Trans>I finished listening it</Trans>}
+            {isVideoGame(mediaItem) && <Trans>I finished playing it</Trans>}
+          </Button>
+          <SetProgressButton mediaItem={mediaItem} />
+        </>
+      )}
+    </div>
+    {hasProgress(mediaItem) && (
+      <div className="mt-3">
+        <div className="h-1.5 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
+          <div
+            className="h-1.5 rounded-full bg-emerald-500"
+            style={{ width: `${Math.round((mediaItem.progress ?? 0) * 100)}%` }}
+          />
+        </div>
+        <div className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+          {Math.round((mediaItem.progress ?? 0) * 100)}%
+        </div>
+      </div>
+    )}
+  </div>
+);
+
+/** History card — seen/listened/read/played history and links. */
+const HistorySection: FunctionComponent<{
+  mediaItem: MediaItemDetailsResponse;
+}> = ({ mediaItem }) => (
+  <div className={sectionCard}>
+    <div className={sectionLabel}>
+      {isAudiobook(mediaItem) && <Trans>Listen history</Trans>}
+      {isBook(mediaItem) && <Trans>Read history</Trans>}
+      {(isMovie(mediaItem) || isTvShow(mediaItem)) && <Trans>Watch history</Trans>}
+      {isVideoGame(mediaItem) && <Trans>Play history</Trans>}
+    </div>
+
+    {(hasBeenReleased(mediaItem) || !hasReleaseDate(mediaItem)) && (
+      <div className="flex flex-wrap gap-2">
+        <AddToSeenHistoryButton mediaItem={mediaItem} />
+        {hasBeenSeenAtLeastOnce(mediaItem) && (
+          <RemoveFromSeenHistoryButton mediaItem={mediaItem} />
+        )}
+      </div>
+    )}
+
+    {mediaItem.lastSeenAt != null && mediaItem.lastSeenAt > 0 && (
+      <div className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+        {isAudiobook(mediaItem) && (
+          <Trans>Last listened at {new Date(mediaItem.lastSeenAt!).toLocaleString()}</Trans>
+        )}
+        {isBook(mediaItem) && (
+          <Trans>Last read at {new Date(mediaItem.lastSeenAt!).toLocaleString()}</Trans>
+        )}
+        {(isMovie(mediaItem) || isTvShow(mediaItem)) && (
+          <Trans>Last seen at {new Date(mediaItem.lastSeenAt!).toLocaleString()}</Trans>
+        )}
+        {isVideoGame(mediaItem) && (
+          <Trans>Last played at {new Date(mediaItem.lastSeenAt!).toLocaleString()}</Trans>
+        )}
+      </div>
+    )}
+
+    {(mediaItem.seenHistory?.length ?? 0) > 0 && (
+      <div className="mt-2 flex items-center justify-between text-sm">
+        <span className="text-zinc-600 dark:text-zinc-400">
+          {isAudiobook(mediaItem) && (
+            <Plural value={mediaItem.seenHistory!.length} one="Listened 1 time" other="Listened # times" />
+          )}
+          {isBook(mediaItem) && (
+            <Plural value={mediaItem.seenHistory!.length} one="Read 1 time" other="Read # times" />
+          )}
+          {(isMovie(mediaItem) || isTvShow(mediaItem)) && (
+            <Plural value={mediaItem.seenHistory!.length} one="Seen 1 time" other="Seen # times" />
+          )}
+          {isVideoGame(mediaItem) && (
+            <Plural value={mediaItem.seenHistory!.length} one="Played 1 time" other="Played # times" />
+          )}
+        </span>
+        <Link to={`/seen-history/${mediaItem.id}`} className="text-xs text-blue-600 underline dark:text-blue-400">
+          {isAudiobook(mediaItem) && <Trans>Listened history</Trans>}
+          {isBook(mediaItem) && <Trans>Read history</Trans>}
+          {(isMovie(mediaItem) || isTvShow(mediaItem)) && <Trans>Seen history</Trans>}
+          {isVideoGame(mediaItem) && <Trans>Played history</Trans>}
+        </Link>
+      </div>
+    )}
+  </div>
+);
+
+/** TV episodes card — upcoming and first unwatched episode. */
+const TvEpisodesSection: FunctionComponent<{
+  mediaItem: MediaItemDetailsResponse;
+}> = ({ mediaItem }) => (
+  <div className={sectionCard}>
+    <div className={sectionLabel}><Trans>Episodes</Trans></div>
+    {mediaItem.upcomingEpisode && (
+      <div className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
+        <span className="text-zinc-500 dark:text-zinc-400"><Trans>Next episode</Trans>{' '}</span>
+        {mediaItem.upcomingEpisode.releaseDate && (
+          <RelativeTime to={parseISO(mediaItem.upcomingEpisode.releaseDate)} />
+        )}
+        {': '}
+        {formatEpisodeNumber(mediaItem.upcomingEpisode)}{' '}
+        {mediaItem.upcomingEpisode.title}
+      </div>
+    )}
+    {mediaItem.firstUnwatchedEpisode && (
+      <div className={clsx('flex items-center gap-1 text-sm font-medium text-zinc-800 dark:text-zinc-200', mediaItem.upcomingEpisode && 'mt-2')}>
+        <span className="text-zinc-500 dark:text-zinc-400"><Trans>First unwatched</Trans>{': '}</span>
+        {formatEpisodeNumber(mediaItem.firstUnwatchedEpisode)}{' '}
+        {mediaItem.firstUnwatchedEpisode.title}
+        <MarkAsSeenFirstUnwatchedEpisode mediaItem={mediaItem} />
+      </div>
+    )}
+  </div>
+);
+
 /**
  * Renders all action controls and history information for a media item.
  * Watchlist and list-membership buttons have moved to the DetailsPage hero
@@ -758,179 +887,38 @@ const DetailsMetadata: FunctionComponent<{
 const DetailsActions: FunctionComponent<{
   mediaItem: MediaItemDetailsResponse;
   mediaItemRecordId: number;
-}> = ({ mediaItem, mediaItemRecordId }) => (
-  <div className="mt-4 space-y-4">
-    {canMetadataBeUpdated(mediaItem) && (
-      <div>
-        <UpdateMetadataButton mediaItem={mediaItem} />
-      </div>
-    )}
+}> = ({ mediaItem, mediaItemRecordId }) => {
+  const isReleased = hasBeenReleased(mediaItem) || !hasReleaseDate(mediaItem);
 
-    {/* Progress section — non-TV only */}
-    {(hasBeenReleased(mediaItem) || !hasReleaseDate(mediaItem)) &&
-      !isTvShow(mediaItem) && (
-        <div className="rounded-xl border border-zinc-200/80 bg-zinc-50/50 p-4 dark:border-zinc-800 dark:bg-zinc-900/40">
-          <div className="mb-3 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-            <Trans>Progress</Trans>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {!hasProgress(mediaItem) ? (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={async () => {
-                  addToProgress({ mediaItemId: mediaItemRecordId, progress: 0 });
-                }}
-              >
-                {isMovie(mediaItem) && <Trans>I am watching it</Trans>}
-                {isBook(mediaItem) && <Trans>I am reading it</Trans>}
-                {isAudiobook(mediaItem) && <Trans>I am listening it</Trans>}
-                {isVideoGame(mediaItem) && <Trans>I am playing it</Trans>}
-              </Button>
-            ) : (
-              <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={async () => {
-                    addToProgress({ mediaItemId: mediaItemRecordId, progress: 1 });
-                  }}
-                >
-                  {isMovie(mediaItem) && <Trans>I finished watching it</Trans>}
-                  {isBook(mediaItem) && <Trans>I finished reading it</Trans>}
-                  {isAudiobook(mediaItem) && <Trans>I finished listening it</Trans>}
-                  {isVideoGame(mediaItem) && <Trans>I finished playing it</Trans>}
-                </Button>
-                <SetProgressButton mediaItem={mediaItem} />
-              </>
-            )}
-          </div>
-          {hasProgress(mediaItem) && (
-            <div className="mt-3">
-              <div className="h-1.5 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
-                <div
-                  className="h-1.5 rounded-full bg-emerald-500"
-                  style={{ width: `${Math.round((mediaItem.progress ?? 0) * 100)}%` }}
-                />
-              </div>
-              <div className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-                {Math.round((mediaItem.progress ?? 0) * 100)}%
-              </div>
-            </div>
-          )}
-        </div>
+  return (
+    <div className="mt-4 space-y-4">
+      {canMetadataBeUpdated(mediaItem) && (
+        <div><UpdateMetadataButton mediaItem={mediaItem} /></div>
       )}
 
-    {/* History section */}
-    <div className="rounded-xl border border-zinc-200/80 bg-zinc-50/50 p-4 dark:border-zinc-800 dark:bg-zinc-900/40">
-      <div className="mb-3 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-        {isAudiobook(mediaItem) && <Trans>Listen history</Trans>}
-        {isBook(mediaItem) && <Trans>Read history</Trans>}
-        {(isMovie(mediaItem) || isTvShow(mediaItem)) && <Trans>Watch history</Trans>}
-        {isVideoGame(mediaItem) && <Trans>Play history</Trans>}
-      </div>
-
-      {(hasBeenReleased(mediaItem) || !hasReleaseDate(mediaItem)) && (
-        <div className="flex flex-wrap gap-2">
-          <AddToSeenHistoryButton mediaItem={mediaItem} />
-          {hasBeenSeenAtLeastOnce(mediaItem) && (
-            <RemoveFromSeenHistoryButton mediaItem={mediaItem} />
-          )}
-        </div>
+      {isReleased && !isTvShow(mediaItem) && (
+        <ProgressSection mediaItem={mediaItem} mediaItemRecordId={mediaItemRecordId} />
       )}
 
-      {mediaItem.lastSeenAt != null && mediaItem.lastSeenAt > 0 && (
-        <div className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
-          {isAudiobook(mediaItem) && (
-            <Trans>Last listened at {new Date(mediaItem.lastSeenAt!).toLocaleString()}</Trans>
-          )}
-          {isBook(mediaItem) && (
-            <Trans>Last read at {new Date(mediaItem.lastSeenAt!).toLocaleString()}</Trans>
-          )}
-          {(isMovie(mediaItem) || isTvShow(mediaItem)) && (
-            <Trans>Last seen at {new Date(mediaItem.lastSeenAt!).toLocaleString()}</Trans>
-          )}
-          {isVideoGame(mediaItem) && (
-            <Trans>Last played at {new Date(mediaItem.lastSeenAt!).toLocaleString()}</Trans>
-          )}
-        </div>
+      <HistorySection mediaItem={mediaItem} />
+
+      {(mediaItem.upcomingEpisode || mediaItem.firstUnwatchedEpisode) && (
+        <TvEpisodesSection mediaItem={mediaItem} />
       )}
 
-      {(mediaItem.seenHistory?.length ?? 0) > 0 && (
-        <div className="mt-2 flex items-center justify-between text-sm">
-          <span className="text-zinc-600 dark:text-zinc-400">
-            {isAudiobook(mediaItem) && (
-              <Plural value={mediaItem.seenHistory!.length} one="Listened 1 time" other="Listened # times" />
-            )}
-            {isBook(mediaItem) && (
-              <Plural value={mediaItem.seenHistory!.length} one="Read 1 time" other="Read # times" />
-            )}
-            {(isMovie(mediaItem) || isTvShow(mediaItem)) && (
-              <Plural value={mediaItem.seenHistory!.length} one="Seen 1 time" other="Seen # times" />
-            )}
-            {isVideoGame(mediaItem) && (
-              <Plural value={mediaItem.seenHistory!.length} one="Played 1 time" other="Played # times" />
-            )}
-          </span>
-          <Link to={`/seen-history/${mediaItem.id}`} className="text-xs text-blue-600 underline dark:text-blue-400">
-            {isAudiobook(mediaItem) && <Trans>Listened history</Trans>}
-            {isBook(mediaItem) && <Trans>Read history</Trans>}
-            {(isMovie(mediaItem) || isTvShow(mediaItem)) && <Trans>Seen history</Trans>}
-            {isVideoGame(mediaItem) && <Trans>Played history</Trans>}
-          </Link>
+      {(isMovie(mediaItem) || isTvShow(mediaItem)) && (
+        <div><WhereToWatchComponent mediaItem={mediaItem} /></div>
+      )}
+
+      {isReleased && mediaItem.userRating && (
+        <div className={sectionCard}>
+          <div className={sectionLabel}><Trans>Your rating</Trans></div>
+          <RatingAndReview userRating={mediaItem.userRating} mediaItem={mediaItem} />
         </div>
       )}
     </div>
-
-    {/* TV episodes section */}
-    {(mediaItem.upcomingEpisode || mediaItem.firstUnwatchedEpisode) && (
-      <div className="rounded-xl border border-zinc-200/80 bg-zinc-50/50 p-4 dark:border-zinc-800 dark:bg-zinc-900/40">
-        <div className="mb-3 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-          <Trans>Episodes</Trans>
-        </div>
-        {mediaItem.upcomingEpisode && (
-          <div className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
-            <span className="text-zinc-500 dark:text-zinc-400"><Trans>Next episode</Trans>{' '}</span>
-            {mediaItem.upcomingEpisode.releaseDate && (
-              <RelativeTime to={parseISO(mediaItem.upcomingEpisode.releaseDate)} />
-            )}
-            {': '}
-            {formatEpisodeNumber(mediaItem.upcomingEpisode)}{' '}
-            {mediaItem.upcomingEpisode.title}
-          </div>
-        )}
-        {mediaItem.firstUnwatchedEpisode && (
-          <div className={clsx('flex items-center gap-1 text-sm font-medium text-zinc-800 dark:text-zinc-200', mediaItem.upcomingEpisode && 'mt-2')}>
-            <span className="text-zinc-500 dark:text-zinc-400"><Trans>First unwatched</Trans>{': '}</span>
-            {formatEpisodeNumber(mediaItem.firstUnwatchedEpisode)}{' '}
-            {mediaItem.firstUnwatchedEpisode.title}
-            <MarkAsSeenFirstUnwatchedEpisode mediaItem={mediaItem} />
-          </div>
-        )}
-      </div>
-    )}
-
-    {/* Where to watch */}
-    {(isMovie(mediaItem) || isTvShow(mediaItem)) && (
-      <div>
-        <WhereToWatchComponent mediaItem={mediaItem} />
-      </div>
-    )}
-
-    {/* Rating section */}
-    {(hasBeenReleased(mediaItem) || !hasReleaseDate(mediaItem)) && mediaItem.userRating && (
-      <div className="rounded-xl border border-zinc-200/80 bg-zinc-50/50 p-4 dark:border-zinc-800 dark:bg-zinc-900/40">
-        <div className="mb-3 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-          <Trans>Your rating</Trans>
-        </div>
-        <RatingAndReview
-          userRating={mediaItem.userRating}
-          mediaItem={mediaItem}
-        />
-      </div>
-    )}
-  </div>
-);
+  );
+};
 
 export const DetailsPage: FunctionComponent = () => {
   const { mediaItemId: routeMediaItemId } = useParams();
