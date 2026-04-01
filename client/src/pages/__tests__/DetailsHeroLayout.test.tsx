@@ -166,7 +166,7 @@ function makeMediaItem(
     genres: ['Action', 'Drama'],
     source: 'tmdb',
     seenHistory: [],
-    watchlistEntry: null,
+    onWatchlist: null,
     userRating: null,
     relatedContent: [],
     ...overrides,
@@ -341,7 +341,7 @@ describe('DetailsPage – watchlist CTA', () => {
   beforeEach(() => jest.clearAllMocks());
 
   it('shows "Add to watchlist" when item is NOT on watchlist', () => {
-    setupDetails({ watchlistEntry: null });
+    setupDetails({ onWatchlist: null });
     render(<DetailsPage />);
     expect(
       screen.getByRole('button', { name: /add to watchlist/i })
