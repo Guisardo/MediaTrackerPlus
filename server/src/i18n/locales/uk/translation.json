@@ -21,6 +21,7 @@
   "Running migrations": "Виконання міграцій",
   "Season {0} of {1} has been canceled": "Сезон {0} серіалу {1} скасовано",
   "Season {0} of {1} will be released at {2}": "Сезон {0} серіалу {1} вийде {2}",
+  "Season {0} of {1} will be released at {releaseDate}": "",
   "Season {seasonNumber} of {0} has been canceled": "Сезон {seasonNumber} серіалу {0} скасовано",
   "Season {seasonNumber} of {0} will be released at {releaseDate}": "Сезон {seasonNumber} серіалу {0} вийде {releaseDate}",
   "Server closed": "Сервер закрито",
@@ -29,6 +30,8 @@
   "TMDB language changed to: \"{value}\", updating metadata for all items": "Мову TMDB змінено на: «{value}», оновлення метаданих для всіх елементів",
   "Test message": "Тестове повідомлення",
   "Updating metadata": "Оновлення метаданих",
+  "Updating: {0}": "",
+  "Updating: {0} (last updated at: {date})": "",
   "Updating: {title}": "Оновлення: {title}",
   "Updating: {title} (last updated at: {date}": "Оновлення: {title} (останнє оновлення: {date}",
   "Updating: {title} (last updated at: {date})": "Оновлення: {title} (останнє оновлення: {date})",
@@ -44,5 +47,8 @@
   "{count, plural, one {Sending notification for new episodes of {title} to # user} other {Sending notification for new episodes of {title} to # users}}": "{count, plural, one {Надсилання сповіщення про нові епізоди {title} # користувачу} few {Надсилання сповіщення про нові епізоди {title} # користувачам} many {Надсилання сповіщення про нові епізоди {title} # користувачам} other {Надсилання сповіщення про нові епізоди {title} # користувачам}}",
   "{count, plural, one {Sending notification for {title} to # user} other {Sending notification for {title} to # users}}": "{count, plural, one {Надсилання сповіщення про {title} # користувачу} few {Надсилання сповіщення про {title} # користувачам} many {Надсилання сповіщення про {title} # користувачам} other {Надсилання сповіщення про {title} # користувачам}}",
   "{count, plural, one {Updated 1 item} other {Updated # items}}": "{count, plural, one {Оновлено 1 елемент} few {Оновлено # елементи} many {Оновлено # елементів} other {Оновлено # елементи}}",
+  "{numberOfFailures, plural, one {Failed to update 1 item} other {Failed to update # items}}": "",
+  "{numberOfSkippedItems, plural, one {Skipped 1 item because upstream metadata returned 404} other {Skipped # items because upstream metadata returned 404}}": "",
+  "{numberOfUpdatedItems, plural, one {Updated 1 item} other {Updated # items}}": "",
   "{title} has been released": "{title} вийшов"
 }

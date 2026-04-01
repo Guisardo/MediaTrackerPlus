@@ -21,6 +21,7 @@
   "Running migrations": "Running migrations",
   "Season {0} of {1} has been canceled": "Season {0} of {1} has been canceled",
   "Season {0} of {1} will be released at {2}": "Season {0} of {1} will be released at {2}",
+  "Season {0} of {1} will be released at {releaseDate}": "Season {0} of {1} will be released at {releaseDate}",
   "Season {seasonNumber} of {0} has been canceled": "Season {seasonNumber} of {0} has been canceled",
   "Season {seasonNumber} of {0} will be released at {releaseDate}": "Season {seasonNumber} of {0} will be released at {releaseDate}",
   "Server closed": "Server closed",
@@ -29,6 +30,8 @@
   "TMDB language changed to: \"{value}\", updating metadata for all items": "TMDB language changed to: \"{value}\", updating metadata for all items",
   "Test message": "Test message",
   "Updating metadata": "Updating metadata",
+  "Updating: {0}": "Updating: {0}",
+  "Updating: {0} (last updated at: {date})": "Updating: {0} (last updated at: {date})",
   "Updating: {title}": "Updating: {title}",
   "Updating: {title} (last updated at: {date}": "Updating: {title} (last updated at: {date}",
   "Updating: {title} (last updated at: {date})": "Updating: {title} (last updated at: {date})",
@@ -44,5 +47,8 @@
   "{count, plural, one {Sending notification for new episodes of {title} to # user} other {Sending notification for new episodes of {title} to # users}}": "{count, plural, one {Sending notification for new episodes of {title} to # user} other {Sending notification for new episodes of {title} to # users}}",
   "{count, plural, one {Sending notification for {title} to # user} other {Sending notification for {title} to # users}}": "{count, plural, one {Sending notification for {title} to # user} other {Sending notification for {title} to # users}}",
   "{count, plural, one {Updated 1 item} other {Updated # items}}": "{count, plural, one {Updated 1 item} other {Updated # items}}",
+  "{numberOfFailures, plural, one {Failed to update 1 item} other {Failed to update # items}}": "{numberOfFailures, plural, one {Failed to update 1 item} other {Failed to update # items}}",
+  "{numberOfSkippedItems, plural, one {Skipped 1 item because upstream metadata returned 404} other {Skipped # items because upstream metadata returned 404}}": "{numberOfSkippedItems, plural, one {Skipped 1 item because upstream metadata returned 404} other {Skipped # items because upstream metadata returned 404}}",
+  "{numberOfUpdatedItems, plural, one {Updated 1 item} other {Updated # items}}": "{numberOfUpdatedItems, plural, one {Updated 1 item} other {Updated # items}}",
   "{title} has been released": "{title} has been released"
 }

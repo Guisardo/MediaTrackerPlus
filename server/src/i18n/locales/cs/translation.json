@@ -21,6 +21,7 @@
   "Running migrations": "Spouštím migrace",
   "Season {0} of {1} has been canceled": "Série {0} seriálu {1} byla zrušena",
   "Season {0} of {1} will be released at {2}": "Série {0} seriálu {1} bude vydána {2}",
+  "Season {0} of {1} will be released at {releaseDate}": "",
   "Season {seasonNumber} of {0} has been canceled": "Série {seasonNumber} seriálu {0} byla zrušena",
   "Season {seasonNumber} of {0} will be released at {releaseDate}": "Série {seasonNumber} seriálu {0} bude vydána {releaseDate}",
   "Server closed": "Server ukončen",
@@ -29,6 +30,8 @@
   "TMDB language changed to: \"{value}\", updating metadata for all items": "Jazyk TMDB byl změněn na: \"{value}\", aktualizuji metadata pro všechny položky",
   "Test message": "Testovací zpráva",
   "Updating metadata": "Aktualizuji metadata",
+  "Updating: {0}": "",
+  "Updating: {0} (last updated at: {date})": "",
   "Updating: {title}": "Aktualizuji: {title}",
   "Updating: {title} (last updated at: {date}": "Aktualizuji: {title} (naposledy aktualizováno: {date}",
   "Updating: {title} (last updated at: {date})": "Aktualizuji: {title} (naposledy aktualizováno: {date})",
@@ -44,5 +47,8 @@
   "{count, plural, one {Sending notification for new episodes of {title} to # user} other {Sending notification for new episodes of {title} to # users}}": "{count, plural, one {Odesílám oznámení o nových epizodách {title} pro # uživatele} few {Odesílám oznámení o nových epizodách {title} pro # uživatele} many {Odesílám oznámení o nových epizodách {title} pro # uživatelů} other {Odesílám oznámení o nových epizodách {title} pro # uživatelů}}",
   "{count, plural, one {Sending notification for {title} to # user} other {Sending notification for {title} to # users}}": "{count, plural, one {Odesílám oznámení o {title} pro # uživatele} few {Odesílám oznámení o {title} pro # uživatele} many {Odesílám oznámení o {title} pro # uživatelů} other {Odesílám oznámení o {title} pro # uživatelů}}",
   "{count, plural, one {Updated 1 item} other {Updated # items}}": "{count, plural, one {Aktualizována 1 položka} few {Aktualizovány # položky} many {Aktualizováno # položek} other {Aktualizováno # položek}}",
+  "{numberOfFailures, plural, one {Failed to update 1 item} other {Failed to update # items}}": "",
+  "{numberOfSkippedItems, plural, one {Skipped 1 item because upstream metadata returned 404} other {Skipped # items because upstream metadata returned 404}}": "",
+  "{numberOfUpdatedItems, plural, one {Updated 1 item} other {Updated # items}}": "",
   "{title} has been released": "{title} bylo vydáno"
 }

@@ -44,7 +44,7 @@ msgid "{0, plural, one {1 item} other {# items}}"
 msgstr "{0, plural, one {1 элемент} few {# элемента} many {# элементов} other {# элемента}}"
 
 #. placeholder {0}: mediaItem.authors.length
-#: src/pages/Details.tsx:543
+#: src/pages/Details.tsx:690
 msgid "{0, plural, one {Author} other {Authors}}"
 msgstr "{0, plural, one {Автор} few {Авторы} many {Авторов} other {Авторы}}"
 
@@ -57,10 +57,9 @@ msgstr "{0, plural, one {Вы хотите удалить # запись из и
 #~ msgid "{0, plural, one {Found # item for query \"<0>{searchQuery}</0>\"} other {Found # items for query \"<1>{searchQuery}</1>\"}}"
 #~ msgstr "{0, plural, one {Найден # элемент по запросу \"<0>{searchQuery}</0>\"} other {Найдено # элементов по запросу \"<1>{searchQuery}</1>\"}}"
 
-#. placeholder {0}: mediaItem.genres.length
-#: src/pages/Details.tsx:503
-msgid "{0, plural, one {Genre} other {Genres}}"
-msgstr "{0, plural, one {Жанр} few {Жанра} many {Жанров} other {Жанра}}"
+#: src/pages/Details.tsx:662
+#~ msgid "{0, plural, one {Genre} other {Genres}}"
+#~ msgstr "{0, plural, one {Жанр} few {Жанра} many {Жанров} other {Жанра}}"
 
 #. placeholder {0}: listsWithItem?.length
 #: src/components/AddToListModal.tsx:157
@@ -68,36 +67,40 @@ msgid "{0, plural, one {Listed on 1 list} other {Listed on # lists}}"
 msgstr "{0, plural, one {В 1 списке} few {В # списках} many {В # списках} other {В # списках}}"
 
 #. placeholder {0}: mediaItem.seenHistory!.length
-#: src/pages/Details.tsx:771
+#: src/pages/Details.tsx:863
 #: src/pages/SeenHistory.tsx:50
 msgid "{0, plural, one {Listened 1 time} other {Listened # times}}"
 msgstr "{0, plural, one {Прослушано 1 раз} few {Прослушано # раза} many {Прослушано # раз} other {Прослушано # раза}}"
 
 #. placeholder {0}: mediaItem.narrators.length
-#: src/pages/Details.tsx:557
+#: src/pages/Details.tsx:697
 msgid "{0, plural, one {Narrator} other {Narrators}}"
 msgstr "{0, plural, one {Рассказчик} few {Рассказчика} many {Рассказчиков} other {Рассказчика}}"
 
+#: src/pages/Details.tsx:630
+#~ msgid "{0, plural, one {Platform} other {platforms}}"
+#~ msgstr "{0, plural, one {Платформа} few {Платформы} many {Платформ} other {Платформы}}"
+
 #. placeholder {0}: mediaItem.platform.length
-#: src/pages/Details.tsx:471
-msgid "{0, plural, one {Platform} other {platforms}}"
-msgstr "{0, plural, one {Платформа} few {Платформы} many {Платформ} other {Платформы}}"
+#: src/pages/Details.tsx:663
+msgid "{0, plural, one {Platform} other {Platforms}}"
+msgstr ""
 
 #. placeholder {0}: mediaItem.seenHistory!.length
-#: src/pages/Details.tsx:795
+#: src/pages/Details.tsx:872
 #: src/pages/SeenHistory.tsx:74
 msgid "{0, plural, one {Played 1 time} other {Played # times}}"
 msgstr "{0, plural, one {Сыграно 1 раз} few {Сыграно # раза} many {Сыграно # раз} other {Сыграно # раза}}"
 
 #. placeholder {0}: mediaItem.seenHistory!.length
-#: src/pages/Details.tsx:779
+#: src/pages/Details.tsx:866
 #: src/pages/SeenHistory.tsx:58
 msgid "{0, plural, one {Read 1 time} other {Read # times}}"
 msgstr "{0, plural, one {Прочитано 1 раз} few {Прочитано # раза} many {Прочитано # раз} other {Прочитано # раза}}"
 
 #. placeholder {0}: episode.seenHistory!.length
 #. placeholder {0}: mediaItem.seenHistory!.length
-#: src/pages/Details.tsx:787
+#: src/pages/Details.tsx:869
 #: src/pages/SeasonsPage.tsx:87
 #: src/pages/SeenHistory.tsx:66
 msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
@@ -198,7 +201,7 @@ msgstr "О приложении"
 msgid "Access Token"
 msgstr "Токен доступа"
 
-#: src/components/Facets/ActiveFacetChips.tsx:219
+#: src/components/Facets/ActiveFacetChips.tsx:217
 msgid "Active filters"
 msgstr "Активные фильтры"
 
@@ -265,7 +268,7 @@ msgstr "Добавить в историю чтения"
 msgid "Add to seen history"
 msgstr "Добавить в историю просмотров"
 
-#: src/pages/Details.tsx:853
+#: src/pages/Details.tsx:1053
 msgid "Add to watchlist"
 msgstr "Добавить в список для просмотра"
 
@@ -324,6 +327,7 @@ msgstr "Язык Audible"
 #: src/components/Facets/ActiveFacetChips.tsx:76
 #: src/components/Facets/MediaTypeSection.tsx:24
 #: src/components/GridItem.tsx:109
+#: src/pages/Details.tsx:608
 msgid "Audiobook"
 msgstr "Аудиокнига"
 
@@ -349,9 +353,11 @@ msgstr "Избегать спойлеров к эпизодам"
 msgid "Avoid season spoilers"
 msgstr "Избегать спойлеров к сезонам"
 
+#: src/components/DetailsRelatedContentSection.tsx:29
 #: src/components/Facets/ActiveFacetChips.tsx:74
 #: src/components/Facets/MediaTypeSection.tsx:22
 #: src/components/GridItem.tsx:110
+#: src/pages/Details.tsx:607
 msgid "Book"
 msgstr "Книга"
 
@@ -381,7 +387,7 @@ msgstr "Изменить пароль"
 msgid "Clear"
 msgstr "Очистить"
 
-#: src/components/Facets/ActiveFacetChips.tsx:331
+#: src/components/Facets/ActiveFacetChips.tsx:323
 #: src/components/Facets/FacetDrawer.tsx:72
 msgid "Clear all"
 msgstr "Очистить всё"
@@ -400,6 +406,7 @@ msgstr "Секрет клиента"
 
 #: src/components/AddOrEditGroupButton.tsx:70
 #: src/components/AddToListModal.tsx:110
+#: src/pages/Details.tsx:343
 msgid "Close"
 msgstr "Закрыть"
 
@@ -419,7 +426,7 @@ msgstr "Подтвердите новый пароль"
 msgid "Confirm password"
 msgstr "Подтвердите пароль"
 
-#: src/pages/Details.tsx:197
+#: src/pages/Details.tsx:237
 msgid "Content categories"
 msgstr "Категории контента"
 
@@ -427,7 +434,7 @@ msgstr "Категории контента"
 msgid "Content is hidden based on your age-based content filtering preferences."
 msgstr "Контент скрыт в соответствии с вашими настройками возрастной фильтрации."
 
-#: src/pages/Details.tsx:373
+#: src/pages/Details.tsx:588
 msgid "Content restricted"
 msgstr "Контент ограничен"
 
@@ -494,7 +501,7 @@ msgstr "По убыванию"
 msgid "Description"
 msgstr "Описание"
 
-#: src/pages/Details.tsx:177
+#: src/pages/Details.tsx:217
 msgid "Descriptors"
 msgstr "Дескрипторы"
 
@@ -541,11 +548,12 @@ msgid "Episode {0} {1}"
 msgstr "Эпизод {0} {1}"
 
 #: src/components/ImportSummaryTable.tsx:93
-#: src/pages/Details.tsx:589
+#: src/pages/Details.tsx:678
+#: src/pages/Details.tsx:889
 msgid "Episodes"
 msgstr "Эпизоды"
 
-#: src/pages/Details.tsx:655
+#: src/pages/Details.tsx:1021
 msgid "Episodes page"
 msgstr "Страница эпизодов"
 
@@ -572,9 +580,17 @@ msgstr "Не удалось загрузить группу. Возможно, �
 msgid "Filters"
 msgstr "Фильтры"
 
-#: src/pages/Details.tsx:734
-msgid "First unwatched episode"
-msgstr "Первый непросмотренный эпизод"
+#: src/pages/Details.tsx:904
+msgid "First unwatched"
+msgstr ""
+
+#: src/pages/Details.tsx:899
+#~ msgid "First unwatched episode"
+#~ msgstr "Первый непросмотренный эпизод"
+
+#: src/pages/Details.tsx:609
+msgid "Game"
+msgstr ""
 
 #: src/components/Nav.tsx:39
 #: src/components/Statistics/StatisticsGenreSegment.tsx:20
@@ -586,7 +602,7 @@ msgstr "Игры"
 msgid "General"
 msgstr "Общее"
 
-#: src/components/Facets/ActiveFacetChips.tsx:225
+#: src/components/Facets/ActiveFacetChips.tsx:223
 #: src/components/Facets/GenreSection.tsx:37
 msgid "Genre"
 msgstr "Genre"
@@ -617,7 +633,7 @@ msgstr "Название группы"
 msgid "Groups"
 msgstr "Группы"
 
-#: src/pages/Details.tsx:186
+#: src/pages/Details.tsx:226
 msgid "Guidance"
 msgstr "Рекомендации"
 
@@ -639,19 +655,19 @@ msgstr "Главная"
 msgid "Http"
 msgstr "Http"
 
-#: src/pages/Details.tsx:677
+#: src/pages/Details.tsx:787
 msgid "I am listening it"
 msgstr "Я слушаю это"
 
-#: src/pages/Details.tsx:678
+#: src/pages/Details.tsx:788
 msgid "I am playing it"
 msgstr "Я играю в это"
 
-#: src/pages/Details.tsx:676
+#: src/pages/Details.tsx:786
 msgid "I am reading it"
 msgstr "Я читаю это"
 
-#: src/pages/Details.tsx:675
+#: src/pages/Details.tsx:785
 msgid "I am watching it"
 msgstr "Я смотрю это"
 
@@ -660,19 +676,19 @@ msgstr "Я смотрю это"
 msgid "I do not remember"
 msgstr "Не помню"
 
-#: src/pages/Details.tsx:698
+#: src/pages/Details.tsx:801
 msgid "I finished listening it"
 msgstr "Я дослушал(а) это"
 
-#: src/pages/Details.tsx:701
+#: src/pages/Details.tsx:802
 msgid "I finished playing it"
 msgstr "Я доиграл(а) в это"
 
-#: src/pages/Details.tsx:696
+#: src/pages/Details.tsx:800
 msgid "I finished reading it"
 msgstr "Я дочитал(а) это"
 
-#: src/pages/Details.tsx:695
+#: src/pages/Details.tsx:799
 msgid "I finished watching it"
 msgstr "Я досмотрел(а) это"
 
@@ -721,9 +737,9 @@ msgstr "Элемент должен соответствовать всем вы
 msgid "Key"
 msgstr "Ключ"
 
-#: src/components/Facets/ActiveFacetChips.tsx:235
+#: src/components/Facets/ActiveFacetChips.tsx:233
 #: src/components/Facets/LanguageSection.tsx:95
-#: src/pages/Details.tsx:534
+#: src/pages/Details.tsx:670
 msgid "Language"
 msgstr "Язык"
 
@@ -732,17 +748,17 @@ msgid "Last airing"
 msgstr "Последний эфир"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
-#: src/pages/Details.tsx:743
+#: src/pages/Details.tsx:845
 msgid "Last listened at {0}"
 msgstr "Последнее прослушивание: {0}"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
-#: src/pages/Details.tsx:761
+#: src/pages/Details.tsx:854
 msgid "Last played at {0}"
 msgstr "Последняя игра: {0}"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
-#: src/pages/Details.tsx:749
+#: src/pages/Details.tsx:848
 msgid "Last read at {0}"
 msgstr "Последнее чтение: {0}"
 
@@ -751,7 +767,7 @@ msgid "Last seen"
 msgstr "Последний просмотр"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
-#: src/pages/Details.tsx:755
+#: src/pages/Details.tsx:851
 msgid "Last seen at {0}"
 msgstr "Последний просмотр: {0}"
 
@@ -780,6 +796,10 @@ msgstr "Список {0} — сериалы"
 msgid "List: {0}"
 msgstr "Список: {0}"
 
+#: src/pages/Details.tsx:827
+msgid "Listen history"
+msgstr ""
+
 #: src/components/Facets/ActiveFacetChips.tsx:26
 #: src/components/Facets/StatusSection.tsx:33
 #: src/components/FilterBy.tsx:25
@@ -791,7 +811,7 @@ msgstr "Прослушано"
 msgid "Listened at {0}"
 msgstr "Прослушано: {0}"
 
-#: src/pages/Details.tsx:803
+#: src/pages/Details.tsx:876
 msgid "Listened history"
 msgstr "История прослушиваний"
 
@@ -800,11 +820,11 @@ msgid "Lists"
 msgstr "Списки"
 
 #: src/components/AddToListModal.tsx:50
-#: src/components/PaginatedGridItems.tsx:441
+#: src/components/PaginatedGridItems.tsx:439
 #: src/components/SelectLastSeenEpisode.tsx:100
 #: src/pages/Calendar.tsx:66
-#: src/pages/Details.tsx:392
-#: src/pages/Details.tsx:405
+#: src/pages/Details.tsx:943
+#: src/pages/Details.tsx:956
 #: src/pages/EpisodePage.tsx:32
 #: src/pages/GroupDetailPage.tsx:285
 #: src/pages/GroupsPage.tsx:17
@@ -836,11 +856,11 @@ msgstr "Выйти"
 msgid "Logs"
 msgstr "Журналы"
 
-#: src/components/Facets/RatingSection.tsx:68
+#: src/components/Facets/RatingSection.tsx:64
 msgid "Maximum rating"
 msgstr "Максимальная оценка"
 
-#: src/components/Facets/YearSection.tsx:92
+#: src/components/Facets/YearSection.tsx:88
 msgid "Maximum year"
 msgstr "Максимальный год"
 
@@ -848,7 +868,7 @@ msgstr "Максимальный год"
 msgid "Media type"
 msgstr "Тип медиа"
 
-#: src/components/Facets/ActiveFacetChips.tsx:281
+#: src/components/Facets/ActiveFacetChips.tsx:279
 #: src/components/Facets/MediaTypeSection.tsx:117
 msgid "Media Type"
 msgstr "Тип медиа"
@@ -857,17 +877,23 @@ msgstr "Тип медиа"
 msgid "Members"
 msgstr "Участники"
 
-#: src/components/Facets/RatingSection.tsx:67
+#: src/components/Facets/RatingSection.tsx:63
 msgid "Minimum rating"
 msgstr "Минимальная оценка"
 
-#: src/components/Facets/YearSection.tsx:91
+#: src/components/Facets/YearSection.tsx:87
 msgid "Minimum year"
 msgstr "Минимальный год"
 
+#: src/pages/Details.tsx:363
+msgid "More options"
+msgstr ""
+
+#: src/components/DetailsRelatedContentSection.tsx:21
 #: src/components/Facets/ActiveFacetChips.tsx:70
 #: src/components/Facets/MediaTypeSection.tsx:18
 #: src/components/GridItem.tsx:111
+#: src/pages/Details.tsx:605
 msgid "Movie"
 msgstr "Фильм"
 
@@ -891,7 +917,7 @@ msgstr "Моя оценка"
 msgid "Name"
 msgstr "Название"
 
-#: src/pages/Details.tsx:485
+#: src/pages/Details.tsx:657
 msgid "Network"
 msgstr "Сеть"
 
@@ -912,7 +938,7 @@ msgstr "Новый пароль"
 msgid "Next airing"
 msgstr "Следующий эфир"
 
-#: src/pages/Details.tsx:721
+#: src/pages/Details.tsx:893
 msgid "Next episode"
 msgstr "Следующий эпизод"
 
@@ -968,9 +994,13 @@ msgstr "Сейчас"
 msgid "Number of episodes"
 msgstr "Количество эпизодов"
 
-#: src/pages/Details.tsx:570
-msgid "Number of pages"
-msgstr "Количество страниц"
+#: src/pages/Details.tsx:731
+#~ msgid "Number of pages"
+#~ msgstr "Количество страниц"
+
+#: src/pages/Details.tsx:290
+msgid "Official"
+msgstr ""
 
 #: src/components/Facets/ActiveFacetChips.tsx:23
 #: src/components/Facets/StatusSection.tsx:57
@@ -978,11 +1008,15 @@ msgstr "Количество страниц"
 msgid "On watchlist"
 msgstr "В списке для просмотра"
 
-#: src/pages/Details.tsx:525
-msgid "Overview"
-msgstr "Обзор"
+#: src/pages/Details.tsx:684
+#~ msgid "Overview"
+#~ msgstr "Обзор"
 
-#: src/pages/Details.tsx:154
+#: src/pages/Details.tsx:703
+msgid "Pages"
+msgstr ""
+
+#: src/pages/Details.tsx:194
 msgid "Parental guidance"
 msgstr "Родительские рекомендации"
 
@@ -1009,6 +1043,18 @@ msgstr "Платформа"
 msgid "Platform Recommended"
 msgstr "Рекомендовано платформой"
 
+#: src/pages/Details.tsx:830
+msgid "Play history"
+msgstr ""
+
+#: src/pages/Details.tsx:320
+msgid "Play preview"
+msgstr ""
+
+#: src/pages/Details.tsx:322
+msgid "Play trailer"
+msgstr ""
+
 #: src/components/Facets/ActiveFacetChips.tsx:32
 #: src/components/Facets/StatusSection.tsx:39
 #: src/components/FilterBy.tsx:29
@@ -1020,13 +1066,17 @@ msgstr "Сыграно"
 msgid "Played at {0}"
 msgstr "Сыграно: {0}"
 
-#: src/pages/Details.tsx:811
+#: src/pages/Details.tsx:879
 msgid "Played history"
 msgstr "История игр"
 
 #: src/pages/Settings.tsx:139
 msgid "Preferences"
 msgstr "Настройки"
+
+#: src/pages/Details.tsx:283
+msgid "Preview"
+msgstr ""
 
 #: src/pages/settings/Notifications.tsx:267
 #: src/pages/settings/Notifications.tsx:272
@@ -1043,7 +1093,7 @@ msgid "Private"
 msgstr "Приватный"
 
 #: src/components/OrderBy.tsx:22
-#: src/pages/Details.tsx:706
+#: src/pages/Details.tsx:774
 msgid "Progress"
 msgstr "Прогресс"
 
@@ -1055,7 +1105,7 @@ msgstr "Публичный"
 msgid "Public reviews"
 msgstr "Публичные отзывы"
 
-#: src/components/Facets/ActiveFacetChips.tsx:269
+#: src/components/Facets/ActiveFacetChips.tsx:267
 #: src/components/Facets/PublisherSection.tsx:53
 msgid "Publisher"
 msgstr "Издатель"
@@ -1090,9 +1140,9 @@ msgstr "Случайная видеоигра"
 msgid "Rated"
 msgstr "Оценено"
 
-#: src/components/Facets/ActiveFacetChips.tsx:316
-#: src/components/Facets/RatingSection.tsx:57
-#: src/pages/Details.tsx:160
+#: src/components/Facets/ActiveFacetChips.tsx:311
+#: src/components/Facets/RatingSection.tsx:53
+#: src/pages/Details.tsx:200
 #: src/pages/import/Goodreads.tsx:83
 msgid "Rating"
 msgstr "Оценка"
@@ -1129,7 +1179,8 @@ msgstr "Прочитано"
 msgid "Read at {0}"
 msgstr "Прочитано: {0}"
 
-#: src/pages/Details.tsx:805
+#: src/pages/Details.tsx:828
+#: src/pages/Details.tsx:877
 msgid "Read history"
 msgstr "История чтения"
 
@@ -1180,13 +1231,17 @@ msgstr "Рекомендуемые"
 msgid "Register"
 msgstr "Зарегистрироваться"
 
+#: src/components/DetailsRelatedContentSection.tsx:79
+msgid "Related content"
+msgstr ""
+
 #: src/components/GridItem.tsx:261
 msgid "Release <0/>"
 msgstr "Выход <0/>"
 
 #: src/components/OrderBy.tsx:15
 #: src/hooks/translations.ts:12
-#: src/pages/Details.tsx:436
+#: src/pages/Details.tsx:633
 #: src/pages/EpisodePage.tsx:82
 msgid "Release date"
 msgstr "Дата выхода"
@@ -1240,7 +1295,7 @@ msgstr "Удалить из истории чтения"
 msgid "Remove from seen history"
 msgstr "Удалить из истории просмотров"
 
-#: src/pages/Details.tsx:877
+#: src/pages/Details.tsx:1077
 msgid "Remove from watchlist"
 msgstr "Удалить из списка для просмотра"
 
@@ -1252,7 +1307,7 @@ msgstr "Удалить сезон из истории просмотров"
 msgid "Remove token"
 msgstr "Удалить токен"
 
-#: src/pages/Details.tsx:228
+#: src/pages/Details.tsx:412
 msgid "Review by <0><1>{author}</1></0> at {date}"
 msgstr "Отзыв от <0><1>{author}</1></0> — {date}"
 
@@ -1266,7 +1321,7 @@ msgid "RSS link"
 msgstr "RSS-ссылка"
 
 #: src/hooks/translations.ts:13
-#: src/pages/Details.tsx:447
+#: src/pages/Details.tsx:640
 #: src/pages/EpisodePage.tsx:73
 msgid "Runtime"
 msgstr "Хронометраж"
@@ -1296,7 +1351,7 @@ msgstr "Сохранить список"
 msgid "Save review"
 msgstr "Сохранить отзыв"
 
-#: src/components/PaginatedGridItems.tsx:182
+#: src/components/PaginatedGridItems.tsx:180
 msgid "Search"
 msgstr "Поиск"
 
@@ -1304,7 +1359,7 @@ msgstr "Поиск"
 msgid "Search by username…"
 msgstr "Поиск по имени пользователя…"
 
-#: src/components/PaginatedGridItems.tsx:381
+#: src/components/PaginatedGridItems.tsx:379
 msgid "Search for items or <0>import</0>"
 msgstr "Search for items or <0>import</0>"
 
@@ -1330,7 +1385,7 @@ msgid "Season {0}"
 msgstr "Сезон {0}"
 
 #: src/components/ImportSummaryTable.tsx:92
-#: src/pages/Details.tsx:582
+#: src/pages/Details.tsx:675
 msgid "Seasons"
 msgstr "Сезоны"
 
@@ -1343,7 +1398,7 @@ msgstr "Просмотрено"
 msgid "Seen at {0}"
 msgstr "Просмотрено: {0}"
 
-#: src/pages/Details.tsx:808
+#: src/pages/Details.tsx:878
 #: src/pages/import/TraktTv.tsx:187
 msgid "Seen history"
 msgstr "История просмотров"
@@ -1414,7 +1469,7 @@ msgid "Set"
 msgstr "Установить"
 
 #: src/components/SetProgress.tsx:62
-#: src/pages/Details.tsx:912
+#: src/pages/Details.tsx:1112
 msgid "Set progress"
 msgstr "Установить прогресс"
 
@@ -1438,7 +1493,7 @@ msgstr "Показывать мои отзывы другим пользоват
 msgid "Shows"
 msgstr "Сериалы"
 
-#: src/components/PaginatedGridItems.tsx:448
+#: src/components/PaginatedGridItems.tsx:446
 msgid "Some content is hidden based on your age-based content filtering preferences."
 msgstr "Часть контента скрыта в соответствии с вашими настройками возрастной фильтрации."
 
@@ -1452,11 +1507,11 @@ msgstr "Сортировать по"
 msgid "Sort order"
 msgstr "Порядок сортировки"
 
-#: src/pages/Details.tsx:607
+#: src/pages/Details.tsx:707
 msgid "Source"
 msgstr "Источник"
 
-#: src/pages/Details.tsx:118
+#: src/pages/Details.tsx:158
 msgid "Spoiler"
 msgstr "Спойлер"
 
@@ -1469,10 +1524,10 @@ msgstr "Начать заново"
 msgid "Statistics"
 msgstr "Статистика"
 
-#: src/components/Facets/ActiveFacetChips.tsx:293
+#: src/components/Facets/ActiveFacetChips.tsx:291
 #: src/components/Facets/StatusSection.tsx:116
 #: src/components/OrderBy.tsx:16
-#: src/pages/Details.tsx:494
+#: src/pages/Details.tsx:653
 msgid "Status"
 msgstr "Статус"
 
@@ -1489,7 +1544,7 @@ msgstr "Список с именем \"{name}\" уже существует"
 msgid "This component can only be used with tv shows"
 msgstr "Этот компонент можно использовать только с сериалами"
 
-#: src/pages/Details.tsx:376
+#: src/pages/Details.tsx:591
 msgid "This content is not available based on your age-based content filtering preferences."
 msgstr "Этот контент недоступен в соответствии с вашими настройками возрастной фильтрации."
 
@@ -1511,10 +1566,19 @@ msgstr "К прочтению"
 msgid "Topic"
 msgstr "Тема"
 
-#: src/pages/Details.tsx:458
+#: src/pages/Details.tsx:647
 msgid "Total runtime"
 msgstr "Общий хронометраж"
 
+#: src/pages/Details.tsx:285
+msgid "Trailer"
+msgstr ""
+
+#: src/pages/Details.tsx:276
+msgid "Trailers & previews"
+msgstr ""
+
+#: src/components/DetailsRelatedContentSection.tsx:25
 #: src/components/GridItem.tsx:112
 #: src/components/Nav.tsx:37
 #: src/components/Statistics/StatisticsGenreSegment.tsx:16
@@ -1524,6 +1588,7 @@ msgstr "ТВ"
 
 #: src/components/Facets/ActiveFacetChips.tsx:72
 #: src/components/Facets/MediaTypeSection.tsx:20
+#: src/pages/Details.tsx:606
 msgid "TV Show"
 msgstr "Сериал"
 
@@ -1538,7 +1603,7 @@ msgstr "Не инициализировано"
 msgid "Unrated"
 msgstr "Без оценки"
 
-#: src/pages/Details.tsx:597
+#: src/pages/Details.tsx:682
 msgid "Unseen episodes"
 msgstr "Непросмотренные эпизоды"
 
@@ -1551,7 +1616,7 @@ msgstr "Количество непросмотренных эпизодов"
 msgid "Upcoming"
 msgstr "Предстоящие"
 
-#: src/pages/Details.tsx:898
+#: src/pages/Details.tsx:1098
 msgid "Update metadata"
 msgstr "Обновить метаданные"
 
@@ -1568,6 +1633,7 @@ msgstr "Имя пользователя"
 msgid "Version"
 msgstr "Версия"
 
+#: src/components/DetailsRelatedContentSection.tsx:32
 #: src/components/Facets/ActiveFacetChips.tsx:78
 #: src/components/Facets/MediaTypeSection.tsx:26
 #: src/components/GridItem.tsx:113
@@ -1588,6 +1654,10 @@ msgstr "Ожидание аутентификации"
 #: src/pages/LogsPage.tsx:107
 msgid "Warning"
 msgstr "Предупреждение"
+
+#: src/pages/Details.tsx:829
+msgid "Watch history"
+msgstr ""
 
 #: src/components/Facets/ActiveFacetChips.tsx:34
 #: src/components/Facets/StatusSection.tsx:41
@@ -1648,12 +1718,12 @@ msgstr "Когда вы читали \"{0}\"?"
 msgid "When did you see \"{0}\"?"
 msgstr "Когда вы смотрели \"{0}\"?"
 
-#: src/pages/Details.tsx:290
+#: src/pages/Details.tsx:505
 msgid "Where to watch"
 msgstr "Где смотреть"
 
-#: src/components/Facets/ActiveFacetChips.tsx:304
-#: src/components/Facets/YearSection.tsx:81
+#: src/components/Facets/ActiveFacetChips.tsx:302
+#: src/components/Facets/YearSection.tsx:77
 msgid "Year"
 msgstr "Год"
 
@@ -1664,6 +1734,10 @@ msgstr "Да"
 #: src/pages/settings/Preferences.tsx:17
 msgid "Your date of birth is used for age-based content filtering. This is self-only account data and is never shared with other users."
 msgstr "Ваша дата рождения используется для возрастной фильтрации контента. Это личные данные, доступные только вам, и они никогда не передаются другим пользователям."
+
+#: src/pages/Details.tsx:924
+msgid "Your rating"
+msgstr ""
 
 #: src/pages/GroupDetailPage.tsx:319
 msgid "Your role:"

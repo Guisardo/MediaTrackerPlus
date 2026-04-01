@@ -21,6 +21,7 @@
   "Running migrations": "Executant migracions",
   "Season {0} of {1} has been canceled": "La temporada {0} de {1} ha estat cancel·lada",
   "Season {0} of {1} will be released at {2}": "La temporada {0} de {1} es llançarà el {2}",
+  "Season {0} of {1} will be released at {releaseDate}": "",
   "Season {seasonNumber} of {0} has been canceled": "La temporada {seasonNumber} de {0} ha estat cancel·lada",
   "Season {seasonNumber} of {0} will be released at {releaseDate}": "La temporada {seasonNumber} de {0} es llançarà el {releaseDate}",
   "Server closed": "Servidor tancat",
@@ -29,6 +30,8 @@
   "TMDB language changed to: \"{value}\", updating metadata for all items": "L'idioma de TMDB ha canviat a: \"{value}\", actualitzant metadades per a tots els elements",
   "Test message": "Missatge de prova",
   "Updating metadata": "Actualitzant metadades",
+  "Updating: {0}": "",
+  "Updating: {0} (last updated at: {date})": "",
   "Updating: {title}": "Actualitzant: {title}",
   "Updating: {title} (last updated at: {date}": "Actualitzant: {title} (última actualització: {date}",
   "Updating: {title} (last updated at: {date})": "Actualitzant: {title} (última actualització: {date})",
@@ -44,5 +47,8 @@
   "{count, plural, one {Sending notification for new episodes of {title} to # user} other {Sending notification for new episodes of {title} to # users}}": "{count, plural, one {Enviant notificació per als nous episodis de {title} a # usuari} other {Enviant notificació per als nous episodis de {title} a # usuaris}}",
   "{count, plural, one {Sending notification for {title} to # user} other {Sending notification for {title} to # users}}": "{count, plural, one {Enviant notificació per a {title} a # usuari} other {Enviant notificació per a {title} a # usuaris}}",
   "{count, plural, one {Updated 1 item} other {Updated # items}}": "{count, plural, one {S'ha actualitzat 1 element} other {S'han actualitzat # elements}}",
+  "{numberOfFailures, plural, one {Failed to update 1 item} other {Failed to update # items}}": "",
+  "{numberOfSkippedItems, plural, one {Skipped 1 item because upstream metadata returned 404} other {Skipped # items because upstream metadata returned 404}}": "",
+  "{numberOfUpdatedItems, plural, one {Updated 1 item} other {Updated # items}}": "",
   "{title} has been released": "{title} s'ha llançat"
 }

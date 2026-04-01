@@ -21,6 +21,7 @@
   "Running migrations": "מריץ העברות",
   "Season {0} of {1} has been canceled": "עונה {0} של {1} בוטלה",
   "Season {0} of {1} will be released at {2}": "עונה {0} של {1} תצא לאור ב-{2}",
+  "Season {0} of {1} will be released at {releaseDate}": "",
   "Season {seasonNumber} of {0} has been canceled": "עונה {seasonNumber} של {0} בוטלה",
   "Season {seasonNumber} of {0} will be released at {releaseDate}": "עונה {seasonNumber} של {0} תצא לאור ב-{releaseDate}",
   "Server closed": "השרת נסגר",
@@ -29,6 +30,8 @@
   "TMDB language changed to: \"{value}\", updating metadata for all items": "שפת TMDB שונתה ל: \"{value}\", מעדכן מטא-נתונים עבור כל הפריטים",
   "Test message": "הודעת בדיקה",
   "Updating metadata": "מעדכן מטא-נתונים",
+  "Updating: {0}": "",
+  "Updating: {0} (last updated at: {date})": "",
   "Updating: {title}": "מעדכן: {title}",
   "Updating: {title} (last updated at: {date}": "מעדכן: {title} (עודכן לאחרונה ב: {date}",
   "Updating: {title} (last updated at: {date})": "מעדכן: {title} (עודכן לאחרונה ב: {date})",
@@ -44,5 +47,8 @@
   "{count, plural, one {Sending notification for new episodes of {title} to # user} other {Sending notification for new episodes of {title} to # users}}": "{count, plural, one {שולח התראה על פרקים חדשים של {title} למשתמש אחד} two {שולח התראה על פרקים חדשים של {title} לשני משתמשים} many {שולח התראה על פרקים חדשים של {title} ל-# משתמשים} other {שולח התראה על פרקים חדשים של {title} ל-# משתמשים}}",
   "{count, plural, one {Sending notification for {title} to # user} other {Sending notification for {title} to # users}}": "{count, plural, one {שולח התראה על {title} למשתמש אחד} two {שולח התראה על {title} לשני משתמשים} many {שולח התראה על {title} ל-# משתמשים} other {שולח התראה על {title} ל-# משתמשים}}",
   "{count, plural, one {Updated 1 item} other {Updated # items}}": "{count, plural, one {פריט אחד עודכן} two {שני פריטים עודכנו} many {# פריטים עודכנו} other {# פריטים עודכנו}}",
+  "{numberOfFailures, plural, one {Failed to update 1 item} other {Failed to update # items}}": "",
+  "{numberOfSkippedItems, plural, one {Skipped 1 item because upstream metadata returned 404} other {Skipped # items because upstream metadata returned 404}}": "",
+  "{numberOfUpdatedItems, plural, one {Updated 1 item} other {Updated # items}}": "",
   "{title} has been released": "{title} יצא לאור"
 }
