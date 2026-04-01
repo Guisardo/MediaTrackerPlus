@@ -9,6 +9,13 @@ import { computeViewerAge, isAgeEligible } from 'src/utils/ageEligibility';
 import { toCodedRequestErrorObject } from 'src/requestError';
 import { metadataProviders } from 'src/metadata/metadataProviders';
 import { logger } from 'src/logger';
+import { findMediaItemByExternalId } from 'src/metadata/findByExternalId';
+import { RelatedContentService } from 'src/recommendations/relatedContentService';
+
+const relatedContentService = new RelatedContentService({
+  metadataProviders,
+  findMediaItemByExternalId,
+});
 
 /**
  * Resolves the language to use for metadata overlay, implementing three-tier fallback:
@@ -54,6 +61,34 @@ async function enrichDetailsWithTrailers(
       `MediaItemController.details: failed to fetch trailers for mediaItemId=${details.id ?? 'unknown'} source=${details.source} mediaType=${details.mediaType}`
     );
     logger.error('MediaItemController.details: trailer enrichment error', {
+      err: error,
+    });
+  }
+
+  return details;
+}
+
+async function enrichDetailsWithRelatedContent(
+  details: MediaItemDetailsResponse,
+  viewerAge: number | null | undefined
+): Promise<MediaItemDetailsResponse> {
+  try {
+    const relatedContent = await relatedContentService.relatedContent({
+      mediaItem: details,
+      viewerAge,
+    });
+
+    if (relatedContent.length > 0) {
+      return {
+        ...details,
+        relatedContent,
+      };
+    }
+  } catch (error) {
+    logger.warn(
+      `MediaItemController.details: failed to enrich related content for mediaItemId=${details.id ?? 'unknown'} source=${details.source} mediaType=${details.mediaType}`
+    );
+    logger.error('MediaItemController.details: related content enrichment error', {
       err: error,
     });
   }
@@ -120,7 +155,11 @@ export class MediaItemController {
       language: language,
     });
 
-    const enrichedDetails = await enrichDetailsWithTrailers(details, language);
+    const detailsWithTrailers = await enrichDetailsWithTrailers(details, language);
+    const enrichedDetails = await enrichDetailsWithRelatedContent(
+      detailsWithTrailers,
+      viewerAge
+    );
 
     // nosemgrep: javascript.express.security.audit.xss.direct-response-write.direct-response-write
     res.send(enrichedDetails);

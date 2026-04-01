@@ -58,6 +58,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from 'src/components/ui/collapsible';
+import { DetailsRelatedContentSection } from 'src/components/DetailsRelatedContentSection';
 
 /**
  * Determines whether there is any parental metadata worth rendering.
@@ -1043,6 +1044,8 @@ export const DetailsPage: FunctionComponent = () => {
       )}
 
       <DetailsActions mediaItem={mediaItem} mediaItemRecordId={mediaItemRecordId} />
+
+      <DetailsRelatedContentSection relatedContent={mediaItem.relatedContent} />
     </div>
   );
 };

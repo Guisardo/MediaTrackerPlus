@@ -24,8 +24,8 @@ export namespace Items {
     export type RequestQuery = {
       groupId?: number | null;
       filter?: string | null;
-      status?: string | null;
       genres?: string | null;
+      status?: string | null;
       orderBy?: MediaItemOrderBy | null;
       sortOrder?: SortOrder | null;
       onlyOnWatchlist?: boolean | null;
@@ -74,9 +74,9 @@ export namespace Items {
     export type RequestQuery = {
       groupId?: number | null;
       filter?: string | null;
-      status?: string | null;
       mediaType?: MediaType | null;
       genres?: string | null;
+      status?: string | null;
       orderBy?: MediaItemOrderBy | null;
       onlyOnWatchlist?: boolean | null;
       onlySeenItems?: boolean | null;
@@ -111,9 +111,9 @@ export namespace Items {
     export type RequestQuery = {
       groupId?: number | null;
       filter?: string | null;
-      status?: string | null;
       mediaType?: MediaType | null;
       genres?: string | null;
+      status?: string | null;
       orderBy?: MediaItemOrderBy | null;
       sortOrder?: SortOrder | null;
       onlyOnWatchlist?: boolean | null;
@@ -152,9 +152,9 @@ export namespace Items {
     export type RequestQuery = {
       groupId?: number | null;
       filter?: string | null;
-      status?: string | null;
       mediaType?: MediaType | null;
       genres?: string | null;
+      status?: string | null;
       orderBy?: MediaItemOrderBy | null;
       sortOrder?: SortOrder | null;
       onlyOnWatchlist?: boolean | null;

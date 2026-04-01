@@ -655,7 +655,7 @@
             }
           },
           {
-            "name": "status",
+            "name": "genres",
             "in": "query",
             "required": false,
             "schema": {
@@ -664,7 +664,7 @@
             }
           },
           {
-            "name": "genres",
+            "name": "status",
             "in": "query",
             "required": false,
             "schema": {
@@ -959,15 +959,6 @@
             }
           },
           {
-            "name": "status",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "nullable": true
-            }
-          },
-          {
             "name": "mediaType",
             "in": "query",
             "required": false,
@@ -982,6 +973,15 @@
           },
           {
             "name": "genres",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "status",
             "in": "query",
             "required": false,
             "schema": {
@@ -1179,15 +1179,6 @@
             }
           },
           {
-            "name": "status",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "nullable": true
-            }
-          },
-          {
             "name": "mediaType",
             "in": "query",
             "required": false,
@@ -1202,6 +1193,15 @@
           },
           {
             "name": "genres",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "status",
             "in": "query",
             "required": false,
             "schema": {
@@ -1442,15 +1442,6 @@
             }
           },
           {
-            "name": "status",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "nullable": true
-            }
-          },
-          {
             "name": "mediaType",
             "in": "query",
             "required": false,
@@ -1465,6 +1456,15 @@
           },
           {
             "name": "genres",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "status",
             "in": "query",
             "required": false,
             "schema": {
@@ -4036,111 +4036,11 @@
                 "type": "string",
                 "nullable": true
               },
-              "tmdbId": {
-                "type": "number",
-                "nullable": true
-              },
-              "imdbId": {
-                "type": "string",
-                "nullable": true
-              },
-              "tvdbId": {
-                "type": "number",
-                "nullable": true
-              },
-              "tvmazeId": {
-                "type": "number",
-                "nullable": true
-              },
-              "igdbId": {
-                "type": "number",
-                "nullable": true
-              },
-              "openlibraryId": {
-                "type": "string",
-                "nullable": true
-              },
-              "audibleId": {
-                "type": "string",
-                "nullable": true
-              },
-              "traktId": {
-                "type": "number",
-                "nullable": true
-              },
-              "goodreadsId": {
-                "type": "number",
-                "nullable": true
-              },
-              "numberOfSeasons": {
-                "type": "number",
-                "nullable": true
-              },
-              "status": {
-                "type": "string",
-                "nullable": true
-              },
-              "platform": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "nullable": true
-              },
-              "title": {
-                "type": "string"
-              },
-              "originalTitle": {
-                "type": "string",
-                "nullable": true
-              },
-              "externalPosterUrl": {
-                "type": "string",
-                "nullable": true
-              },
-              "externalBackdropUrl": {
-                "type": "string",
-                "nullable": true
-              },
-              "tmdbRating": {
-                "type": "number",
-                "nullable": true
-              },
-              "overview": {
-                "type": "string",
-                "nullable": true
-              },
-              "lastTimeUpdated": {
-                "type": "number",
-                "nullable": true
-              },
-              "source": {
-                "type": "string"
-              },
-              "network": {
-                "type": "string",
-                "nullable": true
-              },
-              "url": {
-                "type": "string",
-                "nullable": true
-              },
-              "runtime": {
-                "type": "number",
-                "nullable": true
-              },
               "mediaType": {
                 "$ref": "#/components/schemas/MediaType"
               },
-              "genres": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "nullable": true
-              },
-              "numberOfEpisodes": {
-                "type": "number",
+              "creator": {
+                "type": "string",
                 "nullable": true
               },
               "developer": {
@@ -4151,12 +4051,92 @@
                 "type": "string",
                 "nullable": true
               },
-              "creator": {
+              "genres": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              },
+              "igdbId": {
+                "type": "number",
+                "nullable": true
+              },
+              "imdbId": {
                 "type": "string",
+                "nullable": true
+              },
+              "audibleId": {
+                "type": "string",
+                "nullable": true
+              },
+              "lastTimeUpdated": {
+                "type": "number",
+                "nullable": true
+              },
+              "network": {
+                "type": "string",
+                "nullable": true
+              },
+              "numberOfSeasons": {
+                "type": "number",
+                "nullable": true
+              },
+              "openlibraryId": {
+                "type": "string",
+                "nullable": true
+              },
+              "originalTitle": {
+                "type": "string",
+                "nullable": true
+              },
+              "overview": {
+                "type": "string",
+                "nullable": true
+              },
+              "platform": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
                 "nullable": true
               },
               "publisher": {
                 "type": "string",
+                "nullable": true
+              },
+              "tmdbRating": {
+                "type": "number",
+                "nullable": true
+              },
+              "runtime": {
+                "type": "number",
+                "nullable": true
+              },
+              "source": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "nullable": true
+              },
+              "title": {
+                "type": "string"
+              },
+              "tmdbId": {
+                "type": "number",
+                "nullable": true
+              },
+              "tvmazeId": {
+                "type": "number",
+                "nullable": true
+              },
+              "url": {
+                "type": "string",
+                "nullable": true
+              },
+              "needsDetails": {
+                "type": "boolean",
                 "nullable": true
               },
               "authors": {
@@ -4177,7 +4157,15 @@
                 "type": "string",
                 "nullable": true
               },
+              "goodreadsId": {
+                "type": "number",
+                "nullable": true
+              },
               "numberOfPages": {
+                "type": "number",
+                "nullable": true
+              },
+              "traktId": {
                 "type": "number",
                 "nullable": true
               },
@@ -4189,8 +4177,16 @@
                 ],
                 "nullable": true
               },
-              "needsDetails": {
-                "type": "boolean",
+              "tvdbId": {
+                "type": "number",
+                "nullable": true
+              },
+              "externalPosterUrl": {
+                "type": "string",
+                "nullable": true
+              },
+              "externalBackdropUrl": {
+                "type": "string",
                 "nullable": true
               },
               "platformRating": {
@@ -4229,6 +4225,10 @@
                 "items": {
                   "$ref": "#/components/schemas/ParentalGuidanceCategory"
                 },
+                "nullable": true
+              },
+              "numberOfEpisodes": {
+                "type": "number",
                 "nullable": true
               },
               "seasons": {
@@ -4353,6 +4353,13 @@
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/MediaTrailer"
+                },
+                "nullable": true
+              },
+              "relatedContent": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/RelatedContentItem"
                 },
                 "nullable": true
               }
@@ -4711,111 +4718,11 @@
                 "type": "string",
                 "nullable": true
               },
-              "tmdbId": {
-                "type": "number",
-                "nullable": true
-              },
-              "imdbId": {
-                "type": "string",
-                "nullable": true
-              },
-              "tvdbId": {
-                "type": "number",
-                "nullable": true
-              },
-              "tvmazeId": {
-                "type": "number",
-                "nullable": true
-              },
-              "igdbId": {
-                "type": "number",
-                "nullable": true
-              },
-              "openlibraryId": {
-                "type": "string",
-                "nullable": true
-              },
-              "audibleId": {
-                "type": "string",
-                "nullable": true
-              },
-              "traktId": {
-                "type": "number",
-                "nullable": true
-              },
-              "goodreadsId": {
-                "type": "number",
-                "nullable": true
-              },
-              "numberOfSeasons": {
-                "type": "number",
-                "nullable": true
-              },
-              "status": {
-                "type": "string",
-                "nullable": true
-              },
-              "platform": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "nullable": true
-              },
-              "title": {
-                "type": "string"
-              },
-              "originalTitle": {
-                "type": "string",
-                "nullable": true
-              },
-              "externalPosterUrl": {
-                "type": "string",
-                "nullable": true
-              },
-              "externalBackdropUrl": {
-                "type": "string",
-                "nullable": true
-              },
-              "tmdbRating": {
-                "type": "number",
-                "nullable": true
-              },
-              "overview": {
-                "type": "string",
-                "nullable": true
-              },
-              "lastTimeUpdated": {
-                "type": "number",
-                "nullable": true
-              },
-              "source": {
-                "type": "string"
-              },
-              "network": {
-                "type": "string",
-                "nullable": true
-              },
-              "url": {
-                "type": "string",
-                "nullable": true
-              },
-              "runtime": {
-                "type": "number",
-                "nullable": true
-              },
               "mediaType": {
                 "$ref": "#/components/schemas/MediaType"
               },
-              "genres": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "nullable": true
-              },
-              "numberOfEpisodes": {
-                "type": "number",
+              "creator": {
+                "type": "string",
                 "nullable": true
               },
               "developer": {
@@ -4826,12 +4733,92 @@
                 "type": "string",
                 "nullable": true
               },
-              "creator": {
+              "genres": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true
+              },
+              "igdbId": {
+                "type": "number",
+                "nullable": true
+              },
+              "imdbId": {
                 "type": "string",
+                "nullable": true
+              },
+              "audibleId": {
+                "type": "string",
+                "nullable": true
+              },
+              "lastTimeUpdated": {
+                "type": "number",
+                "nullable": true
+              },
+              "network": {
+                "type": "string",
+                "nullable": true
+              },
+              "numberOfSeasons": {
+                "type": "number",
+                "nullable": true
+              },
+              "openlibraryId": {
+                "type": "string",
+                "nullable": true
+              },
+              "originalTitle": {
+                "type": "string",
+                "nullable": true
+              },
+              "overview": {
+                "type": "string",
+                "nullable": true
+              },
+              "platform": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
                 "nullable": true
               },
               "publisher": {
                 "type": "string",
+                "nullable": true
+              },
+              "tmdbRating": {
+                "type": "number",
+                "nullable": true
+              },
+              "runtime": {
+                "type": "number",
+                "nullable": true
+              },
+              "source": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "nullable": true
+              },
+              "title": {
+                "type": "string"
+              },
+              "tmdbId": {
+                "type": "number",
+                "nullable": true
+              },
+              "tvmazeId": {
+                "type": "number",
+                "nullable": true
+              },
+              "url": {
+                "type": "string",
+                "nullable": true
+              },
+              "needsDetails": {
+                "type": "boolean",
                 "nullable": true
               },
               "authors": {
@@ -4852,7 +4839,15 @@
                 "type": "string",
                 "nullable": true
               },
+              "goodreadsId": {
+                "type": "number",
+                "nullable": true
+              },
               "numberOfPages": {
+                "type": "number",
+                "nullable": true
+              },
+              "traktId": {
                 "type": "number",
                 "nullable": true
               },
@@ -4864,8 +4859,16 @@
                 ],
                 "nullable": true
               },
-              "needsDetails": {
-                "type": "boolean",
+              "tvdbId": {
+                "type": "number",
+                "nullable": true
+              },
+              "externalPosterUrl": {
+                "type": "string",
+                "nullable": true
+              },
+              "externalBackdropUrl": {
+                "type": "string",
                 "nullable": true
               },
               "platformRating": {
@@ -4904,6 +4907,10 @@
                 "items": {
                   "$ref": "#/components/schemas/ParentalGuidanceCategory"
                 },
+                "nullable": true
+              },
+              "numberOfEpisodes": {
+                "type": "number",
                 "nullable": true
               }
             },
@@ -5166,6 +5173,46 @@
         ],
         "type": "string"
       },
+      "RelatedContentItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "mediaType": {
+            "$ref": "#/components/schemas/RelatedContentMediaType"
+          },
+          "posterSmall": {
+            "type": "string",
+            "nullable": true
+          },
+          "releaseDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "source": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "mediaType",
+          "title"
+        ]
+      },
+      "RelatedContentMediaType": {
+        "enum": [
+          "book",
+          "movie",
+          "tv",
+          "video_game"
+        ],
+        "type": "string"
+      },
       "GetItemsRequest": {
         "allOf": [
           {
@@ -5179,11 +5226,11 @@
                 "type": "string",
                 "nullable": true
               },
-              "status": {
+              "genres": {
                 "type": "string",
                 "nullable": true
               },
-              "genres": {
+              "status": {
                 "type": "string",
                 "nullable": true
               },
@@ -5330,10 +5377,6 @@
             "type": "string",
             "nullable": true
           },
-          "status": {
-            "type": "string",
-            "nullable": true
-          },
           "mediaType": {
             "allOf": [
               {
@@ -5343,6 +5386,10 @@
             "nullable": true
           },
           "genres": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
             "type": "string",
             "nullable": true
           },
@@ -5504,16 +5551,16 @@
                 "type": "number",
                 "nullable": true
               },
+              "description": {
+                "type": "string",
+                "nullable": true
+              },
               "sortOrder": {
                 "allOf": [
                   {
                     "$ref": "#/components/schemas/ListSortOrder"
                   }
                 ],
-                "nullable": true
-              },
-              "description": {
-                "type": "string",
                 "nullable": true
               },
               "privacy": {
@@ -5659,16 +5706,16 @@
                 "type": "number",
                 "nullable": true
               },
+              "description": {
+                "type": "string",
+                "nullable": true
+              },
               "sortOrder": {
                 "allOf": [
                   {
                     "$ref": "#/components/schemas/ListSortOrder"
                   }
                 ],
-                "nullable": true
-              },
-              "description": {
-                "type": "string",
                 "nullable": true
               },
               "privacy": {

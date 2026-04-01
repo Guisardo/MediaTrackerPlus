@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { ExternalIds, MediaItemForProvider, MediaType } from 'src/entity/mediaItem';
 import { logger } from 'src/logger';
 import { Audible } from 'src/metadata/provider/audible';
+import { IGDB } from 'src/metadata/provider/igdb';
 import { OpenLibrary } from 'src/metadata/provider/openlibrary';
 import { TMDbMovie, TMDbTv } from 'src/metadata/provider/tmdb';
 import { tvEpisodeRepository } from 'src/repository/episode';
@@ -252,6 +253,18 @@ const searchMediaItem = async (args: {
           lookup: () =>
             new OpenLibrary().details({
               openlibraryId: id.openlibraryId as string,
+            }),
+        },
+      ]);
+    }
+  } else if (mediaType === 'video_game') {
+    if (id.igdbId) {
+      return runSearchPlan([
+        {
+          errorMessage: `unable to find video game with igdbId: ${id.igdbId}`,
+          lookup: () =>
+            new IGDB().details({
+              igdbId: id.igdbId as number,
             }),
         },
       ]);
