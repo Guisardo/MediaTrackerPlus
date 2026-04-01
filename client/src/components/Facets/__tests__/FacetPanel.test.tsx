@@ -9,8 +9,15 @@ jest.mock('@lingui/macro', () => ({
 jest.mock('@lingui/react', () => ({
   I18nProvider: ({ children }: { children: React.ReactNode }) => children,
   useLingui: () => ({ i18n: { _: (id: unknown) => id } }),
-  Trans: ({ children, message, id }: { children?: React.ReactNode; message?: string; id?: string }) =>
-    children ?? message ?? id ?? null,
+  Trans: ({
+    children,
+    message,
+    id,
+  }: {
+    children?: React.ReactNode;
+    message?: string;
+    id?: string;
+  }) => children ?? message ?? id ?? null,
 }));
 
 const createMockFacets = (overrides: Record<string, any> = {}) => ({
@@ -36,19 +43,22 @@ describe('FacetPanel', () => {
   it('renders an aside with aria-label Filters', () => {
     const facets = createMockFacets();
     render(React.createElement(FacetPanel, { facets: facets as any }));
-    expect(screen.getByRole('complementary', { name: 'Filters' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('complementary', { name: 'Filters' })
+    ).toBeInTheDocument();
   });
 
-  it('does not show header row when activeFacetCount is 0', () => {
+  it('always shows Filters header but hides Clear all button when activeFacetCount is 0', () => {
     const facets = createMockFacets({ activeFacetCount: 0 });
     render(React.createElement(FacetPanel, { facets: facets as any }));
+    expect(screen.getByText('Filters')).toBeInTheDocument();
     expect(screen.queryByText('Clear all filters')).not.toBeInTheDocument();
   });
 
   it('shows Filters label and Clear all filters button when facets are active', () => {
     const facets = createMockFacets({ activeFacetCount: 3 });
     render(React.createElement(FacetPanel, { facets: facets as any }));
-    expect(screen.getByText('Filters')).toBeInTheDocument();
+    expect(screen.getByText(/^Filters/)).toBeInTheDocument();
     expect(screen.getByText('Clear all filters')).toBeInTheDocument();
   });
 
@@ -62,7 +72,9 @@ describe('FacetPanel', () => {
   it('renders children content', () => {
     const facets = createMockFacets();
     render(
-      React.createElement(FacetPanel, { facets: facets as any },
+      React.createElement(
+        FacetPanel,
+        { facets: facets as any },
         React.createElement('div', { 'data-testid': 'child-content' }, 'Hello')
       )
     );
