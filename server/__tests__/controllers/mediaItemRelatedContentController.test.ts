@@ -137,6 +137,7 @@ describe('MediaItemController related content enrichment', () => {
         id: 1234,
         title: 'Another movie',
         mediaType: 'movie',
+        posterSmall: '/img/p1234?size=small',
       }),
     ]);
     expect(mockedFindMediaItemByExternalId).toHaveBeenCalledWith({
