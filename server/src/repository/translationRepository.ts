@@ -51,76 +51,116 @@ const upsertRowsInBatches = async (
   }
 };
 
+const dedupeLanguages = (languages: readonly string[]): string[] => {
+  const seen = new Set<string>();
+  const deduped: string[] = [];
+
+  for (const language of languages) {
+    const normalized = language.trim().toLowerCase();
+    if (!normalized || seen.has(normalized)) {
+      continue;
+    }
+
+    seen.add(normalized);
+    deduped.push(language);
+  }
+
+  return deduped;
+};
+
+const selectPreferredTranslations = <T extends { language: string }>(
+  rows: T[],
+  getEntityId: (row: T) => number,
+  languages: readonly string[]
+): Map<number, T> => {
+  const normalizedLanguages = dedupeLanguages(languages);
+  const languagePriority = new Map(
+    normalizedLanguages.map((language, index) => [language.toLowerCase(), index])
+  );
+  const selected = new Map<number, { priority: number; row: T }>();
+
+  for (const row of rows) {
+    const priority = languagePriority.get(row.language.toLowerCase());
+    if (priority === undefined) {
+      continue;
+    }
+
+    const entityId = getEntityId(row);
+    const existing = selected.get(entityId);
+    if (!existing || priority < existing.priority) {
+      selected.set(entityId, { priority, row });
+    }
+  }
+
+  return new Map(
+    Array.from(selected.entries()).map(([entityId, value]) => [entityId, value.row])
+  );
+};
+
 /**
- * Fetches media item translations for a list of media item IDs and a specific language.
- * Returns a map from mediaItemId to translation row.
+ * Fetches media item translations for a list of media item IDs, selecting the
+ * first available translation from the ordered list of preferred languages.
  */
 export const getMediaItemTranslations = async (
   mediaItemIds: number[],
-  language: string
+  languages: readonly string[]
 ): Promise<Map<number, MediaItemTranslation>> => {
-  if (mediaItemIds.length === 0) {
+  const normalizedLanguages = dedupeLanguages(languages);
+
+  if (mediaItemIds.length === 0 || normalizedLanguages.length === 0) {
     return new Map();
   }
 
   const rows = await Database.knex<MediaItemTranslation>('mediaItemTranslation')
     .whereIn('mediaItemId', mediaItemIds)
-    .where('language', language)
+    .whereIn('language', normalizedLanguages)
     .select('*');
 
-  const map = new Map<number, MediaItemTranslation>();
-  for (const row of rows) {
-    map.set(row.mediaItemId, row);
-  }
-  return map;
+  return selectPreferredTranslations(rows, (row) => row.mediaItemId, normalizedLanguages);
 };
 
 /**
- * Fetches season translations for a list of season IDs and a specific language.
- * Returns a map from seasonId to translation row.
+ * Fetches season translations for a list of season IDs, selecting the first
+ * available translation from the ordered list of preferred languages.
  */
 export const getSeasonTranslations = async (
   seasonIds: number[],
-  language: string
+  languages: readonly string[]
 ): Promise<Map<number, SeasonTranslation>> => {
-  if (seasonIds.length === 0) {
+  const normalizedLanguages = dedupeLanguages(languages);
+
+  if (seasonIds.length === 0 || normalizedLanguages.length === 0) {
     return new Map();
   }
 
   const rows = await Database.knex<SeasonTranslation>('seasonTranslation')
     .whereIn('seasonId', seasonIds)
-    .where('language', language)
+    .whereIn('language', normalizedLanguages)
     .select('*');
 
-  const map = new Map<number, SeasonTranslation>();
-  for (const row of rows) {
-    map.set(row.seasonId, row);
-  }
-  return map;
+  return selectPreferredTranslations(rows, (row) => row.seasonId, normalizedLanguages);
 };
 
 /**
- * Fetches episode translations for a list of episode IDs and a specific language.
- * Returns a map from episodeId to translation row.
+ * Fetches episode translations for a list of episode IDs, selecting the first
+ * available translation from the ordered list of preferred languages.
  */
 export const getEpisodeTranslations = async (
   episodeIds: number[],
-  language: string
+  languages: readonly string[]
 ): Promise<Map<number, EpisodeTranslation>> => {
-  if (episodeIds.length === 0) {
+  const normalizedLanguages = dedupeLanguages(languages);
+
+  if (episodeIds.length === 0 || normalizedLanguages.length === 0) {
     return new Map();
   }
 
   const rows = await Database.knex<EpisodeTranslation>('episodeTranslation')
     .whereIn('episodeId', episodeIds)
-    .where('language', language)
+    .whereIn('language', normalizedLanguages)
     .select('*');
 
-  const map = new Map<number, EpisodeTranslation>();
-  for (const row of rows) {
-    map.set(row.episodeId, row);
-  }
-  return map;
+  return selectPreferredTranslations(rows, (row) => row.episodeId, normalizedLanguages);
 };
 
 export interface MediaItemTranslationData {

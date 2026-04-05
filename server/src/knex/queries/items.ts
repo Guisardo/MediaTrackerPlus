@@ -26,23 +26,22 @@ import {
 import { applyAgeGatingFilter } from 'src/utils/ageEligibility';
 
 /**
- * Applies translation overlay to a list of mapped items for a given language.
- * Modifies title, overview, and genres fields where a translation exists.
- * Sets metadataLanguage to the language code when a translation is found.
+ * Applies translation overlay to a list of mapped items using the ordered
+ * language preferences and the first available translation per item.
  */
 const applyTranslationOverlay = async (
   items: MediaItemItemsResponse[],
-  language: string
+  preferredLanguages: readonly string[]
 ): Promise<MediaItemItemsResponse[]> => {
   const ids = items
     .map((item) => item.id)
     .filter((id): id is number => id != null);
 
-  if (ids.length === 0) {
+  if (ids.length === 0 || preferredLanguages.length === 0) {
     return items;
   }
 
-  const translationMap = await getMediaItemTranslations(ids, language);
+  const translationMap = await getMediaItemTranslations(ids, preferredLanguages);
 
   return items.map((item) => {
     if (item.id == null) {
@@ -54,7 +53,7 @@ const applyTranslationOverlay = async (
       return { ...item, metadataLanguage: null };
     }
 
-    const updated = { ...item, metadataLanguage: language };
+    const updated = { ...item, metadataLanguage: translation.language };
     if (translation.title != null) {
       updated.title = translation.title;
     }
@@ -76,6 +75,7 @@ type LibraryQuery = Knex.QueryBuilder<Record<string, unknown>, unknown[]>;
 
 type GetItemsKnexArgs = GetItemsArgs & {
   language?: string | null;
+  metadataLanguagePreferences?: readonly string[] | null;
   year?: string;
 };
 
@@ -633,7 +633,13 @@ const mapToSortedFacetOptions = (map: Map<string, number>): FacetOption[] =>
 export const getItemsKnex = async (
   args: GetItemsKnexArgs
 ): Promise<Pagination<MediaItemItemsResponse> | MediaItemItemsResponse[]> => {
-  const { page, language, viewerAge } = args;
+  const { page, language, metadataLanguagePreferences, viewerAge } = args;
+  const preferredLanguages =
+    metadataLanguagePreferences && metadataLanguagePreferences.length > 0
+      ? metadataLanguagePreferences
+      : language
+        ? [language]
+        : [];
   const { sqlQuery, sqlCountQuery, sqlPaginationQuery } = await getItemsKnexSql(
     args
   );
@@ -658,8 +664,8 @@ export const getItemsKnex = async (
 
     let data = res.map(mapRawResult);
 
-    if (language) {
-      data = await applyTranslationOverlay(data, language);
+    if (preferredLanguages.length > 0) {
+      data = await applyTranslationOverlay(data, preferredLanguages);
     }
 
     return {
@@ -675,8 +681,8 @@ export const getItemsKnex = async (
     const res = await sqlQuery;
     let items = res.map(mapRawResult);
 
-    if (language) {
-      items = await applyTranslationOverlay(items, language);
+    if (preferredLanguages.length > 0) {
+      items = await applyTranslationOverlay(items, preferredLanguages);
     }
 
     return items;
