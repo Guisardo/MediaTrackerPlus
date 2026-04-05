@@ -64,7 +64,7 @@ export function computeViewerAge(
  * Rules:
  * - If `viewerAge` is `null` (DOB unset), the viewer is eligible (no gating).
  * - If `minimumAge` is `null` or `undefined` (unknown parental metadata),
- *   the item is visible.
+ *   the item is hidden for DOB-set viewers.
  * - Otherwise the viewer must be at least `minimumAge` years old.
  */
 export function isAgeEligible(
@@ -75,15 +75,15 @@ export function isAgeEligible(
     return true;
   }
   if (minimumAge == null) {
-    return true;
+    return false;
   }
   return viewerAge >= minimumAge;
 }
 
 /**
  * Applies age-gating WHERE clause to a Knex query builder.
- * Items with null `minimumAge` remain visible. Items whose `minimumAge`
- * exceeds the viewer's age are excluded.
+ * Items with null `minimumAge` are excluded for DOB-set viewers. Items whose
+ * `minimumAge` exceeds the viewer's age are also excluded.
  *
  * When `viewerAge` is `null` (DOB unset), no filter is applied, preserving
  * current behavior.
@@ -103,7 +103,5 @@ export function applyAgeGatingFilter(
     return;
   }
 
-  query.where((qb: typeof query) =>
-    qb.whereNull(columnRef).orWhere(columnRef, '<=', viewerAge)
-  );
+  query.where(columnRef, '<=', viewerAge);
 }
