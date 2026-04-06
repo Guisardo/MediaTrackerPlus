@@ -14,7 +14,7 @@ import { clearDatabase, runMigrations } from '__tests__/__utils__/utils';
  * - Items with minimumAge > viewer's age are excluded from GET /api/items/paginated
  * - Facet counts only include age-eligible items
  * - Search excludes age-restricted items that have a resolved minimumAge
- * - Items with null minimumAge (unknown parental metadata) remain visible
+ * - Items with null minimumAge (unknown parental metadata) are hidden for DOB-set users
  * - When dateOfBirth is unset, all items are returned unchanged
  * - Paginated response includes ageGatingActive metadata
  */
@@ -192,7 +192,7 @@ describe('Age Gating Integration', () => {
   describe('GET /api/items', () => {
     const itemsController = new ItemsController();
 
-    test('adult user sees all items', async () => {
+    test('adult user does not see items with missing parental metadata', async () => {
       const res = await request(itemsController.get, {
         userId: ADULT_USER_ID,
         requestQuery: { mediaType: 'movie' },
@@ -204,7 +204,7 @@ describe('Age Gating Integration', () => {
 
       expect(ids).toContain(RATED_R_MOVIE_ID);
       expect(ids).toContain(RATED_PG13_MOVIE_ID);
-      expect(ids).toContain(UNRATED_MOVIE_ID);
+      expect(ids).not.toContain(UNRATED_MOVIE_ID);
       expect(ids).toContain(RATED_G_MOVIE_ID);
     });
 
@@ -220,9 +220,9 @@ describe('Age Gating Integration', () => {
 
       // Teen (age 13-14) should NOT see R-rated (minimumAge=17)
       expect(ids).not.toContain(RATED_R_MOVIE_ID);
-      // Teen SHOULD see PG-13 (minimumAge=13), unrated (null), and G (minimumAge=0)
+      // Teen SHOULD see PG-13 (minimumAge=13) and G (minimumAge=0)
       expect(ids).toContain(RATED_PG13_MOVIE_ID);
-      expect(ids).toContain(UNRATED_MOVIE_ID);
+      expect(ids).not.toContain(UNRATED_MOVIE_ID);
       expect(ids).toContain(RATED_G_MOVIE_ID);
     });
 
@@ -242,7 +242,7 @@ describe('Age Gating Integration', () => {
       expect(ids).toContain(RATED_G_MOVIE_ID);
     });
 
-    test('items with null minimumAge remain visible to all users', async () => {
+    test('items with null minimumAge are hidden for users with DOB', async () => {
       const res = await request(itemsController.get, {
         userId: TEEN_USER_ID,
         requestQuery: { mediaType: 'movie' },
@@ -252,8 +252,7 @@ describe('Age Gating Integration', () => {
       const items = res.data as any[];
       const unratedItem = items.find((i: any) => i.id === UNRATED_MOVIE_ID);
 
-      expect(unratedItem).toBeDefined();
-      expect(unratedItem.minimumAge).toBeNull();
+      expect(unratedItem).toBeUndefined();
     });
   });
 
@@ -264,7 +263,7 @@ describe('Age Gating Integration', () => {
   describe('GET /api/items/paginated', () => {
     const itemsController = new ItemsController();
 
-    test('adult user paginated response includes all items', async () => {
+    test('adult user paginated response excludes items with missing parental metadata', async () => {
       const res = await request(itemsController.getPaginated, {
         userId: ADULT_USER_ID,
         requestQuery: { page: 1, mediaType: 'movie' },
@@ -276,9 +275,9 @@ describe('Age Gating Integration', () => {
 
       expect(ids).toContain(RATED_R_MOVIE_ID);
       expect(ids).toContain(RATED_PG13_MOVIE_ID);
-      expect(ids).toContain(UNRATED_MOVIE_ID);
+      expect(ids).not.toContain(UNRATED_MOVIE_ID);
       expect(ids).toContain(RATED_G_MOVIE_ID);
-      expect(data.total).toBe(4);
+      expect(data.total).toBe(3);
     });
 
     test('teen user paginated response excludes R-rated item', async () => {
@@ -293,9 +292,9 @@ describe('Age Gating Integration', () => {
 
       expect(ids).not.toContain(RATED_R_MOVIE_ID);
       expect(ids).toContain(RATED_PG13_MOVIE_ID);
-      expect(ids).toContain(UNRATED_MOVIE_ID);
+      expect(ids).not.toContain(UNRATED_MOVIE_ID);
       expect(ids).toContain(RATED_G_MOVIE_ID);
-      expect(data.total).toBe(3);
+      expect(data.total).toBe(2);
     });
 
     test('paginated response includes ageGatingActive=true when DOB is set', async () => {
@@ -351,7 +350,7 @@ describe('Age Gating Integration', () => {
 
       expect(genreValues).toContain('Action');
       expect(genreValues).toContain('Adventure');
-      expect(genreValues).toContain('Drama');
+      expect(genreValues).not.toContain('Drama');
       expect(genreValues).toContain('Family');
     });
 
@@ -369,7 +368,7 @@ describe('Age Gating Integration', () => {
       // only movie in that genre and is age-restricted for this teen user
       expect(genreValues).not.toContain('Action');
       expect(genreValues).toContain('Adventure');
-      expect(genreValues).toContain('Drama');
+      expect(genreValues).not.toContain('Drama');
       expect(genreValues).toContain('Family');
     });
 
@@ -420,9 +419,9 @@ describe('Age Gating Integration', () => {
       const ids = (result as any[]).map((i: any) => i.id);
       // R-rated (minimumAge=17) excluded for 13-year-old
       expect(ids).not.toContain(RATED_R_MOVIE_ID);
-      // PG-13 (minimumAge=13) and unrated (null) still visible
+      // PG-13 (minimumAge=13) remains visible
       expect(ids).toContain(RATED_PG13_MOVIE_ID);
-      expect(ids).toContain(UNRATED_MOVIE_ID);
+      expect(ids).not.toContain(UNRATED_MOVIE_ID);
     });
 
     test('search returns all items when viewerAge is null', async () => {
@@ -473,9 +472,9 @@ describe('Age Gating Integration', () => {
       expect(res.statusCode).toBe(200);
       const data = res.data as any;
 
-      // Teen sees 3 movies (PG-13, unrated, G) but not R-rated
-      expect(data.total).toBe(3);
-      expect(data.data).toHaveLength(3);
+      // Teen sees 2 movies (PG-13, G) but not R-rated or unrated
+      expect(data.total).toBe(2);
+      expect(data.data).toHaveLength(2);
       expect(data.ageGatingActive).toBe(true);
     });
   });

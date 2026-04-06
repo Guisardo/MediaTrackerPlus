@@ -697,7 +697,8 @@ export const getItemsKnex = async (
  * clearly labelled step — reducing cyclomatic complexity in each caller.
  *
  * When `viewerAge` is `null` or `undefined` (DOB unset), no filter is applied and all
- * items remain visible regardless of their `minimumAge` value.
+ * items remain visible regardless of their `minimumAge` value. For DOB-set viewers,
+ * items without parental metadata are filtered out alongside items above the age threshold.
  *
  * @param query     - Knex query builder to mutate in place.
  * @param viewerAge - Viewer's age in whole years, or `null`/`undefined` if DOB is unset.

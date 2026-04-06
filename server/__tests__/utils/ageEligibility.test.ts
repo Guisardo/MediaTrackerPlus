@@ -79,14 +79,14 @@ describe('isAgeEligible', () => {
     expect(isAgeEligible(null, null)).toBe(true);
   });
 
-  test('item with null minimumAge is always visible', () => {
-    expect(isAgeEligible(10, null)).toBe(true);
-    expect(isAgeEligible(0, null)).toBe(true);
+  test('item with null minimumAge is hidden for viewers with a known age', () => {
+    expect(isAgeEligible(10, null)).toBe(false);
+    expect(isAgeEligible(0, null)).toBe(false);
   });
 
-  test('item with undefined minimumAge is always visible', () => {
-    expect(isAgeEligible(10, undefined)).toBe(true);
-    expect(isAgeEligible(0, undefined)).toBe(true);
+  test('item with undefined minimumAge is hidden for viewers with a known age', () => {
+    expect(isAgeEligible(10, undefined)).toBe(false);
+    expect(isAgeEligible(0, undefined)).toBe(false);
   });
 
   test('viewer meets minimum age', () => {
@@ -113,44 +113,14 @@ describe('applyAgeGatingFilter', () => {
     const query = { where: jest.fn() };
     applyAgeGatingFilter(query, 18);
     expect(query.where).toHaveBeenCalledTimes(1);
-    expect(query.where).toHaveBeenCalledWith(expect.any(Function));
-  });
-
-  test('applies correct filter logic via callback', () => {
-    const mockQb = {
-      whereNull: jest.fn().mockReturnThis(),
-      orWhere: jest.fn().mockReturnThis(),
-    };
-
-    const query = {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      where: jest.fn((callback: (qb: any) => void) => {
-        callback(mockQb);
-      }),
-    };
-
-    applyAgeGatingFilter(query, 13);
-
-    expect(mockQb.whereNull).toHaveBeenCalledWith('mediaItem.minimumAge');
-    expect(mockQb.orWhere).toHaveBeenCalledWith('mediaItem.minimumAge', '<=', 13);
+    expect(query.where).toHaveBeenCalledWith('mediaItem.minimumAge', '<=', 18);
   });
 
   test('uses custom column reference', () => {
-    const mockQb = {
-      whereNull: jest.fn().mockReturnThis(),
-      orWhere: jest.fn().mockReturnThis(),
-    };
-
-    const query = {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      where: jest.fn((callback: (qb: any) => void) => {
-        callback(mockQb);
-      }),
-    };
+    const query = { where: jest.fn() };
 
     applyAgeGatingFilter(query, 18, 'custom.minimumAge');
 
-    expect(mockQb.whereNull).toHaveBeenCalledWith('custom.minimumAge');
-    expect(mockQb.orWhere).toHaveBeenCalledWith('custom.minimumAge', '<=', 18);
+    expect(query.where).toHaveBeenCalledWith('custom.minimumAge', '<=', 18);
   });
 });

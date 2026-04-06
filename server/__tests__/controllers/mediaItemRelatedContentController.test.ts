@@ -68,7 +68,7 @@ const baseItem = {
   mediaType: 'movie',
   source: 'tmdb',
   tmdbId: 329865,
-  minimumAge: null,
+  minimumAge: 13,
   posterId: 'abc',
 };
 
@@ -121,7 +121,7 @@ describe('MediaItemController related content enrichment', () => {
       mediaType: 'movie',
       source: 'tmdb',
       tmdbId: 1234,
-      minimumAge: null,
+      minimumAge: 13,
       posterId: 'p1234',
     } as any);
 
@@ -202,6 +202,52 @@ describe('MediaItemController related content enrichment', () => {
     expect(res.statusCode).toBe(200);
     expect((res.data as MediaItemDetailsResponse).relatedContent).toEqual([
       expect.objectContaining({ id: 2001 }),
+    ]);
+  });
+
+  test('filters out related items with missing parental metadata for DOB-set viewers', async () => {
+    mockedMetadataProviders.similar.mockResolvedValue([
+      {
+        externalId: '2101',
+        mediaType: 'movie',
+        title: 'Rated',
+        externalRating: 7.0,
+      },
+      {
+        externalId: '2102',
+        mediaType: 'movie',
+        title: 'Unrated',
+        externalRating: 8.4,
+      },
+    ]);
+
+    mockedFindMediaItemByExternalId
+      .mockResolvedValueOnce({
+        id: 2101,
+        title: 'Rated',
+        mediaType: 'movie',
+        source: 'tmdb',
+        tmdbId: 2101,
+        minimumAge: 13,
+      } as any)
+      .mockResolvedValueOnce({
+        id: 2102,
+        title: 'Unrated',
+        mediaType: 'movie',
+        source: 'tmdb',
+        tmdbId: 2102,
+        minimumAge: null,
+      } as any);
+
+    const res = await request(controller.details, {
+      userId: 1,
+      pathParams: { mediaItemId: 77 },
+      requestHeaders: { 'accept-language': 'en' },
+    });
+
+    expect(res.statusCode).toBe(200);
+    expect((res.data as MediaItemDetailsResponse).relatedContent).toEqual([
+      expect.objectContaining({ id: 2101 }),
     ]);
   });
 

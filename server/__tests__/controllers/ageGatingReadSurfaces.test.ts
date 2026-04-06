@@ -38,7 +38,7 @@ const mockedFindMediaItemByExternalId =
  * - Public/shared list viewing uses the viewer's DOB, not the list owner's
  * - Calendar responses exclude restricted items and episodes
  * - Statistics responses exclude restricted items from aggregates
- * - Unknown parental metadata (null minimumAge) remains visible everywhere
+ * - Unknown parental metadata (null minimumAge) is hidden for DOB-set viewers
  * - When dateOfBirth is unset, all surfaces behave normally
  */
 describe('Age Gating - Read Surfaces (US-006)', () => {
@@ -347,14 +347,26 @@ describe('Age Gating - Read Surfaces (US-006)', () => {
       expect((res.data as any).title).toBe('PG-13 Sci-Fi');
     });
 
-    test('teen user can view unrated (null minimumAge) details', async () => {
+    test('teen user receives 403 AGE_RESTRICTED for unrated details', async () => {
       const res = await request(detailsController.details, {
         userId: TEEN_USER_ID,
         pathParams: { mediaItemId: UNRATED_MOVIE_ID },
       });
 
-      expect(res.statusCode).toBe(200);
-      expect((res.data as any).title).toBe('Unrated Documentary');
+      expect(res.statusCode).toBe(403);
+      const error = res.data as any;
+      expect(error.code).toBe('AGE_RESTRICTED');
+    });
+
+    test('adult user receives 403 AGE_RESTRICTED for unrated details', async () => {
+      const res = await request(detailsController.details, {
+        userId: ADULT_USER_ID,
+        pathParams: { mediaItemId: UNRATED_MOVIE_ID },
+      });
+
+      expect(res.statusCode).toBe(403);
+      const error = res.data as any;
+      expect(error.code).toBe('AGE_RESTRICTED');
     });
 
     test('user without DOB can view all details', async () => {
@@ -411,6 +423,50 @@ describe('Age Gating - Read Surfaces (US-006)', () => {
       ]);
     });
 
+    test('filters out related items with missing parental metadata for DOB-set viewers', async () => {
+      mockedMetadataProviders.similar.mockResolvedValue([
+        {
+          externalId: '4101',
+          mediaType: 'movie',
+          title: 'Rated related',
+          externalRating: 7.5,
+        },
+        {
+          externalId: '4102',
+          mediaType: 'movie',
+          title: 'Unrated related',
+          externalRating: 8.1,
+        },
+      ]);
+      mockedFindMediaItemByExternalId
+        .mockResolvedValueOnce({
+          id: 4101,
+          title: 'Rated related',
+          mediaType: 'movie',
+          source: 'tmdb',
+          tmdbId: 4101,
+          minimumAge: 13,
+        } as any)
+        .mockResolvedValueOnce({
+          id: 4102,
+          title: 'Unrated related',
+          mediaType: 'movie',
+          source: 'tmdb',
+          tmdbId: 4102,
+          minimumAge: null,
+        } as any);
+
+      const res = await request(detailsController.details, {
+        userId: TEEN_USER_ID,
+        pathParams: { mediaItemId: RATED_PG13_MOVIE_ID },
+      });
+
+      expect(res.statusCode).toBe(200);
+      expect((res.data as any).relatedContent).toEqual([
+        expect.objectContaining({ id: 4101 }),
+      ]);
+    });
+
     test('non-existent item returns 404', async () => {
       const res = await request(detailsController.details, {
         userId: ADULT_USER_ID,
@@ -428,7 +484,7 @@ describe('Age Gating - Read Surfaces (US-006)', () => {
   describe('GET /api/list/items', () => {
     const listController = new ListController();
 
-    test('adult user sees all items in public list', async () => {
+    test('adult user does not see items with missing parental metadata in public list', async () => {
       const res = await request(listController.getListItems, {
         userId: ADULT_USER_ID,
         requestQuery: { listId: ADULT_PUBLIC_LIST_ID },
@@ -440,7 +496,7 @@ describe('Age Gating - Read Surfaces (US-006)', () => {
 
       expect(mediaItemIds).toContain(RATED_R_MOVIE_ID);
       expect(mediaItemIds).toContain(RATED_PG13_MOVIE_ID);
-      expect(mediaItemIds).toContain(UNRATED_MOVIE_ID);
+      expect(mediaItemIds).not.toContain(UNRATED_MOVIE_ID);
     });
 
     test('teen user viewing adult public list is filtered by teen DOB', async () => {
@@ -455,9 +511,9 @@ describe('Age Gating - Read Surfaces (US-006)', () => {
 
       // Teen should NOT see R-rated content even in adult's public list
       expect(mediaItemIds).not.toContain(RATED_R_MOVIE_ID);
-      // Teen SHOULD see PG-13 and unrated
+      // Teen SHOULD see PG-13 only
       expect(mediaItemIds).toContain(RATED_PG13_MOVIE_ID);
-      expect(mediaItemIds).toContain(UNRATED_MOVIE_ID);
+      expect(mediaItemIds).not.toContain(UNRATED_MOVIE_ID);
     });
 
     test('user without DOB sees all items in public list', async () => {
@@ -475,7 +531,7 @@ describe('Age Gating - Read Surfaces (US-006)', () => {
       expect(mediaItemIds).toContain(UNRATED_MOVIE_ID);
     });
 
-    test('unknown parental metadata remains visible in list items', async () => {
+    test('unknown parental metadata is hidden in list items for viewers with DOB', async () => {
       const res = await request(listController.getListItems, {
         userId: TEEN_USER_ID,
         requestQuery: { listId: ADULT_PUBLIC_LIST_ID },
@@ -487,7 +543,7 @@ describe('Age Gating - Read Surfaces (US-006)', () => {
         (i: any) => i.mediaItem.id === UNRATED_MOVIE_ID
       );
 
-      expect(unratedItem).toBeDefined();
+      expect(unratedItem).toBeUndefined();
     });
   });
 
@@ -563,8 +619,8 @@ describe('Age Gating - Read Surfaces (US-006)', () => {
 
       expect(res.statusCode).toBe(200);
       const data = res.data as any;
-      // Teen watched 3 movies but R-rated is excluded from aggregates => 2 items
-      expect(data.movie.items).toBe(2);
+      // Teen watched 3 movies but R-rated and unrated are excluded => 1 item
+      expect(data.movie.items).toBe(1);
     });
 
     test('user without DOB statistics include all items', async () => {
@@ -593,9 +649,9 @@ describe('Age Gating - Read Surfaces (US-006)', () => {
         const genres = data.movie.map((g: any) => g.genre);
         // R-rated movie's genre (Thriller) should be excluded for teen
         expect(genres).not.toContain('Thriller');
-        // PG-13 (Sci-Fi) and unrated (Documentary) should be present
+        // PG-13 (Sci-Fi) should be present, unrated (Documentary) hidden
         expect(genres).toContain('Sci-Fi');
-        expect(genres).toContain('Documentary');
+        expect(genres).not.toContain('Documentary');
       }
     });
   });
