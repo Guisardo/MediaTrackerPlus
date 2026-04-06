@@ -182,6 +182,32 @@ describe('RelatedContentService', () => {
     expect(result.map((item) => item.id)).toEqual([101]);
   });
 
+  test('filters out related items with missing parental metadata for DOB-set viewers', async () => {
+    const service = new RelatedContentService({
+      metadataProviders: {
+        similar: jest.fn().mockResolvedValue([
+          makeSimilarItem('movie', '111'),
+          makeSimilarItem('movie', '112'),
+        ]),
+      },
+      findMediaItemByExternalId: jest
+        .fn()
+        .mockResolvedValueOnce(
+          makeMediaItem({ id: 111, tmdbId: 111, title: 'Rated', minimumAge: 13 })
+        )
+        .mockResolvedValueOnce(
+          makeMediaItem({ id: 112, tmdbId: 112, title: 'Unrated', minimumAge: null })
+        ),
+    });
+
+    const result = await service.relatedContent({
+      mediaItem: makeMediaItem(),
+      viewerAge: 15,
+    });
+
+    expect(result.map((item) => item.id)).toEqual([111]);
+  });
+
   test('skips unresolved candidates and candidate-level resolution errors', async () => {
     const resolutionError = new Error('resolution failed');
     const service = new RelatedContentService({

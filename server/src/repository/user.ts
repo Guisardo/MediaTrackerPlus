@@ -112,8 +112,8 @@ class UserRepository extends repository<User>({
    * Rules:
    * - Recipients with no `dateOfBirth` are always included.
    * - Recipients whose age is below `minimumAge` are excluded.
-   * - When `minimumAge` is null/undefined (unknown metadata), all recipients
-   *   are included.
+   * - When `minimumAge` is null/undefined (unknown metadata), only recipients
+   *   without `dateOfBirth` are included.
    *
    * Optionally filters by notification preference flags (same semantics as
    * `findUsersWithMediaItemOnWatchlist`).
@@ -153,11 +153,6 @@ class UserRepository extends repository<User>({
 
     // Apply per-recipient age eligibility in memory so we avoid SQL date math
     // and reuse the canonical computeViewerAge / isAgeEligible helpers.
-    if (minimumAge == null) {
-      // Unknown metadata: all recipients are eligible
-      return users.map((u) => this.deserialize(u));
-    }
-
     return users
       .map((u) => this.deserialize(u))
       .filter((user) =>

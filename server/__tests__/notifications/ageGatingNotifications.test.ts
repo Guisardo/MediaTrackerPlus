@@ -9,7 +9,7 @@ import { clearDatabase, runMigrations } from '__tests__/__utils__/utils';
  * - Skips recipients whose age is below the content's `minimumAge`.
  * - Includes recipients whose age meets or exceeds `minimumAge`.
  * - Includes recipients with no `dateOfBirth` (no gating for DOB-unset users).
- * - Includes all recipients when `minimumAge` is null (unknown parental metadata).
+ * - Includes only recipients without `dateOfBirth` when `minimumAge` is null.
  * - Correctly filters by optional notification preference flags.
  */
 describe('Notification age-gating (US-007)', () => {
@@ -244,7 +244,7 @@ describe('Notification age-gating (US-007)', () => {
     // -------------------------------------------------------------------------
     // Unknown parental metadata (minimumAge = null)
     // -------------------------------------------------------------------------
-    it('includes all recipients when minimumAge is null (unknown parental metadata)', async () => {
+    it('includes only recipients without DOB when minimumAge is null (unknown parental metadata)', async () => {
       const recipients =
         await userRepository.findNotificationRecipientsForMediaItem({
           mediaItemId: UNRATED_MOVIE_ID,
@@ -252,12 +252,12 @@ describe('Notification age-gating (US-007)', () => {
         });
 
       const ids = recipients.map((u) => u.id);
-      expect(ids).toContain(ADULT_USER_ID);
-      expect(ids).toContain(TEEN_USER_ID);
+      expect(ids).not.toContain(ADULT_USER_ID);
+      expect(ids).not.toContain(TEEN_USER_ID);
       expect(ids).toContain(NO_DOB_USER_ID);
     });
 
-    it('includes all recipients when minimumAge is undefined (unknown parental metadata)', async () => {
+    it('includes only recipients without DOB when minimumAge is undefined (unknown parental metadata)', async () => {
       const recipients =
         await userRepository.findNotificationRecipientsForMediaItem({
           mediaItemId: UNRATED_MOVIE_ID,
@@ -265,8 +265,8 @@ describe('Notification age-gating (US-007)', () => {
         });
 
       const ids = recipients.map((u) => u.id);
-      expect(ids).toContain(ADULT_USER_ID);
-      expect(ids).toContain(TEEN_USER_ID);
+      expect(ids).not.toContain(ADULT_USER_ID);
+      expect(ids).not.toContain(TEEN_USER_ID);
       expect(ids).toContain(NO_DOB_USER_ID);
     });
 
