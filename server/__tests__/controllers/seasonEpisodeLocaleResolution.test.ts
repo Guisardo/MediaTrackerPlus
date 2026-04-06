@@ -13,10 +13,11 @@ import { Config } from 'src/config';
 /**
  * Integration tests for locale resolution in season and episode API responses.
  *
- * Tests the three-tier fallback logic applied to seasons and episodes:
+ * Tests the locale fallback logic applied to seasons and episodes:
  *   Tier 1: Exact locale match from seasonTranslation / episodeTranslation
- *   Tier 2: First language in METADATA_LANGUAGES when no exact match
- *   Tier 3: Base season/episode fields unchanged when no translation exists (metadataLanguage = null)
+ *   Tier 2: Base non-regional locale match for regional requests
+ *   Tier 3: Default configured locale when neither exact nor base matches are available
+ *   Tier 4: Base season/episode fields unchanged when no translation exists (metadataLanguage = null)
  *
  * Also verifies:
  *   - metadataLanguage field on each season and episode in the response
@@ -105,7 +106,7 @@ describe('Locale Resolution - Season and Episode API', () => {
       expect(season.metadataLanguage).toBe('es');
     });
 
-    test('Tier 2: no exact locale match returns first-language fallback for season', async () => {
+    test('Tier 2: regional request falls back to base locale for season', async () => {
       (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
         'en',
         'es',
@@ -116,7 +117,31 @@ describe('Locale Resolution - Season and Episode API', () => {
       const res = await request(controller.details, {
         userId: Data.user.id,
         pathParams: { mediaItemId: Data.tvShow.id },
-        requestHeaders: { 'accept-language': 'fr' },
+        requestHeaders: { 'accept-language': 'es-AR' },
+      });
+
+      expect(res.statusCode).toBe(200);
+      const data = res.data as any;
+      expect(Array.isArray(data.seasons)).toBe(true);
+
+      const season = data.seasons[0];
+      expect(season.title).toBe('Temporada 1');
+      expect(season.description).toBe('Descripcion en español');
+      expect(season.metadataLanguage).toBe('es');
+    });
+
+    test('Tier 3: no exact/base locale match returns default-language fallback for season', async () => {
+      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
+        'en',
+        'fr',
+      ];
+
+      const controller = new MediaItemController();
+
+      const res = await request(controller.details, {
+        userId: Data.user.id,
+        pathParams: { mediaItemId: Data.tvShow.id },
+        requestHeaders: { 'accept-language': 'es-AR' },
       });
 
       expect(res.statusCode).toBe(200);
@@ -130,7 +155,7 @@ describe('Locale Resolution - Season and Episode API', () => {
       expect(season.metadataLanguage).toBe('en');
     });
 
-    test('Tier 3: no translation for season returns base fields with metadataLanguage null', async () => {
+    test('Tier 4: no translation for season returns base fields with metadataLanguage null', async () => {
       // Only 'de' configured — no German season translations seeded
       (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
         'de',
@@ -215,7 +240,7 @@ describe('Locale Resolution - Season and Episode API', () => {
       expect(ep2.metadataLanguage).toBe('es');
     });
 
-    test('Tier 2: no exact locale match returns first-language fallback for episodes', async () => {
+    test('Tier 2: regional request falls back to base locale for episodes', async () => {
       (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
         'en',
         'es',
@@ -226,7 +251,32 @@ describe('Locale Resolution - Season and Episode API', () => {
       const res = await request(controller.details, {
         userId: Data.user.id,
         pathParams: { mediaItemId: Data.tvShow.id },
-        requestHeaders: { 'accept-language': 'fr' },
+        requestHeaders: { 'accept-language': 'es-AR' },
+      });
+
+      expect(res.statusCode).toBe(200);
+      const data = res.data as any;
+
+      const season = data.seasons[0];
+      const ep1 = season.episodes.find((e: any) => e.episodeNumber === 1);
+      expect(ep1).toBeDefined();
+      expect(ep1.title).toBe('Episodio 1');
+      expect(ep1.description).toBe('Primera descripcion');
+      expect(ep1.metadataLanguage).toBe('es');
+    });
+
+    test('Tier 3: no exact/base locale match returns default-language fallback for episodes', async () => {
+      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
+        'en',
+        'fr',
+      ];
+
+      const controller = new MediaItemController();
+
+      const res = await request(controller.details, {
+        userId: Data.user.id,
+        pathParams: { mediaItemId: Data.tvShow.id },
+        requestHeaders: { 'accept-language': 'es-AR' },
       });
 
       expect(res.statusCode).toBe(200);
@@ -241,7 +291,7 @@ describe('Locale Resolution - Season and Episode API', () => {
       expect(ep1.metadataLanguage).toBe('en');
     });
 
-    test('Tier 3: episode without translation gets metadataLanguage null', async () => {
+    test('Tier 4: episode without translation gets metadataLanguage null', async () => {
       // episode3 has no 'es' translation — should get metadataLanguage null when requesting 'es'
       // but fallback language 'en' also has no episode3 translation
       (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
@@ -292,6 +342,47 @@ describe('Locale Resolution - Season and Episode API', () => {
       // but ep3 also has no 'en' translation → metadataLanguage = null
       expect(ep3.title).toBe(Data.episode3.title);
       expect(ep3.metadataLanguage).toBeNull();
+    });
+
+    test('episodes resolve metadata language independently by availability', async () => {
+      await upsertEpisodeTranslation(Data.episode3.id, 'en', {
+        title: 'Episode 3 (English)',
+        description: 'English episode 3 description',
+      });
+
+      try {
+        (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
+          'en',
+          'es',
+        ];
+
+        const controller = new MediaItemController();
+
+        const res = await request(controller.details, {
+          userId: Data.user.id,
+          pathParams: { mediaItemId: Data.tvShow.id },
+          requestHeaders: { 'accept-language': 'es-AR' },
+        });
+
+        expect(res.statusCode).toBe(200);
+        const data = res.data as any;
+        const season = data.seasons[0];
+
+        const ep1 = season.episodes.find((e: any) => e.episodeNumber === 1);
+        const ep3 = season.episodes.find((e: any) => e.episodeNumber === 3);
+
+        expect(ep1.metadataLanguage).toBe('es');
+        expect(ep1.title).toBe('Episodio 1');
+        expect(ep3.metadataLanguage).toBe('en');
+        expect(ep3.title).toBe('Episode 3 (English)');
+      } finally {
+        await Database.knex('episodeTranslation')
+          .where({
+            episodeId: Data.episode3.id,
+            language: 'en',
+          })
+          .delete();
+      }
     });
 
     test('all episodes in response include metadataLanguage field', async () => {

@@ -8,6 +8,8 @@ import {
   upsertEpisodeTranslations,
   SeasonTranslationData,
   EpisodeTranslationData,
+  getSeasonTranslations,
+  getEpisodeTranslations,
 } from 'src/repository/translationRepository';
 
 /**
@@ -469,6 +471,66 @@ describe('seasonEpisodeTranslationRepository', () => {
       await upsertEpisodeTranslations([]);
       const rows = await getAllEpisodeTranslations();
       expect(rows).toHaveLength(0);
+    });
+  });
+
+  describe('preferred translation selection', () => {
+    test('returns the first available season translation from the preferred language order', async () => {
+      await upsertSeasonTranslations([
+        {
+          seasonId: Data.season.id,
+          language: 'en',
+          title: 'Season 1',
+          description: 'English description',
+        },
+        {
+          seasonId: Data.season.id,
+          language: 'es',
+          title: 'Temporada 1',
+          description: 'Descripcion en espanol',
+        },
+      ]);
+
+      const translations = await getSeasonTranslations(
+        [Data.season.id],
+        ['es-AR', 'es', 'en']
+      );
+
+      expect(translations.get(Data.season.id)?.language).toBe('es');
+      expect(translations.get(Data.season.id)?.title).toBe('Temporada 1');
+    });
+
+    test('resolves episode translations independently for each episode', async () => {
+      await upsertEpisodeTranslations([
+        {
+          episodeId: Data.episode.id,
+          language: 'es',
+          title: 'Episodio 1',
+          description: 'Descripcion 1',
+        },
+        {
+          episodeId: Data.episode.id,
+          language: 'en',
+          title: 'Episode 1',
+          description: 'English 1',
+        },
+        {
+          episodeId: Data.episode2.id,
+          language: 'en',
+          title: 'Episode 2',
+          description: 'English 2',
+        },
+      ]);
+
+      const translations = await getEpisodeTranslations(
+        [Data.episode.id, Data.episode2.id],
+        ['es-AR', 'es', 'en']
+      );
+
+      expect(translations.get(Data.episode.id)?.language).toBe('es');
+      expect(translations.get(Data.episode.id)?.title).toBe('Episodio 1');
+      expect(translations.get(Data.episode2.id)?.language).toBe('en');
+      expect(translations.get(Data.episode2.id)?.title).toBe('Episode 2');
     });
   });
 });

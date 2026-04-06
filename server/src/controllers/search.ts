@@ -6,7 +6,7 @@ import { findMediaItemByExternalId } from 'src/metadata/findByExternalId';
 import { metadataProviders } from 'src/metadata/metadataProviders';
 import { mediaItemRepository } from 'src/repository/mediaItem';
 import { definedOrUndefined } from 'src/repository/repository';
-import { resolveLocale } from 'src/localeResolver';
+import { resolveMetadataLanguagePreferences } from 'src/localeResolver';
 import { getMetadataLanguages } from 'src/metadataLanguages';
 import { userRepository } from 'src/repository/user';
 import { computeViewerAge } from 'src/utils/ageEligibility';
@@ -14,29 +14,6 @@ import { computeViewerAge } from 'src/utils/ageEligibility';
 const IMDB_ID_PATTERN = /^tt\d{7,8}$/i;
 
 const isImdbId = (query: string): boolean => IMDB_ID_PATTERN.test(query.trim());
-
-/**
- * Resolves the language to use for metadata overlay, implementing three-tier fallback:
- * 1. Exact locale match from Accept-Language header against METADATA_LANGUAGES
- * 2. First language in METADATA_LANGUAGES as fallback when no exact match
- * 3. null when METADATA_LANGUAGES is empty (no translations configured)
- */
-function resolveMetadataLanguage(
-  acceptLanguageHeader: string | undefined
-): string | null {
-  const availableLanguages = getMetadataLanguages();
-  if (availableLanguages.length === 0) {
-    return null;
-  }
-
-  const exactMatch = resolveLocale(acceptLanguageHeader, availableLanguages);
-  if (exactMatch) {
-    return exactMatch;
-  }
-
-  // Tier 2 fallback: use first configured language
-  return availableLanguages[0];
-}
 
 /**
  * @openapi_tags Search
@@ -62,7 +39,10 @@ export class SearchController {
       return;
     }
 
-    const language = resolveMetadataLanguage(req.headers['accept-language']);
+    const metadataLanguageResolution = resolveMetadataLanguagePreferences(
+      req.headers['accept-language'],
+      getMetadataLanguages()
+    );
     const selfUser = await userRepository.findOneSelf({ id: userId });
     const viewerAge = computeViewerAge(selfUser?.dateOfBirth);
 
@@ -80,7 +60,7 @@ export class SearchController {
       const existingItemsDetails = await mediaItemRepository.items({
         userId: userId,
         mediaItemIds: mediaItem.id != null ? [mediaItem.id] : [],
-        language: language,
+        metadataLanguagePreferences: metadataLanguageResolution.candidates,
         viewerAge,
       });
 
@@ -106,7 +86,7 @@ export class SearchController {
       mediaItemIds: result
         .map((item) => definedOrUndefined(item.id))
         .filter((id): id is number => id !== undefined),
-      ...(language != null ? { language } : {}),
+      metadataLanguagePreferences: metadataLanguageResolution.candidates,
       viewerAge,
     });
 

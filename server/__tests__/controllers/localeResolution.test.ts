@@ -13,10 +13,11 @@ import { Config } from 'src/config';
 /**
  * Integration tests for locale resolution in media item API endpoints.
  *
- * Tests the three-tier fallback logic:
+ * Tests the locale fallback logic:
  *   Tier 1: Exact locale match from mediaItemTranslation
- *   Tier 2: First language in METADATA_LANGUAGES when no exact match
- *   Tier 3: Base mediaItem fields unchanged when no translation exists (metadataLanguage = null)
+ *   Tier 2: Base non-regional locale match for regional requests
+ *   Tier 3: Default configured locale when neither exact nor base matches are available
+ *   Tier 4: Base mediaItem fields unchanged when no translation exists (metadataLanguage = null)
  *
  * Also verifies:
  *   - The metadataLanguage field is set correctly in all three scenarios
@@ -94,8 +95,7 @@ describe('Locale Resolution - Media Item API', () => {
       expect(data.metadataLanguage).toBe('es');
     });
 
-    test('Tier 2: no exact locale match returns first-language fallback', async () => {
-      // METADATA_LANGUAGES has en and es, request for 'fr' which has no translation
+    test('Tier 2: regional request falls back to base locale before default', async () => {
       (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
         'en',
         'es',
@@ -106,7 +106,29 @@ describe('Locale Resolution - Media Item API', () => {
       const res = await request(controller.details, {
         userId: Data.user.id,
         pathParams: { mediaItemId: Data.movie.id },
-        requestHeaders: { 'accept-language': 'fr' },
+        requestHeaders: { 'accept-language': 'es-AR' },
+      });
+
+      expect(res.statusCode).toBe(200);
+      const data = res.data as any;
+      expect(data.title).toBe('Pelicula de prueba');
+      expect(data.overview).toBe('Una descripcion en español');
+      expect(data.metadataLanguage).toBe('es');
+    });
+
+    test('Tier 3: no exact/base locale match returns default-language fallback', async () => {
+      // METADATA_LANGUAGES has en and es, request for 'fr' which has no translation
+      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
+        'en',
+        'fr',
+      ];
+
+      const controller = new MediaItemController();
+
+      const res = await request(controller.details, {
+        userId: Data.user.id,
+        pathParams: { mediaItemId: Data.movie.id },
+        requestHeaders: { 'accept-language': 'es-AR' },
       });
 
       expect(res.statusCode).toBe(200);
@@ -117,7 +139,7 @@ describe('Locale Resolution - Media Item API', () => {
       expect(data.metadataLanguage).toBe('en');
     });
 
-    test('Tier 3: no translation exists returns base fields with metadataLanguage null', async () => {
+    test('Tier 4: no translation exists returns base fields with metadataLanguage null', async () => {
       // METADATA_LANGUAGES has 'de' only, but no German translation exists
       (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
         'de',
@@ -207,7 +229,7 @@ describe('Locale Resolution - Media Item API', () => {
       expect(movie.metadataLanguage).toBe('es');
     });
 
-    test('Tier 2: no exact match returns first-language fallback for all items', async () => {
+    test('Tier 2: regional request falls back to base locale before default for all items', async () => {
       (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
         'en',
         'es',
@@ -217,7 +239,30 @@ describe('Locale Resolution - Media Item API', () => {
 
       const res = await request(controller.get, {
         userId: Data.user.id,
-        requestHeaders: { 'accept-language': 'ja' },
+        requestHeaders: { 'accept-language': 'es-AR' },
+      });
+
+      expect(res.statusCode).toBe(200);
+      const items = res.data as any[];
+      expect(Array.isArray(items)).toBe(true);
+
+      const movie = items.find((item) => item.id === Data.movie.id);
+      expect(movie).toBeDefined();
+      expect(movie.title).toBe('Pelicula de prueba');
+      expect(movie.metadataLanguage).toBe('es');
+    });
+
+    test('Tier 3: no exact/base match returns default-language fallback for all items', async () => {
+      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
+        'en',
+        'fr',
+      ];
+
+      const controller = new ItemsController();
+
+      const res = await request(controller.get, {
+        userId: Data.user.id,
+        requestHeaders: { 'accept-language': 'es-AR' },
       });
 
       expect(res.statusCode).toBe(200);
@@ -231,7 +276,7 @@ describe('Locale Resolution - Media Item API', () => {
       expect(movie.metadataLanguage).toBe('en');
     });
 
-    test('Tier 3: items without translations get metadataLanguage null', async () => {
+    test('Tier 4: items without translations get metadataLanguage null', async () => {
       // Only 'de' configured — no German translations seeded
       (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
         'de',
@@ -300,6 +345,30 @@ describe('Locale Resolution - Media Item API', () => {
       const paginatedData = res.data as any;
       expect(Array.isArray(paginatedData.data)).toBe(true);
 
+      const movie = paginatedData.data.find(
+        (item: any) => item.id === Data.movie.id
+      );
+      expect(movie).toBeDefined();
+      expect(movie.title).toBe('Pelicula de prueba');
+      expect(movie.metadataLanguage).toBe('es');
+    });
+
+    test('Tier 2: paginated results fall back from regional request to base locale', async () => {
+      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
+        'en',
+        'es',
+      ];
+
+      const controller = new ItemsController();
+
+      const res = await request(controller.getPaginated, {
+        userId: Data.user.id,
+        requestQuery: { page: 1 },
+        requestHeaders: { 'accept-language': 'es-AR' },
+      });
+
+      expect(res.statusCode).toBe(200);
+      const paginatedData = res.data as any;
       const movie = paginatedData.data.find(
         (item: any) => item.id === Data.movie.id
       );

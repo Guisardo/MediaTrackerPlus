@@ -183,11 +183,17 @@ export type GetItemsArgs = {
   groupId?: number;
 
   /**
-   * @description When provided, overlays localized metadata (title, overview, genres)
-   * from the mediaItemTranslation table for the given language code.
-   * Sets metadataLanguage on each result indicating which language was applied.
+   * @description Legacy single-language metadata overlay input. When set without
+   * metadataLanguagePreferences, it is treated as a one-entry preference list.
    */
   language?: string | null;
+
+  /**
+   * @description When provided, overlays localized metadata (title, overview, genres)
+   * from the mediaItemTranslation table using the ordered language candidates.
+   * Sets metadataLanguage on each result to the language actually applied.
+   */
+  metadataLanguagePreferences?: readonly string[] | null;
 
   /**
    * @description The viewer's age in whole years, computed from their dateOfBirth.
@@ -319,6 +325,7 @@ class MediaItemRepository extends repository<MediaItemBase>({
     mediaItemId: number;
     userId: number;
     language?: string | null;
+    metadataLanguagePreferences?: readonly string[] | null;
   }) {
     return getDetailsKnex(params);
   }

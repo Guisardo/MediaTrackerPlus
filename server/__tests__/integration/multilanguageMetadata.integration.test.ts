@@ -10,7 +10,7 @@
  *   FR-5:  Other providers (Audible, IGDB, OpenLibrary)
  *   FR-6:  Primary record update from first language only
  *   FR-7:  API locale-aware responses (batch SELECT, overlay)
- *   FR-8:  Three-tier fallback (exact → first-lang → base)
+ *   FR-8:  Fallback by availability (exact → base → default)
  *   FR-9:  metadataLanguage field in all API responses
  *   FR-10: Frontend Accept-Language header (covered in client tests)
  *   FR-11: UI locale badge / fallback indicator (covered in client tests)
@@ -425,7 +425,7 @@ describe('Multi-Language Metadata Integration Tests', () => {
   // and metadataLanguage Field
   // ========================================================================
 
-  describe('FR-7/FR-8/FR-9: API locale resolution and three-tier fallback', () => {
+  describe('FR-7/FR-8/FR-9: API locale resolution and fallback by availability', () => {
     beforeAll(async () => {
       // Seed core test data for API tests
       await Database.knex('user').insert(Data.user).onConflict('id').ignore();
@@ -482,10 +482,10 @@ describe('Multi-Language Metadata Integration Tests', () => {
     });
 
     // -------------------------------------------------------------------
-    // Media item detail — three-tier fallback
+    // Media item detail — locale fallback by availability
     // -------------------------------------------------------------------
 
-    describe('media item detail - three-tier fallback', () => {
+    describe('media item detail - locale fallback', () => {
       test('Tier 1: exact locale match returns localized data with metadataLanguage', async () => {
         mockConfig.METADATA_LANGUAGES = ['en', 'es'];
 
@@ -503,14 +503,31 @@ describe('Multi-Language Metadata Integration Tests', () => {
         expect(data.metadataLanguage).toBe('es');
       });
 
-      test('Tier 2: no locale match falls back to first language', async () => {
+      test('Tier 2: regional request falls back to base locale before default', async () => {
         mockConfig.METADATA_LANGUAGES = ['en', 'es'];
 
         const controller = new MediaItemController();
         const res = await request(controller.details, {
           userId: Data.user.id,
           pathParams: { mediaItemId: Data.movie.id },
-          requestHeaders: { 'accept-language': 'fr' },
+          requestHeaders: { 'accept-language': 'es-AR' },
+        });
+
+        expect(res.statusCode).toBe(200);
+        const data = res.data as any;
+        expect(data.title).toBe('Titulo de Pelicula');
+        expect(data.overview).toBe('Resumen en espanol');
+        expect(data.metadataLanguage).toBe('es');
+      });
+
+      test('Tier 3: no exact/base locale match falls back to default language', async () => {
+        mockConfig.METADATA_LANGUAGES = ['en', 'es'];
+
+        const controller = new MediaItemController();
+        const res = await request(controller.details, {
+          userId: Data.user.id,
+          pathParams: { mediaItemId: Data.movie.id },
+          requestHeaders: { 'accept-language': 'fr-CA' },
         });
 
         expect(res.statusCode).toBe(200);
@@ -520,7 +537,7 @@ describe('Multi-Language Metadata Integration Tests', () => {
         expect(data.metadataLanguage).toBe('en');
       });
 
-      test('Tier 3: no translations exist returns base fields with metadataLanguage null', async () => {
+      test('Tier 4: no translations exist returns base fields with metadataLanguage null', async () => {
         mockConfig.METADATA_LANGUAGES = ['de'];
 
         const controller = new MediaItemController();
@@ -557,6 +574,22 @@ describe('Multi-Language Metadata Integration Tests', () => {
 
         const movie = items.find((item) => item.id === Data.movie.id);
         expect(movie).toBeDefined();
+        expect(movie.title).toBe('Titulo de Pelicula');
+        expect(movie.metadataLanguage).toBe('es');
+      });
+
+      test('regional request uses base locale translations in list responses', async () => {
+        mockConfig.METADATA_LANGUAGES = ['en', 'es'];
+
+        const controller = new ItemsController();
+        const res = await request(controller.get, {
+          userId: Data.user.id,
+          requestHeaders: { 'accept-language': 'es-AR' },
+        });
+
+        expect(res.statusCode).toBe(200);
+        const items = res.data as any[];
+        const movie = items.find((item) => item.id === Data.movie.id);
         expect(movie.title).toBe('Titulo de Pelicula');
         expect(movie.metadataLanguage).toBe('es');
       });
@@ -621,14 +654,31 @@ describe('Multi-Language Metadata Integration Tests', () => {
         expect(ep1.metadataLanguage).toBe('es');
       });
 
-      test('Tier 2: season fallback to first language', async () => {
+      test('Tier 2: season falls back from regional request to base locale', async () => {
         mockConfig.METADATA_LANGUAGES = ['en', 'es'];
 
         const controller = new MediaItemController();
         const res = await request(controller.details, {
           userId: Data.user.id,
           pathParams: { mediaItemId: Data.tvShow.id },
-          requestHeaders: { 'accept-language': 'ja' },
+          requestHeaders: { 'accept-language': 'es-AR' },
+        });
+
+        expect(res.statusCode).toBe(200);
+        const data = res.data as any;
+        const season = data.seasons?.[0];
+        expect(season.title).toBe('Temporada 1');
+        expect(season.metadataLanguage).toBe('es');
+      });
+
+      test('Tier 3: season falls back to default language when regional and base locales are unavailable', async () => {
+        mockConfig.METADATA_LANGUAGES = ['en', 'es'];
+
+        const controller = new MediaItemController();
+        const res = await request(controller.details, {
+          userId: Data.user.id,
+          pathParams: { mediaItemId: Data.tvShow.id },
+          requestHeaders: { 'accept-language': 'fr-CA' },
         });
 
         expect(res.statusCode).toBe(200);
@@ -638,7 +688,7 @@ describe('Multi-Language Metadata Integration Tests', () => {
         expect(season.metadataLanguage).toBe('en');
       });
 
-      test('Tier 3: episode without translation gets metadataLanguage null', async () => {
+      test('Tier 4: episode without translation gets metadataLanguage null', async () => {
         mockConfig.METADATA_LANGUAGES = ['de'];
 
         const controller = new MediaItemController();
@@ -953,13 +1003,11 @@ describe('Multi-Language Metadata Integration Tests', () => {
       expect(result).toBe('es-419');
     });
 
-    test('BCP 47 regional tag does not match base-only language in accept package', () => {
-      // The accept package requires exact tag match — 'es-MX' does not match 'es'
-      // This is handled by the three-tier fallback in the API layer
+    test('BCP 47 regional tag falls back to the base language when it is available', () => {
       const resultMX = resolveLocale('es-MX', ['en', 'es']);
-      expect(resultMX).toBeNull();
+      expect(resultMX).toBe('es');
       const result419 = resolveLocale('es-419', ['en', 'es']);
-      expect(result419).toBeNull();
+      expect(result419).toBe('es');
     });
 
     test('returns null when no match', () => {

@@ -293,14 +293,14 @@ const resolveProgress = (progress: Progress[]): number | null => {
 };
 
 /**
- * Overlays translations for a TV show's seasons and their nested episodes.
- * Returns the updated seasons array; the caller reassigns it to the response.
+ * Overlays translations for a TV show's seasons and nested episodes using the
+ * first available translation from the ordered language preferences.
  */
 const overlaySeasonAndEpisodeTranslations = async (
   seasons: MediaItemDetailsResponse['seasons'],
-  language: string
+  preferredLanguages: readonly string[]
 ): Promise<MediaItemDetailsResponse['seasons']> => {
-  if (!seasons || seasons.length === 0) {
+  if (!seasons || seasons.length === 0 || preferredLanguages.length === 0) {
     return seasons;
   }
 
@@ -320,8 +320,8 @@ const overlaySeasonAndEpisodeTranslations = async (
   }
 
   const [seasonTranslationMap, episodeTranslationMap] = await Promise.all([
-    getSeasonTranslations(seasonIds, language),
-    getEpisodeTranslations(allEpisodeIds, language),
+    getSeasonTranslations(seasonIds, preferredLanguages),
+    getEpisodeTranslations(allEpisodeIds, preferredLanguages),
   ]);
 
   return seasons.map((season) => {
@@ -336,7 +336,7 @@ const overlaySeasonAndEpisodeTranslations = async (
       if (seasonTranslation.description != null) {
         updatedSeason.description = seasonTranslation.description;
       }
-      updatedSeason.metadataLanguage = language;
+      updatedSeason.metadataLanguage = seasonTranslation.language;
     }
 
     if (updatedSeason.episodes) {
@@ -355,7 +355,7 @@ const overlaySeasonAndEpisodeTranslations = async (
         if (episodeTranslation.description != null) {
           updatedEpisode.description = episodeTranslation.description;
         }
-        updatedEpisode.metadataLanguage = language;
+        updatedEpisode.metadataLanguage = episodeTranslation.language;
         return updatedEpisode;
       });
     }
@@ -372,8 +372,15 @@ export const getDetailsKnex = async (params: {
   mediaItemId: number;
   userId: number;
   language?: string | null;
+  metadataLanguagePreferences?: readonly string[] | null;
 }): Promise<MediaItemDetailsResponse> => {
-  const { mediaItemId, userId, language } = params;
+  const { mediaItemId, userId, language, metadataLanguagePreferences } = params;
+  const preferredLanguages =
+    metadataLanguagePreferences && metadataLanguagePreferences.length > 0
+      ? metadataLanguagePreferences
+      : language
+        ? [language]
+        : [];
 
   const { mediaItem, seasons, episodes, seenHistory, userRating, lists, progress } =
     await fetchDetailsData(mediaItemId, userId);
@@ -446,12 +453,15 @@ export const getDetailsKnex = async (params: {
     metadataLanguage: null,
   };
 
-  if (!language) {
+  if (preferredLanguages.length === 0) {
     return baseResponse;
   }
 
   // Overlay media-item-level translation
-  const translationMap = await getMediaItemTranslations([mediaItemId], language);
+  const translationMap = await getMediaItemTranslations(
+    [mediaItemId],
+    preferredLanguages
+  );
   const translation = translationMap.get(mediaItemId);
 
   if (translation) {
@@ -469,13 +479,13 @@ export const getDetailsKnex = async (params: {
         baseResponse.genres = translation.genres.split(',');
       }
     }
-    baseResponse.metadataLanguage = language;
+    baseResponse.metadataLanguage = translation.language;
   }
 
   // Overlay season and episode translations for TV shows
   baseResponse.seasons = await overlaySeasonAndEpisodeTranslations(
     baseResponse.seasons,
-    language
+    preferredLanguages
   );
 
   return baseResponse;

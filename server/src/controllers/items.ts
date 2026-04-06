@@ -9,14 +9,19 @@ import { MediaItemItemsResponse } from 'src/entity/mediaItem';
 import { FacetsResponse } from 'src/knex/queries/items';
 import { Database } from 'src/dbconfig';
 import { UserGroupMember } from 'src/entity/userGroup';
-import { resolveLocale } from 'src/localeResolver';
+import { resolveMetadataLanguagePreferences } from 'src/localeResolver';
 import { getMetadataLanguages } from 'src/metadataLanguages';
 import { userRepository } from 'src/repository/user';
 import { computeViewerAge } from 'src/utils/ageEligibility';
 
 export type GetItemsRequest = Omit<
   GetItemsArgs,
-  'userId' | 'mediaType' | 'mediaItemIds' | 'language' | 'viewerAge'
+  | 'userId'
+  | 'mediaType'
+  | 'mediaItemIds'
+  | 'language'
+  | 'metadataLanguagePreferences'
+  | 'viewerAge'
 > &
   Partial<Pick<GetItemsArgs, 'mediaType'>>;
 
@@ -32,7 +37,7 @@ type ValidItemsRequestContext = {
   orderBy: GetItemsArgs['orderBy'];
   sortOrder: GetItemsArgs['sortOrder'];
   resolvedGroupId: number | undefined;
-  language: string | null;
+  metadataLanguagePreferences: string[];
   viewerAge: number | null;
 };
 
@@ -42,29 +47,6 @@ type ValidFacetsRequestContext = {
   resolvedGroupId: number | undefined;
   viewerAge: number | null;
 };
-
-/**
- * Resolves the language to use for metadata overlay, implementing three-tier fallback:
- * 1. Exact locale match from Accept-Language header against METADATA_LANGUAGES
- * 2. First language in METADATA_LANGUAGES as fallback when no exact match
- * 3. null when METADATA_LANGUAGES is empty (no translations configured)
- */
-function resolveMetadataLanguage(
-  acceptLanguageHeader: string | undefined
-): string | null {
-  const availableLanguages = getMetadataLanguages();
-  if (availableLanguages.length === 0) {
-    return null;
-  }
-
-  const exactMatch = resolveLocale(acceptLanguageHeader, availableLanguages);
-  if (exactMatch) {
-    return exactMatch;
-  }
-
-  // Tier 2 fallback: use first configured language
-  return availableLanguages[0] ?? null;
-}
 
 /**
  * Validates the groupId for a given userId.
@@ -148,7 +130,10 @@ async function buildItemsRequestContext(args: {
     orderBy: query.orderBy || 'title',
     sortOrder: query.sortOrder || 'asc',
     resolvedGroupId: membershipResult.resolvedGroupId,
-    language: resolveMetadataLanguage(acceptLanguageHeader),
+    metadataLanguagePreferences: resolveMetadataLanguagePreferences(
+      acceptLanguageHeader,
+      getMetadataLanguages()
+    ).candidates,
     viewerAge,
   };
 }
@@ -196,7 +181,7 @@ function buildBaseItemsArgs(
     onlyWithoutUserRating: query.onlyWithoutUserRating,
     onlyWithProgress: query.onlyWithProgress,
     groupId: context.resolvedGroupId,
-    language: context.language,
+    metadataLanguagePreferences: context.metadataLanguagePreferences,
     viewerAge: context.viewerAge,
   };
 }

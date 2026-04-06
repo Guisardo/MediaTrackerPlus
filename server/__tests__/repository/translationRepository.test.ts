@@ -5,6 +5,7 @@ import {
   upsertMediaItemTranslation,
   upsertMediaItemTranslations,
   MediaItemTranslationData,
+  getMediaItemTranslations,
 } from 'src/repository/translationRepository';
 
 /**
@@ -424,6 +425,71 @@ describe('translationRepository', () => {
       await upsertMediaItemTranslations([]);
       const rows = await getAllTranslations();
       expect(rows).toHaveLength(0);
+    });
+  });
+
+  describe('getMediaItemTranslations', () => {
+    test('returns the first available translation from the preferred language order', async () => {
+      await upsertMediaItemTranslations([
+        {
+          mediaItemId: Data.tvShow.id,
+          language: 'en',
+          title: 'English TV Title',
+          overview: 'English TV overview',
+          genres: ['Drama'],
+        },
+        {
+          mediaItemId: Data.tvShow.id,
+          language: 'es',
+          title: 'Titulo TV',
+          overview: 'Resumen TV',
+          genres: ['Drama'],
+        },
+        {
+          mediaItemId: Data.movie.id,
+          language: 'en',
+          title: 'English Movie Title',
+          overview: 'English Movie overview',
+          genres: ['Action'],
+        },
+      ]);
+
+      const translations = await getMediaItemTranslations(
+        [Data.tvShow.id, Data.movie.id],
+        ['es-AR', 'es', 'en']
+      );
+
+      expect(translations.get(Data.tvShow.id)?.language).toBe('es');
+      expect(translations.get(Data.tvShow.id)?.title).toBe('Titulo TV');
+      expect(translations.get(Data.movie.id)?.language).toBe('en');
+      expect(translations.get(Data.movie.id)?.title).toBe('English Movie Title');
+    });
+
+    test('prefers exact regional locale over base locale when both exist', async () => {
+      await upsertMediaItemTranslations([
+        {
+          mediaItemId: Data.tvShow.id,
+          language: 'es',
+          title: 'Titulo base',
+          overview: null,
+          genres: null,
+        },
+        {
+          mediaItemId: Data.tvShow.id,
+          language: 'es-AR',
+          title: 'Titulo regional',
+          overview: null,
+          genres: null,
+        },
+      ]);
+
+      const translations = await getMediaItemTranslations(
+        [Data.tvShow.id],
+        ['es-AR', 'es', 'en']
+      );
+
+      expect(translations.get(Data.tvShow.id)?.language).toBe('es-AR');
+      expect(translations.get(Data.tvShow.id)?.title).toBe('Titulo regional');
     });
   });
 });

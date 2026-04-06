@@ -1,7 +1,10 @@
 import { SearchController } from 'src/controllers/search';
+import { Config } from 'src/config';
 import { Database } from 'src/dbconfig';
 import { findMediaItemByExternalId } from 'src/metadata/findByExternalId';
 import { metadataProviders } from 'src/metadata/metadataProviders';
+import { _resetMetadataLanguagesCache } from 'src/metadataLanguages';
+import { upsertMediaItemTranslation } from 'src/repository/translationRepository';
 import { Data } from '__tests__/__utils__/data';
 import { request } from '__tests__/__utils__/request';
 import { clearDatabase, runMigrations } from '__tests__/__utils__/utils';
@@ -57,8 +60,11 @@ describe('Search controller', () => {
 
   afterAll(clearDatabase);
 
-  afterEach(() => {
+  afterEach(async () => {
     jest.resetAllMocks();
+    await Database.knex('mediaItemTranslation').delete();
+    (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = null;
+    _resetMetadataLanguagesCache();
   });
 
   test('returns 400 for empty query', async () => {
@@ -153,5 +159,64 @@ describe('Search controller', () => {
     expect(res.statusCode).toBe(200);
     expect(mockSearch).toHaveBeenCalledWith('inception');
     expect(mockFindMediaItemByExternalId).not.toHaveBeenCalled();
+  });
+
+  test('IMDB search falls back from regional request to base locale before default', async () => {
+    (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
+      'en',
+      'es',
+    ];
+    _resetMetadataLanguagesCache();
+
+    await upsertMediaItemTranslation(movieWithImdbId.id, 'en', {
+      title: 'The Dark Knight (English)',
+      overview: 'English overview',
+      genres: ['Action'],
+    });
+    await upsertMediaItemTranslation(movieWithImdbId.id, 'es', {
+      title: 'El caballero oscuro',
+      overview: 'Resumen en espanol',
+      genres: ['Accion'],
+    });
+
+    const searchController = new SearchController();
+    mockFindMediaItemByExternalId.mockResolvedValue(movieWithImdbId as any);
+
+    const res = await request(searchController.search, {
+      userId: Data.user.id,
+      requestQuery: { q: 'tt0468569', mediaType: 'movie' },
+      requestHeaders: { 'accept-language': 'es-AR' },
+    });
+
+    expect(res.statusCode).toBe(200);
+    expect((res.data as any[])[0].title).toBe('El caballero oscuro');
+    expect((res.data as any[])[0].metadataLanguage).toBe('es');
+  });
+
+  test('IMDB search falls back to default locale when regional and base locales are unavailable', async () => {
+    (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
+      'en',
+      'fr',
+    ];
+    _resetMetadataLanguagesCache();
+
+    await upsertMediaItemTranslation(movieWithImdbId.id, 'en', {
+      title: 'The Dark Knight (English)',
+      overview: 'English overview',
+      genres: ['Action'],
+    });
+
+    const searchController = new SearchController();
+    mockFindMediaItemByExternalId.mockResolvedValue(movieWithImdbId as any);
+
+    const res = await request(searchController.search, {
+      userId: Data.user.id,
+      requestQuery: { q: 'tt0468569', mediaType: 'movie' },
+      requestHeaders: { 'accept-language': 'es-AR' },
+    });
+
+    expect(res.statusCode).toBe(200);
+    expect((res.data as any[])[0].title).toBe('The Dark Knight (English)');
+    expect((res.data as any[])[0].metadataLanguage).toBe('en');
   });
 });

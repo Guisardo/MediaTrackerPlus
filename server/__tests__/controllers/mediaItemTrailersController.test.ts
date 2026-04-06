@@ -135,7 +135,7 @@ describe('MediaItemController trailer enrichment', () => {
     expect(mockedMediaItemRepository.details).toHaveBeenCalledWith({
       mediaItemId: 77,
       userId: 1,
-      language: 'es',
+      metadataLanguagePreferences: ['es', 'en'],
     });
     expect(mockedMetadataProviders.trailers).toHaveBeenCalledWith(
       baseDetails,

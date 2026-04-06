@@ -23,6 +23,11 @@ describe('resolveLocale', () => {
     expect(result).toBe('es-419');
   });
 
+  test('prefers exact regional locale over base language when both are available', () => {
+    const result = resolveLocale('es-AR', ['en', 'es', 'es-AR']);
+    expect(result).toBe('es-AR');
+  });
+
   test('returns matching language when header has quality values', () => {
     const result = resolveLocale('fr;q=0.9, en;q=0.8', availableLanguages);
     expect(result).toBe('fr');
@@ -45,6 +50,11 @@ describe('resolveLocale', () => {
   test('returns null when header has no matching language', () => {
     const result = resolveLocale('de', availableLanguages);
     expect(result).toBeNull();
+  });
+
+  test('returns base locale when regional tag has no exact match but base language is available', () => {
+    const result = resolveLocale('es-AR', ['en', 'es', 'fr']);
+    expect(result).toBe('es');
   });
 
   test('returns null when header is undefined', () => {
@@ -87,6 +97,11 @@ describe('resolveLocale', () => {
   test('handles complex Accept-Language header with multiple languages', () => {
     const result = resolveLocale('zh-TW;q=1.0, ja;q=0.9, es-419;q=0.8', availableLanguages);
     expect(result).toBe('es-419');
+  });
+
+  test('keeps Accept-Language quality ordering when falling back from regional to base locale', () => {
+    const result = resolveLocale('fr-CA;q=0.9, es-AR;q=0.8', ['en', 'fr', 'es']);
+    expect(result).toBe('fr');
   });
 
   test('returns null when all preferences are unmatched', () => {
