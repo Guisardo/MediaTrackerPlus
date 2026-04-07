@@ -251,6 +251,34 @@ describe('DetailsPage – genre chips', () => {
     render(<DetailsPage />);
     expect(screen.queryByText('Action')).not.toBeInTheDocument();
   });
+
+  it('renders genre chips as links with correct href for movies', () => {
+    setupDetails({ mediaType: 'movie', genres: ['Action'] });
+    render(<DetailsPage />);
+    const link = screen.getByText('Action').closest('a');
+    expect(link).toHaveAttribute('data-to', '/movies?genres=Action');
+  });
+
+  it('renders genre chips as links with correct href for TV shows', () => {
+    setupDetails({ mediaType: 'tv', genres: ['Drama'] });
+    render(<DetailsPage />);
+    const link = screen.getByText('Drama').closest('a');
+    expect(link).toHaveAttribute('data-to', '/tv?genres=Drama');
+  });
+
+  it('renders genre chips as links with correct href for books', () => {
+    setupDetails({ mediaType: 'book', genres: ['Fantasy'] });
+    render(<DetailsPage />);
+    const link = screen.getByText('Fantasy').closest('a');
+    expect(link).toHaveAttribute('data-to', '/books?genres=Fantasy');
+  });
+
+  it('renders genre chips as links with correct href for games', () => {
+    setupDetails({ mediaType: 'video_game', genres: ['RPG'] });
+    render(<DetailsPage />);
+    const link = screen.getByText('RPG').closest('a');
+    expect(link).toHaveAttribute('data-to', '/games?genres=RPG');
+  });
 });
 
 // ---------------------------------------------------------------------------
