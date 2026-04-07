@@ -44,7 +44,7 @@ msgid "{0, plural, one {1 item} other {# items}}"
 msgstr "{0, plural, one {פריט אחד} two {שני פריטים} many {# פריטים} other {# פריטים}}"
 
 #. placeholder {0}: mediaItem.authors.length
-#: src/pages/Details.tsx:671
+#: src/pages/Details.tsx:711
 msgid "{0, plural, one {Author} other {Authors}}"
 msgstr "{0, plural, one {מחבר} two {שני מחברים} many {מחברים} other {מחברים}}"
 
@@ -67,13 +67,13 @@ msgid "{0, plural, one {Listed on 1 list} other {Listed on # lists}}"
 msgstr "{0, plural, one {מופיע ברשימה אחת} two {מופיע בשתי רשימות} many {מופיע ב-# רשימות} other {מופיע ב-# רשימות}}"
 
 #. placeholder {0}: mediaItem.seenHistory!.length
-#: src/pages/Details.tsx:830
+#: src/pages/Details.tsx:894
 #: src/pages/SeenHistory.tsx:50
 msgid "{0, plural, one {Listened 1 time} other {Listened # times}}"
 msgstr "{0, plural, one {הוסמע פעם אחת} two {הוסמע פעמיים} many {הוסמע # פעמים} other {הוסמע # פעמים}}"
 
 #. placeholder {0}: mediaItem.narrators.length
-#: src/pages/Details.tsx:677
+#: src/pages/Details.tsx:717
 msgid "{0, plural, one {Narrator} other {Narrators}}"
 msgstr "{0, plural, one {מספר} two {שני מספרים} many {מספרים} other {מספרים}}"
 
@@ -82,25 +82,25 @@ msgstr "{0, plural, one {מספר} two {שני מספרים} many {מספרים}
 #~ msgstr "{0, plural, one {פלטפורמה} two {שתי פלטפורמות} many {פלטפורמות} other {פלטפורמות}}"
 
 #. placeholder {0}: mediaItem.platform.length
-#: src/pages/Details.tsx:654
+#: src/pages/Details.tsx:694
 msgid "{0, plural, one {Platform} other {Platforms}}"
 msgstr "{0, plural, one {פלטפורמה} two {פלטפורמות} many {פלטפורמות} other {פלטפורמות}}"
 
 #. placeholder {0}: mediaItem.seenHistory!.length
-#: src/pages/Details.tsx:839
+#: src/pages/Details.tsx:903
 #: src/pages/SeenHistory.tsx:74
 msgid "{0, plural, one {Played 1 time} other {Played # times}}"
 msgstr "{0, plural, one {שוחק פעם אחת} two {שוחק פעמיים} many {שוחק # פעמים} other {שוחק # פעמים}}"
 
 #. placeholder {0}: mediaItem.seenHistory!.length
-#: src/pages/Details.tsx:833
+#: src/pages/Details.tsx:897
 #: src/pages/SeenHistory.tsx:58
 msgid "{0, plural, one {Read 1 time} other {Read # times}}"
 msgstr "{0, plural, one {נקרא פעם אחת} two {נקרא פעמיים} many {נקרא # פעמים} other {נקרא # פעמים}}"
 
 #. placeholder {0}: episode.seenHistory!.length
 #. placeholder {0}: mediaItem.seenHistory!.length
-#: src/pages/Details.tsx:836
+#: src/pages/Details.tsx:900
 #: src/pages/SeasonsPage.tsx:87
 #: src/pages/SeenHistory.tsx:66
 msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
@@ -268,7 +268,7 @@ msgstr "הוסף להיסטוריית הקריאה"
 msgid "Add to seen history"
 msgstr "הוסף להיסטוריית הצפייה"
 
-#: src/pages/Details.tsx:1041
+#: src/pages/Details.tsx:1104
 msgid "Add to watchlist"
 msgstr "הוסף לרשימת הצפייה"
 
@@ -327,7 +327,7 @@ msgstr "שפת Audible"
 #: src/components/Facets/ActiveFacetChips.tsx:76
 #: src/components/Facets/MediaTypeSection.tsx:24
 #: src/components/GridItem.tsx:109
-#: src/pages/Details.tsx:608
+#: src/pages/Details.tsx:641
 msgid "Audiobook"
 msgstr "ספר שמע"
 
@@ -357,7 +357,7 @@ msgstr "הימנע מספוילרים לעונות"
 #: src/components/Facets/ActiveFacetChips.tsx:74
 #: src/components/Facets/MediaTypeSection.tsx:22
 #: src/components/GridItem.tsx:110
-#: src/pages/Details.tsx:607
+#: src/pages/Details.tsx:640
 msgid "Book"
 msgstr "ספר"
 
@@ -406,7 +406,7 @@ msgstr "סוד לקוח"
 
 #: src/components/AddOrEditGroupButton.tsx:70
 #: src/components/AddToListModal.tsx:110
-#: src/pages/Details.tsx:343
+#: src/pages/Details.tsx:376
 msgid "Close"
 msgstr "סגור"
 
@@ -426,7 +426,7 @@ msgstr "אשר סיסמה חדשה"
 msgid "Confirm password"
 msgstr "אשר סיסמה"
 
-#: src/pages/Details.tsx:237
+#: src/pages/Details.tsx:270
 msgid "Content categories"
 msgstr "קטגוריות תוכן"
 
@@ -434,7 +434,7 @@ msgstr "קטגוריות תוכן"
 msgid "Content is hidden based on your age-based content filtering preferences."
 msgstr "תוכן מוסתר בהתאם להעדפות סינון התוכן לפי גיל שלך."
 
-#: src/pages/Details.tsx:588
+#: src/pages/Details.tsx:621
 msgid "Content restricted"
 msgstr "התוכן מוגבל"
 
@@ -455,6 +455,7 @@ msgstr "צור קבוצה"
 #: src/components/Facets/ActiveFacetChips.tsx:58
 #: src/components/Facets/CreatorSection.tsx:24
 #: src/components/Facets/CreatorSection.tsx:32
+#: src/pages/Details.tsx:732
 msgid "Creator"
 msgstr "יוצר"
 
@@ -501,17 +502,19 @@ msgstr "בסדר יורד"
 msgid "Description"
 msgstr "תיאור"
 
-#: src/pages/Details.tsx:217
+#: src/pages/Details.tsx:250
 msgid "Descriptors"
 msgstr "תיאורים"
 
 #: src/components/Facets/ActiveFacetChips.tsx:56
 #: src/components/Facets/CreatorSection.tsx:29
+#: src/pages/Details.tsx:738
 msgid "Developer"
 msgstr "מפתח"
 
 #: src/components/Facets/ActiveFacetChips.tsx:49
 #: src/components/Facets/CreatorSection.tsx:22
+#: src/pages/Details.tsx:726
 msgid "Director"
 msgstr "במאי"
 
@@ -548,12 +551,12 @@ msgid "Episode {0} {1}"
 msgstr "פרק {0} {1}"
 
 #: src/components/ImportSummaryTable.tsx:93
-#: src/pages/Details.tsx:663
-#: src/pages/Details.tsx:858
+#: src/pages/Details.tsx:703
+#: src/pages/Details.tsx:922
 msgid "Episodes"
 msgstr "פרקים"
 
-#: src/pages/Details.tsx:1009
+#: src/pages/Details.tsx:1072
 msgid "Episodes page"
 msgstr "דף פרקים"
 
@@ -584,7 +587,7 @@ msgstr "מסננים"
 msgid "Filters ({activeFacetCount})"
 msgstr "מסננים ({activeFacetCount})"
 
-#: src/pages/Details.tsx:872
+#: src/pages/Details.tsx:936
 msgid "First unwatched"
 msgstr "הראשון שלא נצפה"
 
@@ -592,7 +595,7 @@ msgstr "הראשון שלא נצפה"
 #~ msgid "First unwatched episode"
 #~ msgstr "הפרק הראשון שלא נצפה"
 
-#: src/pages/Details.tsx:609
+#: src/pages/Details.tsx:642
 msgid "Game"
 msgstr "משחק"
 
@@ -637,7 +640,7 @@ msgstr "שם הקבוצה"
 msgid "Groups"
 msgstr "קבוצות"
 
-#: src/pages/Details.tsx:226
+#: src/pages/Details.tsx:259
 msgid "Guidance"
 msgstr "הנחיות"
 
@@ -659,19 +662,19 @@ msgstr "דף הבית"
 msgid "Http"
 msgstr "Http"
 
-#: src/pages/Details.tsx:753
+#: src/pages/Details.tsx:817
 msgid "I am listening it"
 msgstr "אני מאזין לזה"
 
-#: src/pages/Details.tsx:754
+#: src/pages/Details.tsx:818
 msgid "I am playing it"
 msgstr "אני משחק בזה"
 
-#: src/pages/Details.tsx:752
+#: src/pages/Details.tsx:816
 msgid "I am reading it"
 msgstr "אני קורא את זה"
 
-#: src/pages/Details.tsx:751
+#: src/pages/Details.tsx:815
 msgid "I am watching it"
 msgstr "אני צופה בזה"
 
@@ -680,19 +683,19 @@ msgstr "אני צופה בזה"
 msgid "I do not remember"
 msgstr "אני לא זוכר"
 
-#: src/pages/Details.tsx:765
+#: src/pages/Details.tsx:829
 msgid "I finished listening it"
 msgstr "סיימתי להאזין לזה"
 
-#: src/pages/Details.tsx:766
+#: src/pages/Details.tsx:830
 msgid "I finished playing it"
 msgstr "סיימתי לשחק בזה"
 
-#: src/pages/Details.tsx:764
+#: src/pages/Details.tsx:828
 msgid "I finished reading it"
 msgstr "סיימתי לקרוא את זה"
 
-#: src/pages/Details.tsx:763
+#: src/pages/Details.tsx:827
 msgid "I finished watching it"
 msgstr "סיימתי לצפות בזה"
 
@@ -743,7 +746,7 @@ msgstr "מפתח"
 
 #: src/components/Facets/ActiveFacetChips.tsx:233
 #: src/components/Facets/LanguageSection.tsx:95
-#: src/pages/Details.tsx:641
+#: src/pages/Details.tsx:674
 msgid "Language"
 msgstr "שפה"
 
@@ -752,17 +755,17 @@ msgid "Last airing"
 msgstr "שידור אחרון"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
-#: src/pages/Details.tsx:812
+#: src/pages/Details.tsx:876
 msgid "Last listened at {0}"
 msgstr "האזנה אחרונה ב-{0}"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
-#: src/pages/Details.tsx:821
+#: src/pages/Details.tsx:885
 msgid "Last played at {0}"
 msgstr "משחק אחרון ב-{0}"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
-#: src/pages/Details.tsx:815
+#: src/pages/Details.tsx:879
 msgid "Last read at {0}"
 msgstr "קריאה אחרונה ב-{0}"
 
@@ -771,7 +774,7 @@ msgid "Last seen"
 msgstr "נצפה לאחרונה"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
-#: src/pages/Details.tsx:818
+#: src/pages/Details.tsx:882
 msgid "Last seen at {0}"
 msgstr "נצפה לאחרונה ב-{0}"
 
@@ -800,7 +803,7 @@ msgstr "רשימה {0} - תוכניות"
 msgid "List: {0}"
 msgstr "רשימה: {0}"
 
-#: src/pages/Details.tsx:794
+#: src/pages/Details.tsx:858
 msgid "Listen history"
 msgstr "היסטוריית האזנה"
 
@@ -815,7 +818,7 @@ msgstr "הוסמע"
 msgid "Listened at {0}"
 msgstr "הוסמע ב-{0}"
 
-#: src/pages/Details.tsx:843
+#: src/pages/Details.tsx:907
 msgid "Listened history"
 msgstr "היסטוריית האזנה"
 
@@ -827,8 +830,8 @@ msgstr "רשימות"
 #: src/components/PaginatedGridItems.tsx:439
 #: src/components/SelectLastSeenEpisode.tsx:100
 #: src/pages/Calendar.tsx:66
-#: src/pages/Details.tsx:931
-#: src/pages/Details.tsx:944
+#: src/pages/Details.tsx:995
+#: src/pages/Details.tsx:1008
 #: src/pages/EpisodePage.tsx:32
 #: src/pages/GroupDetailPage.tsx:285
 #: src/pages/GroupsPage.tsx:17
@@ -893,7 +896,7 @@ msgstr "דירוג מינימלי"
 msgid "Minimum year"
 msgstr "שנה מינימלית"
 
-#: src/pages/Details.tsx:363
+#: src/pages/Details.tsx:396
 msgid "More options"
 msgstr "אפשרויות נוספות"
 
@@ -901,7 +904,7 @@ msgstr "אפשרויות נוספות"
 #: src/components/Facets/ActiveFacetChips.tsx:70
 #: src/components/Facets/MediaTypeSection.tsx:18
 #: src/components/GridItem.tsx:111
-#: src/pages/Details.tsx:605
+#: src/pages/Details.tsx:638
 msgid "Movie"
 msgstr "סרט"
 
@@ -925,7 +928,7 @@ msgstr "הדירוג שלי"
 msgid "Name"
 msgstr "שם"
 
-#: src/pages/Details.tsx:638
+#: src/pages/Details.tsx:671
 msgid "Network"
 msgstr "רשת"
 
@@ -946,7 +949,7 @@ msgstr "סיסמה חדשה"
 msgid "Next airing"
 msgstr "שידור הבא"
 
-#: src/pages/Details.tsx:861
+#: src/pages/Details.tsx:925
 msgid "Next episode"
 msgstr "פרק הבא"
 
@@ -1006,7 +1009,7 @@ msgstr "מספר פרקים"
 #~ msgid "Number of pages"
 #~ msgstr "מספר עמודים"
 
-#: src/pages/Details.tsx:290
+#: src/pages/Details.tsx:323
 msgid "Official"
 msgstr "רשמי"
 
@@ -1020,11 +1023,11 @@ msgstr "ברשימת הצפייה"
 #~ msgid "Overview"
 #~ msgstr "סקירה"
 
-#: src/pages/Details.tsx:682
+#: src/pages/Details.tsx:722
 msgid "Pages"
 msgstr "עמודים"
 
-#: src/pages/Details.tsx:194
+#: src/pages/Details.tsx:227
 msgid "Parental guidance"
 msgstr "הדרכת הורים"
 
@@ -1051,15 +1054,15 @@ msgstr "פלטפורמה"
 msgid "Platform Recommended"
 msgstr "מומלץ על ידי הפלטפורמה"
 
-#: src/pages/Details.tsx:797
+#: src/pages/Details.tsx:861
 msgid "Play history"
 msgstr "היסטוריית משחק"
 
-#: src/pages/Details.tsx:320
+#: src/pages/Details.tsx:353
 msgid "Play preview"
 msgstr "נגן תצוגה מקדימה"
 
-#: src/pages/Details.tsx:322
+#: src/pages/Details.tsx:355
 msgid "Play trailer"
 msgstr "נגן טריילר"
 
@@ -1074,7 +1077,7 @@ msgstr "שוחק"
 msgid "Played at {0}"
 msgstr "שוחק ב-{0}"
 
-#: src/pages/Details.tsx:846
+#: src/pages/Details.tsx:910
 msgid "Played history"
 msgstr "היסטוריית משחקים"
 
@@ -1082,7 +1085,7 @@ msgstr "היסטוריית משחקים"
 msgid "Preferences"
 msgstr "העדפות"
 
-#: src/pages/Details.tsx:283
+#: src/pages/Details.tsx:316
 msgid "Preview"
 msgstr "תצוגה מקדימה"
 
@@ -1101,7 +1104,7 @@ msgid "Private"
 msgstr "פרטי"
 
 #: src/components/OrderBy.tsx:24
-#: src/pages/Details.tsx:743
+#: src/pages/Details.tsx:807
 msgid "Progress"
 msgstr "התקדמות"
 
@@ -1115,6 +1118,7 @@ msgstr "ביקורות ציבוריות"
 
 #: src/components/Facets/ActiveFacetChips.tsx:267
 #: src/components/Facets/PublisherSection.tsx:53
+#: src/pages/Details.tsx:744
 msgid "Publisher"
 msgstr "מוציא לאור"
 
@@ -1150,7 +1154,8 @@ msgstr "מדורג"
 
 #: src/components/Facets/ActiveFacetChips.tsx:311
 #: src/components/Facets/RatingSection.tsx:53
-#: src/pages/Details.tsx:200
+#: src/pages/Details.tsx:233
+#: src/pages/Details.tsx:678
 #: src/pages/import/Goodreads.tsx:83
 msgid "Rating"
 msgstr "דירוג"
@@ -1187,8 +1192,8 @@ msgstr "נקרא"
 msgid "Read at {0}"
 msgstr "נקרא ב-{0}"
 
-#: src/pages/Details.tsx:795
-#: src/pages/Details.tsx:844
+#: src/pages/Details.tsx:859
+#: src/pages/Details.tsx:908
 msgid "Read history"
 msgstr "היסטוריית קריאה"
 
@@ -1249,7 +1254,7 @@ msgstr "שחרור <0/>"
 
 #: src/components/OrderBy.tsx:17
 #: src/hooks/translations.ts:12
-#: src/pages/Details.tsx:626
+#: src/pages/Details.tsx:659
 #: src/pages/EpisodePage.tsx:82
 msgid "Release date"
 msgstr "תאריך שחרור"
@@ -1303,7 +1308,7 @@ msgstr "הסר מהיסטוריית הקריאה"
 msgid "Remove from seen history"
 msgstr "הסר מהיסטוריית הצפייה"
 
-#: src/pages/Details.tsx:1065
+#: src/pages/Details.tsx:1128
 msgid "Remove from watchlist"
 msgstr "הסר מרשימת הצפייה"
 
@@ -1315,7 +1320,7 @@ msgstr "הסר עונה מהיסטוריית הצפייה"
 msgid "Remove token"
 msgstr "הסר אסימון"
 
-#: src/pages/Details.tsx:412
+#: src/pages/Details.tsx:445
 msgid "Review by <0><1>{author}</1></0> at {date}"
 msgstr "ביקורת מאת <0><1>{author}</1></0> ב-{date}"
 
@@ -1329,7 +1334,7 @@ msgid "RSS link"
 msgstr "קישור RSS"
 
 #: src/hooks/translations.ts:13
-#: src/pages/Details.tsx:629
+#: src/pages/Details.tsx:662
 #: src/pages/EpisodePage.tsx:73
 msgid "Runtime"
 msgstr "זמן ריצה"
@@ -1393,7 +1398,7 @@ msgid "Season {0}"
 msgstr "עונה {0}"
 
 #: src/components/ImportSummaryTable.tsx:92
-#: src/pages/Details.tsx:660
+#: src/pages/Details.tsx:700
 msgid "Seasons"
 msgstr "עונות"
 
@@ -1406,7 +1411,7 @@ msgstr "נצפה"
 msgid "Seen at {0}"
 msgstr "נצפה ב-{0}"
 
-#: src/pages/Details.tsx:845
+#: src/pages/Details.tsx:909
 #: src/pages/import/TraktTv.tsx:187
 msgid "Seen history"
 msgstr "היסטוריית צפייה"
@@ -1477,7 +1482,7 @@ msgid "Set"
 msgstr "הגדר"
 
 #: src/components/SetProgress.tsx:62
-#: src/pages/Details.tsx:1100
+#: src/pages/Details.tsx:1163
 msgid "Set progress"
 msgstr "הגדר התקדמות"
 
@@ -1515,11 +1520,11 @@ msgstr "מיין לפי"
 msgid "Sort order"
 msgstr "סדר מיון"
 
-#: src/pages/Details.tsx:644
+#: src/pages/Details.tsx:683
 msgid "Source"
 msgstr "מקור"
 
-#: src/pages/Details.tsx:158
+#: src/pages/Details.tsx:191
 msgid "Spoiler"
 msgstr "ספוילר"
 
@@ -1535,7 +1540,7 @@ msgstr "סטטיסטיקות"
 #: src/components/Facets/ActiveFacetChips.tsx:291
 #: src/components/Facets/StatusSection.tsx:116
 #: src/components/OrderBy.tsx:18
-#: src/pages/Details.tsx:635
+#: src/pages/Details.tsx:668
 msgid "Status"
 msgstr "סטטוס"
 
@@ -1552,7 +1557,7 @@ msgstr "כבר קיימת רשימה בשם \"{name}\""
 msgid "This component can only be used with tv shows"
 msgstr "רכיב זה ניתן לשימוש עם תוכניות טלוויזיה בלבד"
 
-#: src/pages/Details.tsx:591
+#: src/pages/Details.tsx:624
 msgid "This content is not available based on your age-based content filtering preferences."
 msgstr "תוכן זה אינו זמין בהתאם להעדפות סינון התוכן לפי גיל שלך."
 
@@ -1578,15 +1583,15 @@ msgstr "החלף כיוון מיון"
 msgid "Topic"
 msgstr "נושא"
 
-#: src/pages/Details.tsx:632
+#: src/pages/Details.tsx:665
 msgid "Total runtime"
 msgstr "זמן ריצה כולל"
 
-#: src/pages/Details.tsx:285
+#: src/pages/Details.tsx:318
 msgid "Trailer"
 msgstr "טריילר"
 
-#: src/pages/Details.tsx:276
+#: src/pages/Details.tsx:309
 msgid "Trailers & previews"
 msgstr "טריילרים ותצוגות מקדימות"
 
@@ -1600,7 +1605,7 @@ msgstr "טלוויזיה"
 
 #: src/components/Facets/ActiveFacetChips.tsx:72
 #: src/components/Facets/MediaTypeSection.tsx:20
-#: src/pages/Details.tsx:606
+#: src/pages/Details.tsx:639
 msgid "TV Show"
 msgstr "סדרת טלוויזיה"
 
@@ -1615,7 +1620,7 @@ msgstr "לא מאותחל"
 msgid "Unrated"
 msgstr "לא מדורג"
 
-#: src/pages/Details.tsx:666
+#: src/pages/Details.tsx:706
 msgid "Unseen episodes"
 msgstr "פרקים שלא נצפו"
 
@@ -1628,7 +1633,7 @@ msgstr "מספר פרקים שלא נצפו"
 msgid "Upcoming"
 msgstr "קרוב"
 
-#: src/pages/Details.tsx:1086
+#: src/pages/Details.tsx:1149
 msgid "Update metadata"
 msgstr "עדכן מטא-נתונים"
 
@@ -1667,7 +1672,7 @@ msgstr "ממתין לאימות"
 msgid "Warning"
 msgstr "אזהרה"
 
-#: src/pages/Details.tsx:796
+#: src/pages/Details.tsx:860
 msgid "Watch history"
 msgstr "היסטוריית צפייה"
 
@@ -1730,7 +1735,7 @@ msgstr "מתי קראת את \"{0}\"?"
 msgid "When did you see \"{0}\"?"
 msgstr "מתי ראית את \"{0}\"?"
 
-#: src/pages/Details.tsx:505
+#: src/pages/Details.tsx:538
 msgid "Where to watch"
 msgstr "היכן לצפות"
 
@@ -1747,7 +1752,7 @@ msgstr "כן"
 msgid "Your date of birth is used for age-based content filtering. This is self-only account data and is never shared with other users."
 msgstr "תאריך הלידה שלך משמש לסינון תוכן לפי גיל. זהו מידע אישי לחשבונך בלבד והוא לעולם אינו משותף עם משתמשים אחרים."
 
-#: src/pages/Details.tsx:915
+#: src/pages/Details.tsx:979
 msgid "Your rating"
 msgstr "הדירוג שלך"
 
