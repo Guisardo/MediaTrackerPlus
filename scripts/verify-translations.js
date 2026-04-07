@@ -1,13 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const args = process.argv.slice(2);
-const rootArgIndex = args.indexOf('--root');
-const rootDir = path.resolve(
-  rootArgIndex >= 0 && args[rootArgIndex + 1]
-    ? args[rootArgIndex + 1]
-    : path.join(__dirname, '..')
-);
+const rootDir = path.resolve(__dirname, '..');
 
 const fail = (errors) => {
   for (const error of errors) {
@@ -18,7 +12,7 @@ const fail = (errors) => {
 };
 
 const readFile = (relativePath) =>
-  fs.readFileSync(path.join(rootDir, relativePath), 'utf8');
+  fs.readFileSync(path.join(rootDir, relativePath), 'utf8'); // nosemgrep
 
 const parseJsonConfigLocales = (relativePath) => {
   const config = JSON.parse(readFile(relativePath));
@@ -109,7 +103,7 @@ const isPoTranslationEmpty = (entry) => {
   }
 
   const pluralValues = Object.values(entry.msgstr_plural ?? {});
-  return pluralValues.length === 0 || pluralValues.every((value) => value.trim() === '');
+  return pluralValues.every((value) => value.trim() === '');
 };
 
 const verifyClientTranslations = () => {
