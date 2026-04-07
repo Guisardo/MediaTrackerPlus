@@ -44,7 +44,7 @@ msgid "{0, plural, one {1 item} other {# items}}"
 msgstr "{0, plural, other {# 项}}"
 
 #. placeholder {0}: mediaItem.authors.length
-#: src/pages/Details.tsx:671
+#: src/pages/Details.tsx:711
 msgid "{0, plural, one {Author} other {Authors}}"
 msgstr "{0, plural, other {作者}}"
 
@@ -67,13 +67,13 @@ msgid "{0, plural, one {Listed on 1 list} other {Listed on # lists}}"
 msgstr "{0, plural, other {已在 # 个列表中}}"
 
 #. placeholder {0}: mediaItem.seenHistory!.length
-#: src/pages/Details.tsx:830
+#: src/pages/Details.tsx:894
 #: src/pages/SeenHistory.tsx:50
 msgid "{0, plural, one {Listened 1 time} other {Listened # times}}"
 msgstr "{0, plural, other {已收听 # 次}}"
 
 #. placeholder {0}: mediaItem.narrators.length
-#: src/pages/Details.tsx:677
+#: src/pages/Details.tsx:717
 msgid "{0, plural, one {Narrator} other {Narrators}}"
 msgstr "{0, plural, other {旁白}}"
 
@@ -82,25 +82,25 @@ msgstr "{0, plural, other {旁白}}"
 #~ msgstr "{0, plural, other {平台}}"
 
 #. placeholder {0}: mediaItem.platform.length
-#: src/pages/Details.tsx:654
+#: src/pages/Details.tsx:694
 msgid "{0, plural, one {Platform} other {Platforms}}"
 msgstr "{0, plural, other {平台}}"
 
 #. placeholder {0}: mediaItem.seenHistory!.length
-#: src/pages/Details.tsx:839
+#: src/pages/Details.tsx:903
 #: src/pages/SeenHistory.tsx:74
 msgid "{0, plural, one {Played 1 time} other {Played # times}}"
 msgstr "{0, plural, other {已游玩 # 次}}"
 
 #. placeholder {0}: mediaItem.seenHistory!.length
-#: src/pages/Details.tsx:833
+#: src/pages/Details.tsx:897
 #: src/pages/SeenHistory.tsx:58
 msgid "{0, plural, one {Read 1 time} other {Read # times}}"
 msgstr "{0, plural, other {已阅读 # 次}}"
 
 #. placeholder {0}: episode.seenHistory!.length
 #. placeholder {0}: mediaItem.seenHistory!.length
-#: src/pages/Details.tsx:836
+#: src/pages/Details.tsx:900
 #: src/pages/SeasonsPage.tsx:87
 #: src/pages/SeenHistory.tsx:66
 msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
@@ -268,7 +268,7 @@ msgstr "添加到阅读历史"
 msgid "Add to seen history"
 msgstr "添加到观看历史"
 
-#: src/pages/Details.tsx:1041
+#: src/pages/Details.tsx:1104
 msgid "Add to watchlist"
 msgstr "添加到观看清单"
 
@@ -327,7 +327,7 @@ msgstr "Audible语言"
 #: src/components/Facets/ActiveFacetChips.tsx:76
 #: src/components/Facets/MediaTypeSection.tsx:24
 #: src/components/GridItem.tsx:109
-#: src/pages/Details.tsx:608
+#: src/pages/Details.tsx:641
 msgid "Audiobook"
 msgstr "有声书"
 
@@ -357,7 +357,7 @@ msgstr "避免季度剧透"
 #: src/components/Facets/ActiveFacetChips.tsx:74
 #: src/components/Facets/MediaTypeSection.tsx:22
 #: src/components/GridItem.tsx:110
-#: src/pages/Details.tsx:607
+#: src/pages/Details.tsx:640
 msgid "Book"
 msgstr "书籍"
 
@@ -406,7 +406,7 @@ msgstr "客户端密钥"
 
 #: src/components/AddOrEditGroupButton.tsx:70
 #: src/components/AddToListModal.tsx:110
-#: src/pages/Details.tsx:343
+#: src/pages/Details.tsx:376
 msgid "Close"
 msgstr "关闭"
 
@@ -426,7 +426,7 @@ msgstr "确认新密码"
 msgid "Confirm password"
 msgstr "确认密码"
 
-#: src/pages/Details.tsx:237
+#: src/pages/Details.tsx:270
 msgid "Content categories"
 msgstr "内容类别"
 
@@ -434,7 +434,7 @@ msgstr "内容类别"
 msgid "Content is hidden based on your age-based content filtering preferences."
 msgstr "由于你的年龄内容过滤偏好，内容已被隐藏。"
 
-#: src/pages/Details.tsx:588
+#: src/pages/Details.tsx:621
 msgid "Content restricted"
 msgstr "内容受限"
 
@@ -455,6 +455,7 @@ msgstr "创建群组"
 #: src/components/Facets/ActiveFacetChips.tsx:58
 #: src/components/Facets/CreatorSection.tsx:24
 #: src/components/Facets/CreatorSection.tsx:32
+#: src/pages/Details.tsx:732
 msgid "Creator"
 msgstr "创作者"
 
@@ -501,17 +502,19 @@ msgstr "降序"
 msgid "Description"
 msgstr "描述"
 
-#: src/pages/Details.tsx:217
+#: src/pages/Details.tsx:250
 msgid "Descriptors"
 msgstr "描述标签"
 
 #: src/components/Facets/ActiveFacetChips.tsx:56
 #: src/components/Facets/CreatorSection.tsx:29
+#: src/pages/Details.tsx:738
 msgid "Developer"
 msgstr "开发商"
 
 #: src/components/Facets/ActiveFacetChips.tsx:49
 #: src/components/Facets/CreatorSection.tsx:22
+#: src/pages/Details.tsx:726
 msgid "Director"
 msgstr "导演"
 
@@ -548,12 +551,12 @@ msgid "Episode {0} {1}"
 msgstr "剧集 {0} {1}"
 
 #: src/components/ImportSummaryTable.tsx:93
-#: src/pages/Details.tsx:663
-#: src/pages/Details.tsx:858
+#: src/pages/Details.tsx:703
+#: src/pages/Details.tsx:922
 msgid "Episodes"
 msgstr "剧集"
 
-#: src/pages/Details.tsx:1009
+#: src/pages/Details.tsx:1072
 msgid "Episodes page"
 msgstr "剧集页面"
 
@@ -584,7 +587,7 @@ msgstr "筛选"
 msgid "Filters ({activeFacetCount})"
 msgstr "筛选条件 ({activeFacetCount})"
 
-#: src/pages/Details.tsx:872
+#: src/pages/Details.tsx:936
 msgid "First unwatched"
 msgstr "第一个未观看项"
 
@@ -592,7 +595,7 @@ msgstr "第一个未观看项"
 #~ msgid "First unwatched episode"
 #~ msgstr "第一个未观看的剧集"
 
-#: src/pages/Details.tsx:609
+#: src/pages/Details.tsx:642
 msgid "Game"
 msgstr "游戏"
 
@@ -637,7 +640,7 @@ msgstr "群组名称"
 msgid "Groups"
 msgstr "群组"
 
-#: src/pages/Details.tsx:226
+#: src/pages/Details.tsx:259
 msgid "Guidance"
 msgstr "指导"
 
@@ -659,19 +662,19 @@ msgstr "主页"
 msgid "Http"
 msgstr "Http"
 
-#: src/pages/Details.tsx:753
+#: src/pages/Details.tsx:817
 msgid "I am listening it"
 msgstr "正在收听"
 
-#: src/pages/Details.tsx:754
+#: src/pages/Details.tsx:818
 msgid "I am playing it"
 msgstr "正在游玩"
 
-#: src/pages/Details.tsx:752
+#: src/pages/Details.tsx:816
 msgid "I am reading it"
 msgstr "正在阅读"
 
-#: src/pages/Details.tsx:751
+#: src/pages/Details.tsx:815
 msgid "I am watching it"
 msgstr "正在观看"
 
@@ -680,19 +683,19 @@ msgstr "正在观看"
 msgid "I do not remember"
 msgstr "不记得了"
 
-#: src/pages/Details.tsx:765
+#: src/pages/Details.tsx:829
 msgid "I finished listening it"
 msgstr "已收听完毕"
 
-#: src/pages/Details.tsx:766
+#: src/pages/Details.tsx:830
 msgid "I finished playing it"
 msgstr "已游玩完毕"
 
-#: src/pages/Details.tsx:764
+#: src/pages/Details.tsx:828
 msgid "I finished reading it"
 msgstr "已阅读完毕"
 
-#: src/pages/Details.tsx:763
+#: src/pages/Details.tsx:827
 msgid "I finished watching it"
 msgstr "已观看完毕"
 
@@ -743,7 +746,7 @@ msgstr "密钥"
 
 #: src/components/Facets/ActiveFacetChips.tsx:233
 #: src/components/Facets/LanguageSection.tsx:95
-#: src/pages/Details.tsx:641
+#: src/pages/Details.tsx:674
 msgid "Language"
 msgstr "语言"
 
@@ -752,17 +755,17 @@ msgid "Last airing"
 msgstr "最近播出"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
-#: src/pages/Details.tsx:812
+#: src/pages/Details.tsx:876
 msgid "Last listened at {0}"
 msgstr "最近收听于 {0}"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
-#: src/pages/Details.tsx:821
+#: src/pages/Details.tsx:885
 msgid "Last played at {0}"
 msgstr "最近游玩于 {0}"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
-#: src/pages/Details.tsx:815
+#: src/pages/Details.tsx:879
 msgid "Last read at {0}"
 msgstr "最近阅读于 {0}"
 
@@ -771,7 +774,7 @@ msgid "Last seen"
 msgstr "最近观看"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
-#: src/pages/Details.tsx:818
+#: src/pages/Details.tsx:882
 msgid "Last seen at {0}"
 msgstr "最近观看于 {0}"
 
@@ -800,7 +803,7 @@ msgstr "列表 {0} - 电视剧"
 msgid "List: {0}"
 msgstr "列表: {0}"
 
-#: src/pages/Details.tsx:794
+#: src/pages/Details.tsx:858
 msgid "Listen history"
 msgstr "收听历史"
 
@@ -815,7 +818,7 @@ msgstr "已收听"
 msgid "Listened at {0}"
 msgstr "收听于 {0}"
 
-#: src/pages/Details.tsx:843
+#: src/pages/Details.tsx:907
 msgid "Listened history"
 msgstr "收听历史"
 
@@ -827,8 +830,8 @@ msgstr "列表"
 #: src/components/PaginatedGridItems.tsx:439
 #: src/components/SelectLastSeenEpisode.tsx:100
 #: src/pages/Calendar.tsx:66
-#: src/pages/Details.tsx:931
-#: src/pages/Details.tsx:944
+#: src/pages/Details.tsx:995
+#: src/pages/Details.tsx:1008
 #: src/pages/EpisodePage.tsx:32
 #: src/pages/GroupDetailPage.tsx:285
 #: src/pages/GroupsPage.tsx:17
@@ -893,7 +896,7 @@ msgstr "最低评分"
 msgid "Minimum year"
 msgstr "最小年份"
 
-#: src/pages/Details.tsx:363
+#: src/pages/Details.tsx:396
 msgid "More options"
 msgstr "更多选项"
 
@@ -901,7 +904,7 @@ msgstr "更多选项"
 #: src/components/Facets/ActiveFacetChips.tsx:70
 #: src/components/Facets/MediaTypeSection.tsx:18
 #: src/components/GridItem.tsx:111
-#: src/pages/Details.tsx:605
+#: src/pages/Details.tsx:638
 msgid "Movie"
 msgstr "电影"
 
@@ -925,7 +928,7 @@ msgstr "我的评分"
 msgid "Name"
 msgstr "名称"
 
-#: src/pages/Details.tsx:638
+#: src/pages/Details.tsx:671
 msgid "Network"
 msgstr "网络"
 
@@ -946,7 +949,7 @@ msgstr "新密码"
 msgid "Next airing"
 msgstr "下次播出"
 
-#: src/pages/Details.tsx:861
+#: src/pages/Details.tsx:925
 msgid "Next episode"
 msgstr "下一集"
 
@@ -1006,7 +1009,7 @@ msgstr "剧集数量"
 #~ msgid "Number of pages"
 #~ msgstr "页数"
 
-#: src/pages/Details.tsx:290
+#: src/pages/Details.tsx:323
 msgid "Official"
 msgstr "官方"
 
@@ -1020,11 +1023,11 @@ msgstr "已在观看清单"
 #~ msgid "Overview"
 #~ msgstr "概述"
 
-#: src/pages/Details.tsx:682
+#: src/pages/Details.tsx:722
 msgid "Pages"
 msgstr "页数"
 
-#: src/pages/Details.tsx:194
+#: src/pages/Details.tsx:227
 msgid "Parental guidance"
 msgstr "家长指导"
 
@@ -1051,15 +1054,15 @@ msgstr "平台"
 msgid "Platform Recommended"
 msgstr "平台推荐"
 
-#: src/pages/Details.tsx:797
+#: src/pages/Details.tsx:861
 msgid "Play history"
 msgstr "游玩历史"
 
-#: src/pages/Details.tsx:320
+#: src/pages/Details.tsx:353
 msgid "Play preview"
 msgstr "播放预览"
 
-#: src/pages/Details.tsx:322
+#: src/pages/Details.tsx:355
 msgid "Play trailer"
 msgstr "播放预告片"
 
@@ -1074,7 +1077,7 @@ msgstr "已游玩"
 msgid "Played at {0}"
 msgstr "游玩于 {0}"
 
-#: src/pages/Details.tsx:846
+#: src/pages/Details.tsx:910
 msgid "Played history"
 msgstr "游玩历史"
 
@@ -1082,7 +1085,7 @@ msgstr "游玩历史"
 msgid "Preferences"
 msgstr "偏好设置"
 
-#: src/pages/Details.tsx:283
+#: src/pages/Details.tsx:316
 msgid "Preview"
 msgstr "预览"
 
@@ -1101,7 +1104,7 @@ msgid "Private"
 msgstr "私密"
 
 #: src/components/OrderBy.tsx:24
-#: src/pages/Details.tsx:743
+#: src/pages/Details.tsx:807
 msgid "Progress"
 msgstr "进度"
 
@@ -1115,6 +1118,7 @@ msgstr "公开评价"
 
 #: src/components/Facets/ActiveFacetChips.tsx:267
 #: src/components/Facets/PublisherSection.tsx:53
+#: src/pages/Details.tsx:744
 msgid "Publisher"
 msgstr "出版商"
 
@@ -1150,7 +1154,8 @@ msgstr "已评分"
 
 #: src/components/Facets/ActiveFacetChips.tsx:311
 #: src/components/Facets/RatingSection.tsx:53
-#: src/pages/Details.tsx:200
+#: src/pages/Details.tsx:233
+#: src/pages/Details.tsx:678
 #: src/pages/import/Goodreads.tsx:83
 msgid "Rating"
 msgstr "评分"
@@ -1187,8 +1192,8 @@ msgstr "已阅读"
 msgid "Read at {0}"
 msgstr "阅读于 {0}"
 
-#: src/pages/Details.tsx:795
-#: src/pages/Details.tsx:844
+#: src/pages/Details.tsx:859
+#: src/pages/Details.tsx:908
 msgid "Read history"
 msgstr "阅读历史"
 
@@ -1249,7 +1254,7 @@ msgstr "发布 <0/>"
 
 #: src/components/OrderBy.tsx:17
 #: src/hooks/translations.ts:12
-#: src/pages/Details.tsx:626
+#: src/pages/Details.tsx:659
 #: src/pages/EpisodePage.tsx:82
 msgid "Release date"
 msgstr "发布日期"
@@ -1303,7 +1308,7 @@ msgstr "从阅读历史中移除"
 msgid "Remove from seen history"
 msgstr "从观看历史中移除"
 
-#: src/pages/Details.tsx:1065
+#: src/pages/Details.tsx:1128
 msgid "Remove from watchlist"
 msgstr "从观看清单中移除"
 
@@ -1315,7 +1320,7 @@ msgstr "从观看历史中移除季度"
 msgid "Remove token"
 msgstr "删除令牌"
 
-#: src/pages/Details.tsx:412
+#: src/pages/Details.tsx:445
 msgid "Review by <0><1>{author}</1></0> at {date}"
 msgstr "<0><1>{author}</1></0> 于 {date} 的评价"
 
@@ -1329,7 +1334,7 @@ msgid "RSS link"
 msgstr "RSS链接"
 
 #: src/hooks/translations.ts:13
-#: src/pages/Details.tsx:629
+#: src/pages/Details.tsx:662
 #: src/pages/EpisodePage.tsx:73
 msgid "Runtime"
 msgstr "片长"
@@ -1393,7 +1398,7 @@ msgid "Season {0}"
 msgstr "第 {0} 季"
 
 #: src/components/ImportSummaryTable.tsx:92
-#: src/pages/Details.tsx:660
+#: src/pages/Details.tsx:700
 msgid "Seasons"
 msgstr "季度"
 
@@ -1406,7 +1411,7 @@ msgstr "已观看"
 msgid "Seen at {0}"
 msgstr "观看于 {0}"
 
-#: src/pages/Details.tsx:845
+#: src/pages/Details.tsx:909
 #: src/pages/import/TraktTv.tsx:187
 msgid "Seen history"
 msgstr "观看历史"
@@ -1477,7 +1482,7 @@ msgid "Set"
 msgstr "设置"
 
 #: src/components/SetProgress.tsx:62
-#: src/pages/Details.tsx:1100
+#: src/pages/Details.tsx:1163
 msgid "Set progress"
 msgstr "设置进度"
 
@@ -1515,11 +1520,11 @@ msgstr "排序方式"
 msgid "Sort order"
 msgstr "排序顺序"
 
-#: src/pages/Details.tsx:644
+#: src/pages/Details.tsx:683
 msgid "Source"
 msgstr "来源"
 
-#: src/pages/Details.tsx:158
+#: src/pages/Details.tsx:191
 msgid "Spoiler"
 msgstr "剧透"
 
@@ -1535,7 +1540,7 @@ msgstr "统计"
 #: src/components/Facets/ActiveFacetChips.tsx:291
 #: src/components/Facets/StatusSection.tsx:116
 #: src/components/OrderBy.tsx:18
-#: src/pages/Details.tsx:635
+#: src/pages/Details.tsx:668
 msgid "Status"
 msgstr "状态"
 
@@ -1552,7 +1557,7 @@ msgstr "已存在名为 \"{name}\" 的列表"
 msgid "This component can only be used with tv shows"
 msgstr "此组件只能用于电视剧"
 
-#: src/pages/Details.tsx:591
+#: src/pages/Details.tsx:624
 msgid "This content is not available based on your age-based content filtering preferences."
 msgstr "由于你的年龄内容过滤偏好，此内容不可用。"
 
@@ -1578,15 +1583,15 @@ msgstr "切换排序方向"
 msgid "Topic"
 msgstr "主题"
 
-#: src/pages/Details.tsx:632
+#: src/pages/Details.tsx:665
 msgid "Total runtime"
 msgstr "总片长"
 
-#: src/pages/Details.tsx:285
+#: src/pages/Details.tsx:318
 msgid "Trailer"
 msgstr "预告片"
 
-#: src/pages/Details.tsx:276
+#: src/pages/Details.tsx:309
 msgid "Trailers & previews"
 msgstr "预告片和预览"
 
@@ -1600,7 +1605,7 @@ msgstr "电视"
 
 #: src/components/Facets/ActiveFacetChips.tsx:72
 #: src/components/Facets/MediaTypeSection.tsx:20
-#: src/pages/Details.tsx:606
+#: src/pages/Details.tsx:639
 msgid "TV Show"
 msgstr "电视节目"
 
@@ -1615,7 +1620,7 @@ msgstr "未初始化"
 msgid "Unrated"
 msgstr "未评分"
 
-#: src/pages/Details.tsx:666
+#: src/pages/Details.tsx:706
 msgid "Unseen episodes"
 msgstr "未观看的剧集"
 
@@ -1628,7 +1633,7 @@ msgstr "未观看剧集数量"
 msgid "Upcoming"
 msgstr "即将推出"
 
-#: src/pages/Details.tsx:1086
+#: src/pages/Details.tsx:1149
 msgid "Update metadata"
 msgstr "更新元数据"
 
@@ -1667,7 +1672,7 @@ msgstr "等待认证"
 msgid "Warning"
 msgstr "警告"
 
-#: src/pages/Details.tsx:796
+#: src/pages/Details.tsx:860
 msgid "Watch history"
 msgstr "观看历史"
 
@@ -1730,7 +1735,7 @@ msgstr "你什么时候读的 \"{0}\"？"
 msgid "When did you see \"{0}\"?"
 msgstr "你什么时候看的 \"{0}\"？"
 
-#: src/pages/Details.tsx:505
+#: src/pages/Details.tsx:538
 msgid "Where to watch"
 msgstr "在哪里观看"
 
@@ -1747,7 +1752,7 @@ msgstr "是"
 msgid "Your date of birth is used for age-based content filtering. This is self-only account data and is never shared with other users."
 msgstr "你的出生日期将用于按年龄过滤内容。这是仅你本人可见的账户数据，绝不会与其他用户共享。"
 
-#: src/pages/Details.tsx:915
+#: src/pages/Details.tsx:979
 msgid "Your rating"
 msgstr "你的评分"
 

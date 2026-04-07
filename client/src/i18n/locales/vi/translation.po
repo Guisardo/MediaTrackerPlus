@@ -44,7 +44,7 @@ msgid "{0, plural, one {1 item} other {# items}}"
 msgstr "{0, plural, other {# mục}}"
 
 #. placeholder {0}: mediaItem.authors.length
-#: src/pages/Details.tsx:671
+#: src/pages/Details.tsx:711
 msgid "{0, plural, one {Author} other {Authors}}"
 msgstr "{0, plural, other {Tác giả}}"
 
@@ -67,13 +67,13 @@ msgid "{0, plural, one {Listed on 1 list} other {Listed on # lists}}"
 msgstr "{0, plural, other {Có trong # danh sách}}"
 
 #. placeholder {0}: mediaItem.seenHistory!.length
-#: src/pages/Details.tsx:830
+#: src/pages/Details.tsx:894
 #: src/pages/SeenHistory.tsx:50
 msgid "{0, plural, one {Listened 1 time} other {Listened # times}}"
 msgstr "{0, plural, other {Đã nghe # lần}}"
 
 #. placeholder {0}: mediaItem.narrators.length
-#: src/pages/Details.tsx:677
+#: src/pages/Details.tsx:717
 msgid "{0, plural, one {Narrator} other {Narrators}}"
 msgstr "{0, plural, other {Người kể chuyện}}"
 
@@ -82,25 +82,25 @@ msgstr "{0, plural, other {Người kể chuyện}}"
 #~ msgstr "{0, plural, other {nền tảng}}"
 
 #. placeholder {0}: mediaItem.platform.length
-#: src/pages/Details.tsx:654
+#: src/pages/Details.tsx:694
 msgid "{0, plural, one {Platform} other {Platforms}}"
 msgstr "{0, plural, other {Nền tảng}}"
 
 #. placeholder {0}: mediaItem.seenHistory!.length
-#: src/pages/Details.tsx:839
+#: src/pages/Details.tsx:903
 #: src/pages/SeenHistory.tsx:74
 msgid "{0, plural, one {Played 1 time} other {Played # times}}"
 msgstr "{0, plural, other {Đã chơi # lần}}"
 
 #. placeholder {0}: mediaItem.seenHistory!.length
-#: src/pages/Details.tsx:833
+#: src/pages/Details.tsx:897
 #: src/pages/SeenHistory.tsx:58
 msgid "{0, plural, one {Read 1 time} other {Read # times}}"
 msgstr "{0, plural, other {Đã đọc # lần}}"
 
 #. placeholder {0}: episode.seenHistory!.length
 #. placeholder {0}: mediaItem.seenHistory!.length
-#: src/pages/Details.tsx:836
+#: src/pages/Details.tsx:900
 #: src/pages/SeasonsPage.tsx:87
 #: src/pages/SeenHistory.tsx:66
 msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
@@ -268,7 +268,7 @@ msgstr "Thêm vào lịch sử đã đọc"
 msgid "Add to seen history"
 msgstr "Thêm vào lịch sử đã xem"
 
-#: src/pages/Details.tsx:1041
+#: src/pages/Details.tsx:1104
 msgid "Add to watchlist"
 msgstr "Thêm vào danh sách xem"
 
@@ -327,7 +327,7 @@ msgstr "Ngôn ngữ Audible"
 #: src/components/Facets/ActiveFacetChips.tsx:76
 #: src/components/Facets/MediaTypeSection.tsx:24
 #: src/components/GridItem.tsx:109
-#: src/pages/Details.tsx:608
+#: src/pages/Details.tsx:641
 msgid "Audiobook"
 msgstr "Sách nói"
 
@@ -357,7 +357,7 @@ msgstr "Tránh tiết lộ nội dung mùa"
 #: src/components/Facets/ActiveFacetChips.tsx:74
 #: src/components/Facets/MediaTypeSection.tsx:22
 #: src/components/GridItem.tsx:110
-#: src/pages/Details.tsx:607
+#: src/pages/Details.tsx:640
 msgid "Book"
 msgstr "Sách"
 
@@ -406,7 +406,7 @@ msgstr "Bí Mật Khách Hàng"
 
 #: src/components/AddOrEditGroupButton.tsx:70
 #: src/components/AddToListModal.tsx:110
-#: src/pages/Details.tsx:343
+#: src/pages/Details.tsx:376
 msgid "Close"
 msgstr "Đóng"
 
@@ -426,7 +426,7 @@ msgstr "Xác nhận mật khẩu mới"
 msgid "Confirm password"
 msgstr "Xác nhận mật khẩu"
 
-#: src/pages/Details.tsx:237
+#: src/pages/Details.tsx:270
 msgid "Content categories"
 msgstr "Danh mục nội dung"
 
@@ -434,7 +434,7 @@ msgstr "Danh mục nội dung"
 msgid "Content is hidden based on your age-based content filtering preferences."
 msgstr "Nội dung bị ẩn dựa trên tùy chọn lọc nội dung theo độ tuổi của bạn."
 
-#: src/pages/Details.tsx:588
+#: src/pages/Details.tsx:621
 msgid "Content restricted"
 msgstr "Nội dung bị giới hạn"
 
@@ -455,6 +455,7 @@ msgstr "Tạo nhóm"
 #: src/components/Facets/ActiveFacetChips.tsx:58
 #: src/components/Facets/CreatorSection.tsx:24
 #: src/components/Facets/CreatorSection.tsx:32
+#: src/pages/Details.tsx:732
 msgid "Creator"
 msgstr "Người tạo"
 
@@ -501,17 +502,19 @@ msgstr "Giảm dần"
 msgid "Description"
 msgstr "Mô tả"
 
-#: src/pages/Details.tsx:217
+#: src/pages/Details.tsx:250
 msgid "Descriptors"
 msgstr "Mô tả nội dung"
 
 #: src/components/Facets/ActiveFacetChips.tsx:56
 #: src/components/Facets/CreatorSection.tsx:29
+#: src/pages/Details.tsx:738
 msgid "Developer"
 msgstr "Nhà phát triển"
 
 #: src/components/Facets/ActiveFacetChips.tsx:49
 #: src/components/Facets/CreatorSection.tsx:22
+#: src/pages/Details.tsx:726
 msgid "Director"
 msgstr "Đạo diễn"
 
@@ -548,12 +551,12 @@ msgid "Episode {0} {1}"
 msgstr "Tập {0} {1}"
 
 #: src/components/ImportSummaryTable.tsx:93
-#: src/pages/Details.tsx:663
-#: src/pages/Details.tsx:858
+#: src/pages/Details.tsx:703
+#: src/pages/Details.tsx:922
 msgid "Episodes"
 msgstr "Các tập"
 
-#: src/pages/Details.tsx:1009
+#: src/pages/Details.tsx:1072
 msgid "Episodes page"
 msgstr "Trang các tập"
 
@@ -584,7 +587,7 @@ msgstr "Bộ lọc"
 msgid "Filters ({activeFacetCount})"
 msgstr "Bộ lọc ({activeFacetCount})"
 
-#: src/pages/Details.tsx:872
+#: src/pages/Details.tsx:936
 msgid "First unwatched"
 msgstr "Mục đầu tiên chưa xem"
 
@@ -592,7 +595,7 @@ msgstr "Mục đầu tiên chưa xem"
 #~ msgid "First unwatched episode"
 #~ msgstr "Tập chưa xem đầu tiên"
 
-#: src/pages/Details.tsx:609
+#: src/pages/Details.tsx:642
 msgid "Game"
 msgstr "Trò chơi"
 
@@ -637,7 +640,7 @@ msgstr "Tên nhóm"
 msgid "Groups"
 msgstr "Nhóm"
 
-#: src/pages/Details.tsx:226
+#: src/pages/Details.tsx:259
 msgid "Guidance"
 msgstr "Hướng dẫn"
 
@@ -659,19 +662,19 @@ msgstr "Trang chủ"
 msgid "Http"
 msgstr "Http"
 
-#: src/pages/Details.tsx:753
+#: src/pages/Details.tsx:817
 msgid "I am listening it"
 msgstr "Tôi đang nghe"
 
-#: src/pages/Details.tsx:754
+#: src/pages/Details.tsx:818
 msgid "I am playing it"
 msgstr "Tôi đang chơi"
 
-#: src/pages/Details.tsx:752
+#: src/pages/Details.tsx:816
 msgid "I am reading it"
 msgstr "Tôi đang đọc"
 
-#: src/pages/Details.tsx:751
+#: src/pages/Details.tsx:815
 msgid "I am watching it"
 msgstr "Tôi đang xem"
 
@@ -680,19 +683,19 @@ msgstr "Tôi đang xem"
 msgid "I do not remember"
 msgstr "Tôi không nhớ"
 
-#: src/pages/Details.tsx:765
+#: src/pages/Details.tsx:829
 msgid "I finished listening it"
 msgstr "Tôi đã nghe xong"
 
-#: src/pages/Details.tsx:766
+#: src/pages/Details.tsx:830
 msgid "I finished playing it"
 msgstr "Tôi đã chơi xong"
 
-#: src/pages/Details.tsx:764
+#: src/pages/Details.tsx:828
 msgid "I finished reading it"
 msgstr "Tôi đã đọc xong"
 
-#: src/pages/Details.tsx:763
+#: src/pages/Details.tsx:827
 msgid "I finished watching it"
 msgstr "Tôi đã xem xong"
 
@@ -743,7 +746,7 @@ msgstr "Khóa"
 
 #: src/components/Facets/ActiveFacetChips.tsx:233
 #: src/components/Facets/LanguageSection.tsx:95
-#: src/pages/Details.tsx:641
+#: src/pages/Details.tsx:674
 msgid "Language"
 msgstr "Ngôn ngữ"
 
@@ -752,17 +755,17 @@ msgid "Last airing"
 msgstr "Phát sóng lần cuối"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
-#: src/pages/Details.tsx:812
+#: src/pages/Details.tsx:876
 msgid "Last listened at {0}"
 msgstr "Nghe lần cuối lúc {0}"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
-#: src/pages/Details.tsx:821
+#: src/pages/Details.tsx:885
 msgid "Last played at {0}"
 msgstr "Chơi lần cuối lúc {0}"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
-#: src/pages/Details.tsx:815
+#: src/pages/Details.tsx:879
 msgid "Last read at {0}"
 msgstr "Đọc lần cuối lúc {0}"
 
@@ -771,7 +774,7 @@ msgid "Last seen"
 msgstr "Xem lần cuối"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
-#: src/pages/Details.tsx:818
+#: src/pages/Details.tsx:882
 msgid "Last seen at {0}"
 msgstr "Xem lần cuối lúc {0}"
 
@@ -800,7 +803,7 @@ msgstr "Danh sách {0} - chương trình"
 msgid "List: {0}"
 msgstr "Danh sách: {0}"
 
-#: src/pages/Details.tsx:794
+#: src/pages/Details.tsx:858
 msgid "Listen history"
 msgstr "Lịch sử nghe"
 
@@ -815,7 +818,7 @@ msgstr "Đã nghe"
 msgid "Listened at {0}"
 msgstr "Đã nghe lúc {0}"
 
-#: src/pages/Details.tsx:843
+#: src/pages/Details.tsx:907
 msgid "Listened history"
 msgstr "Lịch sử đã nghe"
 
@@ -827,8 +830,8 @@ msgstr "Danh sách"
 #: src/components/PaginatedGridItems.tsx:439
 #: src/components/SelectLastSeenEpisode.tsx:100
 #: src/pages/Calendar.tsx:66
-#: src/pages/Details.tsx:931
-#: src/pages/Details.tsx:944
+#: src/pages/Details.tsx:995
+#: src/pages/Details.tsx:1008
 #: src/pages/EpisodePage.tsx:32
 #: src/pages/GroupDetailPage.tsx:285
 #: src/pages/GroupsPage.tsx:17
@@ -893,7 +896,7 @@ msgstr "Đánh giá tối thiểu"
 msgid "Minimum year"
 msgstr "Năm tối thiểu"
 
-#: src/pages/Details.tsx:363
+#: src/pages/Details.tsx:396
 msgid "More options"
 msgstr "Tùy chọn khác"
 
@@ -901,7 +904,7 @@ msgstr "Tùy chọn khác"
 #: src/components/Facets/ActiveFacetChips.tsx:70
 #: src/components/Facets/MediaTypeSection.tsx:18
 #: src/components/GridItem.tsx:111
-#: src/pages/Details.tsx:605
+#: src/pages/Details.tsx:638
 msgid "Movie"
 msgstr "Phim"
 
@@ -925,7 +928,7 @@ msgstr "Đánh giá của tôi"
 msgid "Name"
 msgstr "Tên"
 
-#: src/pages/Details.tsx:638
+#: src/pages/Details.tsx:671
 msgid "Network"
 msgstr "Mạng lưới"
 
@@ -946,7 +949,7 @@ msgstr "Mật khẩu mới"
 msgid "Next airing"
 msgstr "Phát sóng tiếp theo"
 
-#: src/pages/Details.tsx:861
+#: src/pages/Details.tsx:925
 msgid "Next episode"
 msgstr "Tập tiếp theo"
 
@@ -1006,7 +1009,7 @@ msgstr "Số tập"
 #~ msgid "Number of pages"
 #~ msgstr "Số trang"
 
-#: src/pages/Details.tsx:290
+#: src/pages/Details.tsx:323
 msgid "Official"
 msgstr "Chính thức"
 
@@ -1020,11 +1023,11 @@ msgstr "Trong danh sách xem"
 #~ msgid "Overview"
 #~ msgstr "Tổng quan"
 
-#: src/pages/Details.tsx:682
+#: src/pages/Details.tsx:722
 msgid "Pages"
 msgstr "Trang"
 
-#: src/pages/Details.tsx:194
+#: src/pages/Details.tsx:227
 msgid "Parental guidance"
 msgstr "Hướng dẫn cho phụ huynh"
 
@@ -1051,15 +1054,15 @@ msgstr "Nền tảng"
 msgid "Platform Recommended"
 msgstr "Được nền tảng đề xuất"
 
-#: src/pages/Details.tsx:797
+#: src/pages/Details.tsx:861
 msgid "Play history"
 msgstr "Lịch sử chơi"
 
-#: src/pages/Details.tsx:320
+#: src/pages/Details.tsx:353
 msgid "Play preview"
 msgstr "Phát bản xem trước"
 
-#: src/pages/Details.tsx:322
+#: src/pages/Details.tsx:355
 msgid "Play trailer"
 msgstr "Phát trailer"
 
@@ -1074,7 +1077,7 @@ msgstr "Đã chơi"
 msgid "Played at {0}"
 msgstr "Đã chơi lúc {0}"
 
-#: src/pages/Details.tsx:846
+#: src/pages/Details.tsx:910
 msgid "Played history"
 msgstr "Lịch sử đã chơi"
 
@@ -1082,7 +1085,7 @@ msgstr "Lịch sử đã chơi"
 msgid "Preferences"
 msgstr "Tùy chọn"
 
-#: src/pages/Details.tsx:283
+#: src/pages/Details.tsx:316
 msgid "Preview"
 msgstr "Xem trước"
 
@@ -1101,7 +1104,7 @@ msgid "Private"
 msgstr "Riêng tư"
 
 #: src/components/OrderBy.tsx:24
-#: src/pages/Details.tsx:743
+#: src/pages/Details.tsx:807
 msgid "Progress"
 msgstr "Tiến trình"
 
@@ -1115,6 +1118,7 @@ msgstr "Đánh giá công khai"
 
 #: src/components/Facets/ActiveFacetChips.tsx:267
 #: src/components/Facets/PublisherSection.tsx:53
+#: src/pages/Details.tsx:744
 msgid "Publisher"
 msgstr "Nhà xuất bản"
 
@@ -1150,7 +1154,8 @@ msgstr "Đã đánh giá"
 
 #: src/components/Facets/ActiveFacetChips.tsx:311
 #: src/components/Facets/RatingSection.tsx:53
-#: src/pages/Details.tsx:200
+#: src/pages/Details.tsx:233
+#: src/pages/Details.tsx:678
 #: src/pages/import/Goodreads.tsx:83
 msgid "Rating"
 msgstr "Đánh giá"
@@ -1187,8 +1192,8 @@ msgstr "Đã đọc"
 msgid "Read at {0}"
 msgstr "Đã đọc lúc {0}"
 
-#: src/pages/Details.tsx:795
-#: src/pages/Details.tsx:844
+#: src/pages/Details.tsx:859
+#: src/pages/Details.tsx:908
 msgid "Read history"
 msgstr "Lịch sử đã đọc"
 
@@ -1249,7 +1254,7 @@ msgstr "Phát hành <0/>"
 
 #: src/components/OrderBy.tsx:17
 #: src/hooks/translations.ts:12
-#: src/pages/Details.tsx:626
+#: src/pages/Details.tsx:659
 #: src/pages/EpisodePage.tsx:82
 msgid "Release date"
 msgstr "Ngày phát hành"
@@ -1303,7 +1308,7 @@ msgstr "Xóa khỏi lịch sử đã đọc"
 msgid "Remove from seen history"
 msgstr "Xóa khỏi lịch sử đã xem"
 
-#: src/pages/Details.tsx:1065
+#: src/pages/Details.tsx:1128
 msgid "Remove from watchlist"
 msgstr "Xóa khỏi danh sách xem"
 
@@ -1315,7 +1320,7 @@ msgstr "Xóa mùa khỏi lịch sử đã xem"
 msgid "Remove token"
 msgstr "Xóa mã token"
 
-#: src/pages/Details.tsx:412
+#: src/pages/Details.tsx:445
 msgid "Review by <0><1>{author}</1></0> at {date}"
 msgstr "Đánh giá bởi <0><1>{author}</1></0> vào {date}"
 
@@ -1329,7 +1334,7 @@ msgid "RSS link"
 msgstr "Liên kết RSS"
 
 #: src/hooks/translations.ts:13
-#: src/pages/Details.tsx:629
+#: src/pages/Details.tsx:662
 #: src/pages/EpisodePage.tsx:73
 msgid "Runtime"
 msgstr "Thời gian chạy"
@@ -1393,7 +1398,7 @@ msgid "Season {0}"
 msgstr "Mùa {0}"
 
 #: src/components/ImportSummaryTable.tsx:92
-#: src/pages/Details.tsx:660
+#: src/pages/Details.tsx:700
 msgid "Seasons"
 msgstr "Các mùa"
 
@@ -1406,7 +1411,7 @@ msgstr "Đã xem"
 msgid "Seen at {0}"
 msgstr "Đã xem lúc {0}"
 
-#: src/pages/Details.tsx:845
+#: src/pages/Details.tsx:909
 #: src/pages/import/TraktTv.tsx:187
 msgid "Seen history"
 msgstr "Lịch sử đã xem"
@@ -1477,7 +1482,7 @@ msgid "Set"
 msgstr "Đặt"
 
 #: src/components/SetProgress.tsx:62
-#: src/pages/Details.tsx:1100
+#: src/pages/Details.tsx:1163
 msgid "Set progress"
 msgstr "Đặt tiến trình"
 
@@ -1515,11 +1520,11 @@ msgstr "Sắp xếp theo"
 msgid "Sort order"
 msgstr "Thứ tự sắp xếp"
 
-#: src/pages/Details.tsx:644
+#: src/pages/Details.tsx:683
 msgid "Source"
 msgstr "Nguồn"
 
-#: src/pages/Details.tsx:158
+#: src/pages/Details.tsx:191
 msgid "Spoiler"
 msgstr "Tiết lộ nội dung"
 
@@ -1535,7 +1540,7 @@ msgstr "Thống kê"
 #: src/components/Facets/ActiveFacetChips.tsx:291
 #: src/components/Facets/StatusSection.tsx:116
 #: src/components/OrderBy.tsx:18
-#: src/pages/Details.tsx:635
+#: src/pages/Details.tsx:668
 msgid "Status"
 msgstr "Trạng thái"
 
@@ -1552,7 +1557,7 @@ msgstr "Đã tồn tại danh sách với tên \"{name}\""
 msgid "This component can only be used with tv shows"
 msgstr "Thành phần này chỉ có thể được sử dụng với chương trình truyền hình"
 
-#: src/pages/Details.tsx:591
+#: src/pages/Details.tsx:624
 msgid "This content is not available based on your age-based content filtering preferences."
 msgstr "Nội dung này không khả dụng dựa trên tùy chọn lọc nội dung theo độ tuổi của bạn."
 
@@ -1578,15 +1583,15 @@ msgstr "Chuyển hướng sắp xếp"
 msgid "Topic"
 msgstr "Chủ đề"
 
-#: src/pages/Details.tsx:632
+#: src/pages/Details.tsx:665
 msgid "Total runtime"
 msgstr "Tổng thời gian chạy"
 
-#: src/pages/Details.tsx:285
+#: src/pages/Details.tsx:318
 msgid "Trailer"
 msgstr "Trailer"
 
-#: src/pages/Details.tsx:276
+#: src/pages/Details.tsx:309
 msgid "Trailers & previews"
 msgstr "Trailer và bản xem trước"
 
@@ -1600,7 +1605,7 @@ msgstr "TV"
 
 #: src/components/Facets/ActiveFacetChips.tsx:72
 #: src/components/Facets/MediaTypeSection.tsx:20
-#: src/pages/Details.tsx:606
+#: src/pages/Details.tsx:639
 msgid "TV Show"
 msgstr "Chương trình TV"
 
@@ -1615,7 +1620,7 @@ msgstr "Chưa khởi tạo"
 msgid "Unrated"
 msgstr "Chưa đánh giá"
 
-#: src/pages/Details.tsx:666
+#: src/pages/Details.tsx:706
 msgid "Unseen episodes"
 msgstr "Các tập chưa xem"
 
@@ -1628,7 +1633,7 @@ msgstr "Số tập chưa xem"
 msgid "Upcoming"
 msgstr "Sắp tới"
 
-#: src/pages/Details.tsx:1086
+#: src/pages/Details.tsx:1149
 msgid "Update metadata"
 msgstr "Cập nhật siêu dữ liệu"
 
@@ -1667,7 +1672,7 @@ msgstr "Đang chờ xác thực"
 msgid "Warning"
 msgstr "Cảnh báo"
 
-#: src/pages/Details.tsx:796
+#: src/pages/Details.tsx:860
 msgid "Watch history"
 msgstr "Lịch sử xem"
 
@@ -1730,7 +1735,7 @@ msgstr "Bạn đã đọc \"{0}\" khi nào?"
 msgid "When did you see \"{0}\"?"
 msgstr "Bạn đã xem \"{0}\" khi nào?"
 
-#: src/pages/Details.tsx:505
+#: src/pages/Details.tsx:538
 msgid "Where to watch"
 msgstr "Xem ở đâu"
 
@@ -1747,7 +1752,7 @@ msgstr "Có"
 msgid "Your date of birth is used for age-based content filtering. This is self-only account data and is never shared with other users."
 msgstr "Ngày sinh của bạn được dùng cho tính năng lọc nội dung theo độ tuổi. Đây là dữ liệu chỉ dành cho chính tài khoản của bạn và sẽ không bao giờ được chia sẻ với người dùng khác."
 
-#: src/pages/Details.tsx:915
+#: src/pages/Details.tsx:979
 msgid "Your rating"
 msgstr "Đánh giá của bạn"
 

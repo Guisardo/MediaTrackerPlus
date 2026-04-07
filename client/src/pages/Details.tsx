@@ -10,6 +10,7 @@ import {
   MediaItemDetailsResponse,
   MediaItemItemsResponse,
   MediaTrailer,
+  MediaType,
   ParentalGuidanceCategory,
   ParentalGuidanceGuideItem,
   TvEpisode,
@@ -59,6 +60,38 @@ import {
   CollapsibleTrigger,
 } from 'src/components/ui/collapsible';
 import { DetailsRelatedContentSection } from 'src/components/DetailsRelatedContentSection';
+
+function getMediaTypeRoute(mediaType: MediaType): string {
+  switch (mediaType) {
+    case 'movie': return '/movies';
+    case 'tv': return '/tv';
+    case 'book': return '/books';
+    case 'audiobook': return '/audiobooks';
+    case 'video_game': return '/games';
+    default: return '/';
+  }
+}
+
+function FacetPill({ label, to }: { label: string; to: string }) {
+  return (
+    <Link
+      to={to}
+      className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-medium text-zinc-700 hover:bg-zinc-200 cursor-pointer dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+    >
+      {label}
+    </Link>
+  );
+}
+
+function FacetPillList({ values, route, param }: { values: string[]; route: string; param: string }) {
+  return (
+    <div className="flex flex-wrap gap-1">
+      {values.map((v) => (
+        <FacetPill key={v} label={v} to={`${route}?${new URLSearchParams({ [param]: v }).toString()}`} />
+      ))}
+    </div>
+  );
+}
 
 /**
  * Determines whether there is any parental metadata worth rendering.
@@ -640,6 +673,12 @@ function buildCommonFields(mediaItem: MediaItemDetailsResponse): InfoField[] {
   if (mediaItem.language) {
     fields.push({ label: <Trans>Language</Trans>, value: mediaItem.language });
   }
+  if (mediaItem.tmdbRating != null) {
+    fields.push({
+      label: <Trans>Rating</Trans>,
+      value: `${mediaItem.tmdbRating.toFixed(1)} / 10`,
+    });
+  }
   if (mediaItem.source) {
     fields.push({ label: <Trans>Source</Trans>, value: mediaItem.source });
   }
@@ -649,6 +688,7 @@ function buildCommonFields(mediaItem: MediaItemDetailsResponse): InfoField[] {
 /** Media-type-specific fields (platform, TV episode counts, book/audiobook credits and pages). */
 function buildMediaTypeFields(mediaItem: MediaItemDetailsResponse): InfoField[] {
   const fields: InfoField[] = [];
+  const route = getMediaTypeRoute(mediaItem.mediaType);
   if (mediaItem.platform) {
     fields.push({
       label: <Plural value={mediaItem.platform.length} one="Platform" other="Platforms" />,
@@ -666,13 +706,13 @@ function buildMediaTypeFields(mediaItem: MediaItemDetailsResponse): InfoField[] 
       fields.push({ label: <Trans>Unseen episodes</Trans>, value: mediaItem.unseenEpisodesCount });
     }
   }
-  if (mediaItem.authors) {
+  if (mediaItem.authors?.length) {
     fields.push({
       label: <Plural value={mediaItem.authors.length} one="Author" other="Authors" />,
-      value: mediaItem.authors.sort().join(', '),
+      value: <FacetPillList values={[...mediaItem.authors].sort()} route={route} param="creators" />,
     });
   }
-  if (mediaItem.narrators) {
+  if (mediaItem.narrators?.length) {
     fields.push({
       label: <Plural value={mediaItem.narrators.length} one="Narrator" other="Narrators" />,
       value: mediaItem.narrators.sort().join(', '),
@@ -680,6 +720,30 @@ function buildMediaTypeFields(mediaItem: MediaItemDetailsResponse): InfoField[] 
   }
   if (mediaItem.numberOfPages) {
     fields.push({ label: <Trans>Pages</Trans>, value: mediaItem.numberOfPages });
+  }
+  if (mediaItem.director) {
+    fields.push({
+      label: <Trans>Director</Trans>,
+      value: <FacetPillList values={[mediaItem.director]} route={route} param="creators" />,
+    });
+  }
+  if (mediaItem.creator) {
+    fields.push({
+      label: <Trans>Creator</Trans>,
+      value: <FacetPillList values={[mediaItem.creator]} route={route} param="creators" />,
+    });
+  }
+  if (mediaItem.developer) {
+    fields.push({
+      label: <Trans>Developer</Trans>,
+      value: <FacetPillList values={[mediaItem.developer]} route={route} param="creators" />,
+    });
+  }
+  if (mediaItem.publisher) {
+    fields.push({
+      label: <Trans>Publisher</Trans>,
+      value: <FacetPillList values={[mediaItem.publisher]} route={route} param="publishers" />,
+    });
   }
   return fields;
 }
@@ -976,12 +1040,11 @@ export const DetailsPage: FunctionComponent = () => {
           {mediaItem.genres && mediaItem.genres.length > 0 && (
             <div className="mt-2 flex flex-wrap gap-1.5">
               {mediaItem.genres.sort().map((genre) => (
-                <span
+                <FacetPill
                   key={genre}
-                  className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
-                >
-                  {genre}
-                </span>
+                  label={genre}
+                  to={`${getMediaTypeRoute(mediaItem.mediaType)}?${new URLSearchParams({ genres: genre }).toString()}`}
+                />
               ))}
             </div>
           )}

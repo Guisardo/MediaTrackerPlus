@@ -44,7 +44,7 @@ msgid "{0, plural, one {1 item} other {# items}}"
 msgstr "{0, plural, one {1 στοιχείο} other {# στοιχεία}}"
 
 #. placeholder {0}: mediaItem.authors.length
-#: src/pages/Details.tsx:671
+#: src/pages/Details.tsx:711
 msgid "{0, plural, one {Author} other {Authors}}"
 msgstr "{0, plural, one {Συγγραφέας} other {Συγγραφείς}}"
 
@@ -67,13 +67,13 @@ msgid "{0, plural, one {Listed on 1 list} other {Listed on # lists}}"
 msgstr "{0, plural, one {Σε 1 λίστα} other {Σε # λίστες}}"
 
 #. placeholder {0}: mediaItem.seenHistory!.length
-#: src/pages/Details.tsx:830
+#: src/pages/Details.tsx:894
 #: src/pages/SeenHistory.tsx:50
 msgid "{0, plural, one {Listened 1 time} other {Listened # times}}"
 msgstr "{0, plural, one {Ακούστηκε 1 φορά} other {Ακούστηκε # φορές}}"
 
 #. placeholder {0}: mediaItem.narrators.length
-#: src/pages/Details.tsx:677
+#: src/pages/Details.tsx:717
 msgid "{0, plural, one {Narrator} other {Narrators}}"
 msgstr "{0, plural, one {Αφηγητής} other {Αφηγητές}}"
 
@@ -82,25 +82,25 @@ msgstr "{0, plural, one {Αφηγητής} other {Αφηγητές}}"
 #~ msgstr "{0, plural, one {Πλατφόρμα} other {πλατφόρμες}}"
 
 #. placeholder {0}: mediaItem.platform.length
-#: src/pages/Details.tsx:654
+#: src/pages/Details.tsx:694
 msgid "{0, plural, one {Platform} other {Platforms}}"
 msgstr "{0, plural, one {Πλατφόρμα} other {Πλατφόρμες}}"
 
 #. placeholder {0}: mediaItem.seenHistory!.length
-#: src/pages/Details.tsx:839
+#: src/pages/Details.tsx:903
 #: src/pages/SeenHistory.tsx:74
 msgid "{0, plural, one {Played 1 time} other {Played # times}}"
 msgstr "{0, plural, one {Παίχτηκε 1 φορά} other {Παίχτηκε # φορές}}"
 
 #. placeholder {0}: mediaItem.seenHistory!.length
-#: src/pages/Details.tsx:833
+#: src/pages/Details.tsx:897
 #: src/pages/SeenHistory.tsx:58
 msgid "{0, plural, one {Read 1 time} other {Read # times}}"
 msgstr "{0, plural, one {Διαβάστηκε 1 φορά} other {Διαβάστηκε # φορές}}"
 
 #. placeholder {0}: episode.seenHistory!.length
 #. placeholder {0}: mediaItem.seenHistory!.length
-#: src/pages/Details.tsx:836
+#: src/pages/Details.tsx:900
 #: src/pages/SeasonsPage.tsx:87
 #: src/pages/SeenHistory.tsx:66
 msgid "{0, plural, one {Seen 1 time} other {Seen # times}}"
@@ -268,7 +268,7 @@ msgstr "Προσθήκη στο ιστορικό ανάγνωσης"
 msgid "Add to seen history"
 msgstr "Προσθήκη στο ιστορικό παρακολούθησης"
 
-#: src/pages/Details.tsx:1041
+#: src/pages/Details.tsx:1104
 msgid "Add to watchlist"
 msgstr "Προσθήκη στη λίστα παρακολούθησης"
 
@@ -327,7 +327,7 @@ msgstr "Γλώσσα Audible"
 #: src/components/Facets/ActiveFacetChips.tsx:76
 #: src/components/Facets/MediaTypeSection.tsx:24
 #: src/components/GridItem.tsx:109
-#: src/pages/Details.tsx:608
+#: src/pages/Details.tsx:641
 msgid "Audiobook"
 msgstr "Ηχητικό βιβλίο"
 
@@ -357,7 +357,7 @@ msgstr "Αποφυγή αποκάλυψης σεζόν"
 #: src/components/Facets/ActiveFacetChips.tsx:74
 #: src/components/Facets/MediaTypeSection.tsx:22
 #: src/components/GridItem.tsx:110
-#: src/pages/Details.tsx:607
+#: src/pages/Details.tsx:640
 msgid "Book"
 msgstr "Βιβλίο"
 
@@ -406,7 +406,7 @@ msgstr "Μυστικό Πελάτη"
 
 #: src/components/AddOrEditGroupButton.tsx:70
 #: src/components/AddToListModal.tsx:110
-#: src/pages/Details.tsx:343
+#: src/pages/Details.tsx:376
 msgid "Close"
 msgstr "Κλείσιμο"
 
@@ -426,7 +426,7 @@ msgstr "Επιβεβαίωση νέου κωδικού πρόσβασης"
 msgid "Confirm password"
 msgstr "Επιβεβαίωση κωδικού πρόσβασης"
 
-#: src/pages/Details.tsx:237
+#: src/pages/Details.tsx:270
 msgid "Content categories"
 msgstr "Κατηγορίες περιεχομένου"
 
@@ -434,7 +434,7 @@ msgstr "Κατηγορίες περιεχομένου"
 msgid "Content is hidden based on your age-based content filtering preferences."
 msgstr "Το περιεχόμενο είναι κρυφό βάσει των προτιμήσεών σας για φιλτράρισμα περιεχομένου βάσει ηλικίας."
 
-#: src/pages/Details.tsx:588
+#: src/pages/Details.tsx:621
 msgid "Content restricted"
 msgstr "Περιορισμένο περιεχόμενο"
 
@@ -455,6 +455,7 @@ msgstr "Δημιουργία ομάδας"
 #: src/components/Facets/ActiveFacetChips.tsx:58
 #: src/components/Facets/CreatorSection.tsx:24
 #: src/components/Facets/CreatorSection.tsx:32
+#: src/pages/Details.tsx:732
 msgid "Creator"
 msgstr "Δημιουργός"
 
@@ -501,17 +502,19 @@ msgstr "Φθίνουσα"
 msgid "Description"
 msgstr "Περιγραφή"
 
-#: src/pages/Details.tsx:217
+#: src/pages/Details.tsx:250
 msgid "Descriptors"
 msgstr "Περιγραφές"
 
 #: src/components/Facets/ActiveFacetChips.tsx:56
 #: src/components/Facets/CreatorSection.tsx:29
+#: src/pages/Details.tsx:738
 msgid "Developer"
 msgstr "Προγραμματιστής"
 
 #: src/components/Facets/ActiveFacetChips.tsx:49
 #: src/components/Facets/CreatorSection.tsx:22
+#: src/pages/Details.tsx:726
 msgid "Director"
 msgstr "Σκηνοθέτης"
 
@@ -548,12 +551,12 @@ msgid "Episode {0} {1}"
 msgstr "Επεισόδιο {0} {1}"
 
 #: src/components/ImportSummaryTable.tsx:93
-#: src/pages/Details.tsx:663
-#: src/pages/Details.tsx:858
+#: src/pages/Details.tsx:703
+#: src/pages/Details.tsx:922
 msgid "Episodes"
 msgstr "Επεισόδια"
 
-#: src/pages/Details.tsx:1009
+#: src/pages/Details.tsx:1072
 msgid "Episodes page"
 msgstr "Σελίδα επεισοδίων"
 
@@ -584,7 +587,7 @@ msgstr "Φίλτρα"
 msgid "Filters ({activeFacetCount})"
 msgstr "Φίλτρα ({activeFacetCount})"
 
-#: src/pages/Details.tsx:872
+#: src/pages/Details.tsx:936
 msgid "First unwatched"
 msgstr "Πρώτο αθέατο"
 
@@ -592,7 +595,7 @@ msgstr "Πρώτο αθέατο"
 #~ msgid "First unwatched episode"
 #~ msgstr "Πρώτο μη παρακολουθημένο επεισόδιο"
 
-#: src/pages/Details.tsx:609
+#: src/pages/Details.tsx:642
 msgid "Game"
 msgstr "Παιχνίδι"
 
@@ -637,7 +640,7 @@ msgstr "Όνομα ομάδας"
 msgid "Groups"
 msgstr "Ομάδες"
 
-#: src/pages/Details.tsx:226
+#: src/pages/Details.tsx:259
 msgid "Guidance"
 msgstr "Καθοδήγηση"
 
@@ -659,19 +662,19 @@ msgstr "Αρχική"
 msgid "Http"
 msgstr "Http"
 
-#: src/pages/Details.tsx:753
+#: src/pages/Details.tsx:817
 msgid "I am listening it"
 msgstr "Το ακούω"
 
-#: src/pages/Details.tsx:754
+#: src/pages/Details.tsx:818
 msgid "I am playing it"
 msgstr "Το παίζω"
 
-#: src/pages/Details.tsx:752
+#: src/pages/Details.tsx:816
 msgid "I am reading it"
 msgstr "Το διαβάζω"
 
-#: src/pages/Details.tsx:751
+#: src/pages/Details.tsx:815
 msgid "I am watching it"
 msgstr "Το παρακολουθώ"
 
@@ -680,19 +683,19 @@ msgstr "Το παρακολουθώ"
 msgid "I do not remember"
 msgstr "Δεν θυμάμαι"
 
-#: src/pages/Details.tsx:765
+#: src/pages/Details.tsx:829
 msgid "I finished listening it"
 msgstr "Τελείωσα να το ακούω"
 
-#: src/pages/Details.tsx:766
+#: src/pages/Details.tsx:830
 msgid "I finished playing it"
 msgstr "Τελείωσα να το παίζω"
 
-#: src/pages/Details.tsx:764
+#: src/pages/Details.tsx:828
 msgid "I finished reading it"
 msgstr "Τελείωσα να το διαβάζω"
 
-#: src/pages/Details.tsx:763
+#: src/pages/Details.tsx:827
 msgid "I finished watching it"
 msgstr "Τελείωσα να το παρακολουθώ"
 
@@ -743,7 +746,7 @@ msgstr "Κλειδί"
 
 #: src/components/Facets/ActiveFacetChips.tsx:233
 #: src/components/Facets/LanguageSection.tsx:95
-#: src/pages/Details.tsx:641
+#: src/pages/Details.tsx:674
 msgid "Language"
 msgstr "Γλώσσα"
 
@@ -752,17 +755,17 @@ msgid "Last airing"
 msgstr "Τελευταία μετάδοση"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
-#: src/pages/Details.tsx:812
+#: src/pages/Details.tsx:876
 msgid "Last listened at {0}"
 msgstr "Τελευταία ακρόαση στις {0}"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
-#: src/pages/Details.tsx:821
+#: src/pages/Details.tsx:885
 msgid "Last played at {0}"
 msgstr "Τελευταία αναπαραγωγή στις {0}"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
-#: src/pages/Details.tsx:815
+#: src/pages/Details.tsx:879
 msgid "Last read at {0}"
 msgstr "Τελευταία ανάγνωση στις {0}"
 
@@ -771,7 +774,7 @@ msgid "Last seen"
 msgstr "Τελευταία παρακολούθηση"
 
 #. placeholder {0}: new Date(mediaItem.lastSeenAt!).toLocaleString()
-#: src/pages/Details.tsx:818
+#: src/pages/Details.tsx:882
 msgid "Last seen at {0}"
 msgstr "Τελευταία παρακολούθηση στις {0}"
 
@@ -800,7 +803,7 @@ msgstr "Λίστα {0} - σειρές"
 msgid "List: {0}"
 msgstr "Λίστα: {0}"
 
-#: src/pages/Details.tsx:794
+#: src/pages/Details.tsx:858
 msgid "Listen history"
 msgstr "Ιστορικό ακρόασης"
 
@@ -815,7 +818,7 @@ msgstr "Ακούστηκε"
 msgid "Listened at {0}"
 msgstr "Ακούστηκε στις {0}"
 
-#: src/pages/Details.tsx:843
+#: src/pages/Details.tsx:907
 msgid "Listened history"
 msgstr "Ιστορικό ακρόασης"
 
@@ -827,8 +830,8 @@ msgstr "Λίστες"
 #: src/components/PaginatedGridItems.tsx:439
 #: src/components/SelectLastSeenEpisode.tsx:100
 #: src/pages/Calendar.tsx:66
-#: src/pages/Details.tsx:931
-#: src/pages/Details.tsx:944
+#: src/pages/Details.tsx:995
+#: src/pages/Details.tsx:1008
 #: src/pages/EpisodePage.tsx:32
 #: src/pages/GroupDetailPage.tsx:285
 #: src/pages/GroupsPage.tsx:17
@@ -893,7 +896,7 @@ msgstr "Ελάχιστη βαθμολογία"
 msgid "Minimum year"
 msgstr "Ελάχιστο έτος"
 
-#: src/pages/Details.tsx:363
+#: src/pages/Details.tsx:396
 msgid "More options"
 msgstr "Περισσότερες επιλογές"
 
@@ -901,7 +904,7 @@ msgstr "Περισσότερες επιλογές"
 #: src/components/Facets/ActiveFacetChips.tsx:70
 #: src/components/Facets/MediaTypeSection.tsx:18
 #: src/components/GridItem.tsx:111
-#: src/pages/Details.tsx:605
+#: src/pages/Details.tsx:638
 msgid "Movie"
 msgstr "Ταινία"
 
@@ -925,7 +928,7 @@ msgstr "Η βαθμολογία μου"
 msgid "Name"
 msgstr "Όνομα"
 
-#: src/pages/Details.tsx:638
+#: src/pages/Details.tsx:671
 msgid "Network"
 msgstr "Δίκτυο"
 
@@ -946,7 +949,7 @@ msgstr "Νέος κωδικός πρόσβασης"
 msgid "Next airing"
 msgstr "Επόμενη μετάδοση"
 
-#: src/pages/Details.tsx:861
+#: src/pages/Details.tsx:925
 msgid "Next episode"
 msgstr "Επόμενο επεισόδιο"
 
@@ -1006,7 +1009,7 @@ msgstr "Αριθμός επεισοδίων"
 #~ msgid "Number of pages"
 #~ msgstr "Αριθμός σελίδων"
 
-#: src/pages/Details.tsx:290
+#: src/pages/Details.tsx:323
 msgid "Official"
 msgstr "Επίσημο"
 
@@ -1020,11 +1023,11 @@ msgstr "Στη λίστα παρακολούθησης"
 #~ msgid "Overview"
 #~ msgstr "Επισκόπηση"
 
-#: src/pages/Details.tsx:682
+#: src/pages/Details.tsx:722
 msgid "Pages"
 msgstr "Σελίδες"
 
-#: src/pages/Details.tsx:194
+#: src/pages/Details.tsx:227
 msgid "Parental guidance"
 msgstr "Γονική καθοδήγηση"
 
@@ -1051,15 +1054,15 @@ msgstr "Πλατφόρμα"
 msgid "Platform Recommended"
 msgstr "Προτεινόμενο από Πλατφόρμα"
 
-#: src/pages/Details.tsx:797
+#: src/pages/Details.tsx:861
 msgid "Play history"
 msgstr "Ιστορικό παιχνιδιού"
 
-#: src/pages/Details.tsx:320
+#: src/pages/Details.tsx:353
 msgid "Play preview"
 msgstr "Αναπαραγωγή προεπισκόπησης"
 
-#: src/pages/Details.tsx:322
+#: src/pages/Details.tsx:355
 msgid "Play trailer"
 msgstr "Αναπαραγωγή τρέιλερ"
 
@@ -1074,7 +1077,7 @@ msgstr "Παίχτηκε"
 msgid "Played at {0}"
 msgstr "Παίχτηκε στις {0}"
 
-#: src/pages/Details.tsx:846
+#: src/pages/Details.tsx:910
 msgid "Played history"
 msgstr "Ιστορικό αναπαραγωγής"
 
@@ -1082,7 +1085,7 @@ msgstr "Ιστορικό αναπαραγωγής"
 msgid "Preferences"
 msgstr "Προτιμήσεις"
 
-#: src/pages/Details.tsx:283
+#: src/pages/Details.tsx:316
 msgid "Preview"
 msgstr "Προεπισκόπηση"
 
@@ -1101,7 +1104,7 @@ msgid "Private"
 msgstr "Ιδιωτικό"
 
 #: src/components/OrderBy.tsx:24
-#: src/pages/Details.tsx:743
+#: src/pages/Details.tsx:807
 msgid "Progress"
 msgstr "Πρόοδος"
 
@@ -1115,6 +1118,7 @@ msgstr "Δημόσιες κριτικές"
 
 #: src/components/Facets/ActiveFacetChips.tsx:267
 #: src/components/Facets/PublisherSection.tsx:53
+#: src/pages/Details.tsx:744
 msgid "Publisher"
 msgstr "Εκδότης"
 
@@ -1150,7 +1154,8 @@ msgstr "Βαθμολογήθηκε"
 
 #: src/components/Facets/ActiveFacetChips.tsx:311
 #: src/components/Facets/RatingSection.tsx:53
-#: src/pages/Details.tsx:200
+#: src/pages/Details.tsx:233
+#: src/pages/Details.tsx:678
 #: src/pages/import/Goodreads.tsx:83
 msgid "Rating"
 msgstr "Βαθμολογία"
@@ -1187,8 +1192,8 @@ msgstr "Διαβάστηκε"
 msgid "Read at {0}"
 msgstr "Διαβάστηκε στις {0}"
 
-#: src/pages/Details.tsx:795
-#: src/pages/Details.tsx:844
+#: src/pages/Details.tsx:859
+#: src/pages/Details.tsx:908
 msgid "Read history"
 msgstr "Ιστορικό ανάγνωσης"
 
@@ -1249,7 +1254,7 @@ msgstr "Κυκλοφορία <0/>"
 
 #: src/components/OrderBy.tsx:17
 #: src/hooks/translations.ts:12
-#: src/pages/Details.tsx:626
+#: src/pages/Details.tsx:659
 #: src/pages/EpisodePage.tsx:82
 msgid "Release date"
 msgstr "Ημερομηνία κυκλοφορίας"
@@ -1303,7 +1308,7 @@ msgstr "Αφαίρεση από το ιστορικό ανάγνωσης"
 msgid "Remove from seen history"
 msgstr "Αφαίρεση από το ιστορικό παρακολούθησης"
 
-#: src/pages/Details.tsx:1065
+#: src/pages/Details.tsx:1128
 msgid "Remove from watchlist"
 msgstr "Αφαίρεση από τη λίστα παρακολούθησης"
 
@@ -1315,7 +1320,7 @@ msgstr "Αφαίρεση σεζόν από το ιστορικό παρακολ�
 msgid "Remove token"
 msgstr "Αφαίρεση διακριτικού"
 
-#: src/pages/Details.tsx:412
+#: src/pages/Details.tsx:445
 msgid "Review by <0><1>{author}</1></0> at {date}"
 msgstr "Κριτική από <0><1>{author}</1></0> στις {date}"
 
@@ -1329,7 +1334,7 @@ msgid "RSS link"
 msgstr "Σύνδεσμος RSS"
 
 #: src/hooks/translations.ts:13
-#: src/pages/Details.tsx:629
+#: src/pages/Details.tsx:662
 #: src/pages/EpisodePage.tsx:73
 msgid "Runtime"
 msgstr "Χρόνος προβολής"
@@ -1393,7 +1398,7 @@ msgid "Season {0}"
 msgstr "Σεζόν {0}"
 
 #: src/components/ImportSummaryTable.tsx:92
-#: src/pages/Details.tsx:660
+#: src/pages/Details.tsx:700
 msgid "Seasons"
 msgstr "Σεζόν"
 
@@ -1406,7 +1411,7 @@ msgstr "Παρακολουθήθηκε"
 msgid "Seen at {0}"
 msgstr "Παρακολουθήθηκε στις {0}"
 
-#: src/pages/Details.tsx:845
+#: src/pages/Details.tsx:909
 #: src/pages/import/TraktTv.tsx:187
 msgid "Seen history"
 msgstr "Ιστορικό παρακολούθησης"
@@ -1477,7 +1482,7 @@ msgid "Set"
 msgstr "Ορισμός"
 
 #: src/components/SetProgress.tsx:62
-#: src/pages/Details.tsx:1100
+#: src/pages/Details.tsx:1163
 msgid "Set progress"
 msgstr "Ορισμός προόδου"
 
@@ -1515,11 +1520,11 @@ msgstr "Ταξινόμηση κατά"
 msgid "Sort order"
 msgstr "Σειρά ταξινόμησης"
 
-#: src/pages/Details.tsx:644
+#: src/pages/Details.tsx:683
 msgid "Source"
 msgstr "Πηγή"
 
-#: src/pages/Details.tsx:158
+#: src/pages/Details.tsx:191
 msgid "Spoiler"
 msgstr "Αποκάλυψη πλοκής"
 
@@ -1535,7 +1540,7 @@ msgstr "Στατιστικά"
 #: src/components/Facets/ActiveFacetChips.tsx:291
 #: src/components/Facets/StatusSection.tsx:116
 #: src/components/OrderBy.tsx:18
-#: src/pages/Details.tsx:635
+#: src/pages/Details.tsx:668
 msgid "Status"
 msgstr "Κατάσταση"
 
@@ -1552,7 +1557,7 @@ msgstr "Υπάρχει ήδη μια λίστα με το όνομα \"{name}\""
 msgid "This component can only be used with tv shows"
 msgstr "Αυτό το στοιχείο μπορεί να χρησιμοποιηθεί μόνο με τηλεοπτικές σειρές"
 
-#: src/pages/Details.tsx:591
+#: src/pages/Details.tsx:624
 msgid "This content is not available based on your age-based content filtering preferences."
 msgstr "Αυτό το περιεχόμενο δεν είναι διαθέσιμο βάσει των προτιμήσεών σας για φιλτράρισμα περιεχομένου βάσει ηλικίας."
 
@@ -1578,15 +1583,15 @@ msgstr "Εναλλαγή κατεύθυνσης ταξινόμησης"
 msgid "Topic"
 msgstr "Θέμα"
 
-#: src/pages/Details.tsx:632
+#: src/pages/Details.tsx:665
 msgid "Total runtime"
 msgstr "Συνολικός χρόνος προβολής"
 
-#: src/pages/Details.tsx:285
+#: src/pages/Details.tsx:318
 msgid "Trailer"
 msgstr "Τρέιλερ"
 
-#: src/pages/Details.tsx:276
+#: src/pages/Details.tsx:309
 msgid "Trailers & previews"
 msgstr "Τρέιλερ και προεπισκοπήσεις"
 
@@ -1600,7 +1605,7 @@ msgstr "Τηλεόραση"
 
 #: src/components/Facets/ActiveFacetChips.tsx:72
 #: src/components/Facets/MediaTypeSection.tsx:20
-#: src/pages/Details.tsx:606
+#: src/pages/Details.tsx:639
 msgid "TV Show"
 msgstr "Τηλεοπτική σειρά"
 
@@ -1615,7 +1620,7 @@ msgstr "Μη αρχικοποιημένο"
 msgid "Unrated"
 msgstr "Χωρίς βαθμολογία"
 
-#: src/pages/Details.tsx:666
+#: src/pages/Details.tsx:706
 msgid "Unseen episodes"
 msgstr "Μη παρακολουθημένα επεισόδια"
 
@@ -1628,7 +1633,7 @@ msgstr "Πλήθος μη παρακολουθημένων επεισοδίων"
 msgid "Upcoming"
 msgstr "Επερχόμενο"
 
-#: src/pages/Details.tsx:1086
+#: src/pages/Details.tsx:1149
 msgid "Update metadata"
 msgstr "Ενημέρωση μεταδεδομένων"
 
@@ -1667,7 +1672,7 @@ msgstr "Αναμονή για επαλήθευση ταυτότητας"
 msgid "Warning"
 msgstr "Προειδοποίηση"
 
-#: src/pages/Details.tsx:796
+#: src/pages/Details.tsx:860
 msgid "Watch history"
 msgstr "Ιστορικό παρακολούθησης"
 
@@ -1730,7 +1735,7 @@ msgstr "Πότε διαβάσατε το \"{0}\";"
 msgid "When did you see \"{0}\"?"
 msgstr "Πότε είδατε το \"{0}\";"
 
-#: src/pages/Details.tsx:505
+#: src/pages/Details.tsx:538
 msgid "Where to watch"
 msgstr "Πού να παρακολουθήσετε"
 
@@ -1747,7 +1752,7 @@ msgstr "Ναι"
 msgid "Your date of birth is used for age-based content filtering. This is self-only account data and is never shared with other users."
 msgstr "Η ημερομηνία γέννησής σας χρησιμοποιείται για το φιλτράρισμα περιεχομένου βάσει ηλικίας. Αυτά τα δεδομένα αφορούν μόνο τον λογαριασμό σας και δεν κοινοποιούνται ποτέ σε άλλους χρήστες."
 
-#: src/pages/Details.tsx:915
+#: src/pages/Details.tsx:979
 msgid "Your rating"
 msgstr "Η βαθμολογία σας"
 
