@@ -160,14 +160,15 @@ export const NavComponent: FunctionComponent = () => {
             <div className="inline-flex ml-auto mr-2 whitespace-nowrap">
               <span
                 onClick={() => setDarkMode(!darkMode)}
-                className="pr-2 cursor-pointer select-none material-icons"
+                className="pr-2 cursor-pointer select-none material-icons text-zinc-700 dark:text-zinc-200"
               >
                 {darkMode ? <>light_mode</> : <>mode_night</>}
               </span>
-              <a href="#/settings">{user.name}</a>
-              <span className="px-1">|</span>
+              <a href="#/settings" className="text-zinc-700 dark:text-zinc-200">{user.name}</a>
+              <span className="px-1 text-zinc-700 dark:text-zinc-200">|</span>
               <a
                 href="/logout"
+                className="text-zinc-700 dark:text-zinc-200"
                 onClick={(e) => {
                   e.preventDefault();
                   if (confirm(t`Do you really want to logout?`)) {

@@ -116,6 +116,7 @@
     text-decoration: none;
     color: #333;
     transition: 0.1s;
+    @apply dark:text-zinc-200;
   }
 
   a:visited {
@@ -141,6 +142,7 @@
     border: 1px solid #ccc;
     border-radius: 2px;
     padding: 4px;
+    @apply dark:border-zinc-600;
   }
 
   /* Dark mode global overrides (from dark.css) */

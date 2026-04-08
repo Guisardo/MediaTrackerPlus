@@ -389,6 +389,57 @@ describe('NavComponent – dark mode toggle', () => {
 });
 
 // ---------------------------------------------------------------------------
+// NavComponent – dark mode legibility classes on right-side header elements
+// ---------------------------------------------------------------------------
+
+describe('NavComponent – dark mode legibility classes (issue #44)', () => {
+  beforeEach(() => {
+    mockUseUser.mockReturnValue({ user: LOGGED_IN_USER, logout: mockLogout });
+    mockUseDarkMode.mockReturnValue({
+      darkMode: false,
+      setDarkMode: mockSetDarkMode,
+    });
+  });
+
+  it('username link has dark:text-zinc-200 class', () => {
+    renderNav('/');
+    const usernameLink = screen.getByRole('link', { name: 'Alice' });
+    expect(usernameLink.className).toContain('dark:text-zinc-200');
+  });
+
+  it('logout link has dark:text-zinc-200 class', () => {
+    renderNav('/');
+    const logoutLink = screen.getByRole('link', { name: 'Logout' });
+    expect(logoutLink.className).toContain('dark:text-zinc-200');
+  });
+
+  it('dark mode toggle icon span has dark:text-zinc-200 class', () => {
+    renderNav('/');
+    // The dark mode toggle is a <span class="... material-icons ..."> containing 'mode_night'
+    const toggleSpan = screen
+      .getAllByText('mode_night')
+      .find(
+        (el) =>
+          el.className.includes('material-icons') &&
+          el.className.includes('dark:text-zinc-200')
+      );
+    expect(toggleSpan).toBeDefined();
+  });
+
+  it('username link has text-zinc-700 class for light mode contrast', () => {
+    renderNav('/');
+    const usernameLink = screen.getByRole('link', { name: 'Alice' });
+    expect(usernameLink.className).toContain('text-zinc-700');
+  });
+
+  it('logout link has text-zinc-700 class for light mode contrast', () => {
+    renderNav('/');
+    const logoutLink = screen.getByRole('link', { name: 'Logout' });
+    expect(logoutLink.className).toContain('text-zinc-700');
+  });
+});
+
+// ---------------------------------------------------------------------------
 // NavComponent – unauthenticated user (no nav links)
 // ---------------------------------------------------------------------------
 
