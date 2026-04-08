@@ -461,6 +461,43 @@ describe('Platform Recommended Sort — end-to-end integration', () => {
     expect(tier2Items[0].title).toBe('title'); // tvShow: tmdbRating=8.0
     expect(tier2Items[1].title).toBe('movie'); // movie: tmdbRating=7.0
   });
+
+  // ─── Fix B2: rater does not see their own rated items in recommendations ─────
+
+  test('user does not see their own rated items in platformRecommended results (Fix B2)', async () => {
+    const ratingController = new RatingController();
+    const mock = mockSetImmediate();
+
+    try {
+      // Data.user rates the movie
+      const res = await request(ratingController.add, {
+        userId: Data.user.id,
+        requestBody: { mediaItemId: Data.movie.id, rating: 9 },
+      });
+      expect(res.statusCode).toEqual(200);
+
+      await executeSetImmediateCallbacks(
+        mock.capturedCallbacks,
+        mock.originalSetImmediate
+      );
+
+      // autoMarkAsSeen may mark the movie as seen — clear seen entries so the
+      // seen-item exclusion does not interfere with the rated-item exclusion.
+      await Database.knex('seen').delete();
+
+      // Query as Data.user (the rater) — the movie they rated must not appear.
+      const items = await mediaItemRepository.items({
+        userId: Data.user.id,
+        orderBy: 'platformRecommended',
+        sortOrder: 'desc',
+      });
+      const ids = items.map((i) => i.id);
+
+      expect(ids).not.toContain(Data.movie.id);
+    } finally {
+      global.setImmediate = mock.originalSetImmediate;
+    }
+  });
 });
 
 // ===========================================================================

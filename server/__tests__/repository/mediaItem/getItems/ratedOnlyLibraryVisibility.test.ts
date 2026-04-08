@@ -63,6 +63,19 @@ const movieUntrackedCatalog: MediaItemBase = {
   creator: 'Director C',
 };
 
+/**
+ * Movie Alice has reviewed (text only, no numeric rating).
+ * Used to verify that the `userRating.review IS NOT NULL` exclusion path works.
+ */
+const movieReviewOnly: MediaItemBase = {
+  id: 4,
+  lastTimeUpdated: new Date().getTime(),
+  mediaType: 'movie',
+  source: 'user',
+  title: 'Review-Only Movie',
+  creator: 'Director D',
+};
+
 // ---------------------------------------------------------------------------
 // Setup helpers
 // ---------------------------------------------------------------------------
@@ -150,16 +163,27 @@ describe('Fix B — platformRecommended scans full catalog and excludes rated it
     await mediaItemRepository.create(movieOnWatchlist);
     await mediaItemRepository.create(movieRatedOnly);
     await mediaItemRepository.create(movieUntrackedCatalog);
+    await mediaItemRepository.create(movieReviewOnly);
 
     // Alice: watchlist entry for control item
     await addToWatchlist(userAlice.id!, movieOnWatchlist.id!);
 
-    // Alice: rating for the rated-only movie
+    // Alice: numeric rating for the rated-only movie
     await userRatingRepository.create({
       id: 200,
       mediaItemId: movieRatedOnly.id!,
       userId: userAlice.id!,
       rating: 8,
+      date: new Date().getTime(),
+    });
+
+    // Alice: text review with no numeric rating — exercises the review-only exclusion path
+    await userRatingRepository.create({
+      id: 201,
+      mediaItemId: movieReviewOnly.id!,
+      userId: userAlice.id!,
+      rating: null,
+      review: 'Great film',
       date: new Date().getTime(),
     });
   });
@@ -187,7 +211,18 @@ describe('Fix B — platformRecommended scans full catalog and excludes rated it
     expect(ids).not.toContain(movieRatedOnly.id);
   });
 
-  test('watchlisted-and-seen item is excluded from platformRecommended results', async () => {
+  test('item with a text review but no numeric rating is excluded from platformRecommended for alice', async () => {
+    const items = await mediaItemRepository.items({
+      userId: userAlice.id!,
+      orderBy: 'platformRecommended',
+    });
+    const ids = items.map((i) => i.id);
+
+    // Alice reviewed movieReviewOnly (review only, no star rating) — must not surface.
+    expect(ids).not.toContain(movieReviewOnly.id);
+  });
+
+  test('watchlisted item without a seen entry remains in platformRecommended results', async () => {
     // No seen entry exists in this suite, but movieOnWatchlist has no episodes
     // so it does not trigger the seen-completion exclusion.
     // The test verifies the watchlisted control item IS present (movies on the

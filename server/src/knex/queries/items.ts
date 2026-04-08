@@ -350,6 +350,9 @@ const applyPlatformRecommendedExclusions = (
       [groupId, groupId]
     );
 
+    // Group recommendations intentionally skip the per-user rated-item exclusion.
+    // For groups, any member's rated item may still be new content for another
+    // member — filtering on one user's ratings would unfairly narrow group results.
     return;
   }
 
@@ -382,11 +385,10 @@ const applyPlatformRecommendedExclusions = (
     )
   )`);
 
-  // Exclude items the current user has already rated — the `userRating` LEFT
-  // JOIN is scoped to the current user (see join definition above), so these
-  // WHERE NULL checks affect only that user's ratings.
-  query.whereNull('userRating.rating');
-  query.whereNull('userRating.review');
+  // Exclude items the current user has already rated. The `userRating` LEFT JOIN
+  // is scoped to the current user via andOnVal('userRating.userId', userId), so
+  // a NULL mediaItemId means no rating record exists for this user on this item.
+  query.whereNull('userRating.mediaItemId');
 };
 
 const applyRatedRecommendationExclusions = (
@@ -844,19 +846,6 @@ const getItemsKnexSql = async (args: GetItemsKnexArgs) => {
         .andOnNull('listItem.episodeId')
         .andOnVal('listItem.listId', watchlistId);
     })
-    // Cross-user list membership — used for platform-recommended base filter
-    .leftJoin(
-      (qb) =>
-        qb
-          .select('mediaItemId')
-          .from('listItem')
-          .whereNull('listItem.seasonId')
-          .whereNull('listItem.episodeId')
-          .groupBy('mediaItemId')
-          .as('anyListItem'),
-      'anyListItem.mediaItemId',
-      'mediaItem.id'
-    )
     // Upcoming episode
     .leftJoin<TvEpisode>(
       (qb) =>
@@ -992,7 +981,7 @@ const getItemsKnexSql = async (args: GetItemsKnexArgs) => {
           .as('progress'),
       'progress.mediaItemId',
       'mediaItem.id'
-    );
+    ) as unknown as LibraryQuery;
 
   // When platformRecommended sort with a specific group, join the group's cached ratings.
   // The LEFT JOIN is ONLY added when groupId is provided to avoid any performance impact
@@ -1015,10 +1004,10 @@ const getItemsKnexSql = async (args: GetItemsKnexArgs) => {
       //   1. applyPlatformRecommendedExclusions (already-seen/completed content)
       //   2. Fix B in applyPlatformRecommendedExclusions (already-rated by current user)
       //   3. Any caller-supplied filters (creators, genres, mediaType, etc.)
-      // Removing the anyListItem restriction lets items like a show that exists
-      // in the DB but has never been added to any watchlist still appear as
-      // recommendations (e.g. querying creators=Shonda Rhimes should surface all
-      // of her shows, not just those that some user happened to track).
+      // Removing the anyListItem restriction (done in Fix B1) lets items that
+      // exist in the DB but have never been added to any watchlist still appear
+      // as recommendations (e.g. querying creators=Shonda Rhimes should surface
+      // all of her shows, not just those that some user happened to track).
     } else {
       query.where((qb) =>
         qb
@@ -1335,19 +1324,6 @@ export const getFacetsKnex = async (
         .andOnNull('listItem.episodeId')
         .andOnVal('listItem.listId', watchlistId);
     })
-    // Cross-user list membership — used for platform-recommended base filter
-    .leftJoin(
-      (qb) =>
-        qb
-          .select('mediaItemId')
-          .from('listItem')
-          .whereNull('listItem.seasonId')
-          .whereNull('listItem.episodeId')
-          .groupBy('mediaItemId')
-          .as('anyListItem'),
-      'anyListItem.mediaItemId',
-      'mediaItem.id'
-    )
     // User rating join (needed for status filters)
     .leftJoin<UserRating>(
       (qb) =>
@@ -1362,7 +1338,7 @@ export const getFacetsKnex = async (
           .andOnVal('userRating.userId', userId)
           .andOnNull('userRating.episodeId')
           .andOnNull('userRating.seasonId')
-    );
+    ) as unknown as LibraryQuery;
 
   if (isPlatformRecommended) {
     // Platform-recommended facets scan the full catalog — no base filter on
