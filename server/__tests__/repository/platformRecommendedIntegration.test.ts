@@ -112,12 +112,24 @@ function clientSortByPlatformRecommended(items: ClientItem[]): ClientItem[] {
 // Integration test: rating write → cache update → sort query → correct order
 // ===========================================================================
 
+// A user who never rates anything — used as the viewer in sort-order assertions
+// so that Fix B (exclude already-rated items from platformRecommended) does not
+// hide items that the rating users themselves rated.
+const viewerUser = {
+  id: 2,
+  name: 'viewer',
+  admin: false,
+  password: 'x',
+  publicReviews: false,
+};
+
 describe('Platform Recommended Sort — end-to-end integration', () => {
   beforeAll(async () => {
     await runMigrations();
 
     await Database.knex('user').insert(Data.user);
     await Database.knex('user').insert(Data.user2);
+    await Database.knex('user').insert(viewerUser);
     await Database.knex('mediaItem').insert({
       ...Data.movie,
       tmdbRating: 7.0,
@@ -130,6 +142,22 @@ describe('Platform Recommended Sort — end-to-end integration', () => {
     await Database.knex('season').insert(Data.season);
     await Database.knex('episode').insert(Data.episode);
     await Database.knex('list').insert(Data.watchlist);
+    // Viewer user needs a watchlist so getWatchlistId does not throw.
+    // The viewer never adds items to it; anyListItem covers all items via
+    // Data.user's watchlist entries.
+    await Database.knex('list').insert({
+      id: 99,
+      userId: viewerUser.id,
+      name: 'Watchlist',
+      isWatchlist: true,
+      privacy: 'private',
+      sortBy: 'recently-added',
+      sortOrder: 'asc',
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      allowComments: false,
+      displayNumbers: false,
+    });
     // Add all media items to the watchlist
     await Database.knex('listItem').insert([
       {
@@ -159,13 +187,21 @@ describe('Platform Recommended Sort — end-to-end integration', () => {
       .whereIn('id', [Data.movie.id, Data.tvShow.id, Data.videoGame.id])
       .update({ platformRating: null });
     await Database.knex('listItem')
-      .whereIn('mediaItemId', [Data.movie.id, Data.tvShow.id, Data.videoGame.id])
+      .whereIn('mediaItemId', [
+        Data.movie.id,
+        Data.tvShow.id,
+        Data.videoGame.id,
+      ])
       .update({ estimatedRating: null });
 
     // autoMarkAsSeen removes top-level rated items from the watchlist.
     // Re-insert any listItems that were deleted so each test starts with a full set.
     const existingListItems = await Database.knex('listItem')
-      .whereIn('mediaItemId', [Data.movie.id, Data.tvShow.id, Data.videoGame.id])
+      .whereIn('mediaItemId', [
+        Data.movie.id,
+        Data.tvShow.id,
+        Data.videoGame.id,
+      ])
       .whereNull('seasonId')
       .whereNull('episodeId')
       .where('listId', Data.watchlist.id)
@@ -217,25 +253,15 @@ describe('Platform Recommended Sort — end-to-end integration', () => {
       expect(movieRow.platformRating).toBeCloseTo(8, 5);
 
       // autoMarkAsSeen marks the movie as seen and removes it from the watchlist.
-      // Clear those side effects before querying platform-recommended results so the
-      // test focuses on sort order, not watchlist removal behaviour.
+      // Clear seen entries so items are not filtered out by the seen-item exclusion.
       await Database.knex('seen').delete();
-      const movieListItem = await Database.knex('listItem')
-        .where({ listId: Data.watchlist.id, mediaItemId: Data.movie.id })
-        .whereNull('seasonId')
-        .whereNull('episodeId')
-        .first();
-      if (!movieListItem) {
-        await Database.knex('listItem').insert({
-          listId: Data.watchlist.id,
-          mediaItemId: Data.movie.id,
-          addedAt: Date.now(),
-        });
-      }
 
-      // Now query items with platform-recommended sort
+      // Query as viewerUser — a user who has never rated anything — so Fix B
+      // (exclude already-rated items from platformRecommended) does not hide the
+      // movie from the results, and we can verify sort order purely on score.
+      // anyListItem covers the items via Data.user's watchlist entries.
       const items = await mediaItemRepository.items({
-        userId: Data.user.id,
+        userId: viewerUser.id,
         orderBy: 'platformRecommended',
         sortOrder: 'desc',
       });
@@ -321,38 +347,16 @@ describe('Platform Recommended Sort — end-to-end integration', () => {
       global.setImmediate = mock3.originalSetImmediate;
     }
 
-    // autoMarkAsSeen marks rated items as seen and removes top-level rated items
-    // from the watchlist. Restore those rows before querying platform-recommended
-    // results so the test focuses on platformRating sort order.
+    // autoMarkAsSeen marks rated items as seen and removes them from the watchlist.
+    // Clear seen entries so items are not excluded by the seen-item filter.
     await Database.knex('seen').delete();
-    const movieListItemAfterRating = await Database.knex('listItem')
-      .where({ listId: Data.watchlist.id, mediaItemId: Data.movie.id })
-      .whereNull('seasonId')
-      .whereNull('episodeId')
-      .first();
-    if (!movieListItemAfterRating) {
-      await Database.knex('listItem').insert({
-        listId: Data.watchlist.id,
-        mediaItemId: Data.movie.id,
-        addedAt: Date.now(),
-      });
-    }
-    const tvShowListItemAfterRating = await Database.knex('listItem')
-      .where({ listId: Data.watchlist.id, mediaItemId: Data.tvShow.id })
-      .whereNull('seasonId')
-      .whereNull('episodeId')
-      .first();
-    if (!tvShowListItemAfterRating) {
-      await Database.knex('listItem').insert({
-        listId: Data.watchlist.id,
-        mediaItemId: Data.tvShow.id,
-        addedAt: Date.now(),
-      });
-    }
 
-    // Query items sorted by platform-recommended
+    // Query as viewerUser — a user who has never rated anything — so Fix B
+    // (exclude already-rated items from platformRecommended) does not hide the
+    // rated items, and we can verify sort order purely on platformRating scores.
+    // anyListItem covers the items via Data.user's watchlist entries.
     const items = await mediaItemRepository.items({
-      userId: Data.user.id,
+      userId: viewerUser.id,
       orderBy: 'platformRecommended',
       sortOrder: 'desc',
     });
@@ -422,9 +426,12 @@ describe('Platform Recommended Sort — end-to-end integration', () => {
       .first();
     expect(movieRow.platformRating).toBeCloseTo(9, 5);
 
-    // Verify sort reflects updated score
+    // Query as viewerUser — a user who has never rated anything — so Fix B
+    // (exclude already-rated items from platformRecommended) does not hide the
+    // movie from the results, and we can verify sort order on the updated score.
+    // anyListItem covers the items via Data.user's watchlist entries.
     const items = await mediaItemRepository.items({
-      userId: Data.user.id,
+      userId: viewerUser.id,
       orderBy: 'platformRecommended',
       sortOrder: 'desc',
     });
@@ -467,6 +474,43 @@ describe('Platform Recommended Sort — end-to-end integration', () => {
     expect(tier2Items.every((i) => !i.platformRating)).toBe(true);
     expect(tier2Items[0].title).toBe('title'); // tvShow: tmdbRating=8.0
     expect(tier2Items[1].title).toBe('movie'); // movie: tmdbRating=7.0
+  });
+
+  // ─── Fix B2: rater does not see their own rated items in recommendations ─────
+
+  test('user does not see their own rated items in platformRecommended results (Fix B2)', async () => {
+    const ratingController = new RatingController();
+    const mock = mockSetImmediate();
+
+    try {
+      // Data.user rates the movie
+      const res = await request(ratingController.add, {
+        userId: Data.user.id,
+        requestBody: { mediaItemId: Data.movie.id, rating: 9 },
+      });
+      expect(res.statusCode).toEqual(200);
+
+      await executeSetImmediateCallbacks(
+        mock.capturedCallbacks,
+        mock.originalSetImmediate
+      );
+
+      // autoMarkAsSeen may mark the movie as seen — clear seen entries so the
+      // seen-item exclusion does not interfere with the rated-item exclusion.
+      await Database.knex('seen').delete();
+
+      // Query as Data.user (the rater) — the movie they rated must not appear.
+      const items = await mediaItemRepository.items({
+        userId: Data.user.id,
+        orderBy: 'platformRecommended',
+        sortOrder: 'desc',
+      });
+      const ids = items.map((i) => i.id);
+
+      expect(ids).not.toContain(Data.movie.id);
+    } finally {
+      global.setImmediate = mock.originalSetImmediate;
+    }
   });
 });
 
@@ -646,13 +690,7 @@ describe('Platform Recommended Sort — client/server consistency', () => {
     // 4. Delta (null platformRating → last, alphabetically)
     // 5. Echo  (null platformRating → last, alphabetically)
     expect(serverOrder).toEqual(clientOrder);
-    expect(serverOrder).toEqual([
-      'Alpha',
-      'Beta',
-      'Charlie',
-      'Delta',
-      'Echo',
-    ]);
+    expect(serverOrder).toEqual(['Alpha', 'Beta', 'Charlie', 'Delta', 'Echo']);
   });
 
   test('client and server agree on ordering when sortOrder is asc (score-based sorts ignore direction)', async () => {
@@ -800,7 +838,11 @@ describe('Platform Recommended Sort — listRepository.items() integration', () 
       .whereIn('id', [Data.movie.id, Data.tvShow.id, Data.videoGame.id])
       .update({ platformRating: null });
     await Database.knex('listItem')
-      .whereIn('mediaItemId', [Data.movie.id, Data.tvShow.id, Data.videoGame.id])
+      .whereIn('mediaItemId', [
+        Data.movie.id,
+        Data.tvShow.id,
+        Data.videoGame.id,
+      ])
       .update({ estimatedRating: null });
   });
 

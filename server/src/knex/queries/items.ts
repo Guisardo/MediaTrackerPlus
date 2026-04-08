@@ -41,7 +41,10 @@ const applyTranslationOverlay = async (
     return items;
   }
 
-  const translationMap = await getMediaItemTranslations(ids, preferredLanguages);
+  const translationMap = await getMediaItemTranslations(
+    ids,
+    preferredLanguages
+  );
 
   return items.map((item) => {
     if (item.id == null) {
@@ -350,6 +353,9 @@ const applyPlatformRecommendedExclusions = (
       [groupId, groupId]
     );
 
+    // Group recommendations intentionally skip the per-user rated-item exclusion.
+    // For groups, any member's rated item may still be new content for another
+    // member — filtering on one user's ratings would unfairly narrow group results.
     return;
   }
 
@@ -381,6 +387,11 @@ const applyPlatformRecommendedExclusions = (
       ) AS "completed_users"
     )
   )`);
+
+  // Exclude items the current user has already rated. The `userRating` LEFT JOIN
+  // is scoped to the current user via andOnVal('userRating.userId', userId), so
+  // a NULL mediaItemId means no rating record exists for this user on this item.
+  query.whereNull('userRating.mediaItemId');
 };
 
 const applyRatedRecommendationExclusions = (
@@ -458,10 +469,7 @@ const applyItemOrdering = (
     return;
   }
 
-  if (
-    sortOrder.toLowerCase() !== 'asc' &&
-    sortOrder.toLowerCase() !== 'desc'
-  ) {
+  if (sortOrder.toLowerCase() !== 'asc' && sortOrder.toLowerCase() !== 'desc') {
     throw new Error('Sort order should by either asc or desc');
   }
 
@@ -536,7 +544,9 @@ const applyItemOrdering = (
 
     case 'platformRecommended':
       if (groupId != null) {
-        query.orderByRaw(`CASE WHEN "gpr"."rating" IS NULL THEN 1 ELSE 0 END ASC`);
+        query.orderByRaw(
+          `CASE WHEN "gpr"."rating" IS NULL THEN 1 ELSE 0 END ASC`
+        );
         query.orderByRaw(`CASE
                             WHEN "gpr"."rating" IS NOT NULL AND "mediaItem"."tmdbRating" IS NOT NULL
                               THEN ("gpr"."rating" * 0.7 + "mediaItem"."tmdbRating" * 0.3)
@@ -564,10 +574,8 @@ const applyItemOrdering = (
   }
 };
 
-const mapImagePath = (
-  imageId: unknown,
-  suffix = ''
-): string | null => (imageId ? `/img/${imageId}${suffix}` : null);
+const mapImagePath = (imageId: unknown, suffix = ''): string | null =>
+  imageId ? `/img/${imageId}${suffix}` : null;
 
 const mapUserRating = (row: RawMediaItemRow) =>
   row['userRating.id']
@@ -638,8 +646,8 @@ export const getItemsKnex = async (
     metadataLanguagePreferences && metadataLanguagePreferences.length > 0
       ? metadataLanguagePreferences
       : language
-        ? [language]
-        : [];
+      ? [language]
+      : [];
   const { sqlQuery, sqlCountQuery, sqlPaginationQuery } = await getItemsKnexSql(
     args
   );
@@ -838,19 +846,6 @@ const getItemsKnexSql = async (args: GetItemsKnexArgs) => {
         .andOnNull('listItem.episodeId')
         .andOnVal('listItem.listId', watchlistId);
     })
-    // Cross-user list membership — used for platform-recommended base filter
-    .leftJoin(
-      (qb) =>
-        qb
-          .select('mediaItemId')
-          .from('listItem')
-          .whereNull('listItem.seasonId')
-          .whereNull('listItem.episodeId')
-          .groupBy('mediaItemId')
-          .as('anyListItem'),
-      'anyListItem.mediaItemId',
-      'mediaItem.id'
-    )
     // Upcoming episode
     .leftJoin<TvEpisode>(
       (qb) =>
@@ -986,7 +981,7 @@ const getItemsKnexSql = async (args: GetItemsKnexArgs) => {
           .as('progress'),
       'progress.mediaItemId',
       'mediaItem.id'
-    );
+    ) as unknown as LibraryQuery;
 
   // When platformRecommended sort with a specific group, join the group's cached ratings.
   // The LEFT JOIN is ONLY added when groupId is provided to avoid any performance impact
@@ -1004,15 +999,22 @@ const getItemsKnexSql = async (args: GetItemsKnexArgs) => {
     query.whereIn('mediaItem.id', mediaItemIds);
   } else {
     if (isPlatformRecommended) {
-      // For platform-recommended, surface items from ALL users' lists so
-      // cross-content-type recommendations appear regardless of what the
-      // current user personally added to their watchlist.
-      query.whereNotNull('anyListItem.mediaItemId');
+      // Platform-recommended mode scans the full catalog — no base filter on
+      // user interactions. Items are narrowed by:
+      //   1. applyPlatformRecommendedExclusions (already-seen/completed content)
+      //   2. Fix B in applyPlatformRecommendedExclusions (already-rated by current user)
+      //   3. Any caller-supplied filters (creators, genres, mediaType, etc.)
+      // Removing the anyListItem restriction (done in Fix B1) lets items that
+      // exist in the DB but have never been added to any watchlist still appear
+      // as recommendations (e.g. querying creators=Shonda Rhimes should surface
+      // all of her shows, not just those that some user happened to track).
     } else {
       query.where((qb) =>
         qb
           .whereNotNull('listItem.mediaItemId')
           .orWhereNotNull('lastSeen.mediaItemId')
+          .orWhereNotNull('userRating.rating')
+          .orWhereNotNull('userRating.review')
       );
     }
 
@@ -1222,17 +1224,11 @@ const mapRawResult = (row: RawMediaItemRow): MediaItemItemsResponse => {
         ? row['lastAiredEpisode.releaseDate']
         : row['mediaItem.releaseDate'],
     userRating: mapUserRating(row),
-    firstUnwatchedEpisode: mapEpisodeRow(
-      row,
-      'firstUnwatchedEpisode',
-      'id'
-    ),
-    upcomingEpisode: mapEpisodeRow(
-      row,
-      'upcomingEpisode',
-      'releaseDate',
-      { seen: false, includeSeen: true }
-    ),
+    firstUnwatchedEpisode: mapEpisodeRow(row, 'firstUnwatchedEpisode', 'id'),
+    upcomingEpisode: mapEpisodeRow(row, 'upcomingEpisode', 'releaseDate', {
+      seen: false,
+      includeSeen: true,
+    }),
     lastAiredEpisode: mapEpisodeRow(row, 'lastAiredEpisode', 'id', {
       seen: false,
       includeSeen: true,
@@ -1322,19 +1318,6 @@ export const getFacetsKnex = async (
         .andOnNull('listItem.episodeId')
         .andOnVal('listItem.listId', watchlistId);
     })
-    // Cross-user list membership — used for platform-recommended base filter
-    .leftJoin(
-      (qb) =>
-        qb
-          .select('mediaItemId')
-          .from('listItem')
-          .whereNull('listItem.seasonId')
-          .whereNull('listItem.episodeId')
-          .groupBy('mediaItemId')
-          .as('anyListItem'),
-      'anyListItem.mediaItemId',
-      'mediaItem.id'
-    )
     // User rating join (needed for status filters)
     .leftJoin<UserRating>(
       (qb) =>
@@ -1349,18 +1332,21 @@ export const getFacetsKnex = async (
           .andOnVal('userRating.userId', userId)
           .andOnNull('userRating.episodeId')
           .andOnNull('userRating.seasonId')
-    );
+    ) as unknown as LibraryQuery;
 
   if (isPlatformRecommended) {
-    // For platform-recommended, compute facets across ALL users' lists so the
-    // Media Type facet reflects the full cross-content-type recommendation set.
-    query.whereNotNull('anyListItem.mediaItemId');
+    // Platform-recommended facets scan the full catalog — no base filter on
+    // user interactions, mirroring the getItemsKnexSql behaviour.
+    // Facet counts are computed across all items that would pass the active
+    // filters (creators, genres, mediaType, etc.) so the panel stays accurate.
   } else {
-    // User-scoping: only items in user's library (on watchlist OR seen)
+    // User-scoping: only items in user's library (on watchlist OR seen OR rated)
     query.where((qb) =>
       qb
         .whereNotNull('listItem.mediaItemId')
         .orWhereNotNull('lastSeen.mediaItemId')
+        .orWhereNotNull('userRating.rating')
+        .orWhereNotNull('userRating.review')
     );
   }
 
