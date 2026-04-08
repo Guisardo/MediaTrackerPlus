@@ -381,6 +381,12 @@ const applyPlatformRecommendedExclusions = (
       ) AS "completed_users"
     )
   )`);
+
+  // Exclude items the current user has already rated — the `userRating` LEFT
+  // JOIN is scoped to the current user (see join definition above), so these
+  // WHERE NULL checks affect only that user's ratings.
+  query.whereNull('userRating.rating');
+  query.whereNull('userRating.review');
 };
 
 const applyRatedRecommendationExclusions = (
@@ -1004,15 +1010,22 @@ const getItemsKnexSql = async (args: GetItemsKnexArgs) => {
     query.whereIn('mediaItem.id', mediaItemIds);
   } else {
     if (isPlatformRecommended) {
-      // For platform-recommended, surface items from ALL users' lists so
-      // cross-content-type recommendations appear regardless of what the
-      // current user personally added to their watchlist.
-      query.whereNotNull('anyListItem.mediaItemId');
+      // Platform-recommended mode scans the full catalog — no base filter on
+      // user interactions. Items are narrowed by:
+      //   1. applyPlatformRecommendedExclusions (already-seen/completed content)
+      //   2. Fix B in applyPlatformRecommendedExclusions (already-rated by current user)
+      //   3. Any caller-supplied filters (creators, genres, mediaType, etc.)
+      // Removing the anyListItem restriction lets items like a show that exists
+      // in the DB but has never been added to any watchlist still appear as
+      // recommendations (e.g. querying creators=Shonda Rhimes should surface all
+      // of her shows, not just those that some user happened to track).
     } else {
       query.where((qb) =>
         qb
           .whereNotNull('listItem.mediaItemId')
           .orWhereNotNull('lastSeen.mediaItemId')
+          .orWhereNotNull('userRating.rating')
+          .orWhereNotNull('userRating.review')
       );
     }
 
@@ -1352,15 +1365,18 @@ export const getFacetsKnex = async (
     );
 
   if (isPlatformRecommended) {
-    // For platform-recommended, compute facets across ALL users' lists so the
-    // Media Type facet reflects the full cross-content-type recommendation set.
-    query.whereNotNull('anyListItem.mediaItemId');
+    // Platform-recommended facets scan the full catalog — no base filter on
+    // user interactions, mirroring the getItemsKnexSql behaviour.
+    // Facet counts are computed across all items that would pass the active
+    // filters (creators, genres, mediaType, etc.) so the panel stays accurate.
   } else {
-    // User-scoping: only items in user's library (on watchlist OR seen)
+    // User-scoping: only items in user's library (on watchlist OR seen OR rated)
     query.where((qb) =>
       qb
         .whereNotNull('listItem.mediaItemId')
         .orWhereNotNull('lastSeen.mediaItemId')
+        .orWhereNotNull('userRating.rating')
+        .orWhereNotNull('userRating.review')
     );
   }
 
