@@ -41,7 +41,10 @@ const applyTranslationOverlay = async (
     return items;
   }
 
-  const translationMap = await getMediaItemTranslations(ids, preferredLanguages);
+  const translationMap = await getMediaItemTranslations(
+    ids,
+    preferredLanguages
+  );
 
   return items.map((item) => {
     if (item.id == null) {
@@ -466,10 +469,7 @@ const applyItemOrdering = (
     return;
   }
 
-  if (
-    sortOrder.toLowerCase() !== 'asc' &&
-    sortOrder.toLowerCase() !== 'desc'
-  ) {
+  if (sortOrder.toLowerCase() !== 'asc' && sortOrder.toLowerCase() !== 'desc') {
     throw new Error('Sort order should by either asc or desc');
   }
 
@@ -544,7 +544,9 @@ const applyItemOrdering = (
 
     case 'platformRecommended':
       if (groupId != null) {
-        query.orderByRaw(`CASE WHEN "gpr"."rating" IS NULL THEN 1 ELSE 0 END ASC`);
+        query.orderByRaw(
+          `CASE WHEN "gpr"."rating" IS NULL THEN 1 ELSE 0 END ASC`
+        );
         query.orderByRaw(`CASE
                             WHEN "gpr"."rating" IS NOT NULL AND "mediaItem"."tmdbRating" IS NOT NULL
                               THEN ("gpr"."rating" * 0.7 + "mediaItem"."tmdbRating" * 0.3)
@@ -572,10 +574,8 @@ const applyItemOrdering = (
   }
 };
 
-const mapImagePath = (
-  imageId: unknown,
-  suffix = ''
-): string | null => (imageId ? `/img/${imageId}${suffix}` : null);
+const mapImagePath = (imageId: unknown, suffix = ''): string | null =>
+  imageId ? `/img/${imageId}${suffix}` : null;
 
 const mapUserRating = (row: RawMediaItemRow) =>
   row['userRating.id']
@@ -646,8 +646,8 @@ export const getItemsKnex = async (
     metadataLanguagePreferences && metadataLanguagePreferences.length > 0
       ? metadataLanguagePreferences
       : language
-        ? [language]
-        : [];
+      ? [language]
+      : [];
   const { sqlQuery, sqlCountQuery, sqlPaginationQuery } = await getItemsKnexSql(
     args
   );
@@ -1224,17 +1224,11 @@ const mapRawResult = (row: RawMediaItemRow): MediaItemItemsResponse => {
         ? row['lastAiredEpisode.releaseDate']
         : row['mediaItem.releaseDate'],
     userRating: mapUserRating(row),
-    firstUnwatchedEpisode: mapEpisodeRow(
-      row,
-      'firstUnwatchedEpisode',
-      'id'
-    ),
-    upcomingEpisode: mapEpisodeRow(
-      row,
-      'upcomingEpisode',
-      'releaseDate',
-      { seen: false, includeSeen: true }
-    ),
+    firstUnwatchedEpisode: mapEpisodeRow(row, 'firstUnwatchedEpisode', 'id'),
+    upcomingEpisode: mapEpisodeRow(row, 'upcomingEpisode', 'releaseDate', {
+      seen: false,
+      includeSeen: true,
+    }),
     lastAiredEpisode: mapEpisodeRow(row, 'lastAiredEpisode', 'id', {
       seen: false,
       includeSeen: true,

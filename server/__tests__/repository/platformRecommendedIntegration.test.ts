@@ -115,7 +115,13 @@ function clientSortByPlatformRecommended(items: ClientItem[]): ClientItem[] {
 // A user who never rates anything — used as the viewer in sort-order assertions
 // so that Fix B (exclude already-rated items from platformRecommended) does not
 // hide items that the rating users themselves rated.
-const viewerUser = { id: 2, name: 'viewer', admin: false, password: 'x', publicReviews: false };
+const viewerUser = {
+  id: 2,
+  name: 'viewer',
+  admin: false,
+  password: 'x',
+  publicReviews: false,
+};
 
 describe('Platform Recommended Sort — end-to-end integration', () => {
   beforeAll(async () => {
@@ -181,13 +187,21 @@ describe('Platform Recommended Sort — end-to-end integration', () => {
       .whereIn('id', [Data.movie.id, Data.tvShow.id, Data.videoGame.id])
       .update({ platformRating: null });
     await Database.knex('listItem')
-      .whereIn('mediaItemId', [Data.movie.id, Data.tvShow.id, Data.videoGame.id])
+      .whereIn('mediaItemId', [
+        Data.movie.id,
+        Data.tvShow.id,
+        Data.videoGame.id,
+      ])
       .update({ estimatedRating: null });
 
     // autoMarkAsSeen removes top-level rated items from the watchlist.
     // Re-insert any listItems that were deleted so each test starts with a full set.
     const existingListItems = await Database.knex('listItem')
-      .whereIn('mediaItemId', [Data.movie.id, Data.tvShow.id, Data.videoGame.id])
+      .whereIn('mediaItemId', [
+        Data.movie.id,
+        Data.tvShow.id,
+        Data.videoGame.id,
+      ])
       .whereNull('seasonId')
       .whereNull('episodeId')
       .where('listId', Data.watchlist.id)
@@ -676,13 +690,7 @@ describe('Platform Recommended Sort — client/server consistency', () => {
     // 4. Delta (null platformRating → last, alphabetically)
     // 5. Echo  (null platformRating → last, alphabetically)
     expect(serverOrder).toEqual(clientOrder);
-    expect(serverOrder).toEqual([
-      'Alpha',
-      'Beta',
-      'Charlie',
-      'Delta',
-      'Echo',
-    ]);
+    expect(serverOrder).toEqual(['Alpha', 'Beta', 'Charlie', 'Delta', 'Echo']);
   });
 
   test('client and server agree on ordering when sortOrder is asc (score-based sorts ignore direction)', async () => {
@@ -830,7 +838,11 @@ describe('Platform Recommended Sort — listRepository.items() integration', () 
       .whereIn('id', [Data.movie.id, Data.tvShow.id, Data.videoGame.id])
       .update({ platformRating: null });
     await Database.knex('listItem')
-      .whereIn('mediaItemId', [Data.movie.id, Data.tvShow.id, Data.videoGame.id])
+      .whereIn('mediaItemId', [
+        Data.movie.id,
+        Data.tvShow.id,
+        Data.videoGame.id,
+      ])
       .update({ estimatedRating: null });
   });
 
