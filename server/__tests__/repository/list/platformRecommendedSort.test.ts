@@ -460,7 +460,9 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — SQL 
       // NoRatings has neither platformRating nor tmdbRating — must be last
       expect(items[items.length - 1].title).toBe('NoRatings');
     } finally {
-      await Database.knex('listItem').where('mediaItemId', itemNoRatings.id).delete();
+      await Database.knex('listItem')
+        .where('mediaItemId', itemNoRatings.id)
+        .delete();
       await Database.knex('mediaItem').where('id', itemNoRatings.id).delete();
     }
   });
@@ -559,8 +561,16 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — SQL 
     await Database.knex('mediaItem').insert(itemZeroRating);
     await Database.knex('mediaItem').insert(itemNoRatings);
     await Database.knex('listItem').insert([
-      { listId: watchlist.id, mediaItemId: itemZeroRating.id, addedAt: Date.now() },
-      { listId: watchlist.id, mediaItemId: itemNoRatings.id, addedAt: Date.now() },
+      {
+        listId: watchlist.id,
+        mediaItemId: itemZeroRating.id,
+        addedAt: Date.now(),
+      },
+      {
+        listId: watchlist.id,
+        mediaItemId: itemNoRatings.id,
+        addedAt: Date.now(),
+      },
     ]);
 
     try {
@@ -571,7 +581,9 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — SQL 
       });
 
       const zeroRatedIndex = items.findIndex((i) => i.title === 'ZeroRated');
-      const trulyUnratedIndex = items.findIndex((i) => i.title === 'TrulyUnrated');
+      const trulyUnratedIndex = items.findIndex(
+        (i) => i.title === 'TrulyUnrated'
+      );
 
       // ZeroRated has platformRating=0 (valid scored item, score=0)
       // TrulyUnrated has no ratings at all → sorts last
@@ -632,7 +644,9 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — SQL 
       expect(items[2].title).toBe('Aaaa');
       expect(items[3].title).toBe('Gamma');
     } finally {
-      await Database.knex('listItem').where('mediaItemId', itemAaaa.id).delete();
+      await Database.knex('listItem')
+        .where('mediaItemId', itemAaaa.id)
+        .delete();
       await Database.knex('mediaItem').where('id', itemAaaa.id).delete();
     }
   });
@@ -687,8 +701,16 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — excl
     await Database.knex('mediaItem').insert(watchedMovie);
     await Database.knex('list').insert(watchlist);
     await Database.knex('listItem').insert([
-      { listId: watchlist.id, mediaItemId: unwatchedMovie.id, addedAt: Date.now() },
-      { listId: watchlist.id, mediaItemId: watchedMovie.id, addedAt: Date.now() },
+      {
+        listId: watchlist.id,
+        mediaItemId: unwatchedMovie.id,
+        addedAt: Date.now(),
+      },
+      {
+        listId: watchlist.id,
+        mediaItemId: watchedMovie.id,
+        addedAt: Date.now(),
+      },
     ]);
     // user2 has watched 'Watched Movie' (non-TV: seen entry with episodeId IS NULL)
     await Database.knex('seen').insert({
@@ -765,7 +787,7 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended' }) — excl
 // types they personally have added.
 // ---------------------------------------------------------------------------
 
-describe("listRepository.items() — platform-recommended scope covers all platform lists", () => {
+describe('listRepository.items() — platform-recommended scope covers all platform lists', () => {
   const userLucas = { id: 50, name: 'lucas', password: 'password' };
   const userVioleta = { id: 51, name: 'violeta', password: 'password' };
 

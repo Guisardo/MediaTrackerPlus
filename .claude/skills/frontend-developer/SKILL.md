@@ -11,14 +11,14 @@ Implements, refactors, and migrates UI for the MediaTrackerPlus `client/` direct
 
 ## Quick Reference
 
-| Task | Reference |
-|---|---|
-| Component patterns, props, composition | [COMPONENTS.md](COMPONENTS.md) |
-| Styling rules, Tailwind v3→v4 migration guide | [STYLING.md](STYLING.md) |
-| shadcn/ui component inventory | [COMPONENTS.md](COMPONENTS.md) |
-| i18n macros and RTL | Agent system prompt |
-| API hooks and React Query | Agent system prompt |
-| Test setup | Agent system prompt |
+| Task                                          | Reference                      |
+| --------------------------------------------- | ------------------------------ |
+| Component patterns, props, composition        | [COMPONENTS.md](COMPONENTS.md) |
+| Styling rules, Tailwind v3→v4 migration guide | [STYLING.md](STYLING.md)       |
+| shadcn/ui component inventory                 | [COMPONENTS.md](COMPONENTS.md) |
+| i18n macros and RTL                           | Agent system prompt            |
+| API hooks and React Query                     | Agent system prompt            |
+| Test setup                                    | Agent system prompt            |
 
 ## Decision Tree
 
@@ -48,39 +48,39 @@ User asks about UI/frontend
 
 The app tracks five media types — every component that handles content needs to support all five:
 
-| Media Type | Route | Key Fields |
-|---|---|---|
-| `movie` | `/movies` | title, poster, releaseDate, runtime |
-| `tv` | `/tv` | title, poster, seasons, episodes |
-| `game` | `/games` | title, cover, releaseDate, platform |
-| `book` | `/books` | title, cover, author, pages |
+| Media Type  | Route         | Key Fields                               |
+| ----------- | ------------- | ---------------------------------------- |
+| `movie`     | `/movies`     | title, poster, releaseDate, runtime      |
+| `tv`        | `/tv`         | title, poster, seasons, episodes         |
+| `game`      | `/games`      | title, cover, releaseDate, platform      |
+| `book`      | `/books`      | title, cover, author, pages              |
 | `audiobook` | `/audiobooks` | title, cover, author, narrator, duration |
 
 ## Key Pages (31 total)
 
-| Page | Path | Purpose |
-|---|---|---|
-| `GridPage` | `/movies`, `/tv`, etc. | Paginated poster grid with facets |
-| `DetailsPage` | `/details/:id` | Full media item details |
-| `SeasonsPage` | `/seasons/:id` | TV season list |
-| `EpisodePage` | `/episode/:id` | Episode details + progress |
-| `UpcomingPage` | `/upcoming` | Items with upcoming release |
-| `WatchlistPage` | `/watchlist` | User's watchlist |
-| `CalendarPage` | `/calendar` | FullCalendar release calendar |
-| `StatisticsPage` | `/statistics` | Viewing statistics charts |
-| `GroupsPage` | `/groups` | User group management |
-| `SettingsPage` | `/settings` | App configuration |
-| `ImportPage` | `/import` | Trakt/Goodreads import |
+| Page             | Path                   | Purpose                           |
+| ---------------- | ---------------------- | --------------------------------- |
+| `GridPage`       | `/movies`, `/tv`, etc. | Paginated poster grid with facets |
+| `DetailsPage`    | `/details/:id`         | Full media item details           |
+| `SeasonsPage`    | `/seasons/:id`         | TV season list                    |
+| `EpisodePage`    | `/episode/:id`         | Episode details + progress        |
+| `UpcomingPage`   | `/upcoming`            | Items with upcoming release       |
+| `WatchlistPage`  | `/watchlist`           | User's watchlist                  |
+| `CalendarPage`   | `/calendar`            | FullCalendar release calendar     |
+| `StatisticsPage` | `/statistics`          | Viewing statistics charts         |
+| `GroupsPage`     | `/groups`              | User group management             |
+| `SettingsPage`   | `/settings`            | App configuration                 |
+| `ImportPage`     | `/import`              | Trakt/Goodreads import            |
 
 ## Current Styling State
 
 The codebase has four overlapping styling systems. Consolidation to Tailwind-only is in progress:
 
-| System | Status | Action |
-|---|---|---|
-| Tailwind CSS v3 | Active — primary | Keep, migrate to v4 |
-| styled-components v5 | Active — GridItem.tsx and others | Remove on contact |
-| SCSS/SASS (main.scss) | Active — grid mixins, base | Remove on contact |
-| Plain CSS (dark.css, etc.) | Active — theme overrides | Consolidate into Tailwind |
+| System                     | Status                           | Action                    |
+| -------------------------- | -------------------------------- | ------------------------- |
+| Tailwind CSS v3            | Active — primary                 | Keep, migrate to v4       |
+| styled-components v5       | Active — GridItem.tsx and others | Remove on contact         |
+| SCSS/SASS (main.scss)      | Active — grid mixins, base       | Remove on contact         |
+| Plain CSS (dark.css, etc.) | Active — theme overrides         | Consolidate into Tailwind |
 
 See [STYLING.md](STYLING.md) for the complete migration guide.

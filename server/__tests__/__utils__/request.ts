@@ -78,19 +78,21 @@ export const request = (
     // If the handler returns a promise, resolve when it completes
     // (handles cases where handler calls res.status() without res.send())
     if ((result as unknown) && typeof (result as any).then === 'function') {
-      (result as unknown as Promise<void>).then(() => {
-        if (!resolved) {
-          resolved = true;
-          resolve({
-            statusCode: currentStatusCode,
-          });
-        }
-      }).catch((err) => {
-        if (!resolved) {
-          resolved = true;
-          reject(err);
-        }
-      });
+      (result as unknown as Promise<void>)
+        .then(() => {
+          if (!resolved) {
+            resolved = true;
+            resolve({
+              statusCode: currentStatusCode,
+            });
+          }
+        })
+        .catch((err) => {
+          if (!resolved) {
+            resolved = true;
+            reject(err);
+          }
+        });
     }
   });
 };

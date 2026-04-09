@@ -507,9 +507,7 @@ describe('US-023: Content List Facets Integration Tests', () => {
       });
 
       // Should only contain items matching the rating range
-      const mtMap = new Map(
-        facets.mediaTypes.map((m) => [m.value, m.count])
-      );
+      const mtMap = new Map(facets.mediaTypes.map((m) => [m.value, m.count]));
       // video_game: Elden Ring (9.2) only, not Witcher 3 (no rating)
       expect(mtMap.get('video_game')).toBe(1);
       // movie: Inception (9.0) + Interstellar (8.5) = 2
@@ -602,9 +600,7 @@ describe('US-023: Content List Facets Integration Tests', () => {
       });
 
       expect(facets.publishers.length).toBeGreaterThan(0);
-      const pubMap = new Map(
-        facets.publishers.map((p) => [p.value, p.count])
-      );
+      const pubMap = new Map(facets.publishers.map((p) => [p.value, p.count]));
       expect(pubMap.get('CD Projekt')).toBe(1);
       expect(pubMap.get('Bandai Namco')).toBe(1);
     });
@@ -742,9 +738,7 @@ describe('US-023: Content List Facets Integration Tests', () => {
       });
 
       // Only 3 rated items: 2 movies (Inception, Interstellar) + 1 TV (Breaking Bad)
-      const mtMap = new Map(
-        facets.mediaTypes.map((m) => [m.value, m.count])
-      );
+      const mtMap = new Map(facets.mediaTypes.map((m) => [m.value, m.count]));
       expect(mtMap.get('movie')).toBe(2);
       expect(mtMap.get('tv')).toBe(1);
       expect(mtMap.get('video_game')).toBeUndefined();
@@ -762,9 +756,7 @@ describe('US-023: Content List Facets Integration Tests', () => {
       });
 
       expect(facets.mediaTypes.length).toBeGreaterThan(0);
-      const mtMap = new Map(
-        facets.mediaTypes.map((m) => [m.value, m.count])
-      );
+      const mtMap = new Map(facets.mediaTypes.map((m) => [m.value, m.count]));
       expect(mtMap.get('movie')).toBe(3); // Inception, Lucy, Interstellar
       expect(mtMap.get('tv')).toBe(2); // Breaking Bad, Alternate SciFi
       expect(mtMap.get('video_game')).toBe(2); // Witcher 3, Elden Ring
@@ -1207,9 +1199,7 @@ describe('US-023: Content List Facets Integration Tests', () => {
       expect(facets.languages.length).toBe(1);
       expect(facets.languages[0].value).toBe('es');
 
-      const mtMap = new Map(
-        facets.mediaTypes.map((m) => [m.value, m.count])
-      );
+      const mtMap = new Map(facets.mediaTypes.map((m) => [m.value, m.count]));
       expect(mtMap.get('movie')).toBe(1);
       expect(mtMap.size).toBe(1); // only movie type
     });

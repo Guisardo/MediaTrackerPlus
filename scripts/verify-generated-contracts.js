@@ -10,7 +10,12 @@ const restApiContractsPath = path.join(
   'generated',
   'data-contracts.ts'
 );
-const restApiClientPath = path.join(rootDir, 'rest-api', 'generated', 'http-client.ts');
+const restApiClientPath = path.join(
+  rootDir,
+  'rest-api',
+  'generated',
+  'http-client.ts'
+);
 
 const fail = (message) => {
   console.error(message);
@@ -72,7 +77,9 @@ if (Object.keys(paths).length === 0) {
 const requiredPaths = ['/api/details/{mediaItemId}', '/api/items'];
 for (const requiredPath of requiredPaths) {
   if (!(requiredPath in paths)) {
-    fail(`Generated OpenAPI document is missing required path: ${requiredPath}`);
+    fail(
+      `Generated OpenAPI document is missing required path: ${requiredPath}`
+    );
   }
 }
 
@@ -99,7 +106,8 @@ const requiredEntryExports = [
   "export * from './generated/http-client';",
   "export * from './generated/ItemsRoute';",
   "export * from './generated/StatisticsRoute';",
-  'export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {',
+  'export class Api<',
+  'extends HttpClient<SecurityDataType>',
   'items = new ItemsApi<SecurityDataType>(this);',
   'statistics = new StatisticsApi<SecurityDataType>(this);',
   'group = new GroupApi<SecurityDataType>(this);',
@@ -108,7 +116,9 @@ const requiredEntryExports = [
 
 for (const requiredSnippet of requiredEntryExports) {
   if (!restApiEntry.includes(requiredSnippet)) {
-    fail(`rest-api entrypoint is missing compatibility export: ${requiredSnippet}`);
+    fail(
+      `rest-api entrypoint is missing compatibility export: ${requiredSnippet}`
+    );
   }
 }
 

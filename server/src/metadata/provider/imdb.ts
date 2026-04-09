@@ -112,7 +112,7 @@ const IMDB_PARENTAL_GUIDE_GRAPHQL_QUERY = `
 `;
 
 const IMDB_HTML_HEADERS = {
-  'Accept':
+  Accept:
     'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
   'Accept-Language': 'en-US,en;q=0.9',
   'User-Agent':
@@ -120,7 +120,7 @@ const IMDB_HTML_HEADERS = {
 };
 
 const IMDB_GRAPHQL_HEADERS = {
-  'Accept': 'application/json',
+  Accept: 'application/json',
   'Accept-Language': 'en-US,en;q=0.9',
   'Content-Type': 'application/json',
   'User-Agent':
@@ -232,7 +232,10 @@ const mergeParentalGuide = (
 
 const buildSummaryCategoryMap = (
   summaries: ImdbParentsGuideCategorySummary[]
-): { orderedIds: string[]; categoryMap: Map<string, ParentalGuidanceCategory> } => {
+): {
+  orderedIds: string[];
+  categoryMap: Map<string, ParentalGuidanceCategory>;
+} => {
   const orderedIds: string[] = [];
   const categoryMap = new Map<string, ParentalGuidanceCategory>();
 
@@ -300,7 +303,9 @@ const collectNonEmptyCategories = (
 ): ParentalGuidanceCategory[] =>
   orderedIds
     .map((categoryId) => categoryMap.get(categoryId))
-    .filter((category): category is ParentalGuidanceCategory => category != null)
+    .filter(
+      (category): category is ParentalGuidanceCategory => category != null
+    )
     .filter(
       (category) =>
         category.severity != null ||
@@ -324,7 +329,8 @@ export const parseImdbParentalGuideHtml = (
     return null;
   }
 
-  const guide = payload.props?.pageProps?.contentData?.data?.title?.parentsGuide;
+  const guide =
+    payload.props?.pageProps?.contentData?.data?.title?.parentsGuide;
   if (!guide) {
     return null;
   }

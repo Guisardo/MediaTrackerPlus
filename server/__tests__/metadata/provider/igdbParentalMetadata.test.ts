@@ -52,7 +52,10 @@ const buildGameResponse = (ageRatings?: unknown[]) => [
 const mockDetailsCall = (ageRatings?: unknown[]) => {
   mockedAxios.post
     .mockResolvedValueOnce(tokenRefreshMock)
-    .mockResolvedValueOnce({ status: 200, data: buildGameResponse(ageRatings) });
+    .mockResolvedValueOnce({
+      status: 200,
+      data: buildGameResponse(ageRatings),
+    });
 };
 
 describe('IGDB parental metadata normalization', () => {

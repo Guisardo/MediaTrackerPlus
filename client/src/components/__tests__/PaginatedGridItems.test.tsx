@@ -30,7 +30,11 @@ jest.mock('@lingui/macro', () => {
   const React = require('react');
   return {
     Trans: ({ children, message, id }: any) =>
-      React.createElement(React.Fragment, null, children ?? message ?? id ?? null),
+      React.createElement(
+        React.Fragment,
+        null,
+        children ?? message ?? id ?? null
+      ),
     Plural: ({ value, one, other }: any) =>
       React.createElement(React.Fragment, null, value === 1 ? one : other),
     t: (strings: any, ...values: any[]) =>
@@ -99,9 +103,7 @@ jest.mock('@lingui/react', () => {
       const rest = str.slice(startMatch[0].length);
 
       // Parse "one {form} other {form}}" by tracking brace depth
-      const parseForms = (
-        input: string
-      ): Record<string, string> => {
+      const parseForms = (input: string): Record<string, string> => {
         const forms: Record<string, string> = {};
         let i = 0;
         while (i < input.length) {
@@ -132,7 +134,10 @@ jest.mock('@lingui/react', () => {
       };
 
       const forms = parseForms(rest);
-      const form = numVal === 1 ? (forms.one ?? forms.other ?? '') : (forms.other ?? forms.one ?? '');
+      const form =
+        numVal === 1
+          ? forms.one ?? forms.other ?? ''
+          : forms.other ?? forms.one ?? '';
       // Replace '#' with the numeric value, then substitute leaf refs
       const substituted = form.replace('#', String(numVal));
       return substituteLeafValues(substituted);
@@ -170,7 +175,11 @@ jest.mock('@lingui/react', () => {
         const Component = (components as any)[key];
         if (Component && React.isValidElement(Component)) {
           // Clone the component element with the inner text as children
-          return React.cloneElement(Component as React.ReactElement, { key: idx }, innerText);
+          return React.cloneElement(
+            Component as React.ReactElement,
+            { key: idx },
+            innerText
+          );
         }
         return innerText;
       }
@@ -263,10 +272,8 @@ jest.mock('src/hooks/facets', () => ({
 
 jest.mock('src/components/Facets', () => {
   const React = require('react');
-  const makeMock =
-    (name: string) =>
-    (props: any) =>
-      React.createElement('div', { 'data-testid': name });
+  const makeMock = (name: string) => (props: any) =>
+    React.createElement('div', { 'data-testid': name });
   const activeFacetChipsMock = jest.fn((props: any) =>
     React.createElement('div', { 'data-testid': 'active-facet-chips' })
   );
@@ -279,7 +286,13 @@ jest.mock('src/components/Facets', () => {
       activeFacetChipsMock,
       mediaTypeSectionMock,
     },
-    FacetPanel: ({ children, facets }: { children: React.ReactNode; facets: any }) =>
+    FacetPanel: ({
+      children,
+      facets,
+    }: {
+      children: React.ReactNode;
+      facets: any;
+    }) =>
       React.createElement('div', { 'data-testid': 'facet-panel' }, children),
     FacetDrawer: ({
       children,
@@ -293,7 +306,11 @@ jest.mock('src/components/Facets', () => {
       facets: any;
     }) =>
       isOpen
-        ? React.createElement('div', { 'data-testid': 'facet-drawer' }, children)
+        ? React.createElement(
+            'div',
+            { 'data-testid': 'facet-drawer' },
+            children
+          )
         : null,
     FacetMobileButton: ({ onClick, activeFacetCount }: any) =>
       React.createElement(
@@ -303,7 +320,10 @@ jest.mock('src/components/Facets', () => {
       ),
     ActiveFacetChips: activeFacetChipsMock,
     GenreSection: ({ genres }: any) =>
-      React.createElement('div', { 'data-testid': 'genre-section', 'data-genres': JSON.stringify(genres) }),
+      React.createElement('div', {
+        'data-testid': 'genre-section',
+        'data-genres': JSON.stringify(genres),
+      }),
     YearSection: makeMock('year-section'),
     RatingSection: makeMock('rating-section'),
     LanguageSection: makeMock('language-section'),
@@ -338,7 +358,10 @@ import { useFilterBy } from 'src/components/FilterBy';
 import { useGroupSelectorComponent } from 'src/components/GroupSelector';
 import { useUpdateSearchParams } from 'src/hooks/updateSearchParamsHook';
 import { useFacets } from 'src/hooks/facets';
-import { PaginatedGridItems, Pagination } from 'src/components/PaginatedGridItems';
+import {
+  PaginatedGridItems,
+  Pagination,
+} from 'src/components/PaginatedGridItems';
 import * as FacetsModule from 'src/components/Facets';
 
 // ---------------------------------------------------------------------------
@@ -710,7 +733,8 @@ describe('PaginatedGridItems – empty state with showSearch', () => {
     });
     (useFilterBy as jest.Mock).mockReturnValue({
       filter: {},
-      FilterByComponent: () => React.createElement('div', { 'data-testid': 'filter-by' }),
+      FilterByComponent: () =>
+        React.createElement('div', { 'data-testid': 'filter-by' }),
     });
 
     renderPaginated({ showSearch: true, args: { mediaType: 'movie' as any } });
@@ -718,8 +742,9 @@ describe('PaginatedGridItems – empty state with showSearch', () => {
     // The Trans mock renders the id string with component placeholders.
     // We verify that the "import" text appears somewhere in the document —
     // either as a link or as inline text rendered by the Trans component mock.
-    const importText = screen.queryByRole('link', { name: 'import' })
-      ?? screen.queryByText(/import/i);
+    const importText =
+      screen.queryByRole('link', { name: 'import' }) ??
+      screen.queryByText(/import/i);
     expect(importText).toBeInTheDocument();
 
     // Also verify the surrounding text fragment is rendered
@@ -933,7 +958,9 @@ describe('PaginatedGridItems – FacetMobileButton', () => {
 
     renderPaginated({ showFacets: true });
 
-    expect(screen.getByTestId('facet-mobile-button').textContent).toContain('3');
+    expect(screen.getByTestId('facet-mobile-button').textContent).toContain(
+      '3'
+    );
   });
 });
 
@@ -953,17 +980,17 @@ describe('PaginatedGridItems – ActiveFacetChips', () => {
   it('passes undefined mediaType to ActiveFacetChips on mixed-content pages', () => {
     renderPaginated({ showFacets: true, args: {} });
 
-    expect(
-      __facetSpies.activeFacetChipsMock.mock.calls.at(-1)?.[0]
-    ).toEqual(expect.objectContaining({ mediaType: undefined }));
+    expect(__facetSpies.activeFacetChipsMock.mock.calls.at(-1)?.[0]).toEqual(
+      expect.objectContaining({ mediaType: undefined })
+    );
   });
 
   it('passes concrete mediaType to ActiveFacetChips on single-type pages', () => {
     renderPaginated({ showFacets: true, args: { mediaType: 'movie' as any } });
 
-    expect(
-      __facetSpies.activeFacetChipsMock.mock.calls.at(-1)?.[0]
-    ).toEqual(expect.objectContaining({ mediaType: 'movie' }));
+    expect(__facetSpies.activeFacetChipsMock.mock.calls.at(-1)?.[0]).toEqual(
+      expect.objectContaining({ mediaType: 'movie' })
+    );
   });
 });
 
@@ -975,13 +1002,27 @@ describe('PaginatedGridItems – facet sections rendered in panel', () => {
   it('renders facet sections when showFacets=true', () => {
     renderPaginated({ showFacets: true });
 
-    expect(screen.getAllByTestId('status-section').length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByTestId('genre-section').length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByTestId('year-section').length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByTestId('language-section').length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByTestId('creator-section').length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByTestId('publisher-section').length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByTestId('media-type-section').length).toBeGreaterThanOrEqual(1);
+    expect(
+      screen.getAllByTestId('status-section').length
+    ).toBeGreaterThanOrEqual(1);
+    expect(
+      screen.getAllByTestId('genre-section').length
+    ).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByTestId('year-section').length).toBeGreaterThanOrEqual(
+      1
+    );
+    expect(
+      screen.getAllByTestId('language-section').length
+    ).toBeGreaterThanOrEqual(1);
+    expect(
+      screen.getAllByTestId('creator-section').length
+    ).toBeGreaterThanOrEqual(1);
+    expect(
+      screen.getAllByTestId('publisher-section').length
+    ).toBeGreaterThanOrEqual(1);
+    expect(
+      screen.getAllByTestId('media-type-section').length
+    ).toBeGreaterThanOrEqual(1);
   });
 
   it('does NOT render facet sections when showFacets=false', () => {
@@ -994,17 +1035,17 @@ describe('PaginatedGridItems – facet sections rendered in panel', () => {
   it('passes undefined mediaType to MediaTypeSection on mixed-content pages', () => {
     renderPaginated({ showFacets: true, args: {} });
 
-    expect(
-      __facetSpies.mediaTypeSectionMock.mock.calls.at(-1)?.[0]
-    ).toEqual(expect.objectContaining({ mediaType: undefined }));
+    expect(__facetSpies.mediaTypeSectionMock.mock.calls.at(-1)?.[0]).toEqual(
+      expect.objectContaining({ mediaType: undefined })
+    );
   });
 
   it('passes concrete mediaType to MediaTypeSection on single-type pages', () => {
     renderPaginated({ showFacets: true, args: { mediaType: 'movie' as any } });
 
-    expect(
-      __facetSpies.mediaTypeSectionMock.mock.calls.at(-1)?.[0]
-    ).toEqual(expect.objectContaining({ mediaType: 'movie' }));
+    expect(__facetSpies.mediaTypeSectionMock.mock.calls.at(-1)?.[0]).toEqual(
+      expect.objectContaining({ mediaType: 'movie' })
+    );
   });
 
   it('forwards numeric facet params unchanged to useItems and useFacetsData', () => {
@@ -1109,11 +1150,16 @@ describe('PaginatedGridItems – noItems logic (showFacets=false)', () => {
     });
     (useFilterBy as jest.Mock).mockReturnValue({
       filter: {},
-      FilterByComponent: () => React.createElement('div', { 'data-testid': 'filter-by' }),
+      FilterByComponent: () =>
+        React.createElement('div', { 'data-testid': 'filter-by' }),
     });
 
     // showSearch=true triggers the noItems message branch
-    renderPaginated({ showSearch: true, showFacets: false, args: { mediaType: 'movie' as any } });
+    renderPaginated({
+      showSearch: true,
+      showFacets: false,
+      args: { mediaType: 'movie' as any },
+    });
 
     expect(screen.getByText(/Search for items or/)).toBeInTheDocument();
   });
@@ -1127,10 +1173,15 @@ describe('PaginatedGridItems – noItems logic (showFacets=false)', () => {
     });
     (useFilterBy as jest.Mock).mockReturnValue({
       filter: { onlyOnWatchlist: true },
-      FilterByComponent: () => React.createElement('div', { 'data-testid': 'filter-by' }),
+      FilterByComponent: () =>
+        React.createElement('div', { 'data-testid': 'filter-by' }),
     });
 
-    renderPaginated({ showSearch: true, showFacets: false, args: { mediaType: 'movie' as any } });
+    renderPaginated({
+      showSearch: true,
+      showFacets: false,
+      args: { mediaType: 'movie' as any },
+    });
 
     // noItems=false so the empty-state message should NOT appear
     expect(screen.queryByText(/Search for items or/)).not.toBeInTheDocument();
@@ -1150,7 +1201,11 @@ describe('PaginatedGridItems – noItems logic (showFacets=true)', () => {
       activeFacetCount: 0,
     });
 
-    renderPaginated({ showSearch: true, showFacets: true, args: { mediaType: 'movie' as any } });
+    renderPaginated({
+      showSearch: true,
+      showFacets: true,
+      args: { mediaType: 'movie' as any },
+    });
 
     expect(screen.getByText(/Search for items or/)).toBeInTheDocument();
   });
@@ -1167,7 +1222,11 @@ describe('PaginatedGridItems – noItems logic (showFacets=true)', () => {
       activeFacetCount: 2,
     });
 
-    renderPaginated({ showSearch: true, showFacets: true, args: { mediaType: 'movie' as any } });
+    renderPaginated({
+      showSearch: true,
+      showFacets: true,
+      args: { mediaType: 'movie' as any },
+    });
 
     // noItems=false so the empty-state message should NOT appear
     expect(screen.queryByText(/Search for items or/)).not.toBeInTheDocument();
@@ -1198,7 +1257,9 @@ describe('PaginatedGridItems – facetsData', () => {
       publishers: ['Studio B'],
       mediaTypes: ['movie'],
     };
-    (useFacetsData as jest.Mock).mockReturnValue({ facetsData: realFacetsData });
+    (useFacetsData as jest.Mock).mockReturnValue({
+      facetsData: realFacetsData,
+    });
 
     renderPaginated({ showFacets: true });
 
@@ -1278,7 +1339,11 @@ describe('PaginatedGridItems – search results display', () => {
       search: mockSearch,
     });
 
-    renderPaginated({ showFacets: true, showSearch: true, args: { mediaType: 'movie' as any } });
+    renderPaginated({
+      showFacets: true,
+      showSearch: true,
+      args: { mediaType: 'movie' as any },
+    });
 
     const input = screen.getByRole('textbox');
     await user.type(input, 'action');
@@ -1351,9 +1416,7 @@ describe('PaginatedGridItems – GridItem rendering', () => {
   it('renders items from items array when no search is active', () => {
     (useItems as jest.Mock).mockReturnValue({
       isLoading: false,
-      items: [
-        { id: 1, title: 'Item From Items Array' },
-      ],
+      items: [{ id: 1, title: 'Item From Items Array' }],
       numberOfPages: 1,
       numberOfItemsTotal: 1,
     });
@@ -1370,7 +1433,10 @@ describe('PaginatedGridItems – GridItem rendering', () => {
 
 describe('PaginatedGridItems – isStatisticsPage prop', () => {
   it('passes isStatisticsPage to useFilterBy', () => {
-    renderPaginated({ isStatisticsPage: true, args: { mediaType: 'movie' as any } });
+    renderPaginated({
+      isStatisticsPage: true,
+      args: { mediaType: 'movie' as any },
+    });
 
     expect(useFilterBy).toHaveBeenCalledWith(
       'movie',
@@ -1412,6 +1478,8 @@ describe('PaginatedGridItems – facet sections in FacetDrawer', () => {
 
     expect(screen.getByTestId('facet-drawer')).toBeInTheDocument();
     // The drawer contains facet sections (2 instances now: panel + drawer)
-    expect(screen.getAllByTestId('genre-section').length).toBeGreaterThanOrEqual(2);
+    expect(
+      screen.getAllByTestId('genre-section').length
+    ).toBeGreaterThanOrEqual(2);
   });
 });

@@ -28,7 +28,11 @@ interface HarnessProps {
   newValues?: string[];
 }
 
-const HookHarness: React.FC<HarnessProps> = ({ paramName, onchange, newValues }) => {
+const HookHarness: React.FC<HarnessProps> = ({
+  paramName,
+  onchange,
+  newValues,
+}) => {
   const { values, setValues } = useMultiValueSearchParam(paramName, onchange);
 
   return (
@@ -79,10 +83,7 @@ describe('useMultiValueSearchParam – reading values', () => {
 
   it('filters out empty strings produced by consecutive commas', () => {
     // URL-encoded "Action,,Drama" after splitting gives ['Action', '', 'Drama']
-    renderHarness(
-      { paramName: 'genres' },
-      '/items?genres=Action%2C%2CDrama'
-    );
+    renderHarness({ paramName: 'genres' }, '/items?genres=Action%2C%2CDrama');
 
     const values = JSON.parse(screen.getByTestId('values').textContent!);
     expect(values).not.toContain('');
@@ -166,10 +167,7 @@ describe('useMultiValueSearchParam – writing values (setValues)', () => {
   it('does NOT call onchange when no onchange is provided', async () => {
     const user = userEvent.setup();
     // This test just ensures no error is thrown when onchange is undefined
-    renderHarness(
-      { paramName: 'genres', newValues: ['Action'] },
-      '/items'
-    );
+    renderHarness({ paramName: 'genres', newValues: ['Action'] }, '/items');
 
     await expect(
       user.click(screen.getByRole('button', { name: 'Set Values' }))
@@ -214,9 +212,9 @@ describe('useMultiValueSearchParam – page reset', () => {
     await user.click(screen.getByRole('button', { name: 'Set Values' }));
 
     // After writing, the page param should have been removed
-    expect(
-      JSON.parse(screen.getByTestId('page-values').textContent!)
-    ).toEqual([]);
+    expect(JSON.parse(screen.getByTestId('page-values').textContent!)).toEqual(
+      []
+    );
   });
 
   it('preserves orderBy param when writing new values', async () => {
@@ -243,9 +241,9 @@ describe('useMultiValueSearchParam – page reset', () => {
 
     await user.click(screen.getByRole('button', { name: 'Set' }));
 
-    expect(
-      JSON.parse(screen.getByTestId('orderBy').textContent!)
-    ).toEqual(['title']);
+    expect(JSON.parse(screen.getByTestId('orderBy').textContent!)).toEqual([
+      'title',
+    ]);
   });
 
   it('removes the page param when clearing values with an empty array', async () => {
@@ -259,8 +257,8 @@ describe('useMultiValueSearchParam – page reset', () => {
 
     await user.click(screen.getByRole('button', { name: 'Set Values' }));
 
-    expect(
-      JSON.parse(screen.getByTestId('page-values').textContent!)
-    ).toEqual([]);
+    expect(JSON.parse(screen.getByTestId('page-values').textContent!)).toEqual(
+      []
+    );
   });
 });

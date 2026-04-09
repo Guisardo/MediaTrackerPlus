@@ -41,7 +41,7 @@ services:
     image: guisardo/mediatracker-plus:latest
     container_name: mediatracker-plus
     ports:
-      - "7481:7481"
+      - '7481:7481'
     volumes:
       - /path/to/data:/storage
       - assetsVolume:/assets

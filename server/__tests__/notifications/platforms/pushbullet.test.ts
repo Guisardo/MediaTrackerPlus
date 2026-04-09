@@ -9,7 +9,9 @@ const mockedAxios = axios as jest.Mocked<typeof axios>;
 /**
  * Builds a complete FormattedNotification for use in tests.
  */
-function buildFormattedNotification(overrides: Partial<FormattedNotification> = {}): FormattedNotification {
+function buildFormattedNotification(
+  overrides: Partial<FormattedNotification> = {}
+): FormattedNotification {
   return {
     plainText: 'Plain text body',
     markdown: '**Markdown body**',
@@ -108,7 +110,9 @@ describe('Pushbullet notification platform', () => {
     });
 
     test('sends the plainText body as "body" in the payload', async () => {
-      const body = buildFormattedNotification({ plainText: 'Breaking Bad S05E16 Felina is now available' });
+      const body = buildFormattedNotification({
+        plainText: 'Breaking Bad S05E16 Felina is now available',
+      });
 
       await Pushbullet.sendFunction({
         credentials: { token: accessToken },
@@ -131,7 +135,9 @@ describe('Pushbullet notification platform', () => {
 
     test('sends a complete, correctly-shaped payload', async () => {
       const title = 'Complete Payload Test';
-      const body = buildFormattedNotification({ plainText: 'This is the plain text content' });
+      const body = buildFormattedNotification({
+        plainText: 'This is the plain text content',
+      });
 
       await Pushbullet.sendFunction({
         credentials: { token: accessToken },
@@ -178,9 +184,12 @@ describe('Pushbullet notification platform', () => {
     });
 
     test('propagates the error when axios.post rejects with an HTTP error', async () => {
-      const httpError = Object.assign(new Error('Request failed with status code 401'), {
-        response: { status: 401 },
-      });
+      const httpError = Object.assign(
+        new Error('Request failed with status code 401'),
+        {
+          response: { status: 401 },
+        }
+      );
       mockedAxios.post.mockRejectedValueOnce(httpError);
 
       await expect(

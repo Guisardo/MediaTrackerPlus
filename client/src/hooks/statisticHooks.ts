@@ -5,9 +5,9 @@ import { mediaTrackerApi } from 'src/api/api';
 export const useGenreSeen = (
   currentYear: Statistics.StatisticsSeeninyearList.RequestQuery
 ) => {
-  const year = (currentYear.year === null
-    ? null
-    : currentYear) as Statistics.StatisticsSeeninyearList.RequestQuery | null;
+  const year = (
+    currentYear.year === null ? null : currentYear
+  ) as Statistics.StatisticsSeeninyearList.RequestQuery | null;
 
   const {
     error: error,
@@ -31,9 +31,9 @@ export const useGenreSeen = (
 export const useSeen = (
   currentYear: Statistics.StatisticsSeeninyearList.RequestQuery
 ) => {
-  const year = (currentYear.year === null
-    ? null
-    : currentYear) as Statistics.StatisticsSeeninyearList.RequestQuery | null;
+  const year = (
+    currentYear.year === null ? null : currentYear
+  ) as Statistics.StatisticsSeeninyearList.RequestQuery | null;
 
   const {
     error: error,

@@ -1,4 +1,7 @@
-import { getLanguageDisplayName, getLanguageDisplayNameInLocale } from '../locale';
+import {
+  getLanguageDisplayName,
+  getLanguageDisplayNameInLocale,
+} from '../locale';
 
 describe('locale utils', () => {
   describe('getLanguageDisplayName', () => {

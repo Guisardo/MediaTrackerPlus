@@ -73,10 +73,7 @@ export const YearSection: FunctionComponent<{
     setYearRange(newMin, newMax);
 
   return (
-    <FacetSection
-      title={t`Year`}
-      hasActiveSelection={hasActiveSelection}
-    >
+    <FacetSection title={t`Year`} hasActiveSelection={hasActiveSelection}>
       <FacetRangeSlider
         min={minYear}
         max={maxYear}

@@ -25,12 +25,14 @@ function hashToken(raw: string): string {
  * Builds a minimal Express Request mock. Headers, query, and the user property
  * can be overridden per test.
  */
-function buildMockRequest(overrides: {
-  authHeader?: string;
-  accessTokenHeader?: string;
-  queryToken?: string;
-  user?: number;
-} = {}): Request & { user?: number } {
+function buildMockRequest(
+  overrides: {
+    authHeader?: string;
+    accessTokenHeader?: string;
+    queryToken?: string;
+    user?: number;
+  } = {}
+): Request & { user?: number } {
   const headers: Record<string, string> = {};
 
   if (overrides.authHeader !== undefined) {
@@ -45,9 +47,8 @@ function buildMockRequest(overrides: {
     header(name: string): string | undefined {
       return headers[name];
     },
-    query: overrides.queryToken !== undefined
-      ? { token: overrides.queryToken }
-      : {},
+    query:
+      overrides.queryToken !== undefined ? { token: overrides.queryToken } : {},
   } as unknown as Request & { user?: number };
 }
 
@@ -313,7 +314,12 @@ describe('AccessTokenMiddleware.authorize', () => {
       // Only the bearer hash lookup should return a result
       mockAccessTokenRepository.findOne.mockImplementation(async (where) => {
         if ((where as any).token === hashToken(bearerRaw)) {
-          return { id: 10, userId, token: hashToken(bearerRaw), description: 'bearer' };
+          return {
+            id: 10,
+            userId,
+            token: hashToken(bearerRaw),
+            description: 'bearer',
+          };
         }
         return undefined;
       });
@@ -328,7 +334,8 @@ describe('AccessTokenMiddleware.authorize', () => {
 
       expect(req.user).toBe(userId);
       // The first findOne call must use the Bearer hash
-      const firstCallArg = (mockAccessTokenRepository.findOne as jest.Mock).mock.calls[0][0];
+      const firstCallArg = (mockAccessTokenRepository.findOne as jest.Mock).mock
+        .calls[0][0];
       expect(firstCallArg).toEqual({ token: hashToken(bearerRaw) });
     });
 

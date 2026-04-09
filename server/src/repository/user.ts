@@ -9,10 +9,7 @@ import {
   userSelfColumns,
 } from 'src/entity/user';
 import { repository } from 'src/repository/repository';
-import {
-  computeViewerAge,
-  isAgeEligible,
-} from 'src/utils/ageEligibility';
+import { computeViewerAge, isAgeEligible } from 'src/utils/ageEligibility';
 
 class UserRepository extends repository<User>({
   tableName: 'user',
@@ -57,9 +54,7 @@ class UserRepository extends repository<User>({
    * Must only be called for the currently-authenticated user — never for
    * public or other-user queries.
    */
-  public async findOneSelf(
-    where: Partial<User>
-  ): Promise<User | undefined> {
+  public async findOneSelf(where: Partial<User>): Promise<User | undefined> {
     const res = (await Database.knex<User>(this.tableName)
       .where(where)
       .select(userSelfColumns)
@@ -137,9 +132,7 @@ class UserRepository extends repository<User>({
       )
       .leftJoin('listItem', 'listItem.listId', 'list.id')
       .where('listItem.mediaItemId', mediaItemId)
-      .select(
-        userSelfColumns.map((column) => this.tableName + '.' + column)
-      );
+      .select(userSelfColumns.map((column) => this.tableName + '.' + column));
 
     if (sendNotificationForReleases) {
       qb.where('sendNotificationForReleases', true);

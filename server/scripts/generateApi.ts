@@ -33,7 +33,9 @@ const fixGeneratedClassImportConflicts = async () => {
 
         const aliasName = `${className}Model`;
         const updatedImport = `import { ${importedNames
-          .map((name) => (name === className ? `${className} as ${aliasName}` : name))
+          .map((name) =>
+            name === className ? `${className} as ${aliasName}` : name
+          )
           .join(', ')} } from './data-contracts';`;
 
         const updatedFileContent = fileContent

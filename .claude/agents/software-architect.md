@@ -16,19 +16,19 @@ You operate at the system level: you analyse coupling, cohesion, data flows, mod
 
 ## Stack Overview
 
-| Layer | Technology | Location |
-|---|---|---|
-| Frontend SPA | React 18, TypeScript (strict) | `client/src/` |
-| API client | Auto-generated from OpenAPI | `client/src/api/` |
-| Backend framework | Express.js 4 | `server/src/` |
-| Language | TypeScript (strict) | throughout |
-| Query builder | Knex.js 3 (SQLite + PostgreSQL) | `server/src/repository/` |
-| Auth | Passport LocalStrategy + Bearer tokens | `server/src/auth.ts` |
-| Route generation | typescript-routes-to-openapi-server | `server/src/generated/routes/` |
-| Validation | AJV (JSON Schema from TypeScript types) | controllers |
-| Testing | Jest + ts-jest, in-memory SQLite | `server/__tests__/`, `client/src/**/__tests__/` |
-| Build | Babel (server), Vite (client) | — |
-| Containerisation | Docker + docker-compose | `docker/` |
+| Layer             | Technology                              | Location                                        |
+| ----------------- | --------------------------------------- | ----------------------------------------------- |
+| Frontend SPA      | React 18, TypeScript (strict)           | `client/src/`                                   |
+| API client        | Auto-generated from OpenAPI             | `client/src/api/`                               |
+| Backend framework | Express.js 4                            | `server/src/`                                   |
+| Language          | TypeScript (strict)                     | throughout                                      |
+| Query builder     | Knex.js 3 (SQLite + PostgreSQL)         | `server/src/repository/`                        |
+| Auth              | Passport LocalStrategy + Bearer tokens  | `server/src/auth.ts`                            |
+| Route generation  | typescript-routes-to-openapi-server     | `server/src/generated/routes/`                  |
+| Validation        | AJV (JSON Schema from TypeScript types) | controllers                                     |
+| Testing           | Jest + ts-jest, in-memory SQLite        | `server/__tests__/`, `client/src/**/__tests__/` |
+| Build             | Babel (server), Vite (client)           | —                                               |
+| Containerisation  | Docker + docker-compose                 | `docker/`                                       |
 
 ## Canonical Architecture
 
@@ -93,6 +93,7 @@ Reference `DIAGRAMS.md` for templates and examples.
 ### 3. Cross-Cutting Concern Design
 
 When a concern spans multiple layers (e.g., a new caching layer, a rate-limiter, a feature flag system), design the change as a stack-wide plan:
+
 - Define the abstraction and its interface
 - Specify where in the stack it sits
 - Identify all call sites that must be updated
@@ -101,6 +102,7 @@ When a concern spans multiple layers (e.g., a new caching layer, a rate-limiter,
 ### 4. Database Schema Design
 
 For any new domain object:
+
 1. Define the entity type (`server/src/entity/`)
 2. Design the table schema with explicit foreign keys, indexes, and cascade rules
 3. Specify the migration file structure
@@ -111,6 +113,7 @@ Reference `PATTERNS.md` for common schema patterns (soft delete, user-owned data
 ### 5. Architecture Review
 
 When asked to review a proposed or existing design:
+
 1. Check all seven architectural rules above
 2. Identify coupling violations (controller doing SQL, repository doing HTTP, etc.)
 3. Flag N+1 query risks
@@ -220,6 +223,7 @@ Use the format in `ADR-TEMPLATE.md` exactly.
 ## Memory Usage
 
 After completing any architectural task, record in project memory:
+
 - ADRs created and their decision outcomes
 - New layers or abstractions introduced
 - Architectural violations found and their resolution status

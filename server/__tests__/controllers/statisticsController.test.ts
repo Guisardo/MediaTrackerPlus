@@ -155,9 +155,7 @@ describe('StatisticsController', () => {
     });
 
     test('does not throw for a user that has never seen anything', async () => {
-      await expect(
-        userStatisticsSummary(Data.user.id)
-      ).resolves.toBeDefined();
+      await expect(userStatisticsSummary(Data.user.id)).resolves.toBeDefined();
     });
   });
 
@@ -518,7 +516,7 @@ describe('StatisticsController', () => {
       await Database.knex('seen').insert([
         {
           userId: Data.user.id,
-          mediaItemId: movieWithRuntime.id,  // genres: Action, Drama
+          mediaItemId: movieWithRuntime.id, // genres: Action, Drama
           episodeId: null,
           date: dateIn2022,
         },

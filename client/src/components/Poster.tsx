@@ -1,9 +1,5 @@
 import clsx from 'clsx';
-import React, {
-  FunctionComponent,
-  useEffect,
-  useState,
-} from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 
 import { MediaType } from 'mediatracker-api';
 

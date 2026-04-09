@@ -319,9 +319,7 @@ describe('progressRepository', () => {
         userId: Data.user.id,
       });
 
-      user1Entries.forEach((entry) =>
-        expect(entry.userId).toBe(Data.user.id)
-      );
+      user1Entries.forEach((entry) => expect(entry.userId).toBe(Data.user.id));
     });
 
     test('returns entries filtered by mediaItemId', async () => {

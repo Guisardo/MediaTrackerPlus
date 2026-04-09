@@ -514,12 +514,16 @@ describe('Group CRUD and Membership Integration Tests', () => {
         await (capturedCallback as unknown as () => Promise<void>)();
 
         // Verify all related rows are physically deleted
-        const cacheRows = await Database.knex('groupPlatformRating')
-          .where('groupId', groupId);
+        const cacheRows = await Database.knex('groupPlatformRating').where(
+          'groupId',
+          groupId
+        );
         expect(cacheRows).toHaveLength(0);
 
-        const memberRows = await Database.knex('userGroupMember')
-          .where('groupId', groupId);
+        const memberRows = await Database.knex('userGroupMember').where(
+          'groupId',
+          groupId
+        );
         expect(memberRows).toHaveLength(0);
 
         const groupRow = await Database.knex('userGroup')
@@ -1153,9 +1157,7 @@ describe('Group CRUD and Membership Integration Tests', () => {
       const listRes = await request(groupController.listGroups, {
         userId: Data.user.id,
       });
-      const group = (listRes.data as any[]).find(
-        (g: any) => g.id === groupId
-      );
+      const group = (listRes.data as any[]).find((g: any) => g.id === groupId);
       expect(group).toBeDefined();
       expect(group.memberCount).toBe(3);
 
@@ -1238,8 +1240,10 @@ describe('Group CRUD and Membership Integration Tests', () => {
           .first();
         expect(groupRow).toBeUndefined();
 
-        const memberRows = await Database.knex('userGroupMember')
-          .where('groupId', groupId);
+        const memberRows = await Database.knex('userGroupMember').where(
+          'groupId',
+          groupId
+        );
         expect(memberRows).toHaveLength(0);
       } finally {
         global.setImmediate = originalSetImmediate;
@@ -1283,12 +1287,16 @@ describe('Group CRUD and Membership Integration Tests', () => {
         .first();
       expect(staleGroup).toBeUndefined();
 
-      const staleCacheRows = await Database.knex('groupPlatformRating')
-        .where('groupId', staleGroupId);
+      const staleCacheRows = await Database.knex('groupPlatformRating').where(
+        'groupId',
+        staleGroupId
+      );
       expect(staleCacheRows).toHaveLength(0);
 
-      const staleMemberRows = await Database.knex('userGroupMember')
-        .where('groupId', staleGroupId);
+      const staleMemberRows = await Database.knex('userGroupMember').where(
+        'groupId',
+        staleGroupId
+      );
       expect(staleMemberRows).toHaveLength(0);
 
       // Recent group should still exist (not cleaned up yet)

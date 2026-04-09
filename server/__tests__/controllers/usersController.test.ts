@@ -325,9 +325,13 @@ describe('UsersController', () => {
         .where('name', passwordTestUser.name)
         .first();
       if (createdUser) {
-        await Database.knex('listItem').where('listId', 'in',
-          Database.knex('list').where('userId', createdUser.id).select('id')
-        ).delete();
+        await Database.knex('listItem')
+          .where(
+            'listId',
+            'in',
+            Database.knex('list').where('userId', createdUser.id).select('id')
+          )
+          .delete();
         await Database.knex('list').where('userId', createdUser.id).delete();
         await Database.knex('user').where('id', createdUser.id).delete();
       }
@@ -457,7 +461,7 @@ describe('UsersController', () => {
       expect(Array.isArray(res.data)).toBe(true);
       const results = res.data as any[];
       expect(results.length).toBeGreaterThan(0);
-      expect(results.some(u => u.id === Data.user2.id)).toBe(true);
+      expect(results.some((u) => u.id === Data.user2.id)).toBe(true);
     });
 
     test('returns matching users with uppercase query', async () => {
@@ -471,7 +475,7 @@ describe('UsersController', () => {
       expect(res.statusCode).toBe(200);
       const results = res.data as any[];
       expect(results.length).toBeGreaterThan(0);
-      expect(results.some(u => u.id === Data.user2.id)).toBe(true);
+      expect(results.some((u) => u.id === Data.user2.id)).toBe(true);
     });
 
     test('excludes the authenticated user from search results', async () => {
@@ -485,7 +489,7 @@ describe('UsersController', () => {
 
       expect(res.statusCode).toBe(200);
       const results = res.data as any[];
-      expect(results.every(u => u.id !== Data.user.id)).toBe(true);
+      expect(results.every((u) => u.id !== Data.user.id)).toBe(true);
     });
 
     test('returns only id and name fields — no password or admin fields', async () => {
@@ -498,7 +502,7 @@ describe('UsersController', () => {
 
       expect(res.statusCode).toBe(200);
       const results = res.data as any[];
-      results.forEach(user => {
+      results.forEach((user) => {
         expect(user).toHaveProperty('id');
         expect(user).toHaveProperty('name');
         expect(user).not.toHaveProperty('password');
@@ -564,7 +568,7 @@ describe('UsersController', () => {
       expect(res.statusCode).toBe(200);
       const results = res.data as any[];
       expect(results.length).toBeGreaterThan(0);
-      expect(results.some(u => u.name.includes('user'))).toBe(true);
+      expect(results.some((u) => u.name.includes('user'))).toBe(true);
     });
   });
 
@@ -657,8 +661,12 @@ describe('UsersController', () => {
   describe('dateOfBirth (self-only field)', () => {
     afterEach(async () => {
       // Clear dateOfBirth on both test users after each test.
-      await Database.knex('user').where('id', Data.user2.id).update({ dateOfBirth: null });
-      await Database.knex('user').where('id', Data.user.id).update({ dateOfBirth: null });
+      await Database.knex('user')
+        .where('id', Data.user2.id)
+        .update({ dateOfBirth: null });
+      await Database.knex('user')
+        .where('id', Data.user.id)
+        .update({ dateOfBirth: null });
     });
 
     // ---- GET /api/user -------------------------------------------------------
@@ -757,7 +765,9 @@ describe('UsersController', () => {
       });
 
       const user = res.data as any;
-      expect(user.dateOfBirth === null || user.dateOfBirth === undefined).toBe(true);
+      expect(user.dateOfBirth === null || user.dateOfBirth === undefined).toBe(
+        true
+      );
     });
 
     // ---- dateOfBirth is NOT exposed on public projections --------------------
@@ -811,18 +821,24 @@ describe('UsersController', () => {
       });
 
       try {
-        const dbUser = await Database.knex('user').where('id', dobUserId).first();
+        const dbUser = await Database.knex('user')
+          .where('id', dobUserId)
+          .first();
         expect(dbUser).toBeDefined();
         expect(dbUser.name).toBe('dobTestUser');
         // dateOfBirth defaults to null — not required
-        expect(dbUser.dateOfBirth === null || dbUser.dateOfBirth === undefined).toBe(true);
+        expect(
+          dbUser.dateOfBirth === null || dbUser.dateOfBirth === undefined
+        ).toBe(true);
       } finally {
         // Clean up
-        await Database.knex('listItem').where(
-          'listId',
-          'in',
-          Database.knex('list').where('userId', dobUserId).select('id')
-        ).delete();
+        await Database.knex('listItem')
+          .where(
+            'listId',
+            'in',
+            Database.knex('list').where('userId', dobUserId).select('id')
+          )
+          .delete();
         await Database.knex('list').where('userId', dobUserId).delete();
         await Database.knex('user').where('id', dobUserId).delete();
       }

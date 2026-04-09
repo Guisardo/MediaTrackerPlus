@@ -140,7 +140,12 @@ describe('TMDb', () => {
       mockedAxios.get.mockResolvedValueOnce({
         data: {
           results: [
-            { id: 999, title: 'Unrated Movie', vote_average: 0, vote_count: 100 },
+            {
+              id: 999,
+              title: 'Unrated Movie',
+              vote_average: 0,
+              vote_count: 100,
+            },
           ],
         },
         status: 200,
@@ -200,8 +205,18 @@ describe('TMDb', () => {
       mockedAxios.get.mockResolvedValueOnce({
         data: {
           results: [
-            { id: 100, name: 'Low Vote Show', vote_average: 7.0, vote_count: 3 },
-            { id: 200, name: 'Popular Show', vote_average: 8.5, vote_count: 5000 },
+            {
+              id: 100,
+              name: 'Low Vote Show',
+              vote_average: 7.0,
+              vote_count: 3,
+            },
+            {
+              id: 200,
+              name: 'Popular Show',
+              vote_average: 8.5,
+              vote_count: 5000,
+            },
           ],
         },
         status: 200,
@@ -474,7 +489,7 @@ const movieSearchResult = [
       'https://image.tmdb.org/t/p/original/sdEOH0992YZ0QSxgXNIGLq1ToUi.jpg',
     tmdbId: 672,
     overview:
-      "Cars fly, trees fight back, and a mysterious house-elf comes to warn Harry Potter at the start of his second year at Hogwarts. Adventure and danger await when bloody writing on a wall announces: The Chamber Of Secrets Has Been Opened. To save Hogwarts will require all of Harry, Ron and Hermione’s magical abilities and courage.",
+      'Cars fly, trees fight back, and a mysterious house-elf comes to warn Harry Potter at the start of his second year at Hogwarts. Adventure and danger await when bloody writing on a wall announces: The Chamber Of Secrets Has Been Opened. To save Hogwarts will require all of Harry, Ron and Hermione’s magical abilities and courage.',
     status: undefined,
     url: undefined,
     genres: undefined,

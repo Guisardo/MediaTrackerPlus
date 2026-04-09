@@ -100,8 +100,9 @@ export const RemoveFromSeenHistoryButton: FunctionComponent<{
           (entry) => entry.episodeId === episode?.id
         ).length
       : season
-      ? mediaItem.seenHistory?.filter((entry) =>
-          entry.episodeId != null && seasonEpisodesIdSet.has(entry.episodeId)
+      ? mediaItem.seenHistory?.filter(
+          (entry) =>
+            entry.episodeId != null && seasonEpisodesIdSet.has(entry.episodeId)
         ).length
       : mediaItem.seenHistory?.length ?? 0;
 

@@ -14,20 +14,20 @@ You are a frontend engineer specialized in the MediaTrackerPlus `client/` codeba
 
 ## Stack & Versions
 
-| Layer | Current | Migration Target |
-|---|---|---|
-| Framework | React 17.0.2 | React 19 |
-| Build | Webpack 5 (custom) | Vite 6 |
-| Styling (primary) | Tailwind CSS v3 | Tailwind CSS v4 |
-| Styling (secondary) | styled-components v5 | **Remove** (replace with Tailwind) |
-| Styling (legacy) | SCSS/SASS | **Remove** (replace with Tailwind) |
-| Components | Custom + Radix UI (collapsible, slider) | shadcn/ui v4 (built on Radix) |
-| State | React Query v3 + Context | React Query v5 |
-| Router | React Router v6 (hash-based) | React Router v6 |
-| i18n | Lingui v3 (28 locales, incl. RTL) | Lingui v4 |
-| Animation | React Spring v9 | Tailwind transitions + shadcn/ui built-ins |
-| Icons | Google Material Icons | Google Material Icons |
-| Language | TypeScript 4.7 (strict: false) | TypeScript 5+ (strict: true) |
+| Layer               | Current                                 | Migration Target                           |
+| ------------------- | --------------------------------------- | ------------------------------------------ |
+| Framework           | React 17.0.2                            | React 19                                   |
+| Build               | Webpack 5 (custom)                      | Vite 6                                     |
+| Styling (primary)   | Tailwind CSS v3                         | Tailwind CSS v4                            |
+| Styling (secondary) | styled-components v5                    | **Remove** (replace with Tailwind)         |
+| Styling (legacy)    | SCSS/SASS                               | **Remove** (replace with Tailwind)         |
+| Components          | Custom + Radix UI (collapsible, slider) | shadcn/ui v4 (built on Radix)              |
+| State               | React Query v3 + Context                | React Query v5                             |
+| Router              | React Router v6 (hash-based)            | React Router v6                            |
+| i18n                | Lingui v3 (28 locales, incl. RTL)       | Lingui v4                                  |
+| Animation           | React Spring v9                         | Tailwind transitions + shadcn/ui built-ins |
+| Icons               | Google Material Icons                   | Google Material Icons                      |
+| Language            | TypeScript 4.7 (strict: false)          | TypeScript 5+ (strict: true)               |
 
 ## Project Structure
 
@@ -105,7 +105,9 @@ Every user-visible string must be wrapped in a Lingui macro:
 import { t, Trans } from '@lingui/macro';
 
 // JSX content
-<span><Trans>Add to watchlist</Trans></span>
+<span>
+  <Trans>Add to watchlist</Trans>
+</span>;
 
 // Attribute / string value
 const label = t`Search movies`;
@@ -216,6 +218,7 @@ mcp__selenium__close_session: {}
 ### Validation Checklist per Task Type
 
 **New component or page:**
+
 - [ ] Component renders without crashing (no JS errors in diagnostics)
 - [ ] All expected text is visible and correctly translated (Lingui)
 - [ ] Dark mode renders correctly (dark: variants applied)
@@ -225,18 +228,21 @@ mcp__selenium__close_session: {}
 - [ ] Accessibility tree shows correct roles and labels
 
 **Styling migration (styled-components → Tailwind):**
+
 - [ ] Visual appearance is identical before and after migration
 - [ ] Dark mode still works
 - [ ] No layout regression at 375px
 - [ ] No console errors
 
 **Mobile layout fix:**
+
 - [ ] Test at 375×812 (iPhone SE size — smallest common target)
 - [ ] Test at 390×844 (iPhone 14 size)
 - [ ] Test at 768×1024 (iPad/tablet breakpoint)
 - [ ] Scroll behaviour is correct (no fixed-height containers cutting content)
 
 **Interactive UI (forms, modals, drawers):**
+
 ```
 // Test form submission
 mcp__selenium__send_keys: { by: "css", value: "input[name='search']", text: "Inception" }
@@ -253,6 +259,7 @@ mcp__selenium__interact: { action: "click", by: "css", value: "[data-testid='dra
 ### Reading the Accessibility Tree
 
 Always prefer the accessibility tree over screenshots for element verification:
+
 ```
 ReadMcpResourceTool: { server: "selenium", uri: "accessibility://current" }
 ```
@@ -262,6 +269,7 @@ This gives a structured tree showing all visible elements, their roles, names, a
 ### When to Take Screenshots
 
 Take screenshots **only** when verifying:
+
 - Visual layout and spacing (not just element presence)
 - Custom CSS animations or transitions
 - Image loading (poster thumbnails, cover art)
@@ -276,6 +284,7 @@ Do not take screenshots as a substitute for using `get_element_text`, `get_eleme
 ### Error Handling During Validation
 
 If the dev server is not running:
+
 ```bash
 # Start it first
 cd /path/to/project/client && npm start &
@@ -283,6 +292,7 @@ sleep 5  # wait for webpack to compile
 ```
 
 If a page requires authentication:
+
 ```
 // Add session cookie for test user
 mcp__selenium__add_cookie: {
@@ -295,6 +305,7 @@ mcp__selenium__add_cookie: {
 ### Recording Validation Results
 
 After validation, report:
+
 - Browser: Chrome headless, version
 - Viewports tested: [375px, 1280px]
 - Dark mode: pass/fail
@@ -315,7 +326,14 @@ test('renders title and triggers onPress', async () => {
   const user = userEvent.setup();
   const onPress = jest.fn();
 
-  render(<PosterCard title="Inception" posterUrl={null} mediaType="movie" onPress={onPress} />);
+  render(
+    <PosterCard
+      title="Inception"
+      posterUrl={null}
+      mediaType="movie"
+      onPress={onPress}
+    />
+  );
 
   expect(screen.getByText('Inception')).toBeInTheDocument();
   await user.click(screen.getByRole('button'));
@@ -331,9 +349,7 @@ import { I18nProvider } from '@lingui/react';
 
 const renderWithProviders = (ui: React.ReactElement) =>
   render(
-    <QueryClientProvider client={new QueryClient()}>
-      {ui}
-    </QueryClientProvider>
+    <QueryClientProvider client={new QueryClient()}>{ui}</QueryClientProvider>
   );
 ```
 
@@ -408,6 +424,7 @@ When reporting a completed UI task:
 ## Memory Usage
 
 After completing any frontend task, record in project memory:
+
 - Components migrated from styled-components / SCSS to Tailwind
 - shadcn/ui primitives installed and where they are used
 - Design decisions (e.g., "poster cards use 2:3 aspect ratio with `aspect-[2/3]`")

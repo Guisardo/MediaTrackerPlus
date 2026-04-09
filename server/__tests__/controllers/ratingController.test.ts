@@ -537,7 +537,9 @@ describe('RatingController', () => {
           .where('userId', Data.user.id)
           .where('mediaItemId', Data.tvShow.id);
 
-        const seenEpisodeIds = seenEntries.map((s: { episodeId: number }) => s.episodeId);
+        const seenEpisodeIds = seenEntries.map(
+          (s: { episodeId: number }) => s.episodeId
+        );
 
         expect(seenEntries.length).toEqual(3);
         expect(seenEpisodeIds).toContain(Data.episode.id);
@@ -737,7 +739,9 @@ describe('RatingController', () => {
         // The promise chain resolved via the early-return path:
         // userRepository.findOne returned a user with addRecommendedToWatchlist = false,
         // so getRecommendationService() was never called (no external API errors to catch).
-        const user = await Database.knex('user').where('id', Data.user.id).first();
+        const user = await Database.knex('user')
+          .where('id', Data.user.id)
+          .first();
         expect(user.addRecommendedToWatchlist).toBe(0);
       } finally {
         findOneSpy.mockRestore();

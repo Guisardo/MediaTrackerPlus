@@ -275,13 +275,17 @@ When producing a diagram in a response, always:
 3. Add a **Legend** section below if the diagram uses non-obvious shapes or colours.
 4. For sequence diagrams, use `autonumber` so steps can be referenced in prose.
 
-```markdown
+````markdown
 **Sequence diagram** — illustrates the data flow for creating a new user rating.
 
 ```mermaid
 sequenceDiagram
   ...
 ```
+````
 
 **Legend**: Shaded boxes = external services (outside the Express process boundary).
+
+```
+
 ```

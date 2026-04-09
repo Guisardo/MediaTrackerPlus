@@ -10,10 +10,10 @@ All endpoints are prefixed with `/api/`. The app serves both the React SPA (`/`)
 
 Two mechanisms — both are transparently handled by middleware and result in `req.user` being populated:
 
-| Mechanism | Header | When to Use |
-|---|---|---|
-| Session cookie | `Cookie: connect.sid=...` | Browser sessions |
-| Bearer token | `Authorization: Bearer <token>` or `Access-Token: <token>` | API clients, Plex integration |
+| Mechanism      | Header                                                     | When to Use                   |
+| -------------- | ---------------------------------------------------------- | ----------------------------- |
+| Session cookie | `Cookie: connect.sid=...`                                  | Browser sessions              |
+| Bearer token   | `Authorization: Bearer <token>` or `Access-Token: <token>` | API clients, Plex integration |
 
 ### Protected vs. public endpoints
 
@@ -29,30 +29,31 @@ app.use(AccessTokenMiddleware); // adds token-based auth fallback
 
 ### HTTP methods
 
-| Method | Use for |
-|---|---|
-| `GET` | Read — never side effects |
-| `POST` | Create new resource |
-| `PUT` | Full replace of existing resource |
-| `PATCH` | Partial update |
-| `DELETE` | Remove resource |
+| Method   | Use for                           |
+| -------- | --------------------------------- |
+| `GET`    | Read — never side effects         |
+| `POST`   | Create new resource               |
+| `PUT`    | Full replace of existing resource |
+| `PATCH`  | Partial update                    |
+| `DELETE` | Remove resource                   |
 
 ### Status codes
 
-| Code | When |
-|---|---|
-| `200` | Success with body |
-| `201` | Resource created |
-| `204` | Success, no body |
+| Code  | When                                    |
+| ----- | --------------------------------------- |
+| `200` | Success with body                       |
+| `201` | Resource created                        |
+| `204` | Success, no body                        |
 | `400` | Validation error (AJV schema violation) |
-| `401` | Not authenticated |
-| `403` | Authenticated but not authorized |
-| `404` | Resource not found |
-| `500` | Unexpected server error |
+| `401` | Not authenticated                       |
+| `403` | Authenticated but not authorized        |
+| `404` | Resource not found                      |
+| `500` | Unexpected server error                 |
 
 ### Error response format
 
 All errors return:
+
 ```json
 {
   "errorMessage": "Descriptive error message",
@@ -61,26 +62,31 @@ All errors return:
 ```
 
 Use `RequestError` in controllers:
+
 ```typescript
 import { RequestError } from '../requestError';
 
 throw new RequestError(404, `Media item ${id} not found`);
-throw new RequestError(403, `User ${userId} is not a member of group ${groupId}`);
+throw new RequestError(
+  403,
+  `User ${userId} is not a member of group ${groupId}`
+);
 ```
 
 ## Endpoint Inventory
 
 ### Items (`/api/items`)
 
-| Method | Path | Description |
-|---|---|---|
-| `GET` | `/api/items` | List media items (paginated, filterable) |
-| `GET` | `/api/item/:id` | Get single item with full details |
-| `POST` | `/api/items` | Add a media item to the user's library |
-| `PUT` | `/api/item/:id` | Update a media item |
-| `DELETE` | `/api/item/:id` | Remove a media item |
+| Method   | Path            | Description                              |
+| -------- | --------------- | ---------------------------------------- |
+| `GET`    | `/api/items`    | List media items (paginated, filterable) |
+| `GET`    | `/api/item/:id` | Get single item with full details        |
+| `POST`   | `/api/items`    | Add a media item to the user's library   |
+| `PUT`    | `/api/item/:id` | Update a media item                      |
+| `DELETE` | `/api/item/:id` | Remove a media item                      |
 
 **Filtering params for GET `/api/items`:**
+
 - `mediaType`: `movie | tv | game | book | audiobook`
 - `status`: `watchlist | in-progress | completed | dropped`
 - `page`, `pageSize`: pagination
@@ -89,106 +95,106 @@ throw new RequestError(403, `User ${userId} is not a member of group ${groupId}`
 
 ### Authentication (`/api/users`)
 
-| Method | Path | Description |
-|---|---|---|
-| `POST` | `/api/users/register` | Create new account |
-| `POST` | `/api/users/login` | Log in (sets session cookie) |
-| `POST` | `/api/users/logout` | Log out (clears session) |
-| `GET` | `/api/users/me` | Get current user profile |
-| `PUT` | `/api/users/me` | Update profile |
-| `PUT` | `/api/users/me/password` | Change password |
+| Method | Path                     | Description                  |
+| ------ | ------------------------ | ---------------------------- |
+| `POST` | `/api/users/register`    | Create new account           |
+| `POST` | `/api/users/login`       | Log in (sets session cookie) |
+| `POST` | `/api/users/logout`      | Log out (clears session)     |
+| `GET`  | `/api/users/me`          | Get current user profile     |
+| `PUT`  | `/api/users/me`          | Update profile               |
+| `PUT`  | `/api/users/me/password` | Change password              |
 
 ### Tracking (`/api/seen`, `/api/progress`, `/api/rating`, `/api/watchlist`)
 
-| Method | Path | Description |
-|---|---|---|
-| `POST` | `/api/seen` | Mark item/episode as seen |
-| `DELETE` | `/api/seen/:id` | Mark item/episode as unseen |
-| `GET` | `/api/seen/:mediaItemId` | Get seen dates for an item |
-| `PUT` | `/api/progress` | Set progress (episode or book position) |
-| `GET` | `/api/progress/:mediaItemId` | Get progress for an item |
-| `PUT` | `/api/rating` | Set star rating (0–10) |
-| `DELETE` | `/api/rating/:mediaItemId` | Remove rating |
-| `POST` | `/api/watchlist` | Add to watchlist |
-| `DELETE` | `/api/watchlist/:mediaItemId` | Remove from watchlist |
+| Method   | Path                          | Description                             |
+| -------- | ----------------------------- | --------------------------------------- |
+| `POST`   | `/api/seen`                   | Mark item/episode as seen               |
+| `DELETE` | `/api/seen/:id`               | Mark item/episode as unseen             |
+| `GET`    | `/api/seen/:mediaItemId`      | Get seen dates for an item              |
+| `PUT`    | `/api/progress`               | Set progress (episode or book position) |
+| `GET`    | `/api/progress/:mediaItemId`  | Get progress for an item                |
+| `PUT`    | `/api/rating`                 | Set star rating (0–10)                  |
+| `DELETE` | `/api/rating/:mediaItemId`    | Remove rating                           |
+| `POST`   | `/api/watchlist`              | Add to watchlist                        |
+| `DELETE` | `/api/watchlist/:mediaItemId` | Remove from watchlist                   |
 
 ### Groups (`/api/group`)
 
-| Method | Path | Description |
-|---|---|---|
-| `GET` | `/api/group` | List user's groups |
-| `POST` | `/api/group` | Create a group |
-| `GET` | `/api/group/:id` | Get group details + members |
-| `PUT` | `/api/group/:id` | Update group |
-| `DELETE` | `/api/group/:id` | Delete group |
-| `POST` | `/api/group/:id/members` | Add member |
-| `DELETE` | `/api/group/:id/members/:userId` | Remove member |
-| `GET` | `/api/group/:id/ratings` | Get group platform rating cache |
+| Method   | Path                             | Description                     |
+| -------- | -------------------------------- | ------------------------------- |
+| `GET`    | `/api/group`                     | List user's groups              |
+| `POST`   | `/api/group`                     | Create a group                  |
+| `GET`    | `/api/group/:id`                 | Get group details + members     |
+| `PUT`    | `/api/group/:id`                 | Update group                    |
+| `DELETE` | `/api/group/:id`                 | Delete group                    |
+| `POST`   | `/api/group/:id/members`         | Add member                      |
+| `DELETE` | `/api/group/:id/members/:userId` | Remove member                   |
+| `GET`    | `/api/group/:id/ratings`         | Get group platform rating cache |
 
 ### Lists (`/api/lists`)
 
-| Method | Path | Description |
-|---|---|---|
-| `GET` | `/api/lists` | Get user's custom lists |
-| `POST` | `/api/lists` | Create a list |
-| `GET` | `/api/list/:id` | Get list with items |
-| `PUT` | `/api/list/:id` | Update list metadata |
-| `DELETE` | `/api/list/:id` | Delete list |
-| `POST` | `/api/list/:id/items` | Add item to list |
-| `DELETE` | `/api/list/:id/items/:itemId` | Remove item from list |
+| Method   | Path                          | Description             |
+| -------- | ----------------------------- | ----------------------- |
+| `GET`    | `/api/lists`                  | Get user's custom lists |
+| `POST`   | `/api/lists`                  | Create a list           |
+| `GET`    | `/api/list/:id`               | Get list with items     |
+| `PUT`    | `/api/list/:id`               | Update list metadata    |
+| `DELETE` | `/api/list/:id`               | Delete list             |
+| `POST`   | `/api/list/:id/items`         | Add item to list        |
+| `DELETE` | `/api/list/:id/items/:itemId` | Remove item from list   |
 
 ### Search (`/api/search`)
 
-| Method | Path | Description |
-|---|---|---|
-| `GET` | `/api/search` | Search across metadata providers |
+| Method | Path          | Description                      |
+| ------ | ------------- | -------------------------------- |
+| `GET`  | `/api/search` | Search across metadata providers |
 
 Query params: `q` (search term), `mediaType`
 
 ### Calendar (`/api/calendar`)
 
-| Method | Path | Description |
-|---|---|---|
-| `GET` | `/api/calendar` | Get calendar events for date range |
+| Method | Path            | Description                        |
+| ------ | --------------- | ---------------------------------- |
+| `GET`  | `/api/calendar` | Get calendar events for date range |
 
 Query params: `start`, `end` (ISO dates)
 
 ### Statistics (`/api/statistics`)
 
-| Method | Path | Description |
-|---|---|---|
-| `GET` | `/api/statistics` | Get aggregated user statistics |
-| `GET` | `/api/statistics/genres` | Genre breakdown |
+| Method | Path                     | Description                    |
+| ------ | ------------------------ | ------------------------------ |
+| `GET`  | `/api/statistics`        | Get aggregated user statistics |
+| `GET`  | `/api/statistics/genres` | Genre breakdown                |
 
 ### Configuration (`/api/configuration`)
 
-| Method | Path | Description |
-|---|---|---|
-| `GET` | `/api/configuration` | Get app + user configuration |
-| `PUT` | `/api/configuration` | Update configuration |
+| Method | Path                 | Description                  |
+| ------ | -------------------- | ---------------------------- |
+| `GET`  | `/api/configuration` | Get app + user configuration |
+| `PUT`  | `/api/configuration` | Update configuration         |
 
 ### Imports
 
-| Method | Path | Description |
-|---|---|---|
+| Method | Path                    | Description          |
+| ------ | ----------------------- | -------------------- |
 | `POST` | `/api/import/goodreads` | Import Goodreads CSV |
-| `POST` | `/api/import/trakt` | Import from Trakt.tv |
+| `POST` | `/api/import/trakt`     | Import from Trakt.tv |
 
 ### Image Proxy (`/api/img`)
 
-| Method | Path | Description |
-|---|---|---|
-| `GET` | `/api/img` | Proxy and resize external images |
+| Method | Path       | Description                      |
+| ------ | ---------- | -------------------------------- |
+| `GET`  | `/api/img` | Proxy and resize external images |
 
 Query params: `url` (encoded), `w` (width)
 
 ### Tokens (`/api/token`)
 
-| Method | Path | Description |
-|---|---|---|
-| `GET` | `/api/token` | List API tokens |
-| `POST` | `/api/token` | Create API token |
-| `DELETE` | `/api/token/:id` | Revoke token |
+| Method   | Path             | Description      |
+| -------- | ---------------- | ---------------- |
+| `GET`    | `/api/token`     | List API tokens  |
+| `POST`   | `/api/token`     | Create API token |
+| `DELETE` | `/api/token/:id` | Revoke token     |
 
 ## Adding a New Endpoint — Checklist
 
@@ -223,7 +229,9 @@ const items = await knex<MediaItem>('mediaItem')
   .orderBy('title', 'asc');
 
 // INSERT and return
-const [created] = await knex<MediaItem>('mediaItem').insert(data).returning('*');
+const [created] = await knex<MediaItem>('mediaItem')
+  .insert(data)
+  .returning('*');
 
 // UPSERT
 await knex<UserRating>('userRating')
@@ -260,8 +268,12 @@ const [{ count }] = await knex('mediaItem')
 
 ```typescript
 const itemsWithRatings = await knex('mediaItem as m')
-  .leftJoin('userRating as r', function() {
-    this.on('r.mediaItemId', '=', 'm.id').andOn('r.userId', '=', knex.raw('?', [userId]));
+  .leftJoin('userRating as r', function () {
+    this.on('r.mediaItemId', '=', 'm.id').andOn(
+      'r.userId',
+      '=',
+      knex.raw('?', [userId])
+    );
   })
   .where('m.userId', userId)
   .select('m.*', 'r.value as userRating');

@@ -49,11 +49,7 @@ describe('ListController', () => {
     afterEach(async () => {
       // Remove any lists created during a test, keeping the seed lists intact
       await Database.knex('list')
-        .whereNotIn('id', [
-          Data.watchlist.id,
-          Data.list.id,
-          Data.listUser2.id,
-        ])
+        .whereNotIn('id', [Data.watchlist.id, Data.list.id, Data.listUser2.id])
         .delete();
     });
 

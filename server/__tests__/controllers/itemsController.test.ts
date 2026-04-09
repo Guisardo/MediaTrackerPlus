@@ -30,7 +30,11 @@ describe('ItemsController', () => {
     await Database.knex('listItem').insert([
       { listId: Data.watchlist.id, mediaItemId: Data.movie.id, addedAt: now },
       { listId: Data.watchlist.id, mediaItemId: Data.tvShow.id, addedAt: now },
-      { listId: Data.watchlist.id, mediaItemId: Data.videoGame.id, addedAt: now },
+      {
+        listId: Data.watchlist.id,
+        mediaItemId: Data.videoGame.id,
+        addedAt: now,
+      },
       { listId: Data.watchlist.id, mediaItemId: Data.book.id, addedAt: now },
     ]);
   });

@@ -26,9 +26,7 @@ const parseAcceptLanguageHeader = (
       const qualityParam = params.find((param) =>
         param.trim().toLowerCase().startsWith('q=')
       );
-      const quality = qualityParam
-        ? Number(qualityParam.trim().slice(2))
-        : 1;
+      const quality = qualityParam ? Number(qualityParam.trim().slice(2)) : 1;
 
       return {
         quality:
@@ -38,9 +36,7 @@ const parseAcceptLanguageHeader = (
         tag,
       };
     })
-    .filter(
-      (preference) => preference.tag.length > 0 && preference.quality > 0
-    )
+    .filter((preference) => preference.tag.length > 0 && preference.quality > 0)
     .sort((left, right) => right.quality - left.quality);
 
 const normalizeAvailableLanguages = (
@@ -120,7 +116,10 @@ export function resolveLocale(
       return normalizedLanguages[0]?.original ?? null;
     }
 
-    const exactLanguage = findExactLanguage(preference.tag, normalizedLanguages);
+    const exactLanguage = findExactLanguage(
+      preference.tag,
+      normalizedLanguages
+    );
     if (exactLanguage) {
       return exactLanguage.original;
     }
@@ -185,7 +184,11 @@ export function resolveMetadataLanguagePreferences(
     }
   }
 
-  appendUniqueLanguage(candidates, seen, normalizedLanguages[0]?.original ?? null);
+  appendUniqueLanguage(
+    candidates,
+    seen,
+    normalizedLanguages[0]?.original ?? null
+  );
 
   return {
     primary: candidates[0] ?? null,

@@ -14,7 +14,9 @@ export interface SimilarityProviders {
 export interface RecommendationServiceDeps {
   metadataProviders: SimilarityProviders;
   watchlistWriter: WatchlistWriter;
-  findMediaItemById: (mediaItemId: number) => Promise<MediaItemBase | undefined>;
+  findMediaItemById: (
+    mediaItemId: number
+  ) => Promise<MediaItemBase | undefined>;
 }
 
 export class RecommendationService {
@@ -28,31 +30,52 @@ export class RecommendationService {
     this.findMediaItemById = deps.findMediaItemById;
   }
 
-  async processRating(userId: number, mediaItemId: number, rating: number): Promise<void> {
+  async processRating(
+    userId: number,
+    mediaItemId: number,
+    rating: number
+  ): Promise<void> {
     try {
       await this.executeProcessRating(userId, mediaItemId, rating);
     } catch (err) {
-      logger.error('RecommendationService: Unhandled error in processRating', { err });
+      logger.error('RecommendationService: Unhandled error in processRating', {
+        err,
+      });
     }
   }
 
-  private async executeProcessRating(userId: number, mediaItemId: number, rating: number): Promise<void> {
+  private async executeProcessRating(
+    userId: number,
+    mediaItemId: number,
+    rating: number
+  ): Promise<void> {
     const mediaItem = await this.findMediaItemById(mediaItemId);
 
     if (!mediaItem) {
-      logger.warn(`RecommendationService: mediaItemId=${mediaItemId} not found — skipping recommendation pipeline`);
+      logger.warn(
+        `RecommendationService: mediaItemId=${mediaItemId} not found — skipping recommendation pipeline`
+      );
       return;
     }
 
     const { mediaType } = mediaItem;
 
-    logger.info(`RecommendationService: processRating start — userId=${userId}, mediaItemId=${mediaItemId}, mediaType=${mediaType}, rating=${rating}`);
+    logger.info(
+      `RecommendationService: processRating start — userId=${userId}, mediaItemId=${mediaItemId}, mediaType=${mediaType}, rating=${rating}`
+    );
 
-    const similarItems = (await this.metadataProviders.similar(mediaItem)) ?? [];
+    const similarItems =
+      (await this.metadataProviders.similar(mediaItem)) ?? [];
 
-    logger.info(`RecommendationService: fetched ${similarItems.length} similar items for mediaItemId=${mediaItemId}`);
+    logger.info(
+      `RecommendationService: fetched ${similarItems.length} similar items for mediaItemId=${mediaItemId}`
+    );
 
-    const writeResult = await this.watchlistWriter.write(userId, similarItems, rating);
+    const writeResult = await this.watchlistWriter.write(
+      userId,
+      similarItems,
+      rating
+    );
 
     logger.info(
       `RecommendationService: processRating complete — userId=${userId}, mediaItemId=${mediaItemId}, ` +

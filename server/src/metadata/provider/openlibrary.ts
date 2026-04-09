@@ -81,8 +81,7 @@ export class OpenLibrary extends MetadataProvider {
           ? `https://covers.openlibrary.org/b/id/${res.data.covers[0]}.jpg`
           : args.externalPosterUrl,
       numberOfPages: args.numberOfPages,
-      authors:
-        authors.length > 0 ? normalizeCreatorField(authors) : undefined,
+      authors: authors.length > 0 ? normalizeCreatorField(authors) : undefined,
     };
   }
 

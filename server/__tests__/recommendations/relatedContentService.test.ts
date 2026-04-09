@@ -12,7 +12,9 @@ jest.mock('src/logger', () => ({
   },
 }));
 
-const makeMediaItem = (overrides: Partial<MediaItemBase> = {}): MediaItemBase => ({
+const makeMediaItem = (
+  overrides: Partial<MediaItemBase> = {}
+): MediaItemBase => ({
   id: 1,
   mediaType: 'movie',
   source: 'tmdb',
@@ -114,17 +116,25 @@ describe('RelatedContentService', () => {
   test('dedupes by resolved mediaItem id and excludes source item', async () => {
     const service = new RelatedContentService({
       metadataProviders: {
-        similar: jest.fn().mockResolvedValue([
-          makeSimilarItem('movie', '10'),
-          makeSimilarItem('movie', '11'),
-          makeSimilarItem('movie', '12'),
-        ]),
+        similar: jest
+          .fn()
+          .mockResolvedValue([
+            makeSimilarItem('movie', '10'),
+            makeSimilarItem('movie', '11'),
+            makeSimilarItem('movie', '12'),
+          ]),
       },
       findMediaItemByExternalId: jest
         .fn()
-        .mockResolvedValueOnce(makeMediaItem({ id: 1, tmdbId: 10, title: 'Self' }))
-        .mockResolvedValueOnce(makeMediaItem({ id: 7, tmdbId: 11, title: 'Duplicate #1' }))
-        .mockResolvedValueOnce(makeMediaItem({ id: 7, tmdbId: 12, title: 'Duplicate #2' })),
+        .mockResolvedValueOnce(
+          makeMediaItem({ id: 1, tmdbId: 10, title: 'Self' })
+        )
+        .mockResolvedValueOnce(
+          makeMediaItem({ id: 7, tmdbId: 11, title: 'Duplicate #1' })
+        )
+        .mockResolvedValueOnce(
+          makeMediaItem({ id: 7, tmdbId: 12, title: 'Duplicate #2' })
+        ),
     });
 
     const result = await service.relatedContent({
@@ -154,7 +164,10 @@ describe('RelatedContentService', () => {
       findMediaItemByExternalId: resolver,
     });
 
-    const result = await service.relatedContent({ mediaItem: makeMediaItem(), limit: 12 });
+    const result = await service.relatedContent({
+      mediaItem: makeMediaItem(),
+      limit: 12,
+    });
 
     expect(result).toHaveLength(12);
     expect(resolver).toHaveBeenCalledTimes(12);
@@ -163,15 +176,31 @@ describe('RelatedContentService', () => {
   test('filters out age-restricted related items', async () => {
     const service = new RelatedContentService({
       metadataProviders: {
-        similar: jest.fn().mockResolvedValue([
-          makeSimilarItem('movie', '101'),
-          makeSimilarItem('movie', '102'),
-        ]),
+        similar: jest
+          .fn()
+          .mockResolvedValue([
+            makeSimilarItem('movie', '101'),
+            makeSimilarItem('movie', '102'),
+          ]),
       },
       findMediaItemByExternalId: jest
         .fn()
-        .mockResolvedValueOnce(makeMediaItem({ id: 101, tmdbId: 101, title: 'Allowed', minimumAge: 13 }))
-        .mockResolvedValueOnce(makeMediaItem({ id: 102, tmdbId: 102, title: 'Blocked', minimumAge: 18 })),
+        .mockResolvedValueOnce(
+          makeMediaItem({
+            id: 101,
+            tmdbId: 101,
+            title: 'Allowed',
+            minimumAge: 13,
+          })
+        )
+        .mockResolvedValueOnce(
+          makeMediaItem({
+            id: 102,
+            tmdbId: 102,
+            title: 'Blocked',
+            minimumAge: 18,
+          })
+        ),
     });
 
     const result = await service.relatedContent({
@@ -185,18 +214,30 @@ describe('RelatedContentService', () => {
   test('filters out related items with missing parental metadata for DOB-set viewers', async () => {
     const service = new RelatedContentService({
       metadataProviders: {
-        similar: jest.fn().mockResolvedValue([
-          makeSimilarItem('movie', '111'),
-          makeSimilarItem('movie', '112'),
-        ]),
+        similar: jest
+          .fn()
+          .mockResolvedValue([
+            makeSimilarItem('movie', '111'),
+            makeSimilarItem('movie', '112'),
+          ]),
       },
       findMediaItemByExternalId: jest
         .fn()
         .mockResolvedValueOnce(
-          makeMediaItem({ id: 111, tmdbId: 111, title: 'Rated', minimumAge: 13 })
+          makeMediaItem({
+            id: 111,
+            tmdbId: 111,
+            title: 'Rated',
+            minimumAge: 13,
+          })
         )
         .mockResolvedValueOnce(
-          makeMediaItem({ id: 112, tmdbId: 112, title: 'Unrated', minimumAge: null })
+          makeMediaItem({
+            id: 112,
+            tmdbId: 112,
+            title: 'Unrated',
+            minimumAge: null,
+          })
         ),
     });
 
@@ -212,17 +253,21 @@ describe('RelatedContentService', () => {
     const resolutionError = new Error('resolution failed');
     const service = new RelatedContentService({
       metadataProviders: {
-        similar: jest.fn().mockResolvedValue([
-          makeSimilarItem('movie', '201'),
-          makeSimilarItem('movie', '202'),
-          makeSimilarItem('movie', '203'),
-        ]),
+        similar: jest
+          .fn()
+          .mockResolvedValue([
+            makeSimilarItem('movie', '201'),
+            makeSimilarItem('movie', '202'),
+            makeSimilarItem('movie', '203'),
+          ]),
       },
       findMediaItemByExternalId: jest
         .fn()
         .mockResolvedValueOnce(undefined)
         .mockRejectedValueOnce(resolutionError)
-        .mockResolvedValueOnce(makeMediaItem({ id: 203, tmdbId: 203, title: 'Resolved' })),
+        .mockResolvedValueOnce(
+          makeMediaItem({ id: 203, tmdbId: 203, title: 'Resolved' })
+        ),
     });
 
     const result = await service.relatedContent({ mediaItem: makeMediaItem() });

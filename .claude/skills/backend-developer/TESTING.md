@@ -72,11 +72,12 @@ describe('ExampleController', () => {
   describe('GET /api/example/:id', () => {
     test('returns 200 and item data for authenticated owner', async () => {
       const user = await createTestUser();
-      const item = await createTestMediaItem({ userId: user.id, mediaType: 'movie' });
+      const item = await createTestMediaItem({
+        userId: user.id,
+        mediaType: 'movie',
+      });
 
-      const res = await request
-        .get(`/api/example/${item.id}`)
-        .auth(user);             // sets session cookie
+      const res = await request.get(`/api/example/${item.id}`).auth(user); // sets session cookie
 
       expect(res.status).toBe(200);
       expect(res.body.id).toBe(item.id);
@@ -94,21 +95,17 @@ describe('ExampleController', () => {
     test('returns 404 for non-existent item', async () => {
       const user = await createTestUser();
 
-      const res = await request
-        .get('/api/example/99999')
-        .auth(user);
+      const res = await request.get('/api/example/99999').auth(user);
 
       expect(res.status).toBe(404);
     });
 
-    test('returns 403 when accessing another user\'s item', async () => {
+    test("returns 403 when accessing another user's item", async () => {
       const owner = await createTestUser({ username: 'owner' });
       const other = await createTestUser({ username: 'other' });
       const item = await createTestMediaItem({ userId: owner.id });
 
-      const res = await request
-        .get(`/api/example/${item.id}`)
-        .auth(other);
+      const res = await request.get(`/api/example/${item.id}`).auth(other);
 
       expect(res.status).toBe(403);
     });
@@ -134,7 +131,7 @@ describe('ExampleController', () => {
       const res = await request
         .post('/api/example')
         .auth(user)
-        .send({ mediaType: 'movie' });  // missing title
+        .send({ mediaType: 'movie' }); // missing title
 
       expect(res.status).toBe(400);
       expect(res.body.MediaTrackerError).toBe(true);
@@ -177,7 +174,10 @@ const show = await createTestMediaItem({
 });
 
 // Mark as seen
-const seenEntry = await createTestSeen({ userId: user.id, mediaItemId: movie.id });
+const seenEntry = await createTestSeen({
+  userId: user.id,
+  mediaItemId: movie.id,
+});
 
 // Add a rating
 const rating = await createTestRating({
@@ -187,7 +187,10 @@ const rating = await createTestRating({
 });
 
 // Create a group with members
-const group = await createTestUserGroup({ ownerId: user.id, name: 'Movie Club' });
+const group = await createTestUserGroup({
+  ownerId: user.id,
+  name: 'Movie Club',
+});
 await createTestGroupMember({ groupId: group.id, userId: otherUser.id });
 ```
 
@@ -212,7 +215,10 @@ describe('exampleRepository', () => {
   test('findById returns correct entity', async () => {
     const user = await createTestUser();
     const item = await createTestMediaItem({ userId: user.id });
-    const found = await createTestExample({ userId: user.id, mediaItemId: item.id });
+    const found = await createTestExample({
+      userId: user.id,
+      mediaItemId: item.id,
+    });
 
     const result = await exampleRepository.findById(found.id);
     expect(result).not.toBeUndefined();
@@ -230,9 +236,17 @@ describe('exampleRepository', () => {
     const item = await createTestMediaItem({ userId: user.id });
 
     // First upsert — creates
-    await exampleRepository.upsert({ userId: user.id, mediaItemId: item.id, value: 'first' });
+    await exampleRepository.upsert({
+      userId: user.id,
+      mediaItemId: item.id,
+      value: 'first',
+    });
     // Second upsert — updates (same unique constraint)
-    await exampleRepository.upsert({ userId: user.id, mediaItemId: item.id, value: 'second' });
+    await exampleRepository.upsert({
+      userId: user.id,
+      mediaItemId: item.id,
+      value: 'second',
+    });
 
     const result = await exampleRepository.findByUserAndItem(user.id, item.id);
     expect(result!.value).toBe('second');
@@ -246,7 +260,11 @@ Verify that migrations run cleanly in both directions:
 
 ```typescript
 // server/__tests__/migrations/your_migration.test.ts
-import { runMigrations, rollbackLastMigration, clearDatabase } from '../__utils__/db';
+import {
+  runMigrations,
+  rollbackLastMigration,
+  clearDatabase,
+} from '../__utils__/db';
 import { knex } from '../../src/dbconfig';
 
 describe('20260311143000_add_example_table migration', () => {
@@ -292,11 +310,13 @@ describe('TmdbProvider', () => {
   test('search returns normalized results', async () => {
     mockedAxios.get.mockResolvedValueOnce({
       data: {
-        results: [{
-          id: 550,
-          title: 'Fight Club',
-          release_date: '1999-10-15',
-        }],
+        results: [
+          {
+            id: 550,
+            title: 'Fight Club',
+            release_date: '1999-10-15',
+          },
+        ],
       },
     });
 
@@ -325,14 +345,10 @@ The `request` helper provides an `.auth(user)` method that sets a valid session:
 
 ```typescript
 // Bearer token auth (alternative)
-const res = await request
-  .get('/api/items')
-  .set('Access-Token', user.apiToken);
+const res = await request.get('/api/items').set('Access-Token', user.apiToken);
 
 // Session-based auth (most common in tests)
-const res = await request
-  .get('/api/items')
-  .auth(user);  // sets the session cookie
+const res = await request.get('/api/items').auth(user); // sets the session cookie
 ```
 
 ## Bulk Upsert Testing (SQLite Limit)
@@ -349,7 +365,10 @@ test('bulk upsert works for >500 items', async () => {
   // Should not throw a "too many SQL variables" error
   await expect(mediaItemRepository.bulkUpsert(items)).resolves.not.toThrow();
 
-  const count = await knex('mediaItem').where({ userId: user.id }).count({ c: '*' }).first();
+  const count = await knex('mediaItem')
+    .where({ userId: user.id })
+    .count({ c: '*' })
+    .first();
   expect(Number(count!.c)).toBe(600);
 });
 ```
@@ -358,16 +377,17 @@ test('bulk upsert works for >500 items', async () => {
 
 Every new endpoint must have tests for:
 
-| Scenario | Required |
-|---|---|
-| Success (happy path) | ✅ |
-| Item not found (404) | ✅ |
-| Unauthenticated request (401) | ✅ |
+| Scenario                                | Required                      |
+| --------------------------------------- | ----------------------------- |
+| Success (happy path)                    | ✅                            |
+| Item not found (404)                    | ✅                            |
+| Unauthenticated request (401)           | ✅                            |
 | Access to another user's resource (403) | ✅ if resource is user-scoped |
-| Invalid input (400) | ✅ for POST/PUT/PATCH |
-| Admin-only enforcement | ✅ if endpoint is admin-only |
+| Invalid input (400)                     | ✅ for POST/PUT/PATCH         |
+| Admin-only enforcement                  | ✅ if endpoint is admin-only  |
 
 Run coverage to check:
+
 ```bash
 DATABASE_PATH=:memory: npm run test:coverage
 ```

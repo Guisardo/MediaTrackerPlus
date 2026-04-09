@@ -1,7 +1,5 @@
 {
   "permissions": {
-    "allow": [
-      "Bash(git rm --cached docs-catalog.json)"
-    ]
+    "allow": ["Bash(git rm --cached docs-catalog.json)"]
   }
 }

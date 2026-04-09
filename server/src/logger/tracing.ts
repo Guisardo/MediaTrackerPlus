@@ -16,7 +16,8 @@ const MAX_OBJECT_KEYS = 10;
 const MAX_STRING_LENGTH = 120;
 
 const isSensitiveKey = (key: string) =>
-  SENSITIVE_KEY_PATTERN.test(key) || SENSITIVE_QUERY_KEYS.has(key.toLowerCase());
+  SENSITIVE_KEY_PATTERN.test(key) ||
+  SENSITIVE_QUERY_KEYS.has(key.toLowerCase());
 
 export const sanitizeUrlForLog = (value: string) => {
   if (!value.includes('?')) {
@@ -24,9 +25,10 @@ export const sanitizeUrlForLog = (value: string) => {
   }
 
   try {
-    const url = value.startsWith('http://') || value.startsWith('https://')
-      ? new URL(value)
-      : new URL(value, 'https://mediatracker.local');
+    const url =
+      value.startsWith('http://') || value.startsWith('https://')
+        ? new URL(value)
+        : new URL(value, 'https://mediatracker.local');
 
     Array.from(url.searchParams.keys()).forEach((key) => {
       if (isSensitiveKey(key)) {
@@ -172,11 +174,7 @@ export const traceMethod = (options?: {
   includeResult?: boolean;
   label?: string;
 }) => {
-  const {
-    includeArgs = true,
-    includeResult = true,
-    label,
-  } = options || {};
+  const { includeArgs = true, includeResult = true, label } = options || {};
 
   return (
     target: object,
@@ -256,8 +254,11 @@ export const applyMethodDecorator = (
   }
 
   const nextDescriptor =
-    decorator(target, propertyKey, descriptor as TypedPropertyDescriptor<any>) ||
-    descriptor;
+    decorator(
+      target,
+      propertyKey,
+      descriptor as TypedPropertyDescriptor<any>
+    ) || descriptor;
 
   Object.defineProperty(target, propertyKey, nextDescriptor);
 };

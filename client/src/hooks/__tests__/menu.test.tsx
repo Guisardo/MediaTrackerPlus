@@ -52,10 +52,7 @@ const Harness: React.FC<HarnessProps> = ({
   );
 };
 
-function renderMenu(
-  props: HarnessProps,
-  initialEntries: string[] = ['/']
-) {
+function renderMenu(props: HarnessProps, initialEntries: string[] = ['/']) {
   return render(
     <MemoryRouter initialEntries={initialEntries}>
       <Harness {...props} />
@@ -92,7 +89,9 @@ describe('useMenuComponent – Menu visibility', () => {
     expect(screen.getByText('Asc', { selector: 'li' })).toBeInTheDocument();
 
     await user.click(screen.getByText('Trigger'));
-    expect(screen.queryByText('Asc', { selector: 'li' })).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('Asc', { selector: 'li' })
+    ).not.toBeInTheDocument();
   });
 
   it('closes the dropdown when clicking outside', async () => {
@@ -107,7 +106,9 @@ describe('useMenuComponent – Menu visibility', () => {
     await user.click(document.body);
 
     await waitFor(() => {
-      expect(screen.queryByText('Asc', { selector: 'li' })).not.toBeInTheDocument();
+      expect(
+        screen.queryByText('Asc', { selector: 'li' })
+      ).not.toBeInTheDocument();
     });
   });
 });
@@ -125,10 +126,9 @@ describe('useMenuComponent – value selection', () => {
   });
 
   it('renders the initial selection from URL param', () => {
-    renderMenu(
-      { values: ['Asc', 'Desc'], paramFilter: 'sort' },
-      ['/?sort=Desc']
-    );
+    renderMenu({ values: ['Asc', 'Desc'], paramFilter: 'sort' }, [
+      '/?sort=Desc',
+    ]);
 
     expect(screen.getByTestId('selectedValue').textContent).toBe('Desc');
   });

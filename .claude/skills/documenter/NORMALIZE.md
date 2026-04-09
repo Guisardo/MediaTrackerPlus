@@ -24,6 +24,7 @@ H5/H6        → Do not use
 ```
 
 **Violations to fix:**
+
 - Multiple H1s → keep the first, demote the rest by one level
 - Skipped levels (H1 → H3) → insert the missing level or demote
 - Headings ending with `:` → remove the colon
@@ -33,7 +34,7 @@ H5/H6        → Do not use
 
 Every fenced code block **must** have a language identifier:
 
-```
+````
 ```bash          # shell commands
 ```typescript    # TypeScript
 ```javascript    # JavaScript
@@ -41,7 +42,7 @@ Every fenced code block **must** have a language identifier:
 ```yaml          # YAML / docker-compose
 ```sql           # SQL
 ```text          # plain text / output with no syntax
-```
+````
 
 Blocks with no identifier → add `text` as a safe fallback.
 Inline code for commands, file paths, env vars, and config keys: use single backticks.
@@ -55,13 +56,13 @@ Inline code for commands, file paths, env vars, and config keys: use single back
 
 ### N5 — Links
 
-| Link type | Rule |
-|-----------|------|
-| Internal doc | Relative path: `[ORGANIZE.md](ORGANIZE.md)` |
+| Link type       | Rule                                                    |
+| --------------- | ------------------------------------------------------- |
+| Internal doc    | Relative path: `[ORGANIZE.md](ORGANIZE.md)`             |
 | Internal anchor | Lowercase, hyphens: `[heading](#n2--heading-hierarchy)` |
-| External URL | Full HTTPS URL with display text |
-| Bare URLs | Wrap in angle brackets: `<https://example.com>` |
-| Image alt text | Always present: `![descriptive text](path/to/img.png)` |
+| External URL    | Full HTTPS URL with display text                        |
+| Bare URLs       | Wrap in angle brackets: `<https://example.com>`         |
+| Image alt text  | Always present: `![descriptive text](path/to/img.png)`  |
 
 ### N6 — Tables
 
@@ -73,9 +74,9 @@ Inline code for commands, file paths, env vars, and config keys: use single back
 Example well-formed table:
 
 ```markdown
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| PORT | number | `9000` | HTTP listening port |
+| Name | Type   | Default | Description         |
+| ---- | ------ | ------- | ------------------- |
+| PORT | number | `9000`  | HTTP listening port |
 ```
 
 ### N7 — Blank Lines

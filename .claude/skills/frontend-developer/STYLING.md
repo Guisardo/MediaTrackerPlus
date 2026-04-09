@@ -6,12 +6,12 @@ Rules, patterns, and migration guide for the MediaTrackerPlus `client/` styling 
 
 The codebase has four overlapping styling systems — this causes inconsistency and makes dark mode / mobile support fragile:
 
-| System | Where Used | Migration Action |
-|---|---|---|
-| **Tailwind CSS v3** (primary) | Most components, pages | Keep — upgrade to v4 |
-| **styled-components v5** | GridItem, some modals | Remove on contact |
-| **SCSS/SASS** | `main.scss` (grid mixins, base) | Remove on contact |
-| **Plain CSS** | `dark.css`, `fullcalendar.css`, `materialIcons.css` | Consolidate into Tailwind |
+| System                        | Where Used                                          | Migration Action          |
+| ----------------------------- | --------------------------------------------------- | ------------------------- |
+| **Tailwind CSS v3** (primary) | Most components, pages                              | Keep — upgrade to v4      |
+| **styled-components v5**      | GridItem, some modals                               | Remove on contact         |
+| **SCSS/SASS**                 | `main.scss` (grid mixins, base)                     | Remove on contact         |
+| **Plain CSS**                 | `dark.css`, `fullcalendar.css`, `materialIcons.css` | Consolidate into Tailwind |
 
 ## The Rule: Tailwind Only
 
@@ -38,6 +38,7 @@ Tailwind v4 (stable, Jan 2025) changes configuration from `tailwind.config.js` t
 ### Key changes:
 
 **Before (v3 — current):**
+
 ```js
 // tailwind.config.js
 module.exports = {
@@ -50,7 +51,7 @@ module.exports = {
     },
   },
   plugins: [
-    plugin(function({ addUtilities }) {
+    plugin(function ({ addUtilities }) {
       addUtilities({ '.btn': { padding: '8px 16px' } });
     }),
   ],
@@ -58,9 +59,10 @@ module.exports = {
 ```
 
 **After (v4 — target):**
+
 ```css
 /* src/styles/tailwind.css */
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
   --color-brand: #6366f1;
@@ -74,6 +76,7 @@ module.exports = {
 ```
 
 **Import change:**
+
 ```css
 /* v3 */
 @tailwind base;
@@ -81,10 +84,11 @@ module.exports = {
 @tailwind utilities;
 
 /* v4 */
-@import "tailwindcss";
+@import 'tailwindcss';
 ```
 
 ### Run the automated migration:
+
 ```bash
 npx @tailwindcss/upgrade
 ```
@@ -95,13 +99,13 @@ This handles most of the v3 → v4 config conversion automatically.
 
 Tailwind is mobile-first by default. Write base classes for mobile, then override with `sm:`, `md:`, `lg:`:
 
-| Breakpoint | Width | Use for |
-|---|---|---|
-| (base) | 0–639px | Mobile phones — **write here first** |
-| `sm:` | ≥640px | Large phones, small tablets |
-| `md:` | ≥768px | Tablets |
-| `lg:` | ≥1024px | Desktop |
-| `xl:` | ≥1280px | Wide desktop |
+| Breakpoint | Width   | Use for                              |
+| ---------- | ------- | ------------------------------------ |
+| (base)     | 0–639px | Mobile phones — **write here first** |
+| `sm:`      | ≥640px  | Large phones, small tablets          |
+| `md:`      | ≥768px  | Tablets                              |
+| `lg:`      | ≥1024px | Desktop                              |
+| `xl:`      | ≥1280px | Wide desktop                         |
 
 ```tsx
 // ✅ Mobile-first
@@ -133,6 +137,7 @@ The app uses `dark:` class-based dark mode (set on `<html>`). Every colour token
 ```
 
 ### Toggling dark mode (for Selenium testing):
+
 ```js
 // Enable dark mode
 document.documentElement.classList.add('dark');
@@ -149,8 +154,11 @@ Container queries let components respond to their container width rather than th
 ```tsx
 // Mark a container
 <div className="@container">
-  <div className="flex-col @sm:flex-row">   // switches layout at container ≥640px
-    <img className="w-full @sm:w-32" />     // constrained width when container is wide enough
+  <div className="flex-col @sm:flex-row">
+    {' '}
+    // switches layout at container ≥640px
+    <img className="w-full @sm:w-32" /> // constrained width when container is
+    wide enough
   </div>
 </div>
 ```
@@ -162,32 +170,38 @@ This is especially useful for `GridItem` — it can be used in both a 2-column a
 When you encounter a file using styled-components, follow this migration process:
 
 ### Step 1 — Identify all styled components in the file
+
 ```bash
 grep -n "styled\." client/src/components/GridItem.tsx
 ```
 
 ### Step 2 — Map styled props to Tailwind conditional classes
+
 ```tsx
 // Before
 const Card = styled.div<{ active?: boolean; compact?: boolean }>`
-  background: ${p => p.active ? '#3b82f6' : '#fff'};
-  padding: ${p => p.compact ? '4px' : '12px'};
+  background: ${(p) => (p.active ? '#3b82f6' : '#fff')};
+  padding: ${(p) => (p.compact ? '4px' : '12px')};
   border-radius: 8px;
 `;
-<Card active={isActive} compact={isCompact} />
+<Card active={isActive} compact={isCompact} />;
 
 // After
 import { clsx } from 'clsx';
 
-<div className={clsx(
-  'rounded-lg',
-  isActive ? 'bg-blue-500' : 'bg-white dark:bg-gray-900',
-  isCompact ? 'p-1' : 'p-3',
-)} />
+<div
+  className={clsx(
+    'rounded-lg',
+    isActive ? 'bg-blue-500' : 'bg-white dark:bg-gray-900',
+    isCompact ? 'p-1' : 'p-3'
+  )}
+/>;
 ```
 
 ### Step 3 — Handle dynamic colour values
+
 If a styled-component uses a colour that comes from JavaScript (e.g., genre colour from API), use inline style for that specific value:
+
 ```tsx
 // Genre colour comes from the API — no Tailwind class exists for it
 <div
@@ -199,6 +213,7 @@ If a styled-component uses a colour that comes from JavaScript (e.g., genre colo
 ```
 
 ### Step 4 — Verify there are no remaining imports
+
 ```bash
 grep "styled-components" client/src/components/GridItem.tsx  # should return nothing
 ```
@@ -208,6 +223,7 @@ grep "styled-components" client/src/components/GridItem.tsx  # should return not
 ### Current SCSS grid mixins (to replace)
 
 The `main.scss` file defines grid mixins like:
+
 ```scss
 // Current SCSS — main.scss
 @mixin item-grid($cols) {
@@ -216,18 +232,26 @@ The `main.scss` file defines grid mixins like:
   gap: 12px;
 }
 
-.items-grid-mobile { @include item-grid(2); }
-.items-grid-tablet { @include item-grid(3); }
-.items-grid-desktop { @include item-grid(4); }
+.items-grid-mobile {
+  @include item-grid(2);
+}
+.items-grid-tablet {
+  @include item-grid(3);
+}
+.items-grid-desktop {
+  @include item-grid(4);
+}
 ```
 
 Tailwind replacement:
+
 ```tsx
 // Replace SCSS grid classes with Tailwind
 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
 ```
 
 ### When SCSS is fully removed from a file:
+
 1. Delete the SCSS import in the component
 2. Check if `main.scss` still imports the removed partial — if so, remove that `@use` too
 3. Run `npm start` and confirm no build error
@@ -237,48 +261,55 @@ Tailwind replacement:
 Use these standard tokens. Do not hardcode hex values:
 
 ### Spacing
+
 - Card padding: `p-3` mobile, `p-4` desktop
 - Grid gap: `gap-3` mobile, `gap-4` desktop
 - Section spacing: `py-6` mobile, `py-8` desktop
 
 ### Border radius
+
 - Cards: `rounded-lg` (8px)
 - Badges: `rounded-full`
 - Buttons: `rounded-md` (6px)
 - Input: `rounded-md`
 
 ### Typography
+
 - Page title: `text-xl font-bold` mobile, `text-2xl` desktop
 - Section heading: `text-base font-semibold`
 - Body: `text-sm`
 - Caption / metadata: `text-xs text-gray-500 dark:text-gray-400`
 
 ### Shadows
+
 - Cards: `shadow-sm dark:shadow-none`
 - Modals: `shadow-xl`
 - Dropdowns: `shadow-md`
 
 ### Focus / interactive states
+
 Always include focus-visible ring for keyboard accessibility:
+
 ```tsx
-className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+className =
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500';
 ```
 
 ## Colour Palette
 
 The app supports light and dark mode. Use Tailwind's built-in colour scale:
 
-| Use | Light | Dark |
-|---|---|---|
-| Page background | `bg-gray-50` | `dark:bg-gray-950` |
-| Card background | `bg-white` | `dark:bg-gray-900` |
-| Border | `border-gray-200` | `dark:border-gray-700` |
-| Body text | `text-gray-900` | `dark:text-gray-100` |
-| Muted text | `text-gray-500` | `dark:text-gray-400` |
-| Primary action | `bg-blue-600` | `dark:bg-blue-500` |
-| Destructive action | `bg-red-600` | `dark:bg-red-500` |
-| Star rating | `text-yellow-400` | `text-yellow-400` |
-| Success | `text-green-600` | `dark:text-green-400` |
+| Use                | Light             | Dark                   |
+| ------------------ | ----------------- | ---------------------- |
+| Page background    | `bg-gray-50`      | `dark:bg-gray-950`     |
+| Card background    | `bg-white`        | `dark:bg-gray-900`     |
+| Border             | `border-gray-200` | `dark:border-gray-700` |
+| Body text          | `text-gray-900`   | `dark:text-gray-100`   |
+| Muted text         | `text-gray-500`   | `dark:text-gray-400`   |
+| Primary action     | `bg-blue-600`     | `dark:bg-blue-500`     |
+| Destructive action | `bg-red-600`      | `dark:bg-red-500`      |
+| Star rating        | `text-yellow-400` | `text-yellow-400`      |
+| Success            | `text-green-600`  | `dark:text-green-400`  |
 
 ## Transition & Animation
 

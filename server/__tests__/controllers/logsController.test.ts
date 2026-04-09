@@ -122,8 +122,8 @@ describe('LogsController', () => {
   beforeAll(async () => {
     await runMigrations();
 
-    await Database.knex('user').insert(Data.user);   // admin = true
-    await Database.knex('user').insert(Data.user2);  // admin = false
+    await Database.knex('user').insert(Data.user); // admin = true
+    await Database.knex('user').insert(Data.user2); // admin = false
   });
 
   afterAll(clearDatabase);

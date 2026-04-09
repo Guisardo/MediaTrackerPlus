@@ -19,9 +19,11 @@ Add a multi-dimensional facet filter panel to content list pages so users can di
 ## User Stories
 
 ### US-001: Backend facet counts API endpoint
+
 **Description:** As a developer, I need a backend API endpoint that returns available facet options with item counts so the facet panel can display meaningful, dynamic choices.
 
 **Acceptance Criteria:**
+
 - [ ] `GET /api/items/facets` endpoint exists and returns `{ genres, years, languages, creators, publishers, mediaTypes }` each as `Array<{ value: string; count: number }>`
 - [ ] Endpoint accepts optional `mediaType` query param; when provided, scopes results to that type; when absent (mixed-content pages), aggregates across all types
 - [ ] `mediaTypes` dimension is populated only when `mediaType` is NOT provided (single-type pages have no use for a media type facet)
@@ -35,9 +37,11 @@ Add a multi-dimensional facet filter panel to content list pages so users can di
 - [ ] Typecheck passes
 
 ### US-002: Backend multi-facet filtering for paginated items
+
 **Description:** As a developer, I need the paginated items endpoint to accept multi-value and range facet parameters so filtered result sets can be fetched.
 
 **Acceptance Criteria:**
+
 - [ ] `GET /api/items/paginated` accepts `genres` param as comma-separated string (e.g., `genres=Action,Comedy`)
 - [ ] `GET /api/items/paginated` accepts `languages` param as comma-separated string
 - [ ] `GET /api/items/paginated` accepts `creators` param as comma-separated string
@@ -53,9 +57,11 @@ Add a multi-dimensional facet filter panel to content list pages so users can di
 - [ ] Typecheck passes
 
 ### US-003: FacetPanel desktop sidebar layout
+
 **Description:** As a user browsing on desktop, I want a persistent facet sidebar so I can adjust filters without losing my place in the list.
 
 **Acceptance Criteria:**
+
 - [ ] `FacetPanel` component renders as a fixed-width sidebar (240px) beside the grid on screens ≥ 1024px
 - [ ] Sidebar is always visible on desktop; no button required to open it
 - [ ] Each facet dimension renders as a collapsible accordion section with a chevron toggle
@@ -66,9 +72,11 @@ Add a multi-dimensional facet filter panel to content list pages so users can di
 - [ ] Verify in browser using Selenium MCP
 
 ### US-004: FacetPanel mobile bottom drawer
+
 **Description:** As a user browsing on mobile, I want facets in a bottom drawer so they don't crowd the limited screen space.
 
 **Acceptance Criteria:**
+
 - [ ] On screens < 1024px, FacetPanel is hidden by default
 - [ ] A "Filters" button is visible in the list toolbar area (near the existing FilterBy/OrderBy controls)
 - [ ] When any facet is active, the Filters button shows a badge with the count of active facet dimensions
@@ -80,9 +88,11 @@ Add a multi-dimensional facet filter panel to content list pages so users can di
 - [ ] Verify in browser using Selenium MCP
 
 ### US-005: Genre facet section
+
 **Description:** As a user, I want to filter by one or more genres so I can find content I'm in the mood for.
 
 **Acceptance Criteria:**
+
 - [ ] Genre accordion section lists up to 15 genres as checkbox items, each with a count badge
 - [ ] Genres are sorted by count descending
 - [ ] A "Show more" link expands the list to show all genres; "Show less" collapses back to 15
@@ -94,9 +104,11 @@ Add a multi-dimensional facet filter panel to content list pages so users can di
 - [ ] Verify in browser using Selenium MCP
 
 ### US-006: Year range facet section
+
 **Description:** As a user, I want to filter by release year range so I can browse content from a specific era.
 
 **Acceptance Criteria:**
+
 - [ ] Year accordion section shows a dual-handle range slider [1] spanning from the earliest available year to the current year
 - [ ] Two numeric inputs below the slider show the current `yearMin` and `yearMax` values
 - [ ] Dragging either slider handle updates the corresponding numeric input in real-time
@@ -107,9 +119,11 @@ Add a multi-dimensional facet filter panel to content list pages so users can di
 - [ ] Verify in browser using Selenium MCP
 
 ### US-007: Rating range facet section
+
 **Description:** As a user, I want to filter by TMDB rating range so I can find highly-rated content.
 
 **Acceptance Criteria:**
+
 - [ ] Rating accordion section shows a dual-handle range slider from 0 to 10 with 0.5-step increments
 - [ ] Two numeric inputs show current `ratingMin` and `ratingMax` values (e.g., "6.5" – "10.0")
 - [ ] Dragging either slider handle updates its numeric input in real-time
@@ -120,9 +134,11 @@ Add a multi-dimensional facet filter panel to content list pages so users can di
 - [ ] Verify in browser using Selenium MCP
 
 ### US-008: Language facet section
+
 **Description:** As a user, I want to filter by language so I can find content in my preferred language.
 
 **Acceptance Criteria:**
+
 - [ ] Language accordion section lists available languages as checkbox items with count badges
 - [ ] Language codes from the `language` field are mapped to display names (e.g., `en` → "English", `fr` → "French")
 - [ ] Multiple languages can be selected simultaneously (OR logic)
@@ -132,9 +148,11 @@ Add a multi-dimensional facet filter panel to content list pages so users can di
 - [ ] Verify in browser using Selenium MCP
 
 ### US-009: Add `creator` field for TV shows (backend schema + metadata)
+
 **Description:** As a developer, I need to store TV show creators in the database so the creator facet can work for TV content.
 
 **Acceptance Criteria:**
+
 - [ ] New migration adds a `creator` column (`STRING`, nullable) to the `mediaItem` table
 - [ ] `creator` added to `MediaItemBase` as `creator?: string` and to `mediaItemColumns` in `/server/src/entity/mediaItem.ts`
 - [ ] `mapTvShow()` in `/server/src/metadata/provider/tmdb.ts` maps `item.created_by?.map(c => c.name).join(', ')` to `tvShow.creator` (the `created_by: CreatedBy[]` field is already present in every `TvDetailsResponse` — data has been fetched but discarded until now)
@@ -143,9 +161,11 @@ Add a multi-dimensional facet filter panel to content list pages so users can di
 - [ ] Typecheck passes
 
 ### US-010: Add `director` field for movies (backend schema + metadata)
+
 **Description:** As a developer, I need to store movie directors in the database so the creator facet can work for movies.
 
 **Acceptance Criteria:**
+
 - [ ] New migration adds a `director` column (`STRING`, nullable) to the `mediaItem` table
 - [ ] `director` added to `MediaItemBase` as `director?: string` and to `mediaItemColumns`
 - [ ] `TMDbMovie.details()` call in `/server/src/metadata/provider/tmdb.ts` is updated to include `append_to_response: 'credits'` in the request params
@@ -155,9 +175,11 @@ Add a multi-dimensional facet filter panel to content list pages so users can di
 - [ ] Typecheck passes
 
 ### US-011: Creator facet section (all media types)
+
 **Description:** As a user, I want to filter by the creator of the content to browse a specific person's body of work across all media types.
 
 **Acceptance Criteria:**
+
 - [ ] Section label is context-aware: "Director" for movies, "Creator" for TV shows, "Author" for books and audiobooks, "Developer" for games
 - [ ] Creator section is hidden when the current media type has no creator data (edge case: new TV/movie items added before their metadata refreshed)
 - [ ] Checkbox list with count badges, up to 15 most-common with "Show more / Show less" toggle
@@ -167,9 +189,11 @@ Add a multi-dimensional facet filter panel to content list pages so users can di
 - [ ] Verify in browser using Selenium MCP
 
 ### US-012: Status facet section (replaces FilterBy)
+
 **Description:** As a user, I want to filter by status (seen, watchlist, rated) inside the facet panel so I don't need a separate filter dropdown.
 
 **Acceptance Criteria:**
+
 - [ ] Status accordion section renders checkboxes: "Rated", "Unrated", "On watchlist", and a media-type-aware seen label ("Watched" for movies/TV, "Played" for games, "Read" for books, "Listened" for audiobooks)
 - [ ] Multiple status values can be checked simultaneously (AND logic — item must match all checked statuses)
 - [ ] Selecting statuses updates a new `status` URL param as comma-separated keys (e.g., `status=rated,watchlist`); internal keys: `rated`, `unrated`, `watchlist`, `seen`
@@ -181,9 +205,11 @@ Add a multi-dimensional facet filter panel to content list pages so users can di
 - [ ] Verify in browser using Selenium MCP
 
 ### US-013: Active facet chips row
+
 **Description:** As a user, I want to see my active filters at a glance above the grid and be able to remove any of them individually.
 
 **Acceptance Criteria:**
+
 - [ ] A horizontal row of chips renders between the toolbar and the grid when at least one facet is active
 - [ ] Each chip shows the dimension label and value, e.g., "Genre: Action", "Year: 2010–2020", "Rating: 7–10"
 - [ ] Year and rating ranges each produce a single chip showing the range
@@ -194,9 +220,11 @@ Add a multi-dimensional facet filter panel to content list pages so users can di
 - [ ] Verify in browser using Selenium MCP
 
 ### US-014: `useFacets` hook and PaginatedGridItems integration
+
 **Description:** As a developer, I need all facet state managed through a single hook and the FacetPanel wired into the existing list component so every content list page can opt in.
 
 **Acceptance Criteria:**
+
 - [ ] `useFacets()` hook exists and reads/writes `genres`, `yearMin`, `yearMax`, `ratingMin`, `ratingMax`, `languages`, `creators`, `publishers`, `status` URL params
 - [ ] `useFacets()` returns: active facet query params (for API calls), a derived `activeFacetCount` number, and setter functions per dimension (including `setPublishers`)
 - [ ] `PaginatedGridItems` accepts a new optional `showFacets?: boolean` prop; when `true`, renders the FacetPanel alongside the grid
@@ -211,9 +239,11 @@ Add a multi-dimensional facet filter panel to content list pages so users can di
 - [ ] Typecheck passes
 
 ### US-015: Media Type facet section (mixed-content pages)
+
 **Description:** As a user browsing my watchlist or upcoming items, I want to filter by media type so I can see only movies, or only books, without leaving the page.
 
 **Acceptance Criteria:**
+
 - [ ] Media Type accordion section renders on mixed-content pages (`WatchlistPage`, `UpcomingPage`, `InProgressPage`) when facets are enabled
 - [ ] Section is **not rendered** on single-type pages (`ItemsPage` — already scoped to one media type)
 - [ ] Each media type present in the user's library is shown as a checkbox with display label and count (e.g., "Movie (42)", "TV Show (18)", "Book (5)")
@@ -225,9 +255,11 @@ Add a multi-dimensional facet filter panel to content list pages so users can di
 - [ ] Verify in browser using Selenium MCP
 
 ### US-016: Author and creator field normalization
+
 **Description:** As a developer, I need all incoming author and creator names to be normalized before storing, so the creator facet produces clean, deduplicated tokens when aggregating.
 
 **Acceptance Criteria:**
+
 - [ ] A shared utility function `normalizeCreatorField(names: string[]): string[]` exists in `/server/src/utils/normalizeCreators.ts` and performs: trim whitespace from each name, filter empty strings, deduplicate while preserving order
 - [ ] The function is applied before `join(',')` in all three storage sites: OpenLibrary `mapBook()`, Audible `mapAudiobook()`, and the Goodreads import controller
 - [ ] **Research confirmed (no "Last, First" format found):** All three sources — Goodreads (`goodreads.xml` fixture: "Fyodor Dostoevsky", "J.K. Rowling"), OpenLibrary (`author_name: string[]`), and Audible (`author.name` from objects) — return names in "First Last" format. No "Last, First" conversion is required.
@@ -237,9 +269,11 @@ Add a multi-dimensional facet filter panel to content list pages so users can di
 - [ ] Typecheck passes
 
 ### US-017: Sort order compatibility with facets
+
 **Description:** As a developer, I need the existing sort controls to remain fully functional when facets are enabled so that users can sort and filter simultaneously without losing their sort preference.
 
 **Acceptance Criteria:**
+
 - [ ] `OrderByComponent` continues to render in the `PaginatedGridItems` toolbar when `showFacets={true}` — it is **not** removed or relocated
 - [ ] On mobile, the sort direction toggle button (`↑`/`↓`) and the sort field menu remain accessible in the toolbar alongside the new "Filters" button
 - [ ] All 10 `MediaItemOrderBy` sort fields (`title`, `releaseDate`, `lastSeen`, `status`, `mediaType`, `progress`, `recommended`, `nextAiring`, `lastAiring`, `unseenEpisodes`) remain available and functional when facets are active
@@ -251,9 +285,11 @@ Add a multi-dimensional facet filter panel to content list pages so users can di
 - [ ] Typecheck passes
 
 ### US-018: Add `publisher` field for games (backend schema + metadata)
+
 **Description:** As a developer, I need to store game publisher names in the database so the publisher facet can work for video game content.
 
 **Acceptance Criteria:**
+
 - [ ] New migration adds a `publisher` column (`STRING`, nullable) to the `mediaItem` table
 - [ ] `publisher` added to `MediaItemBase` as `publisher?: string` and to `mediaItemColumns` in `/server/src/entity/mediaItem.ts`
 - [ ] `mapGame()` in `/server/src/metadata/provider/igdb.ts` maps the publisher name from `involved_companies` (entries where `publisher === true`) to `game.publisher`; when multiple publishers exist, their names are joined with `', '`
@@ -262,9 +298,11 @@ Add a multi-dimensional facet filter panel to content list pages so users can di
 - [ ] Typecheck passes
 
 ### US-019: Publisher facet section (games)
+
 **Description:** As a user browsing games, I want to filter by publisher so I can browse a specific company's catalog.
 
 **Acceptance Criteria:**
+
 - [ ] Publisher accordion section renders inside `FacetPanel` only when `mediaType=video_game` or on mixed-content pages where at least one game publisher value exists
 - [ ] Section is **not rendered** on any other single-type page (movies, TV, books, audiobooks)
 - [ ] On mixed-content pages the section header reads "Publisher"; on the games page it also reads "Publisher"
@@ -307,7 +345,7 @@ Add a multi-dimensional facet filter panel to content list pages so users can di
 - No facet panel on `/calendar` page
 - No facets on `UpcomingPage`/`InProgressPage` if those pages do not use `PaginatedGridItems` — integration requires the same refactor path as `ListPage` and is tracked as a follow-up if confirmed
 - No animated transitions for drawer open/close (functional behavior only; can be enhanced later)
-- No custom sort order for facet options (always count descending — this refers to the ordering of options *within* the facet panel, not the grid sort order)
+- No custom sort order for facet options (always count descending — this refers to the ordering of options _within_ the facet panel, not the grid sort order)
 - No changes to the `OrderByComponent` UI or the `MediaItemOrderBy` / `SortOrder` types — sorting behavior is preserved as-is (FR-20)
 - No removal of `FilterByComponent` from statistics pages — `FilterBy` is only suppressed when `showFacets={true}`, and statistics pages use `showFacets={false}` (i.e. no regression on stats pages)
 - No facets on the Statistics sub-pages (those have their own year/genre navigation)
@@ -331,20 +369,21 @@ Add a multi-dimensional facet filter panel to content list pages so users can di
 - Use `@radix-ui/react-slider` [1] for the dual-handle year and rating range sliders — it provides accessible, unstyled primitives that work well with TailwindCSS.
 - Use `@radix-ui/react-collapsible` [2] for accordion sections — provides keyboard navigation and ARIA attributes out of the box, satisfying the accessible disclosure pattern [3].
 - **Genres column is CSV, not JSON.** The `genres` column stores a plain comma-separated string (e.g., `"Action,Drama"`), serialized via `genres.join(',')` and deserialized via `.split(',')` throughout the codebase (confirmed in `mediaItem.ts` and `statisticsController.ts`). Do not use `json_each()` directly on the column — it requires a fragile JSON-wrapping hack that breaks on genre names containing double-quote characters. For the facets aggregation query, use application-layer splitting (fetch rows, split in TypeScript), mirroring the pattern already used in `statisticsController.ts`. For the multi-value `genres` filter in the items query, use OR-chained `LIKE '%value%'` per genre, consistent with the existing single-value `genre` filter already in `items.ts`.
-- **Existing `year` param conflict.** The existing `year` URL param filters by *seen date year* (not release year). The new `yearMin`/`yearMax` facet params filter by `releaseDate` year. Both coexist — do not rename or shadow the existing `year` param. The `GetItemsArgs` type must add `yearMin`/`yearMax` as new optional fields.
+- **Existing `year` param conflict.** The existing `year` URL param filters by _seen date year_ (not release year). The new `yearMin`/`yearMax` facet params filter by `releaseDate` year. Both coexist — do not rename or shadow the existing `year` param. The `GetItemsArgs` type must add `yearMin`/`yearMax` as new optional fields.
 - **Existing `genre` param coexistence.** The existing singular `genre` param performs a single-value LIKE filter. The new plural `genres` param is multi-value OR logic. Both must be handled independently in the controller and query builder.
 - **Creator field availability by media type (confirmed by API research):**
 
-  | Media Type | Field | Source | Status | Notes |
-  |---|---|---|---|---|
-  | Movie | `director` | TMDB `/3/movie/{id}?append_to_response=credits` | Not stored — needs `append_to_response=credits` added to existing details call in `tmdb.ts` | `Crew` type already defined in file; filter `crew` by `job === 'Director'`; store as plain string |
-  | TV Show | `creator` | TMDB `TvDetailsResponse.created_by[]` | Not stored — data **already fetched** but silently discarded in `mapTvShow()` | One line to add: `tvShow.creator = item.created_by?.map(c => c.name).join(', ')` |
-  | Book | `authors` | OpenLibrary `author_name[]` in search response | **Already stored** as CSV string | Authors populated via search path; details path only has key refs, not names |
-  | Audiobook | `authors` | Audible `contributors.authors[].name` | **Already stored** as CSV string | `narrators` is also stored separately but not used for creator facet |
-  | Video Game | `developer` | IGDB `involved_companies` (developer flag) | **Already stored** as plain string | Used for the Creator facet dimension; separate from publisher |
-  | Video Game | `publisher` | IGDB `involved_companies` (publisher flag) | Not stored — needs a new migration and mapping in `igdb.ts` | Filter `involved_companies` by `publisher === true`; join names with `', '`; store as plain string |
+  | Media Type | Field       | Source                                          | Status                                                                                      | Notes                                                                                              |
+  | ---------- | ----------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+  | Movie      | `director`  | TMDB `/3/movie/{id}?append_to_response=credits` | Not stored — needs `append_to_response=credits` added to existing details call in `tmdb.ts` | `Crew` type already defined in file; filter `crew` by `job === 'Director'`; store as plain string  |
+  | TV Show    | `creator`   | TMDB `TvDetailsResponse.created_by[]`           | Not stored — data **already fetched** but silently discarded in `mapTvShow()`               | One line to add: `tvShow.creator = item.created_by?.map(c => c.name).join(', ')`                   |
+  | Book       | `authors`   | OpenLibrary `author_name[]` in search response  | **Already stored** as CSV string                                                            | Authors populated via search path; details path only has key refs, not names                       |
+  | Audiobook  | `authors`   | Audible `contributors.authors[].name`           | **Already stored** as CSV string                                                            | `narrators` is also stored separately but not used for creator facet                               |
+  | Video Game | `developer` | IGDB `involved_companies` (developer flag)      | **Already stored** as plain string                                                          | Used for the Creator facet dimension; separate from publisher                                      |
+  | Video Game | `publisher` | IGDB `involved_companies` (publisher flag)      | Not stored — needs a new migration and mapping in `igdb.ts`                                 | Filter `involved_companies` by `publisher === true`; join names with `', '`; store as plain string |
 
   Three new columns (`director`, `creator`, `publisher`) are stored as plain strings (same pattern as `developer`, not as CSV arrays like `authors`). New migrations required for each.
+
 - **Author name format confirmed "First Last" across all sources (US-016).** Research confirmed: Goodreads XML stores `<author_name>Fyodor Dostoevsky</author_name>` (single "First Last" string); OpenLibrary returns `author_name: string[]` array in "First Last" format; Audible maps `author.name` from objects in "First Last" format. No "Last, First" conversion is needed. The normalization utility (`normalizeCreatorField`, `splitCreatorField`) adds defensive whitespace trimming and empty-token filtering only.
 - **`splitCreatorField` replaces raw `.split(',')`.** A shared utility `splitCreatorField(csv: string | null): string[]` in `/server/src/utils/normalizeCreators.ts` is used everywhere stored creator CSV values are expanded. This ensures consistent trimming of the leading space that appears when joining with `', '` (e.g., `"Christopher Nolan, Emma Thomas".split(',')` → `["Christopher Nolan", " Emma Thomas"]`). All four deserialization sites (`mediaItem.ts`, `items.ts`, `details.ts`, facets aggregation) must use this utility.
 - **`useFacets` must use a new `useMultiValueSearchParam` hook** (not the existing scalar `useUpdateSearchParams`) for `genres`, `languages`, `creators`, `publishers`, and `status`. The existing hook is scalar-only — adding array semantics risks breaking its usages in `OrderBy`, pagination, and `useMenuComponent`. The `useFilterBy` hook is no longer called in `PaginatedGridItems` when `showFacets={true}`; its `filter` URL param logic is superseded by the `status` param in `useFacets`.
@@ -470,19 +509,19 @@ sequenceDiagram
 
 ## References
 
-*References verified on 2026-03-07*
+_References verified on 2026-03-07_
 
 [1] **@radix-ui/react-slider** [Official Docs]
-    Radix UI
-    https://www.radix-ui.com/primitives/docs/components/slider
-    *Supports: Dual-handle range slider recommendation in Technical Considerations (US-006, US-007)*
+Radix UI
+https://www.radix-ui.com/primitives/docs/components/slider
+_Supports: Dual-handle range slider recommendation in Technical Considerations (US-006, US-007)_
 
 [2] **@radix-ui/react-collapsible** [Official Docs]
-    Radix UI
-    https://www.radix-ui.com/primitives/docs/components/collapsible
-    *Supports: Accordion section recommendation in Technical Considerations (US-003, FR-6)*
+Radix UI
+https://www.radix-ui.com/primitives/docs/components/collapsible
+_Supports: Accordion section recommendation in Technical Considerations (US-003, FR-6)_
 
 [3] **WAI-ARIA Authoring Practices — Accordion Pattern** [Spec]
-    W3C Web Accessibility Initiative
-    https://www.w3.org/WAI/ARIA/apg/patterns/accordion/
-    *Supports: Accessible disclosure pattern requirement in Technical Considerations (FR-6)*
+W3C Web Accessibility Initiative
+https://www.w3.org/WAI/ARIA/apg/patterns/accordion/
+_Supports: Accessible disclosure pattern requirement in Technical Considerations (FR-6)_

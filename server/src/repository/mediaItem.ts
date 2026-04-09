@@ -333,8 +333,12 @@ class MediaItemRepository extends repository<MediaItemBase>({
   public override deserialize(value: Partial<MediaItemBase>): MediaItemBase {
     return super.deserialize({
       ...value,
-      genres: definedOrUndefined((value.genres as unknown as string)?.split(',')),
-      narrators: splitCreatorField((value.narrators as unknown as string) || null),
+      genres: definedOrUndefined(
+        (value.genres as unknown as string)?.split(',')
+      ),
+      narrators: splitCreatorField(
+        (value.narrators as unknown as string) || null
+      ),
       authors: splitCreatorField((value.authors as unknown as string) || null),
       platform: value.platform
         ? JSON.parse(value.platform as unknown as string)
@@ -419,7 +423,9 @@ class MediaItemRepository extends repository<MediaItemBase>({
       const serializedMediaItem = this.serialize(
         this.stripValue({
           ...mediaItem,
-          posterId: mediaItem.externalPosterUrl ? mediaItem.posterId : undefined,
+          posterId: mediaItem.externalPosterUrl
+            ? mediaItem.posterId
+            : undefined,
           backdropId: mediaItem.externalBackdropUrl
             ? mediaItem.backdropId
             : undefined,
@@ -434,11 +440,9 @@ class MediaItemRepository extends repository<MediaItemBase>({
         serializedMediaItem.backdropId = null;
       }
 
-      await trx(this.tableName)
-        .update(serializedMediaItem)
-        .where({
-          id: mediaItem.id,
-        });
+      await trx(this.tableName).update(serializedMediaItem).where({
+        id: mediaItem.id,
+      });
 
       if (result.seasons) {
         await Promise.all(
@@ -671,7 +675,10 @@ class MediaItemRepository extends repository<MediaItemBase>({
     }
 
     const splittedExternalIds = externalIdColumnNames.reduce<
-      Array<{ columnName: (typeof externalIdColumnNames)[number]; values: Array<string | number> }>
+      Array<{
+        columnName: typeof externalIdColumnNames[number];
+        values: Array<string | number>;
+      }>
     >((items, id) => {
       const values = params[id];
 

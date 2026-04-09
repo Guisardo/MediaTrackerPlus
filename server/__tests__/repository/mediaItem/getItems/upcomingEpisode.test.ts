@@ -1,7 +1,10 @@
 import _ from 'lodash';
 
 import { mediaItemRepository } from 'src/repository/mediaItem';
-import { MediaItemBaseWithSeasons, MediaItemItemsResponse } from 'src/entity/mediaItem';
+import {
+  MediaItemBaseWithSeasons,
+  MediaItemItemsResponse,
+} from 'src/entity/mediaItem';
 import { TvEpisode } from 'src/entity/tvepisode';
 import { User } from 'src/entity/user';
 import { userRepository } from 'src/repository/user';
@@ -210,7 +213,10 @@ describe('upcomingEpisode', () => {
       userId: 1,
     });
 
-    const itemsById = _.keyBy(fetchedMediaItems, (item) => item.id) as _.Dictionary<MediaItemItemsResponse>;
+    const itemsById = _.keyBy(
+      fetchedMediaItems,
+      (item) => item.id
+    ) as _.Dictionary<MediaItemItemsResponse>;
 
     expect(itemsById[1].upcomingEpisode).toStrictEqual({
       ...upcomingEpisode,
@@ -245,7 +251,10 @@ describe('upcomingEpisode', () => {
       userId: 1,
     });
 
-    const itemsById = _.keyBy(fetchedMediaItems, (item) => item.id) as _.Dictionary<MediaItemItemsResponse>;
+    const itemsById = _.keyBy(
+      fetchedMediaItems,
+      (item) => item.id
+    ) as _.Dictionary<MediaItemItemsResponse>;
 
     [2, 3, 4, 5, 6].map((mediaItemId) => {
       expect(itemsById[mediaItemId].upcomingEpisode).toStrictEqual(undefined);
@@ -270,7 +279,10 @@ describe('upcomingEpisode', () => {
       userId: 1,
     });
 
-    const itemsById = _.keyBy(fetchedMediaItems, (item) => item.id) as _.Dictionary<MediaItemItemsResponse>;
+    const itemsById = _.keyBy(
+      fetchedMediaItems,
+      (item) => item.id
+    ) as _.Dictionary<MediaItemItemsResponse>;
 
     expect(itemsById[7].upcomingEpisode).toBeDefined();
   });

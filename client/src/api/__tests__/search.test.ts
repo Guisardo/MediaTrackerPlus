@@ -49,7 +49,11 @@ const SearchHarness: React.FC<SearchHarnessProps> = ({ searchArgs }) => {
   return React.createElement(
     React.Fragment,
     null,
-    React.createElement('span', { 'data-testid': 'isLoading' }, String(result.isLoading)),
+    React.createElement(
+      'span',
+      { 'data-testid': 'isLoading' },
+      String(result.isLoading)
+    ),
     React.createElement(
       'span',
       { 'data-testid': 'items' },

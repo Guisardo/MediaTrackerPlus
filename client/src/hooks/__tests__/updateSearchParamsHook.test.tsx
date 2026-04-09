@@ -51,10 +51,7 @@ const HookHarness: React.FC<HarnessProps> = ({
   );
 };
 
-const renderHarness = (
-  harnessProps: HarnessProps,
-  initialEntry = '/'
-) => {
+const renderHarness = (harnessProps: HarnessProps, initialEntry = '/') => {
   return render(
     React.createElement(
       MemoryRouter,
@@ -212,7 +209,9 @@ describe('useUpdateSearchParams – resetPage behaviour', () => {
       <>
         <span data-testid="genre-value">{String(genre.currentValue)}</span>
         <span data-testid="page-value">{String(page.currentValue)}</span>
-        <button onClick={() => genre.updateSearchParams(genreTarget)}>Update genre</button>
+        <button onClick={() => genre.updateSearchParams(genreTarget)}>
+          Update genre
+        </button>
       </>
     );
   };

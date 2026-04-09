@@ -60,9 +60,21 @@ const ListsHarness: React.FC<ListsHarnessProps> = ({ userId, mediaItemId }) => {
   return React.createElement(
     React.Fragment,
     null,
-    React.createElement('span', { 'data-testid': 'isLoading' }, String(result.isLoading)),
-    React.createElement('span', { 'data-testid': 'isError' }, String(result.isError)),
-    React.createElement('span', { 'data-testid': 'lists' }, JSON.stringify(result.lists ?? null)),
+    React.createElement(
+      'span',
+      { 'data-testid': 'isLoading' },
+      String(result.isLoading)
+    ),
+    React.createElement(
+      'span',
+      { 'data-testid': 'isError' },
+      String(result.isError)
+    ),
+    React.createElement(
+      'span',
+      { 'data-testid': 'lists' },
+      JSON.stringify(result.lists ?? null)
+    ),
     React.createElement(
       'button',
       { onClick: result.invalidateListsQuery },

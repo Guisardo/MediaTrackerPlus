@@ -1,6 +1,9 @@
 import type { ApiConfig } from './generated/http-client';
 import { HttpClient } from './generated/http-client';
-import type { List as ListModel, Seen as SeenModel } from './generated/data-contracts';
+import type {
+  List as ListModel,
+  Seen as SeenModel,
+} from './generated/data-contracts';
 
 import { Calendar as CalendarApi } from './generated/Calendar';
 import { Configuration as ConfigurationApi } from './generated/Configuration';
@@ -52,43 +55,68 @@ export interface List extends ListModel {}
 
 export namespace List {
   export namespace AddList {
-    export type RequestParams = import('./generated/ListRoute').List.AddList.RequestParams;
-    export type RequestQuery = import('./generated/ListRoute').List.AddList.RequestQuery;
-    export type RequestBody = import('./generated/ListRoute').List.AddList.RequestBody;
-    export type RequestHeaders = import('./generated/ListRoute').List.AddList.RequestHeaders;
-    export type ResponseBody = import('./generated/ListRoute').List.AddList.ResponseBody;
+    export type RequestParams =
+      import('./generated/ListRoute').List.AddList.RequestParams;
+    export type RequestQuery =
+      import('./generated/ListRoute').List.AddList.RequestQuery;
+    export type RequestBody =
+      import('./generated/ListRoute').List.AddList.RequestBody;
+    export type RequestHeaders =
+      import('./generated/ListRoute').List.AddList.RequestHeaders;
+    export type ResponseBody =
+      import('./generated/ListRoute').List.AddList.ResponseBody;
   }
 
   export namespace UpdateList {
-    export type RequestParams = import('./generated/ListRoute').List.UpdateList.RequestParams;
-    export type RequestQuery = import('./generated/ListRoute').List.UpdateList.RequestQuery;
-    export type RequestBody = import('./generated/ListRoute').List.UpdateList.RequestBody;
-    export type RequestHeaders = import('./generated/ListRoute').List.UpdateList.RequestHeaders;
-    export type ResponseBody = import('./generated/ListRoute').List.UpdateList.ResponseBody;
+    export type RequestParams =
+      import('./generated/ListRoute').List.UpdateList.RequestParams;
+    export type RequestQuery =
+      import('./generated/ListRoute').List.UpdateList.RequestQuery;
+    export type RequestBody =
+      import('./generated/ListRoute').List.UpdateList.RequestBody;
+    export type RequestHeaders =
+      import('./generated/ListRoute').List.UpdateList.RequestHeaders;
+    export type ResponseBody =
+      import('./generated/ListRoute').List.UpdateList.ResponseBody;
   }
 
   export namespace GetList {
-    export type RequestParams = import('./generated/ListRoute').List.GetList.RequestParams;
-    export type RequestQuery = import('./generated/ListRoute').List.GetList.RequestQuery;
-    export type RequestBody = import('./generated/ListRoute').List.GetList.RequestBody;
-    export type RequestHeaders = import('./generated/ListRoute').List.GetList.RequestHeaders;
-    export type ResponseBody = import('./generated/ListRoute').List.GetList.ResponseBody;
+    export type RequestParams =
+      import('./generated/ListRoute').List.GetList.RequestParams;
+    export type RequestQuery =
+      import('./generated/ListRoute').List.GetList.RequestQuery;
+    export type RequestBody =
+      import('./generated/ListRoute').List.GetList.RequestBody;
+    export type RequestHeaders =
+      import('./generated/ListRoute').List.GetList.RequestHeaders;
+    export type ResponseBody =
+      import('./generated/ListRoute').List.GetList.ResponseBody;
   }
 
   export namespace DeleteList {
-    export type RequestParams = import('./generated/ListRoute').List.DeleteList.RequestParams;
-    export type RequestQuery = import('./generated/ListRoute').List.DeleteList.RequestQuery;
-    export type RequestBody = import('./generated/ListRoute').List.DeleteList.RequestBody;
-    export type RequestHeaders = import('./generated/ListRoute').List.DeleteList.RequestHeaders;
-    export type ResponseBody = import('./generated/ListRoute').List.DeleteList.ResponseBody;
+    export type RequestParams =
+      import('./generated/ListRoute').List.DeleteList.RequestParams;
+    export type RequestQuery =
+      import('./generated/ListRoute').List.DeleteList.RequestQuery;
+    export type RequestBody =
+      import('./generated/ListRoute').List.DeleteList.RequestBody;
+    export type RequestHeaders =
+      import('./generated/ListRoute').List.DeleteList.RequestHeaders;
+    export type ResponseBody =
+      import('./generated/ListRoute').List.DeleteList.ResponseBody;
   }
 
   export namespace GetListItems {
-    export type RequestParams = import('./generated/ListRoute').List.GetListItems.RequestParams;
-    export type RequestQuery = import('./generated/ListRoute').List.GetListItems.RequestQuery;
-    export type RequestBody = import('./generated/ListRoute').List.GetListItems.RequestBody;
-    export type RequestHeaders = import('./generated/ListRoute').List.GetListItems.RequestHeaders;
-    export type ResponseBody = import('./generated/ListRoute').List.GetListItems.ResponseBody;
+    export type RequestParams =
+      import('./generated/ListRoute').List.GetListItems.RequestParams;
+    export type RequestQuery =
+      import('./generated/ListRoute').List.GetListItems.RequestQuery;
+    export type RequestBody =
+      import('./generated/ListRoute').List.GetListItems.RequestBody;
+    export type RequestHeaders =
+      import('./generated/ListRoute').List.GetListItems.RequestHeaders;
+    export type ResponseBody =
+      import('./generated/ListRoute').List.GetListItems.ResponseBody;
   }
 }
 
@@ -96,39 +124,61 @@ export interface Seen extends SeenModel {}
 
 export namespace Seen {
   export namespace Add {
-    export type RequestParams = import('./generated/SeenRoute').Seen.Add.RequestParams;
-    export type RequestQuery = import('./generated/SeenRoute').Seen.Add.RequestQuery;
-    export type RequestBody = import('./generated/SeenRoute').Seen.Add.RequestBody;
-    export type RequestHeaders = import('./generated/SeenRoute').Seen.Add.RequestHeaders;
-    export type ResponseBody = import('./generated/SeenRoute').Seen.Add.ResponseBody;
+    export type RequestParams =
+      import('./generated/SeenRoute').Seen.Add.RequestParams;
+    export type RequestQuery =
+      import('./generated/SeenRoute').Seen.Add.RequestQuery;
+    export type RequestBody =
+      import('./generated/SeenRoute').Seen.Add.RequestBody;
+    export type RequestHeaders =
+      import('./generated/SeenRoute').Seen.Add.RequestHeaders;
+    export type ResponseBody =
+      import('./generated/SeenRoute').Seen.Add.ResponseBody;
   }
 
   export namespace AddByExternalId {
-    export type RequestParams = import('./generated/SeenRoute').Seen.AddByExternalId.RequestParams;
-    export type RequestQuery = import('./generated/SeenRoute').Seen.AddByExternalId.RequestQuery;
-    export type RequestBody = import('./generated/SeenRoute').Seen.AddByExternalId.RequestBody;
-    export type RequestHeaders = import('./generated/SeenRoute').Seen.AddByExternalId.RequestHeaders;
-    export type ResponseBody = import('./generated/SeenRoute').Seen.AddByExternalId.ResponseBody;
+    export type RequestParams =
+      import('./generated/SeenRoute').Seen.AddByExternalId.RequestParams;
+    export type RequestQuery =
+      import('./generated/SeenRoute').Seen.AddByExternalId.RequestQuery;
+    export type RequestBody =
+      import('./generated/SeenRoute').Seen.AddByExternalId.RequestBody;
+    export type RequestHeaders =
+      import('./generated/SeenRoute').Seen.AddByExternalId.RequestHeaders;
+    export type ResponseBody =
+      import('./generated/SeenRoute').Seen.AddByExternalId.ResponseBody;
   }
 
   export namespace DeleteById {
-    export type RequestParams = import('./generated/SeenRoute').Seen.DeleteById.RequestParams;
-    export type RequestQuery = import('./generated/SeenRoute').Seen.DeleteById.RequestQuery;
-    export type RequestBody = import('./generated/SeenRoute').Seen.DeleteById.RequestBody;
-    export type RequestHeaders = import('./generated/SeenRoute').Seen.DeleteById.RequestHeaders;
-    export type ResponseBody = import('./generated/SeenRoute').Seen.DeleteById.ResponseBody;
+    export type RequestParams =
+      import('./generated/SeenRoute').Seen.DeleteById.RequestParams;
+    export type RequestQuery =
+      import('./generated/SeenRoute').Seen.DeleteById.RequestQuery;
+    export type RequestBody =
+      import('./generated/SeenRoute').Seen.DeleteById.RequestBody;
+    export type RequestHeaders =
+      import('./generated/SeenRoute').Seen.DeleteById.RequestHeaders;
+    export type ResponseBody =
+      import('./generated/SeenRoute').Seen.DeleteById.ResponseBody;
   }
 
   export namespace Delete {
-    export type RequestParams = import('./generated/SeenRoute').Seen.Delete.RequestParams;
-    export type RequestQuery = import('./generated/SeenRoute').Seen.Delete.RequestQuery;
-    export type RequestBody = import('./generated/SeenRoute').Seen.Delete.RequestBody;
-    export type RequestHeaders = import('./generated/SeenRoute').Seen.Delete.RequestHeaders;
-    export type ResponseBody = import('./generated/SeenRoute').Seen.Delete.ResponseBody;
+    export type RequestParams =
+      import('./generated/SeenRoute').Seen.Delete.RequestParams;
+    export type RequestQuery =
+      import('./generated/SeenRoute').Seen.Delete.RequestQuery;
+    export type RequestBody =
+      import('./generated/SeenRoute').Seen.Delete.RequestBody;
+    export type RequestHeaders =
+      import('./generated/SeenRoute').Seen.Delete.RequestHeaders;
+    export type ResponseBody =
+      import('./generated/SeenRoute').Seen.Delete.ResponseBody;
   }
 }
 
-export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+export class Api<
+  SecurityDataType = unknown
+> extends HttpClient<SecurityDataType> {
   calendar = new CalendarApi<SecurityDataType>(this);
   configuration = new ConfigurationApi<SecurityDataType>(this);
   group = new GroupApi<SecurityDataType>(this);

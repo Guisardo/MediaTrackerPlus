@@ -15,7 +15,13 @@ export const LogsPage: FunctionComponent = () => {
   const { levels, SelectLogLevelsComponent } = useSelectLogLevels();
 
   const { data, fetchNextPage, isFetchingNextPage, isLoading } =
-    useInfiniteQuery<LogEntry[], Error, InfiniteData<LogEntry[]>, (string | typeof levels)[], string | undefined>({
+    useInfiniteQuery<
+      LogEntry[],
+      Error,
+      InfiniteData<LogEntry[]>,
+      (string | typeof levels)[],
+      string | undefined
+    >({
       queryKey: ['logs', levels],
       queryFn: ({ pageParam }) =>
         mediaTrackerApi.logs.get({ ...levels, from: pageParam, count: 100 }),
@@ -38,7 +44,12 @@ export const LogsPage: FunctionComponent = () => {
               {new Date(log.timestamp).toLocaleString()}{' '}
             </span>
             <span
-              style={{ color: logLevelToColorMap[log.level as keyof typeof logLevelToColorMap] }}
+              style={{
+                color:
+                  logLevelToColorMap[
+                    log.level as keyof typeof logLevelToColorMap
+                  ],
+              }}
               className="text-md"
             >
               {log.level}

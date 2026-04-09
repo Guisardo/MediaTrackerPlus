@@ -42,16 +42,13 @@ const notificationForFutureItems = async () => {
 
     const releaseDate = parseISO(mediaItem.releaseDate);
 
-    addFutureNotification(
-      async () => {
-        if (await checkIfNotificationHasBeenSent(mediaItem)) {
-          return;
-        }
+    addFutureNotification(async () => {
+      if (await checkIfNotificationHasBeenSent(mediaItem)) {
+        return;
+      }
 
-        await sendNotificationForMediaItem(mediaItem);
-      },
-      releaseDate
-    );
+      await sendNotificationForMediaItem(mediaItem);
+    }, releaseDate);
 
     logger.debug(
       `Scheduled notification for release date of "${
@@ -102,22 +99,19 @@ const notificationForFutureEpisodes = async () => {
 
       const releaseDate = parseISO(episode.releaseDate);
 
-      addFutureNotification(
-        async () => {
-          const notificationStatus = await Promise.all(
-            groupedByTvShow.map(async (item) => ({
-              item,
-              alreadySent: await checkIfNotificationHasBeenSent(item),
-            }))
-          );
-          const unsentEpisodes = notificationStatus
-            .filter(({ alreadySent }) => !alreadySent)
-            .map(({ item }) => item);
+      addFutureNotification(async () => {
+        const notificationStatus = await Promise.all(
+          groupedByTvShow.map(async (item) => ({
+            item,
+            alreadySent: await checkIfNotificationHasBeenSent(item),
+          }))
+        );
+        const unsentEpisodes = notificationStatus
+          .filter(({ alreadySent }) => !alreadySent)
+          .map(({ item }) => item);
 
-          await sendNotificationForEpisodes(unsentEpisodes);
-        },
-        releaseDate
-      );
+        await sendNotificationForEpisodes(unsentEpisodes);
+      }, releaseDate);
 
       logger.debug(
         `Scheduled notification for release date of episode "${

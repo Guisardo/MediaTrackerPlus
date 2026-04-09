@@ -50,18 +50,30 @@ describe('openlibrary', () => {
     const workWithAuthors = {
       title: "Harry Potter and the Philosopher's Stone",
       authors: [
-        { author: { key: '/authors/OL23919A' }, type: { key: '/type/author_role' } },
-        { author: { key: '/authors/OL456B' }, type: { key: '/type/author_role' } },
+        {
+          author: { key: '/authors/OL23919A' },
+          type: { key: '/type/author_role' },
+        },
+        {
+          author: { key: '/authors/OL456B' },
+          type: { key: '/type/author_role' },
+        },
       ],
     };
 
     test('populates authors field when all author fetches succeed', async () => {
       mockedAxios.get
         .mockResolvedValueOnce({ data: workWithAuthors })
-        .mockResolvedValueOnce({ data: { key: '/authors/OL23919A', name: 'J.K. Rowling' } })
-        .mockResolvedValueOnce({ data: { key: '/authors/OL456B', name: 'Some Coauthor' } });
+        .mockResolvedValueOnce({
+          data: { key: '/authors/OL23919A', name: 'J.K. Rowling' },
+        })
+        .mockResolvedValueOnce({
+          data: { key: '/authors/OL456B', name: 'Some Coauthor' },
+        });
 
-      const res = await openlibraryApi.details({ openlibraryId: 'works/OL82563W' });
+      const res = await openlibraryApi.details({
+        openlibraryId: 'works/OL82563W',
+      });
 
       expect((res as { authors: string[] }).authors).toStrictEqual([
         'J.K. Rowling',
@@ -77,11 +89,17 @@ describe('openlibrary', () => {
             authors: [{ author: { key: '/authors/OL23919A' } }],
           },
         })
-        .mockResolvedValueOnce({ data: { key: '/authors/OL23919A', name: 'J.K. Rowling' } });
+        .mockResolvedValueOnce({
+          data: { key: '/authors/OL23919A', name: 'J.K. Rowling' },
+        });
 
-      const res = await openlibraryApi.details({ openlibraryId: 'works/OL82563W' });
+      const res = await openlibraryApi.details({
+        openlibraryId: 'works/OL82563W',
+      });
 
-      expect((res as { authors: string[] }).authors).toStrictEqual(['J.K. Rowling']);
+      expect((res as { authors: string[] }).authors).toStrictEqual([
+        'J.K. Rowling',
+      ]);
     });
 
     test('fetches author using full openlibrary.org URL built from the author key', async () => {
@@ -106,7 +124,9 @@ describe('openlibrary', () => {
         data: { title: 'Some Book' },
       });
 
-      const res = await openlibraryApi.details({ openlibraryId: 'works/OL82563W' });
+      const res = await openlibraryApi.details({
+        openlibraryId: 'works/OL82563W',
+      });
 
       expect((res as Record<string, unknown>).authors).toBeUndefined();
     });
@@ -116,7 +136,9 @@ describe('openlibrary', () => {
         data: { title: 'Some Book', authors: [] },
       });
 
-      const res = await openlibraryApi.details({ openlibraryId: 'works/OL82563W' });
+      const res = await openlibraryApi.details({
+        openlibraryId: 'works/OL82563W',
+      });
 
       expect((res as Record<string, unknown>).authors).toBeUndefined();
     });
@@ -129,7 +151,9 @@ describe('openlibrary', () => {
         },
       });
 
-      const res = await openlibraryApi.details({ openlibraryId: 'works/OL82563W' });
+      const res = await openlibraryApi.details({
+        openlibraryId: 'works/OL82563W',
+      });
 
       expect((res as Record<string, unknown>).authors).toBeUndefined();
     });
@@ -140,9 +164,13 @@ describe('openlibrary', () => {
         .mockResolvedValueOnce({ data: { name: 'J.K. Rowling' } })
         .mockRejectedValueOnce(new Error('Network error'));
 
-      const res = await openlibraryApi.details({ openlibraryId: 'works/OL82563W' });
+      const res = await openlibraryApi.details({
+        openlibraryId: 'works/OL82563W',
+      });
 
-      expect((res as { authors: string[] }).authors).toStrictEqual(['J.K. Rowling']);
+      expect((res as { authors: string[] }).authors).toStrictEqual([
+        'J.K. Rowling',
+      ]);
     });
 
     test('authors field is undefined when all author fetches fail', async () => {
@@ -151,7 +179,9 @@ describe('openlibrary', () => {
         .mockRejectedValueOnce(new Error('Network error'))
         .mockRejectedValueOnce(new Error('Network error'));
 
-      const res = await openlibraryApi.details({ openlibraryId: 'works/OL82563W' });
+      const res = await openlibraryApi.details({
+        openlibraryId: 'works/OL82563W',
+      });
 
       expect((res as Record<string, unknown>).authors).toBeUndefined();
     });
@@ -170,9 +200,13 @@ describe('openlibrary', () => {
         .mockResolvedValueOnce({ data: { name: '  J.K. Rowling ' } })
         .mockResolvedValueOnce({ data: { name: 'J.K. Rowling' } });
 
-      const res = await openlibraryApi.details({ openlibraryId: 'works/OL82563W' });
+      const res = await openlibraryApi.details({
+        openlibraryId: 'works/OL82563W',
+      });
 
-      expect((res as { authors: string[] }).authors).toStrictEqual(['J.K. Rowling']);
+      expect((res as { authors: string[] }).authors).toStrictEqual([
+        'J.K. Rowling',
+      ]);
     });
 
     test('author name with only whitespace is excluded by normalizeCreatorField', async () => {
@@ -185,7 +219,9 @@ describe('openlibrary', () => {
         })
         .mockResolvedValueOnce({ data: { name: '   ' } });
 
-      const res = await openlibraryApi.details({ openlibraryId: 'works/OL82563W' });
+      const res = await openlibraryApi.details({
+        openlibraryId: 'works/OL82563W',
+      });
 
       // The raw names array has one entry ('   '), so the branch executes normalizeCreatorField
       // which strips whitespace-only names, producing an empty array.
@@ -222,7 +258,10 @@ describe('openlibrary', () => {
     test('returns mapped SimilarItem array from subject works', async () => {
       mockedAxios.get
         .mockResolvedValueOnce({
-          data: { title: "Harry Potter and the Philosopher's Stone", subjects: ['Fantasy Fiction'] },
+          data: {
+            title: "Harry Potter and the Philosopher's Stone",
+            subjects: ['Fantasy Fiction'],
+          },
         })
         .mockResolvedValueOnce({
           data: openLibrarySubjectWorksResponse,
@@ -267,7 +306,9 @@ describe('openlibrary', () => {
 
       await expect(
         openlibraryApi.similar({ openlibraryId: '/works/OL82563W' })
-      ).rejects.toThrow('OpenLibrary work details request failed with HTTP 404');
+      ).rejects.toThrow(
+        'OpenLibrary work details request failed with HTTP 404'
+      );
     });
 
     test('throws when subject works request fails', async () => {
@@ -285,7 +326,10 @@ describe('openlibrary', () => {
     test('sets externalRating to null for all returned books', async () => {
       mockedAxios.get
         .mockResolvedValueOnce({
-          data: { title: "Harry Potter and the Philosopher's Stone", subjects: ['Fantasy Fiction'] },
+          data: {
+            title: "Harry Potter and the Philosopher's Stone",
+            subjects: ['Fantasy Fiction'],
+          },
         })
         .mockResolvedValueOnce({
           data: openLibrarySubjectWorksResponse,

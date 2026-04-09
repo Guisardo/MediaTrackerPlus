@@ -161,18 +161,54 @@ describe('Notification age-gating (US-007)', () => {
 
     // Add watchlist entries for all 3 users × all 4 media items
     await Database.knex('listItem').insert([
-      { listId: ADULT_WATCHLIST_ID, mediaItemId: R_RATED_MOVIE_ID, addedAt: now },
-      { listId: TEEN_WATCHLIST_ID, mediaItemId: R_RATED_MOVIE_ID, addedAt: now },
-      { listId: NO_DOB_WATCHLIST_ID, mediaItemId: R_RATED_MOVIE_ID, addedAt: now },
+      {
+        listId: ADULT_WATCHLIST_ID,
+        mediaItemId: R_RATED_MOVIE_ID,
+        addedAt: now,
+      },
+      {
+        listId: TEEN_WATCHLIST_ID,
+        mediaItemId: R_RATED_MOVIE_ID,
+        addedAt: now,
+      },
+      {
+        listId: NO_DOB_WATCHLIST_ID,
+        mediaItemId: R_RATED_MOVIE_ID,
+        addedAt: now,
+      },
       { listId: ADULT_WATCHLIST_ID, mediaItemId: PG13_MOVIE_ID, addedAt: now },
       { listId: TEEN_WATCHLIST_ID, mediaItemId: PG13_MOVIE_ID, addedAt: now },
       { listId: NO_DOB_WATCHLIST_ID, mediaItemId: PG13_MOVIE_ID, addedAt: now },
-      { listId: ADULT_WATCHLIST_ID, mediaItemId: UNRATED_MOVIE_ID, addedAt: now },
-      { listId: TEEN_WATCHLIST_ID, mediaItemId: UNRATED_MOVIE_ID, addedAt: now },
-      { listId: NO_DOB_WATCHLIST_ID, mediaItemId: UNRATED_MOVIE_ID, addedAt: now },
-      { listId: ADULT_WATCHLIST_ID, mediaItemId: R_RATED_TV_SHOW_ID, addedAt: now },
-      { listId: TEEN_WATCHLIST_ID, mediaItemId: R_RATED_TV_SHOW_ID, addedAt: now },
-      { listId: NO_DOB_WATCHLIST_ID, mediaItemId: R_RATED_TV_SHOW_ID, addedAt: now },
+      {
+        listId: ADULT_WATCHLIST_ID,
+        mediaItemId: UNRATED_MOVIE_ID,
+        addedAt: now,
+      },
+      {
+        listId: TEEN_WATCHLIST_ID,
+        mediaItemId: UNRATED_MOVIE_ID,
+        addedAt: now,
+      },
+      {
+        listId: NO_DOB_WATCHLIST_ID,
+        mediaItemId: UNRATED_MOVIE_ID,
+        addedAt: now,
+      },
+      {
+        listId: ADULT_WATCHLIST_ID,
+        mediaItemId: R_RATED_TV_SHOW_ID,
+        addedAt: now,
+      },
+      {
+        listId: TEEN_WATCHLIST_ID,
+        mediaItemId: R_RATED_TV_SHOW_ID,
+        addedAt: now,
+      },
+      {
+        listId: NO_DOB_WATCHLIST_ID,
+        mediaItemId: R_RATED_TV_SHOW_ID,
+        addedAt: now,
+      },
     ]);
   });
 

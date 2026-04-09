@@ -163,12 +163,17 @@ const AddOrEditListModal: FunctionComponent<{
       </label>
 
       <div className="flex flex-col pt-2">
-        <label id="privacy-label"><Trans>Privacy</Trans>:</label>
+        <label id="privacy-label">
+          <Trans>Privacy</Trans>:
+        </label>
         <Select
           value={privacy}
           onValueChange={(value) => setPrivacy(value as ListPrivacy)}
         >
-          <SelectTrigger aria-labelledby="privacy-label" aria-label={t`Privacy`}>
+          <SelectTrigger
+            aria-labelledby="privacy-label"
+            aria-label={t`Privacy`}
+          >
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -182,12 +187,17 @@ const AddOrEditListModal: FunctionComponent<{
       </div>
 
       <div className="flex flex-col pt-2">
-        <label id="sort-by-label"><Trans>Sort by</Trans>:</label>
+        <label id="sort-by-label">
+          <Trans>Sort by</Trans>:
+        </label>
         <Select
           value={sortBy}
           onValueChange={(value) => setSortBy(value as ListSortBy)}
         >
-          <SelectTrigger aria-labelledby="sort-by-label" aria-label={t`Sort by`}>
+          <SelectTrigger
+            aria-labelledby="sort-by-label"
+            aria-label={t`Sort by`}
+          >
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -201,12 +211,17 @@ const AddOrEditListModal: FunctionComponent<{
       </div>
 
       <div className="flex flex-col pt-2">
-        <label id="sort-order-label"><Trans>Sort order</Trans>:</label>
+        <label id="sort-order-label">
+          <Trans>Sort order</Trans>:
+        </label>
         <Select
           value={sortOrder}
           onValueChange={(value) => setSortOrder(value as ListSortOrder)}
         >
-          <SelectTrigger aria-labelledby="sort-order-label" aria-label={t`Sort order`}>
+          <SelectTrigger
+            aria-labelledby="sort-order-label"
+            aria-label={t`Sort order`}
+          >
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -256,7 +271,11 @@ const AddOrEditListModal: FunctionComponent<{
           </Button>
         )}
 
-        <Button variant="outline" className="ml-auto" onClick={() => closeModal()}>
+        <Button
+          variant="outline"
+          className="ml-auto"
+          onClick={() => closeModal()}
+        >
           Close
         </Button>
       </div>

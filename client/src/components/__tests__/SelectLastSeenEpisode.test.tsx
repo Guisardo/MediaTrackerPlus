@@ -11,7 +11,9 @@ jest.mock('radix-ui', () => {
   const React = require('react');
 
   const Root = ({ children, value, onValueChange, defaultValue }: any) => {
-    const [internalValue, setInternalValue] = React.useState(value ?? defaultValue ?? '');
+    const [internalValue, setInternalValue] = React.useState(
+      value ?? defaultValue ?? ''
+    );
 
     React.useEffect(() => {
       if (value !== undefined) setInternalValue(value);
@@ -26,17 +28,29 @@ jest.mock('radix-ui', () => {
       <div data-radix-select-root>
         {React.Children.map(children, (child: React.ReactElement) => {
           if (!React.isValidElement(child)) return child;
-          return React.cloneElement(child, { __value: internalValue, __onChange: handleChange } as any);
+          return React.cloneElement(child, {
+            __value: internalValue,
+            __onChange: handleChange,
+          } as any);
         })}
       </div>
     );
   };
 
-  const Trigger = React.forwardRef(({ children, 'aria-label': ariaLabel, __value, __onChange, ...props }: any, ref: any) => (
-    <button ref={ref} role="combobox" aria-label={ariaLabel} {...props}>{children}</button>
-  ));
+  const Trigger = React.forwardRef(
+    (
+      { children, 'aria-label': ariaLabel, __value, __onChange, ...props }: any,
+      ref: any
+    ) => (
+      <button ref={ref} role="combobox" aria-label={ariaLabel} {...props}>
+        {children}
+      </button>
+    )
+  );
 
-  const Value = ({ placeholder, __value }: any) => <span>{__value || placeholder || ''}</span>;
+  const Value = ({ placeholder, __value }: any) => (
+    <span>{__value || placeholder || ''}</span>
+  );
 
   const Icon = ({ children }: any) => <>{children}</>;
 
@@ -60,18 +74,20 @@ jest.mock('radix-ui', () => {
     </div>
   );
 
-  const Item = React.forwardRef(({ children, value, __value, __onChange, ...props }: any, ref: any) => (
-    <div
-      ref={ref}
-      role="option"
-      aria-selected={__value === value}
-      data-value={value}
-      onClick={() => __onChange?.(value)}
-      {...props}
-    >
-      <ItemText>{children}</ItemText>
-    </div>
-  ));
+  const Item = React.forwardRef(
+    ({ children, value, __value, __onChange, ...props }: any, ref: any) => (
+      <div
+        ref={ref}
+        role="option"
+        aria-selected={__value === value}
+        data-value={value}
+        onClick={() => __onChange?.(value)}
+        {...props}
+      >
+        <ItemText>{children}</ItemText>
+      </div>
+    )
+  );
 
   const ItemText = ({ children }: any) => <span>{children}</span>;
 
@@ -115,20 +131,29 @@ jest.mock('radix-ui', () => {
 
 jest.mock('@lingui/core', () => ({
   i18n: {
-    _: (d: any) => (typeof d === 'string' ? d : d?.message ?? d?.id ?? String(d)),
+    _: (d: any) =>
+      typeof d === 'string' ? d : d?.message ?? d?.id ?? String(d),
     activate: jest.fn(),
     on: jest.fn(),
   },
   setupI18n: () => ({
-    _: (d: any) => (typeof d === 'string' ? d : d?.message ?? d?.id ?? String(d)),
+    _: (d: any) =>
+      typeof d === 'string' ? d : d?.message ?? d?.id ?? String(d),
     activate: jest.fn(),
     on: jest.fn(),
   }),
 }));
 
 jest.mock('@lingui/macro', () => ({
-  Trans: ({ children, message, id }: { children?: React.ReactNode; message?: string; id?: string }) =>
-    children ?? message ?? id ?? null,
+  Trans: ({
+    children,
+    message,
+    id,
+  }: {
+    children?: React.ReactNode;
+    message?: string;
+    id?: string;
+  }) => children ?? message ?? id ?? null,
   t: (strings: TemplateStringsArray, ...values: unknown[]) =>
     typeof strings === 'string'
       ? strings
@@ -140,8 +165,15 @@ jest.mock('@lingui/macro', () => ({
 jest.mock('@lingui/react', () => ({
   I18nProvider: ({ children }: { children: React.ReactNode }) => children,
   useLingui: () => ({ i18n: { _: (id: unknown) => id } }),
-  Trans: ({ children, message, id }: { children?: React.ReactNode; message?: string; id?: string }) =>
-    children ?? message ?? id ?? null,
+  Trans: ({
+    children,
+    message,
+    id,
+  }: {
+    children?: React.ReactNode;
+    message?: string;
+    id?: string;
+  }) => children ?? message ?? id ?? null,
 }));
 
 const mockSetLastSeenEpisode = jest.fn().mockResolvedValue(undefined);
@@ -182,16 +214,21 @@ jest.mock('src/components/SelectSeenDate', () => {
       React.createElement(
         'div',
         { 'data-testid': 'select-seen-date' },
-        React.createElement('button', {
-          'data-testid': 'select-now',
-          onClick: () => onSelected({ date: new Date() }),
-        }, 'Now')
+        React.createElement(
+          'button',
+          {
+            'data-testid': 'select-now',
+            onClick: () => onSelected({ date: new Date() }),
+          },
+          'Now'
+        )
       ),
   };
 });
 
 jest.mock('src/utils', () => ({
-  formatSeasonNumber: (season: any) => `S${String(season.seasonNumber).padStart(2, '0')}`,
+  formatSeasonNumber: (season: any) =>
+    `S${String(season.seasonNumber).padStart(2, '0')}`,
 }));
 
 import { useDetails } from 'src/api/details';
@@ -221,7 +258,12 @@ const createTvShow = (overrides: Record<string, any> = {}) => ({
       title: 'Season 2',
       isSpecialSeason: false,
       episodes: [
-        { id: 201, episodeNumber: 1, title: 'Seven Thirty-Seven', seasonNumber: 2 },
+        {
+          id: 201,
+          episodeNumber: 1,
+          title: 'Seven Thirty-Seven',
+          seasonNumber: 2,
+        },
         { id: 202, episodeNumber: 2, title: 'Grilled', seasonNumber: 2 },
       ],
     },
@@ -249,10 +291,7 @@ describe('SelectLastSeenEpisode', () => {
     const tvShow = createTvShow();
     mockUseDetails.mockReturnValue({ mediaItem: tvShow, isLoading: false });
     const { container } = render(
-      <SelectLastSeenEpisode
-        tvShow={tvShow as any}
-        closeModal={jest.fn()}
-      />
+      <SelectLastSeenEpisode tvShow={tvShow as any} closeModal={jest.fn()} />
     );
     expect(container.textContent).toContain('Season');
     expect(container.textContent).toContain('Episode');
@@ -279,10 +318,7 @@ describe('SelectLastSeenEpisode', () => {
     mockUseDetails.mockReturnValue({ mediaItem: tvShow, isLoading: false });
     const closeModal = jest.fn();
     render(
-      <SelectLastSeenEpisode
-        tvShow={tvShow as any}
-        closeModal={closeModal}
-      />
+      <SelectLastSeenEpisode tvShow={tvShow as any} closeModal={closeModal} />
     );
     fireEvent.click(screen.getByText('Cancel'));
     expect(closeModal).toHaveBeenCalledTimes(1);
@@ -292,10 +328,7 @@ describe('SelectLastSeenEpisode', () => {
     const tvShow = createTvShow();
     mockUseDetails.mockReturnValue({ mediaItem: tvShow, isLoading: false });
     render(
-      <SelectLastSeenEpisode
-        tvShow={tvShow as any}
-        closeModal={jest.fn()}
-      />
+      <SelectLastSeenEpisode tvShow={tvShow as any} closeModal={jest.fn()} />
     );
     expect(screen.getByText('Select')).toBeInTheDocument();
   });
@@ -304,16 +337,15 @@ describe('SelectLastSeenEpisode', () => {
     const tvShow = createTvShow();
     mockUseDetails.mockReturnValue({ mediaItem: tvShow, isLoading: false });
     render(
-      <SelectLastSeenEpisode
-        tvShow={tvShow as any}
-        closeModal={jest.fn()}
-      />
+      <SelectLastSeenEpisode tvShow={tvShow as any} closeModal={jest.fn()} />
     );
     // With the radix-ui mock, options render directly in the DOM as role="option"
     // The last season (Season 2) is pre-selected via useEffect, episodes should appear
     const options = screen.getAllByRole('option');
     const optionTexts = options.map((o) => o.textContent);
-    expect(optionTexts.some((t) => t?.includes('Seven Thirty-Seven'))).toBe(true);
+    expect(optionTexts.some((t) => t?.includes('Seven Thirty-Seven'))).toBe(
+      true
+    );
   });
 
   it('changes season selection', async () => {
@@ -321,10 +353,7 @@ describe('SelectLastSeenEpisode', () => {
     const tvShow = createTvShow();
     mockUseDetails.mockReturnValue({ mediaItem: tvShow, isLoading: false });
     render(
-      <SelectLastSeenEpisode
-        tvShow={tvShow as any}
-        closeModal={jest.fn()}
-      />
+      <SelectLastSeenEpisode tvShow={tvShow as any} closeModal={jest.fn()} />
     );
     // Click Season 1 option directly (radix mock renders all options in DOM)
     const season1Option = screen.getByRole('option', { name: 'Season 1' });
@@ -346,23 +375,29 @@ describe('SelectLastSeenEpisode', () => {
           seasonNumber: 0,
           title: 'Specials',
           isSpecialSeason: true,
-          episodes: [{ id: 991, episodeNumber: 1, title: 'Behind the Scenes', seasonNumber: 0 }],
+          episodes: [
+            {
+              id: 991,
+              episodeNumber: 1,
+              title: 'Behind the Scenes',
+              seasonNumber: 0,
+            },
+          ],
         },
         {
           id: 10,
           seasonNumber: 1,
           title: 'Season 1',
           isSpecialSeason: false,
-          episodes: [{ id: 101, episodeNumber: 1, title: 'Pilot', seasonNumber: 1 }],
+          episodes: [
+            { id: 101, episodeNumber: 1, title: 'Pilot', seasonNumber: 1 },
+          ],
         },
       ],
     });
     mockUseDetails.mockReturnValue({ mediaItem: tvShow, isLoading: false });
     render(
-      <SelectLastSeenEpisode
-        tvShow={tvShow as any}
-        closeModal={jest.fn()}
-      />
+      <SelectLastSeenEpisode tvShow={tvShow as any} closeModal={jest.fn()} />
     );
     // With radix mock, all options are rendered in the DOM
     const options = screen.getAllByRole('option');
@@ -375,10 +410,7 @@ describe('SelectLastSeenEpisode', () => {
     const tvShow = createTvShow();
     mockUseDetails.mockReturnValue({ mediaItem: tvShow, isLoading: false });
     render(
-      <SelectLastSeenEpisode
-        tvShow={tvShow as any}
-        closeModal={jest.fn()}
-      />
+      <SelectLastSeenEpisode tvShow={tvShow as any} closeModal={jest.fn()} />
     );
     fireEvent.click(screen.getByText('Select'));
     expect(screen.getByTestId('select-seen-date')).toBeInTheDocument();

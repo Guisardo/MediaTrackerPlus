@@ -92,7 +92,8 @@ export const useGroup = (groupId: number) => {
  */
 export const useUpdateGroup = (groupId: number) => {
   const mutation = useMutation({
-    mutationFn: (name: string) => mediaTrackerApi.group.updateGroup(groupId, { name }),
+    mutationFn: (name: string) =>
+      mediaTrackerApi.group.updateGroup(groupId, { name }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: groupDetailQueryKey(groupId) });
       queryClient.invalidateQueries({ queryKey: [USER_GROUPS_QUERY_KEY] });
@@ -156,7 +157,8 @@ export const useAddGroupMember = (groupId: number) => {
  */
 export const useRemoveGroupMember = (groupId: number) => {
   const mutation = useMutation({
-    mutationFn: (userId: number) => mediaTrackerApi.group.removeGroupMember(groupId, userId),
+    mutationFn: (userId: number) =>
+      mediaTrackerApi.group.removeGroupMember(groupId, userId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: groupDetailQueryKey(groupId) });
       queryClient.invalidateQueries({ queryKey: [USER_GROUPS_QUERY_KEY] });
@@ -214,4 +216,9 @@ export const searchUsers = async (
   return result as unknown as UserSearchResult[];
 };
 
-export type { GroupDetailResponse, GroupMemberResponse, GroupResponse, UserGroupRole };
+export type {
+  GroupDetailResponse,
+  GroupMemberResponse,
+  GroupResponse,
+  UserGroupRole,
+};

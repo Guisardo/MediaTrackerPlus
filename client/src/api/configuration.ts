@@ -10,8 +10,9 @@ export const useConfiguration = () => {
   });
 
   const updateMutation = useMutation({
-    mutationFn: (data: Parameters<typeof mediaTrackerApi.configuration.update>[0]) =>
-      mediaTrackerApi.configuration.update(data),
+    mutationFn: (
+      data: Parameters<typeof mediaTrackerApi.configuration.update>[0]
+    ) => mediaTrackerApi.configuration.update(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['configuration'] });
     },

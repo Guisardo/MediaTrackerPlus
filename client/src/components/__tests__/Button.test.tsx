@@ -7,7 +7,9 @@ describe('shadcn/ui Button', () => {
   describe('accessible role and rendering', () => {
     it('renders with button role by default', () => {
       render(<Button>Click me</Button>);
-      expect(screen.getByRole('button', { name: 'Click me' })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: 'Click me' })
+      ).toBeInTheDocument();
     });
 
     it('renders button text content', () => {
@@ -85,7 +87,11 @@ describe('shadcn/ui Button', () => {
     });
 
     it('renders icon size', () => {
-      render(<Button size="icon" aria-label="Search">🔍</Button>);
+      render(
+        <Button size="icon" aria-label="Search">
+          🔍
+        </Button>
+      );
       const button = screen.getByRole('button');
       expect(button).toHaveClass('size-9');
     });
@@ -136,7 +142,9 @@ describe('shadcn/ui Button', () => {
           ✕
         </Button>
       );
-      expect(screen.getByRole('button', { name: 'Close dialog' })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: 'Close dialog' })
+      ).toBeInTheDocument();
     });
 
     it('accepts aria-describedby for additional context', () => {

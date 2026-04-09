@@ -1625,7 +1625,9 @@ describe('migrations', () => {
         .orderBy('id')
         .select('rank')
     ).toEqual(
-      new Array(Number(count) + 1).fill(null).map((_, index) => ({ rank: index }))
+      new Array(Number(count) + 1)
+        .fill(null)
+        .map((_, index) => ({ rank: index }))
     );
 
     await Database.knex.migrate.up({
@@ -1864,9 +1866,7 @@ describe('migrations', () => {
       lastTimeUpdated: new Date().getTime(),
     });
 
-    const result = await Database.knex('mediaItem')
-      .where('id', 999999)
-      .first();
+    const result = await Database.knex('mediaItem').where('id', 999999).first();
 
     expect(result.creator).toEqual('John Doe');
 
@@ -1899,9 +1899,7 @@ describe('migrations', () => {
       lastTimeUpdated: new Date().getTime(),
     });
 
-    const result = await Database.knex('mediaItem')
-      .where('id', 999997)
-      .first();
+    const result = await Database.knex('mediaItem').where('id', 999997).first();
 
     expect(result.director).toEqual('Chris Columbus');
 
@@ -1934,9 +1932,7 @@ describe('migrations', () => {
       lastTimeUpdated: new Date().getTime(),
     });
 
-    const result = await Database.knex('mediaItem')
-      .where('id', 999995)
-      .first();
+    const result = await Database.knex('mediaItem').where('id', 999995).first();
 
     expect(result.publisher).toEqual('Sony Interactive Entertainment');
 
@@ -1976,29 +1972,27 @@ describe('migrations', () => {
     expect(hasGroupPlatformRatingTable).toBe(true);
 
     // Verify userGroup columns
-    expect(
-      await Database.knex.schema.hasColumn('userGroup', 'id')
-    ).toBe(true);
-    expect(
-      await Database.knex.schema.hasColumn('userGroup', 'name')
-    ).toBe(true);
-    expect(
-      await Database.knex.schema.hasColumn('userGroup', 'createdBy')
-    ).toBe(true);
-    expect(
-      await Database.knex.schema.hasColumn('userGroup', 'createdAt')
-    ).toBe(true);
-    expect(
-      await Database.knex.schema.hasColumn('userGroup', 'updatedAt')
-    ).toBe(true);
-    expect(
-      await Database.knex.schema.hasColumn('userGroup', 'deletedAt')
-    ).toBe(true);
+    expect(await Database.knex.schema.hasColumn('userGroup', 'id')).toBe(true);
+    expect(await Database.knex.schema.hasColumn('userGroup', 'name')).toBe(
+      true
+    );
+    expect(await Database.knex.schema.hasColumn('userGroup', 'createdBy')).toBe(
+      true
+    );
+    expect(await Database.knex.schema.hasColumn('userGroup', 'createdAt')).toBe(
+      true
+    );
+    expect(await Database.knex.schema.hasColumn('userGroup', 'updatedAt')).toBe(
+      true
+    );
+    expect(await Database.knex.schema.hasColumn('userGroup', 'deletedAt')).toBe(
+      true
+    );
 
     // Verify userGroupMember columns
-    expect(
-      await Database.knex.schema.hasColumn('userGroupMember', 'id')
-    ).toBe(true);
+    expect(await Database.knex.schema.hasColumn('userGroupMember', 'id')).toBe(
+      true
+    );
     expect(
       await Database.knex.schema.hasColumn('userGroupMember', 'groupId')
     ).toBe(true);
@@ -2165,12 +2159,10 @@ describe('migrations', () => {
     const hasUserGroupTableAfterDown = await Database.knex.schema.hasTable(
       'userGroup'
     );
-    const hasUserGroupMemberTableAfterDown = await Database.knex.schema.hasTable(
-      'userGroupMember'
-    );
-    const hasGroupPlatformRatingTableAfterDown = await Database.knex.schema.hasTable(
-      'groupPlatformRating'
-    );
+    const hasUserGroupMemberTableAfterDown =
+      await Database.knex.schema.hasTable('userGroupMember');
+    const hasGroupPlatformRatingTableAfterDown =
+      await Database.knex.schema.hasTable('groupPlatformRating');
 
     expect(hasUserGroupTableAfterDown).toBe(false);
     expect(hasUserGroupMemberTableAfterDown).toBe(false);
@@ -2185,12 +2177,10 @@ describe('migrations', () => {
     const hasUserGroupTableAfterSecondUp = await Database.knex.schema.hasTable(
       'userGroup'
     );
-    const hasUserGroupMemberTableAfterSecondUp = await Database.knex.schema.hasTable(
-      'userGroupMember'
-    );
-    const hasGroupPlatformRatingTableAfterSecondUp = await Database.knex.schema.hasTable(
-      'groupPlatformRating'
-    );
+    const hasUserGroupMemberTableAfterSecondUp =
+      await Database.knex.schema.hasTable('userGroupMember');
+    const hasGroupPlatformRatingTableAfterSecondUp =
+      await Database.knex.schema.hasTable('groupPlatformRating');
 
     expect(hasUserGroupTableAfterSecondUp).toBe(true);
     expect(hasUserGroupMemberTableAfterSecondUp).toBe(true);

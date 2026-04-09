@@ -3,22 +3,38 @@ import { render, screen, fireEvent } from '@testing-library/react';
 
 jest.mock('@lingui/core', () => ({
   i18n: {
-    _: (d: any) => (typeof d === 'string' ? d : d?.message ?? d?.id ?? String(d)),
+    _: (d: any) =>
+      typeof d === 'string' ? d : d?.message ?? d?.id ?? String(d),
     activate: jest.fn(),
     on: jest.fn(),
   },
   setupI18n: () => ({
-    _: (d: any) => (typeof d === 'string' ? d : d?.message ?? d?.id ?? String(d)),
+    _: (d: any) =>
+      typeof d === 'string' ? d : d?.message ?? d?.id ?? String(d),
     activate: jest.fn(),
     on: jest.fn(),
   }),
 }));
 
 jest.mock('@lingui/macro', () => ({
-  Trans: ({ children, message, id }: { children?: React.ReactNode; message?: string; id?: string }) =>
-    children ?? message ?? id ?? null,
-  Plural: ({ value, one, other }: { value: number | string; one: string; other: string }) =>
-    value === 1 ? one : other,
+  Trans: ({
+    children,
+    message,
+    id,
+  }: {
+    children?: React.ReactNode;
+    message?: string;
+    id?: string;
+  }) => children ?? message ?? id ?? null,
+  Plural: ({
+    value,
+    one,
+    other,
+  }: {
+    value: number | string;
+    one: string;
+    other: string;
+  }) => (value === 1 ? one : other),
   t: (strings: TemplateStringsArray, ...values: unknown[]) =>
     typeof strings === 'string'
       ? strings
@@ -30,8 +46,15 @@ jest.mock('@lingui/macro', () => ({
 jest.mock('@lingui/react', () => ({
   I18nProvider: ({ children }: { children: React.ReactNode }) => children,
   useLingui: () => ({ i18n: { _: (id: unknown) => id } }),
-  Trans: ({ children, message, id }: { children?: React.ReactNode; message?: string; id?: string }) =>
-    children ?? message ?? id ?? null,
+  Trans: ({
+    children,
+    message,
+    id,
+  }: {
+    children?: React.ReactNode;
+    message?: string;
+    id?: string;
+  }) => children ?? message ?? id ?? null,
 }));
 
 const mockAddToProgress = jest.fn().mockResolvedValue(undefined);
@@ -105,7 +128,9 @@ describe('SetProgressComponent', () => {
         closeModal={jest.fn()}
       />
     );
-    const rangeInput = container.querySelector('input[type="range"]') as HTMLInputElement;
+    const rangeInput = container.querySelector(
+      'input[type="range"]'
+    ) as HTMLInputElement;
     expect(rangeInput).toBeInTheDocument();
     expect(rangeInput.value).toBe('50');
   });
@@ -117,7 +142,9 @@ describe('SetProgressComponent', () => {
         closeModal={jest.fn()}
       />
     );
-    const rangeInput = container.querySelector('input[type="range"]') as HTMLInputElement;
+    const rangeInput = container.querySelector(
+      'input[type="range"]'
+    ) as HTMLInputElement;
     fireEvent.change(rangeInput, { target: { value: '75' } });
     expect(screen.getByText('75%')).toBeInTheDocument();
   });
@@ -125,7 +152,9 @@ describe('SetProgressComponent', () => {
   it('renders InputComponent for books with numberOfPages', () => {
     const { container } = render(
       <SetProgressComponent
-        mediaItem={createMediaItem({ mediaType: 'book', numberOfPages: 300 }) as any}
+        mediaItem={
+          createMediaItem({ mediaType: 'book', numberOfPages: 300 }) as any
+        }
         closeModal={jest.fn()}
       />
     );
@@ -149,7 +178,9 @@ describe('SetProgressComponent', () => {
   it('renders InputComponent for audiobooks with runtime', () => {
     const { container } = render(
       <SetProgressComponent
-        mediaItem={createMediaItem({ mediaType: 'audiobook', runtime: 600 }) as any}
+        mediaItem={
+          createMediaItem({ mediaType: 'audiobook', runtime: 600 }) as any
+        }
         closeModal={jest.fn()}
       />
     );
@@ -170,7 +201,9 @@ describe('SetProgressComponent', () => {
   it('renders duration input for books', () => {
     const { container } = render(
       <SetProgressComponent
-        mediaItem={createMediaItem({ mediaType: 'book', numberOfPages: 200 }) as any}
+        mediaItem={
+          createMediaItem({ mediaType: 'book', numberOfPages: 200 }) as any
+        }
         closeModal={jest.fn()}
       />
     );
@@ -208,11 +241,15 @@ describe('SetProgressComponent', () => {
   it('handles number input change for book pages', () => {
     const { container } = render(
       <SetProgressComponent
-        mediaItem={createMediaItem({ mediaType: 'book', numberOfPages: 100 }) as any}
+        mediaItem={
+          createMediaItem({ mediaType: 'book', numberOfPages: 100 }) as any
+        }
         closeModal={jest.fn()}
       />
     );
-    const numberInput = container.querySelector('input[type="number"]') as HTMLInputElement;
+    const numberInput = container.querySelector(
+      'input[type="number"]'
+    ) as HTMLInputElement;
     fireEvent.change(numberInput, { target: { value: '50' } });
     expect(numberInput.value).toBe('50');
   });
@@ -220,11 +257,15 @@ describe('SetProgressComponent', () => {
   it('handles empty string input in number field', () => {
     const { container } = render(
       <SetProgressComponent
-        mediaItem={createMediaItem({ mediaType: 'book', numberOfPages: 100 }) as any}
+        mediaItem={
+          createMediaItem({ mediaType: 'book', numberOfPages: 100 }) as any
+        }
         closeModal={jest.fn()}
       />
     );
-    const numberInput = container.querySelector('input[type="number"]') as HTMLInputElement;
+    const numberInput = container.querySelector(
+      'input[type="number"]'
+    ) as HTMLInputElement;
     fireEvent.change(numberInput, { target: { value: '' } });
     expect(numberInput.value).toBe('');
   });

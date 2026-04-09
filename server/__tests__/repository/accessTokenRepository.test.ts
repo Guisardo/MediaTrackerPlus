@@ -123,7 +123,9 @@ describe('accessTokenRepository', () => {
         token: hashedToken,
       });
 
-      const found = (await accessTokenRepository.findOne({ token: hashedToken }))!;
+      const found = (await accessTokenRepository.findOne({
+        token: hashedToken,
+      }))!;
 
       expect(found).toBeDefined();
       expect(found.userId).toBe(Data.user.id);
@@ -185,9 +187,21 @@ describe('accessTokenRepository', () => {
 
     test('returns only the tokens that belong to the specified user', async () => {
       await Database.knex('accessToken').insert([
-        { userId: Data.user.id, description: 'user1-token-A', token: sha256('u1-a') },
-        { userId: Data.user.id, description: 'user1-token-B', token: sha256('u1-b') },
-        { userId: Data.user2.id, description: 'user2-token', token: sha256('u2') },
+        {
+          userId: Data.user.id,
+          description: 'user1-token-A',
+          token: sha256('u1-a'),
+        },
+        {
+          userId: Data.user.id,
+          description: 'user1-token-B',
+          token: sha256('u1-b'),
+        },
+        {
+          userId: Data.user2.id,
+          description: 'user2-token',
+          token: sha256('u2'),
+        },
       ]);
 
       const user1Tokens = await accessTokenRepository.find({

@@ -106,8 +106,7 @@ export class Audible extends MetadataProvider {
   ): Promise<MediaItemForProvider> {
     const { audibleId } = arg;
 
-    const countryCode =
-      arg.countryCode || this.countryCode();
+    const countryCode = arg.countryCode || this.countryCode();
 
     const res = await axios.get<AudibleResponse.DetailsResult>(
       `https://api.audible.${this.domain(
@@ -159,14 +158,18 @@ export class Audible extends MetadataProvider {
     }
 
     const res = await axios.get<AudibleResponse.DetailsResult>(
-      `https://api.audible.${this.domain(countryCode)}/1.0/catalog/products/${audibleId}`,
+      `https://api.audible.${this.domain(
+        countryCode
+      )}/1.0/catalog/products/${audibleId}`,
       {
         params: this.queryParams,
       }
     );
 
     if (res.status !== 200) {
-      throw new Error(`Audible.localizedDetails: HTTP ${res.status} for audibleId=${audibleId} language=${language}`);
+      throw new Error(
+        `Audible.localizedDetails: HTTP ${res.status} for audibleId=${audibleId} language=${language}`
+      );
     }
 
     if (res.data?.product?.title === undefined) {

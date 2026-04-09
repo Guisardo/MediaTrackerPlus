@@ -200,20 +200,18 @@ describe('notificationPlatformsCredentialsRepository', () => {
         value: 'https://discord.example.com/1',
       });
 
-      const records =
-        await notificationPlatformsCredentialsRepository.find({
-          userId: Data.user.id,
-        });
+      const records = await notificationPlatformsCredentialsRepository.find({
+        userId: Data.user.id,
+      });
 
       expect(records.length).toBeGreaterThanOrEqual(2);
       records.forEach((r) => expect(r.userId).toBe(Data.user.id));
     });
 
     test('returns an empty array when the user has no credentials stored', async () => {
-      const records =
-        await notificationPlatformsCredentialsRepository.find({
-          userId: Data.user2.id,
-        });
+      const records = await notificationPlatformsCredentialsRepository.find({
+        userId: Data.user2.id,
+      });
 
       expect(records).toEqual([]);
     });
@@ -285,8 +283,9 @@ describe('notificationPlatformsCredentialsRepository', () => {
         value: 'new-token',
       });
 
-      const updated =
-        (await notificationPlatformsCredentialsRepository.findOne({ id }))!;
+      const updated = (await notificationPlatformsCredentialsRepository.findOne(
+        { id }
+      ))!;
 
       expect(updated.value).toBe('new-token');
     });
@@ -304,8 +303,9 @@ describe('notificationPlatformsCredentialsRepository', () => {
         platformName: 'ntfy',
       });
 
-      const updated =
-        (await notificationPlatformsCredentialsRepository.findOne({ id }))!;
+      const updated = (await notificationPlatformsCredentialsRepository.findOne(
+        { id }
+      ))!;
 
       expect(updated.platformName).toBe('ntfy');
     });
@@ -323,8 +323,9 @@ describe('notificationPlatformsCredentialsRepository', () => {
         name: 'token',
       });
 
-      const updated =
-        (await notificationPlatformsCredentialsRepository.findOne({ id }))!;
+      const updated = (await notificationPlatformsCredentialsRepository.findOne(
+        { id }
+      ))!;
 
       expect(updated.name).toBe('token');
     });
@@ -372,8 +373,9 @@ describe('notificationPlatformsCredentialsRepository', () => {
 
       await notificationPlatformsCredentialsRepository.delete({ id });
 
-      const found =
-        await notificationPlatformsCredentialsRepository.findOne({ id });
+      const found = await notificationPlatformsCredentialsRepository.findOne({
+        id,
+      });
 
       expect(found).toBeUndefined();
     });
@@ -396,10 +398,9 @@ describe('notificationPlatformsCredentialsRepository', () => {
         userId: Data.user.id,
       });
 
-      const remaining =
-        await notificationPlatformsCredentialsRepository.find({
-          userId: Data.user.id,
-        });
+      const remaining = await notificationPlatformsCredentialsRepository.find({
+        userId: Data.user.id,
+      });
 
       expect(remaining).toHaveLength(0);
     });
@@ -456,11 +457,10 @@ describe('notificationPlatformsCredentialsRepository', () => {
         platformName: 'pushover',
       });
 
-      const remaining =
-        await notificationPlatformsCredentialsRepository.find({
-          userId: Data.user.id,
-          platformName: 'pushover',
-        });
+      const remaining = await notificationPlatformsCredentialsRepository.find({
+        userId: Data.user.id,
+        platformName: 'pushover',
+      });
 
       expect(remaining).toHaveLength(0);
     });
@@ -472,8 +472,9 @@ describe('notificationPlatformsCredentialsRepository', () => {
 
   describe('get (structured credential map for a user)', () => {
     test('returns an empty object when the user has no credentials', async () => {
-      const result =
-        await notificationPlatformsCredentialsRepository.get(Data.user.id);
+      const result = await notificationPlatformsCredentialsRepository.get(
+        Data.user.id
+      );
 
       expect(result).toEqual({});
     });
@@ -486,8 +487,9 @@ describe('notificationPlatformsCredentialsRepository', () => {
         value: 'gotify-secret',
       });
 
-      const result =
-        await notificationPlatformsCredentialsRepository.get(Data.user.id);
+      const result = await notificationPlatformsCredentialsRepository.get(
+        Data.user.id
+      );
 
       expect(result).toHaveProperty('gotify');
       expect(result['gotify']).toEqual({ token: 'gotify-secret' });
@@ -507,8 +509,9 @@ describe('notificationPlatformsCredentialsRepository', () => {
         value: 'po-userkey',
       });
 
-      const result =
-        await notificationPlatformsCredentialsRepository.get(Data.user.id);
+      const result = await notificationPlatformsCredentialsRepository.get(
+        Data.user.id
+      );
 
       expect(result).toHaveProperty('pushover');
       expect((result as any)['pushover']).toEqual({
@@ -531,8 +534,9 @@ describe('notificationPlatformsCredentialsRepository', () => {
         value: 'https://discord.example.com/hook',
       });
 
-      const result =
-        await notificationPlatformsCredentialsRepository.get(Data.user.id);
+      const result = await notificationPlatformsCredentialsRepository.get(
+        Data.user.id
+      );
 
       expect(result).toHaveProperty('gotify');
       expect(result).toHaveProperty('discord');
@@ -556,8 +560,9 @@ describe('notificationPlatformsCredentialsRepository', () => {
         value: 'user2-ntfy',
       });
 
-      const user1Result =
-        await notificationPlatformsCredentialsRepository.get(Data.user.id);
+      const user1Result = await notificationPlatformsCredentialsRepository.get(
+        Data.user.id
+      );
 
       expect(user1Result['ntfy']).toEqual({ topic: 'user1-ntfy' });
       expect(user1Result['ntfy']!['topic']).not.toBe('user2-ntfy');
@@ -576,8 +581,9 @@ describe('notificationPlatformsCredentialsRepository', () => {
         value: 'after-update',
       });
 
-      const result =
-        await notificationPlatformsCredentialsRepository.get(Data.user.id);
+      const result = await notificationPlatformsCredentialsRepository.get(
+        Data.user.id
+      );
 
       expect(result['gotify']!['token']).toBe('after-update');
     });
@@ -595,8 +601,9 @@ describe('notificationPlatformsCredentialsRepository', () => {
         platformName: 'pushbullet',
       });
 
-      const result =
-        await notificationPlatformsCredentialsRepository.get(Data.user.id);
+      const result = await notificationPlatformsCredentialsRepository.get(
+        Data.user.id
+      );
 
       expect(result).not.toHaveProperty('pushbullet');
     });

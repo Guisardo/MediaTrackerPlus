@@ -309,9 +309,24 @@ describe('Recommendation Engine — Integration Tests', () => {
         externalIdMap: { '604': 100, '605': 101, '606': 102 },
         similarItemsMap: {
           [movieItem.id!]: [
-            { externalId: '604', mediaType: 'movie', title: 'The Matrix Reloaded', externalRating: 6.7 },
-            { externalId: '605', mediaType: 'movie', title: 'The Matrix Revolutions', externalRating: 6.3 },
-            { externalId: '606', mediaType: 'movie', title: 'Dark City', externalRating: 7.6 },
+            {
+              externalId: '604',
+              mediaType: 'movie',
+              title: 'The Matrix Reloaded',
+              externalRating: 6.7,
+            },
+            {
+              externalId: '605',
+              mediaType: 'movie',
+              title: 'The Matrix Revolutions',
+              externalRating: 6.3,
+            },
+            {
+              externalId: '606',
+              mediaType: 'movie',
+              title: 'Dark City',
+              externalRating: 7.6,
+            },
           ],
         },
       });
@@ -338,8 +353,18 @@ describe('Recommendation Engine — Integration Tests', () => {
         externalIdMap: { '2000': 200, '2001': 201 },
         similarItemsMap: {
           [tvItem.id!]: [
-            { externalId: '2000', mediaType: 'tv', title: 'Better Call Saul', externalRating: 8.6 },
-            { externalId: '2001', mediaType: 'tv', title: 'Ozark', externalRating: 8.3 },
+            {
+              externalId: '2000',
+              mediaType: 'tv',
+              title: 'Better Call Saul',
+              externalRating: 8.6,
+            },
+            {
+              externalId: '2001',
+              mediaType: 'tv',
+              title: 'Ozark',
+              externalRating: 8.3,
+            },
           ],
         },
       });
@@ -364,9 +389,24 @@ describe('Recommendation Engine — Integration Tests', () => {
         externalIdMap: { '3001': 300, '3002': 301, '3003': 302 },
         similarItemsMap: {
           [gameItem.id!]: [
-            { externalId: '3001', mediaType: 'video_game', title: 'The Witcher 2', externalRating: 8.5 },
-            { externalId: '3002', mediaType: 'video_game', title: 'Cyberpunk 2077', externalRating: 7.5 },
-            { externalId: '3003', mediaType: 'video_game', title: 'Dragon Age', externalRating: 9.0 },
+            {
+              externalId: '3001',
+              mediaType: 'video_game',
+              title: 'The Witcher 2',
+              externalRating: 8.5,
+            },
+            {
+              externalId: '3002',
+              mediaType: 'video_game',
+              title: 'Cyberpunk 2077',
+              externalRating: 7.5,
+            },
+            {
+              externalId: '3003',
+              mediaType: 'video_game',
+              title: 'Dragon Age',
+              externalRating: 9.0,
+            },
           ],
         },
       });
@@ -391,8 +431,18 @@ describe('Recommendation Engine — Integration Tests', () => {
         externalIdMap: { '/works/OL1000W': 400, '/works/OL1001W': 401 },
         similarItemsMap: {
           [bookItem.id!]: [
-            { externalId: '/works/OL1000W', mediaType: 'book', title: 'Foundation', externalRating: null },
-            { externalId: '/works/OL1001W', mediaType: 'book', title: 'Neuromancer', externalRating: null },
+            {
+              externalId: '/works/OL1000W',
+              mediaType: 'book',
+              title: 'Foundation',
+              externalRating: null,
+            },
+            {
+              externalId: '/works/OL1001W',
+              mediaType: 'book',
+              title: 'Neuromancer',
+              externalRating: null,
+            },
           ],
         },
       });
@@ -418,7 +468,12 @@ describe('Recommendation Engine — Integration Tests', () => {
         externalIdMap: { '604': 100 },
         similarItemsMap: {
           [movieItem.id!]: [
-            { externalId: '604', mediaType: 'movie', title: 'The Matrix Reloaded', externalRating: 6.7 },
+            {
+              externalId: '604',
+              mediaType: 'movie',
+              title: 'The Matrix Reloaded',
+              externalRating: 6.7,
+            },
           ],
         },
       });
@@ -438,7 +493,12 @@ describe('Recommendation Engine — Integration Tests', () => {
         externalIdMap: { '604': 100 },
         similarItemsMap: {
           [movieItem.id!]: [
-            { externalId: '604', mediaType: 'movie', title: 'The Matrix Reloaded', externalRating: 6.7 },
+            {
+              externalId: '604',
+              mediaType: 'movie',
+              title: 'The Matrix Reloaded',
+              externalRating: 6.7,
+            },
           ],
         },
       });
@@ -463,7 +523,12 @@ describe('Recommendation Engine — Integration Tests', () => {
         externalIdMap: { '604': 100 },
         similarItemsMap: {
           [movieItem.id!]: [
-            { externalId: '604', mediaType: 'movie', title: 'The Matrix Reloaded', externalRating: 6.7 },
+            {
+              externalId: '604',
+              mediaType: 'movie',
+              title: 'The Matrix Reloaded',
+              externalRating: 6.7,
+            },
           ],
         },
       });
@@ -489,7 +554,12 @@ describe('Recommendation Engine — Integration Tests', () => {
         externalIdMap: { '604': 100 },
         similarItemsMap: {
           [movieItem.id!]: [
-            { externalId: '604', mediaType: 'movie', title: 'The Matrix Reloaded', externalRating: 6.7 },
+            {
+              externalId: '604',
+              mediaType: 'movie',
+              title: 'The Matrix Reloaded',
+              externalRating: 6.7,
+            },
           ],
         },
       });
@@ -515,7 +585,12 @@ describe('Recommendation Engine — Integration Tests', () => {
         externalIdMap: { '604': 100 },
         similarItemsMap: {
           [movieItem.id!]: [
-            { externalId: '604', mediaType: 'movie', title: 'The Matrix Reloaded', externalRating: 6.7 },
+            {
+              externalId: '604',
+              mediaType: 'movie',
+              title: 'The Matrix Reloaded',
+              externalRating: 6.7,
+            },
           ],
         },
       });
@@ -540,9 +615,24 @@ describe('Recommendation Engine — Integration Tests', () => {
         failingExternalIds: new Set(['701']),
         similarItemsMap: {
           [movieItem.id!]: [
-            { externalId: '700', mediaType: 'movie', title: 'Successful Movie 1', externalRating: 7.0 },
-            { externalId: '701', mediaType: 'movie', title: 'Failed Import Movie', externalRating: 8.0 },
-            { externalId: '702', mediaType: 'movie', title: 'Successful Movie 2', externalRating: 6.5 },
+            {
+              externalId: '700',
+              mediaType: 'movie',
+              title: 'Successful Movie 1',
+              externalRating: 7.0,
+            },
+            {
+              externalId: '701',
+              mediaType: 'movie',
+              title: 'Failed Import Movie',
+              externalRating: 8.0,
+            },
+            {
+              externalId: '702',
+              mediaType: 'movie',
+              title: 'Successful Movie 2',
+              externalRating: 6.5,
+            },
           ],
         },
       });
@@ -555,9 +645,7 @@ describe('Recommendation Engine — Integration Tests', () => {
       const addedMediaItemIds = items.map((i) => i.mediaItemId).sort();
       expect(addedMediaItemIds).toEqual([500, 502]);
 
-      expect(logger.warn).toHaveBeenCalledWith(
-        expect.stringContaining('701')
-      );
+      expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('701'));
     });
   });
 
@@ -574,7 +662,12 @@ describe('Recommendation Engine — Integration Tests', () => {
         externalIdMap: { '800': 600 },
         similarItemsMap: {
           [movieItem.id!]: [
-            { externalId: '800', mediaType: 'movie', title: 'Shared Similar Movie', externalRating: 7.5 },
+            {
+              externalId: '800',
+              mediaType: 'movie',
+              title: 'Shared Similar Movie',
+              externalRating: 7.5,
+            },
           ],
         },
       });
@@ -601,8 +694,18 @@ describe('Recommendation Engine — Integration Tests', () => {
         externalIdMap: { '900': 700, '901': 701 },
         similarItemsMap: {
           [movieItem.id!]: [
-            { externalId: '900', mediaType: 'movie', title: 'Movie A', externalRating: 7.0 },
-            { externalId: '901', mediaType: 'movie', title: 'Movie B', externalRating: 8.0 },
+            {
+              externalId: '900',
+              mediaType: 'movie',
+              title: 'Movie A',
+              externalRating: 7.0,
+            },
+            {
+              externalId: '901',
+              mediaType: 'movie',
+              title: 'Movie B',
+              externalRating: 8.0,
+            },
           ],
         },
       });

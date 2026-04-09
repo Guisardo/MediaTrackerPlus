@@ -1,7 +1,11 @@
 import { Database } from 'src/dbconfig';
 import { logger } from 'src/logger';
 import { createLock } from 'src/lock';
-import { getMetadataLanguages, toTmdbLang, IGDB_REGION_MAP } from 'src/metadataLanguages';
+import {
+  getMetadataLanguages,
+  toTmdbLang,
+  IGDB_REGION_MAP,
+} from 'src/metadataLanguages';
 import { metadataProviders } from 'src/metadata/metadataProviders';
 import { mediaItemRepository } from 'src/repository/mediaItem';
 import {
@@ -30,11 +34,15 @@ const INTER_BATCH_DELAY_MS = 35_000;
 export async function detectBackfillNeeded(): Promise<string[]> {
   const configuredLanguages = getMetadataLanguages();
 
-  const mediaItemCount = await Database.knex('mediaItem').count('* as count').first();
+  const mediaItemCount = await Database.knex('mediaItem')
+    .count('* as count')
+    .first();
   const totalItems = Number(mediaItemCount?.count ?? 0);
 
   if (totalItems === 0) {
-    logger.info('Backfill check: no media items in database, skipping backfill');
+    logger.info(
+      'Backfill check: no media items in database, skipping backfill'
+    );
     return [];
   }
 
@@ -50,7 +58,9 @@ export async function detectBackfillNeeded(): Promise<string[]> {
     // Initial deployment: translation table is empty but items exist
     logger.info(
       `Backfill check: initial deployment detected — translation table is empty with ${totalItems} media items. ` +
-      `All configured languages need backfilling: [${configuredLanguages.join(', ')}]`
+        `All configured languages need backfilling: [${configuredLanguages.join(
+          ', '
+        )}]`
     );
     return configuredLanguages;
   }
@@ -62,8 +72,9 @@ export async function detectBackfillNeeded(): Promise<string[]> {
 
   if (missingLanguages.length > 0) {
     logger.info(
-      `Backfill check: new languages detected — missing translations for: [${missingLanguages.join(', ')}]. ` +
-      `Existing languages: [${[...existingLanguages].join(', ')}]`
+      `Backfill check: new languages detected — missing translations for: [${missingLanguages.join(
+        ', '
+      )}]. ` + `Existing languages: [${[...existingLanguages].join(', ')}]`
     );
   } else {
     logger.info(
@@ -182,7 +193,9 @@ async function backfillItemTranslations(
         }
       } catch (error) {
         logger.error(
-          `Backfill: failed to fetch localized details for mediaItem ${mediaItem.id} (${mediaItem.title}) in language '${language}': ${String(error)}`,
+          `Backfill: failed to fetch localized details for mediaItem ${
+            mediaItem.id
+          } (${mediaItem.title}) in language '${language}': ${String(error)}`,
           { err: error }
         );
       }
@@ -192,7 +205,9 @@ async function backfillItemTranslations(
   // IGDB game localizations: single fetch per item, map regions to ISO codes
   if (metadataProvider.fetchGameLocalizations != null) {
     try {
-      const localizations = await metadataProvider.fetchGameLocalizations(mediaItem);
+      const localizations = await metadataProvider.fetchGameLocalizations(
+        mediaItem
+      );
 
       for (const localization of localizations) {
         const regionLanguages = IGDB_REGION_MAP[localization.regionId];
@@ -218,7 +233,9 @@ async function backfillItemTranslations(
       }
     } catch (error) {
       logger.error(
-        `Backfill: failed to fetch game localizations for mediaItem ${mediaItem.id} (${mediaItem.title}): ${String(error)}`,
+        `Backfill: failed to fetch game localizations for mediaItem ${
+          mediaItem.id
+        } (${mediaItem.title}): ${String(error)}`,
         { err: error }
       );
     }
@@ -237,7 +254,9 @@ async function runBackfill(missingLanguages: string[]): Promise<void> {
   }
 
   logger.info(
-    `Backfill translations: starting backfill for languages [${missingLanguages.join(', ')}]`
+    `Backfill translations: starting backfill for languages [${missingLanguages.join(
+      ', '
+    )}]`
   );
 
   const totalCountResult = await Database.knex('mediaItem')
@@ -265,7 +284,9 @@ async function runBackfill(missingLanguages: string[]): Promise<void> {
         processed++;
       } catch (error) {
         logger.error(
-          `Backfill: failed to process mediaItem ${mediaItem.id} (${mediaItem.title}): ${String(error)}`,
+          `Backfill: failed to process mediaItem ${mediaItem.id} (${
+            mediaItem.title
+          }): ${String(error)}`,
           { err: error }
         );
         processed++;
@@ -285,7 +306,9 @@ async function runBackfill(missingLanguages: string[]): Promise<void> {
   }
 
   logger.info(
-    `Backfill translations: completed — ${processed}/${totalItems} items processed for languages [${missingLanguages.join(', ')}]`
+    `Backfill translations: completed — ${processed}/${totalItems} items processed for languages [${missingLanguages.join(
+      ', '
+    )}]`
   );
 }
 
@@ -293,15 +316,17 @@ async function runBackfill(missingLanguages: string[]): Promise<void> {
  * Locked backfill function — prevents concurrent backfill runs.
  * Uses a separate lock from the updateMetadata lock.
  */
-const lockedBackfill = createLock(async function backfillTranslations(): Promise<void> {
-  const missingLanguages = await detectBackfillNeeded();
+const lockedBackfill = createLock(
+  async function backfillTranslations(): Promise<void> {
+    const missingLanguages = await detectBackfillNeeded();
 
-  if (missingLanguages.length === 0) {
-    return;
+    if (missingLanguages.length === 0) {
+      return;
+    }
+
+    await runBackfill(missingLanguages);
   }
-
-  await runBackfill(missingLanguages);
-});
+);
 
 /**
  * Entry point: detects whether backfill is needed and starts it in the background
@@ -321,4 +346,9 @@ export function startBackfillIfNeeded(): void {
 }
 
 // Exported for testing purposes
-export { BACKFILL_BATCH_SIZE, INTER_BATCH_DELAY_MS, runBackfill, backfillItemTranslations };
+export {
+  BACKFILL_BATCH_SIZE,
+  INTER_BATCH_DELAY_MS,
+  runBackfill,
+  backfillItemTranslations,
+};

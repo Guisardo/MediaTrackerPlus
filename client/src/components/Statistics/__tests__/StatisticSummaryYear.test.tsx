@@ -59,7 +59,9 @@ jest.mock('src/api/api', () => ({
 const mockUseSeen = jest.fn();
 jest.mock('src/hooks/statisticHooks', () => ({
   useSeen: (...args: any[]) => mockUseSeen(...args),
-  useGenreSeen: jest.fn().mockReturnValue({ data: undefined, isFetched: false, error: null }),
+  useGenreSeen: jest
+    .fn()
+    .mockReturnValue({ data: undefined, isFetched: false, error: null }),
 }));
 
 import StatisticSummaryYear from 'src/components/Statistics/StatisticSummaryYear';
@@ -79,19 +81,31 @@ beforeEach(() => {
 
 describe('StatisticSummaryYear', () => {
   it('renders without crashing when useSeen returns no data', () => {
-    mockUseSeen.mockReturnValue({ data: undefined, isFetched: false, error: null });
+    mockUseSeen.mockReturnValue({
+      data: undefined,
+      isFetched: false,
+      error: null,
+    });
     const { container } = renderComponent({ year: '2023' });
     expect(container).toBeInTheDocument();
   });
 
   it('passes currentYear to useSeen hook', () => {
-    mockUseSeen.mockReturnValue({ data: undefined, isFetched: true, error: null });
+    mockUseSeen.mockReturnValue({
+      data: undefined,
+      isFetched: true,
+      error: null,
+    });
     renderComponent({ year: '2023' });
     expect(mockUseSeen).toHaveBeenCalledWith({ year: '2023' });
   });
 
   it('passes null currentYear to useSeen hook when year is null', () => {
-    mockUseSeen.mockReturnValue({ data: undefined, isFetched: true, error: null });
+    mockUseSeen.mockReturnValue({
+      data: undefined,
+      isFetched: true,
+      error: null,
+    });
     renderComponent({ year: null });
     expect(mockUseSeen).toHaveBeenCalledWith({ year: null });
   });

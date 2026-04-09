@@ -174,8 +174,20 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended', groupId })
       createdAt: Date.now(),
     });
     await Database.knex('userGroupMember').insert([
-      { id: 200, groupId, userId: user1.id, role: 'admin', addedAt: Date.now() },
-      { id: 201, groupId, userId: user2.id, role: 'viewer', addedAt: Date.now() },
+      {
+        id: 200,
+        groupId,
+        userId: user1.id,
+        role: 'admin',
+        addedAt: Date.now(),
+      },
+      {
+        id: 201,
+        groupId,
+        userId: user2.id,
+        role: 'viewer',
+        addedAt: Date.now(),
+      },
     ]);
     await Database.knex('groupPlatformRating').insert(groupAlphaRating);
     await Database.knex('groupPlatformRating').insert(groupBetaRating);
@@ -306,7 +318,9 @@ describe("mediaItemRepository.items({ orderBy: 'platformRecommended', groupId })
       await Database.knex('groupPlatformRating')
         .where('mediaItemId', itemDelta.id)
         .delete();
-      await Database.knex('listItem').where('mediaItemId', itemDelta.id).delete();
+      await Database.knex('listItem')
+        .where('mediaItemId', itemDelta.id)
+        .delete();
       await Database.knex('mediaItem').where('id', itemDelta.id).delete();
     }
   });

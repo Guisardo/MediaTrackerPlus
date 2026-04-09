@@ -1,5 +1,9 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
+import {
+  Collapsible,
+  CollapsibleTrigger,
+  CollapsibleContent,
+} from '@/components/ui/collapsible';
 
 /**
  * FacetSection wraps an individual facet dimension in a collapsible accordion
@@ -42,9 +46,7 @@ export const FacetSection: FunctionComponent<{
         </span>
       </CollapsibleTrigger>
 
-      <CollapsibleContent className="px-3 pb-3">
-        {children}
-      </CollapsibleContent>
+      <CollapsibleContent className="px-3 pb-3">{children}</CollapsibleContent>
     </Collapsible>
   );
 };

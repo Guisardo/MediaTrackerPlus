@@ -14,7 +14,9 @@ const DarkModeContext = createContext<
   | undefined
 >(undefined);
 
-export const DarkModeProvider: FunctionComponent<{ children: React.ReactNode }> = (props) => {
+export const DarkModeProvider: FunctionComponent<{
+  children: React.ReactNode;
+}> = (props) => {
   const [darkMode, setDarkModeValue] = useState<boolean>(
     localStorage.theme === 'dark'
   );

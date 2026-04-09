@@ -34,12 +34,15 @@ function buildMockRequest(overrides: Partial<Request> = {}): Request {
  * The 'finish' event listener registered by httpLogMiddleware is captured so
  * tests can fire it manually, simulating a completed HTTP response.
  */
-function buildMockResponse(overrides: {
-  statusCode?: number;
-  contentLength?: number | string | null;
-} = {}): Response & { triggerFinish: () => void } {
+function buildMockResponse(
+  overrides: {
+    statusCode?: number;
+    contentLength?: number | string | null;
+  } = {}
+): Response & { triggerFinish: () => void } {
   const { statusCode = 200 } = overrides;
-  const contentLength = 'contentLength' in overrides ? overrides.contentLength : 512;
+  const contentLength =
+    'contentLength' in overrides ? overrides.contentLength : 512;
 
   let finishListener: (() => void) | undefined;
 
@@ -291,6 +294,8 @@ describe('httpLogMiddleware', () => {
     // the count matches however many times triggerFinish can call through.
     // Since our mock stores one listener, both calls will invoke it.
     // The important assertion here is that the first call logged correctly.
-    expect((mockLogger.http as jest.Mock).mock.calls.length).toBeGreaterThanOrEqual(1);
+    expect(
+      (mockLogger.http as jest.Mock).mock.calls.length
+    ).toBeGreaterThanOrEqual(1);
   });
 });

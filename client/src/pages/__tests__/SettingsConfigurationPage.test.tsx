@@ -19,11 +19,16 @@ import userEvent from '@testing-library/user-event';
 // ---------------------------------------------------------------------------
 jest.mock('radix-ui', () => {
   const React = require('react');
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  const SelectContext = React.createContext({ value: '', onChange: (_: string): void => {} });
+  const SelectContext = React.createContext({
+    value: '',
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    onChange: (_: string): void => {},
+  });
 
   const Root = ({ children, value, onValueChange, defaultValue }: any) => {
-    const [internalValue, setInternalValue] = React.useState(value ?? defaultValue ?? '');
+    const [internalValue, setInternalValue] = React.useState(
+      value ?? defaultValue ?? ''
+    );
     React.useEffect(() => {
       if (value !== undefined) setInternalValue(value);
     }, [value]);
@@ -32,15 +37,21 @@ jest.mock('radix-ui', () => {
       onValueChange?.(newVal);
     };
     return (
-      <SelectContext.Provider value={{ value: internalValue, onChange: handleChange }}>
+      <SelectContext.Provider
+        value={{ value: internalValue, onChange: handleChange }}
+      >
         <div>{children}</div>
       </SelectContext.Provider>
     );
   };
 
-  const Trigger = React.forwardRef(({ children, 'aria-label': ariaLabel, ...props }: any, ref: any) => (
-    <button ref={ref} role="combobox" aria-label={ariaLabel} {...props}>{children}</button>
-  ));
+  const Trigger = React.forwardRef(
+    ({ children, 'aria-label': ariaLabel, ...props }: any, ref: any) => (
+      <button ref={ref} role="combobox" aria-label={ariaLabel} {...props}>
+        {children}
+      </button>
+    )
+  );
 
   const Value = ({ placeholder }: any) => {
     const { value } = React.useContext(SelectContext);
@@ -52,21 +63,23 @@ jest.mock('radix-ui', () => {
   const Content = ({ children }: any) => <div>{children}</div>;
   const Viewport = ({ children }: any) => <div>{children}</div>;
 
-  const Item = React.forwardRef(({ children, value, ...props }: any, ref: any) => {
-    const { value: currentValue, onChange } = React.useContext(SelectContext);
-    return (
-      <div
-        ref={ref}
-        role="option"
-        aria-selected={currentValue === value}
-        data-value={value}
-        onClick={() => onChange(value)}
-        {...props}
-      >
-        <span>{children}</span>
-      </div>
-    );
-  });
+  const Item = React.forwardRef(
+    ({ children, value, ...props }: any, ref: any) => {
+      const { value: currentValue, onChange } = React.useContext(SelectContext);
+      return (
+        <div
+          ref={ref}
+          role="option"
+          aria-selected={currentValue === value}
+          data-value={value}
+          onClick={() => onChange(value)}
+          {...props}
+        >
+          <span>{children}</span>
+        </div>
+      );
+    }
+  );
 
   const ItemText = ({ children }: any) => <span>{children}</span>;
   const ItemIndicator = () => null;

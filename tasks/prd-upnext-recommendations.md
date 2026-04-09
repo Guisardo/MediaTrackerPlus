@@ -26,6 +26,7 @@ This feature fills a genuine gap: no free, self-hosted, multi-media-type platfor
 **Description:** As a developer, I need a dedicated `estimatedRating` column on the `listItem` table so that recommendation scores persist between sessions and are directly queryable.
 
 **Acceptance Criteria:**
+
 - [ ] Knex migration file created at `server/src/migrations/20990101000000_listItemEstimatedRating.ts`
 - [ ] Migration adds `estimatedRating FLOAT NULL` column to the `listItem` table
 - [ ] Migration runs successfully on both SQLite and PostgreSQL
@@ -39,6 +40,7 @@ This feature fills a genuine gap: no free, self-hosted, multi-media-type platfor
 **Description:** As a developer, I need the `ListSortBy` union type to include `'recommended'` so the frontend and API can reference it as a valid sort option.
 
 **Acceptance Criteria:**
+
 - [ ] `'recommended'` added to the `ListSortBy` union in `server/src/entity/list.ts`
 - [ ] `estimatedRating?: number` field added to the `ListItem` entity/type definition
 - [ ] No existing sort options removed or renamed
@@ -51,6 +53,7 @@ This feature fills a genuine gap: no free, self-hosted, multi-media-type platfor
 **Description:** As a developer, I need the rating controller to trigger the recommendation engine asynchronously after each rating is saved so that the HTTP response is never delayed.
 
 **Acceptance Criteria:**
+
 - [ ] The following pattern is added in `server/src/controllers/rating.ts` strictly after `res.send()`:
   ```typescript
   setImmediate(() => {
@@ -70,6 +73,7 @@ This feature fills a genuine gap: no free, self-hosted, multi-media-type platfor
 **Description:** As a developer, I need a client that fetches similar movies and TV shows from TMDB so that the recommendation engine can retrieve similarity data for those media types.
 
 **Acceptance Criteria:**
+
 - [ ] `TmdbSimilarClient` implements `fetchSimilar(tmdbId: number, mediaType: 'movie' | 'tv'): Promise<SimilarItem[]>`
 - [ ] Calls `GET /3/movie/{id}/similar` for movies and `GET /3/tv/{id}/similar` for TV shows
 - [ ] Returns all results from the first page (up to 20 items)
@@ -86,6 +90,7 @@ This feature fills a genuine gap: no free, self-hosted, multi-media-type platfor
 **Description:** As a developer, I need a client that fetches similar games from IGDB using the documented two-step flow so that the recommendation engine can retrieve similarity data for games.
 
 **Acceptance Criteria:**
+
 - [ ] `IgdbSimilarClient` implements `fetchSimilar(igdbId: number): Promise<SimilarItem[]>`
 - [ ] Step 1: Queries `POST /v4/games` with `fields similar_games` filter to retrieve similar game IDs for the given game
 - [ ] Step 2: Queries `POST /v4/games` with full detail fields (`name`, `total_rating`, `total_rating_count`) for each retrieved similar game ID
@@ -107,6 +112,7 @@ This feature fills a genuine gap: no free, self-hosted, multi-media-type platfor
 **Description:** As a developer, I need a client that retrieves related books from OpenLibrary using subject-based search so that the recommendation engine can suggest books even without a dedicated similarity API.
 
 **Acceptance Criteria:**
+
 - [ ] `OpenLibrarySimilarClient` implements `fetchSimilar(workId: string): Promise<SimilarItem[]>`
 - [ ] Fetches the work's subjects via `GET https://openlibrary.org/works/{workId}.json`
 - [ ] Searches for books via `GET https://openlibrary.org/subjects/{subject}.json` using the first available subject from the work
@@ -123,6 +129,7 @@ This feature fills a genuine gap: no free, self-hosted, multi-media-type platfor
 **Description:** As a developer, I need a service that adds similar items to the user's watchlist with `estimatedRating`, applying the minimum-value update strategy when an item already exists.
 
 **Acceptance Criteria:**
+
 - [ ] `WatchlistWriter.write(userId: number, items: SimilarItem[], estimatedRating: number): Promise<void>` implemented
 - [ ] For each `SimilarItem`, call `findMediaItemByExternalId` from `server/src/metadata/findByExternalId.ts` to ensure a `mediaItem` row exists before inserting a `listItem`; if `findMediaItemByExternalId` returns `undefined` (import failure), log at `WARN` level with the external ID and skip the item — remaining items in the batch continue processing
 - [ ] For each item: if not already in the user's watchlist → add it with `estimatedRating` set to the provided value
@@ -140,6 +147,7 @@ This feature fills a genuine gap: no free, self-hosted, multi-media-type platfor
 **Description:** As a developer, I need a central orchestrator that receives a rating event, dispatches to the correct similarity API client based on media type, and hands results to `WatchlistWriter`.
 
 **Acceptance Criteria:**
+
 - [ ] `RecommendationService.processRating(userId: number, mediaItemId: number, rating: number): Promise<void>` implemented
 - [ ] Determines the media type by reading the `mediaItem` record from the database
 - [ ] Dispatches to `TmdbSimilarClient` for movies and TV shows, `IgdbSimilarClient` for games, `OpenLibrarySimilarClient` for books
@@ -156,6 +164,7 @@ This feature fills a genuine gap: no free, self-hosted, multi-media-type platfor
 **Description:** As a user, I want to sort my watchlist by "Recommended" so that the content most likely to interest me appears at the top.
 
 **Acceptance Criteria:**
+
 - [ ] When `sortBy === 'recommended'`, `listItemRepository.items()` orders results by `score DESC`
 - [ ] `externalRating` is sourced from `mediaItem.tmdbRating` (already a 0–10 float on the `mediaItem` table); `tmdbRating` MUST be included in the `listRepository.items()` select projection
 - [ ] For games and books, `externalRating` is `null` in v1 (`total_rating` is not persisted on `mediaItem` for games; OpenLibrary has no rating); the formula falls back to `estimatedRating` alone for these types
@@ -173,6 +182,7 @@ This feature fills a genuine gap: no free, self-hosted, multi-media-type platfor
 **Description:** As a developer, I need integration tests that verify the complete recommendation pipeline end-to-end so that regressions are caught before deployment.
 
 **Acceptance Criteria:**
+
 - [ ] Test: rating a movie triggers TMDB similar fetch and adds items to watchlist with `estimatedRating` equal to the trigger rating
 - [ ] Test: rating a game triggers IGDB two-step similar fetch
 - [ ] Test: rating a book triggers OpenLibrary subject fetch
@@ -374,29 +384,29 @@ All previously open questions have been resolved by codebase inspection:
 
 ## References
 
-*References verified on 2026-03-06*
+_References verified on 2026-03-06_
 
 [1] **IGDB API Authentication — OAuth2** [Official Docs]
-    Twitch / IGDB
-    Search: "igdb api authentication oauth token expiry site:api-docs.igdb.com"
-    *Supports: IGDB OAuth token expiry handling in Technical Considerations and US-005*
+Twitch / IGDB
+Search: "igdb api authentication oauth token expiry site:api-docs.igdb.com"
+_Supports: IGDB OAuth token expiry handling in Technical Considerations and US-005_
 
 [2] **TMDB API — Rate Limiting and 429 Responses** [Official Docs]
-    The Movie Database
-    Search: "tmdb api rate limit 429 retry-after site:developers.themoviedb.org"
-    *Supports: HTTP 429 + Retry-After handling in Technical Considerations and US-004*
+The Movie Database
+Search: "tmdb api rate limit 429 retry-after site:developers.themoviedb.org"
+_Supports: HTTP 429 + Retry-After handling in Technical Considerations and US-004_
 
 [3] **OpenLibrary Works and Subjects API** [Official Docs]
-    Internet Archive / Open Library
-    https://openlibrary.org/dev/docs/api#anchor_works
-    *Supports: Subject-based book retrieval approach in FR-7 and US-006*
+Internet Archive / Open Library
+https://openlibrary.org/dev/docs/api#anchor_works
+_Supports: Subject-based book retrieval approach in FR-7 and US-006_
 
 [4] **Node.js Event Loop — setImmediate vs setTimeout** [Official Docs]
-    Node.js Foundation
-    https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick
-    *Supports: Fire-and-forget hook pattern rationale in FR-1, US-003, and the Sequence Diagram*
+Node.js Foundation
+https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick
+_Supports: Fire-and-forget hook pattern rationale in FR-1, US-003, and the Sequence Diagram_
 
 [5] **Knex.js Schema Builder — hasColumn** [Official Docs]
-    Knex.js
-    Search: "knex schema builder hasColumn site:knexjs.org"
-    *Supports: Idempotent migration guard pattern in US-001*
+Knex.js
+Search: "knex schema builder hasColumn site:knexjs.org"
+_Supports: Idempotent migration guard pattern in US-001_

@@ -10,10 +10,15 @@ export const useNotificationPlatformsCredentials = () => {
   });
 
   const setNotificationCredentialsMutation = useMutation({
-    mutationFn: (data: Parameters<typeof mediaTrackerApi.user.updateNotificationCredentials>[0]) =>
-      mediaTrackerApi.user.updateNotificationCredentials(data),
+    mutationFn: (
+      data: Parameters<
+        typeof mediaTrackerApi.user.updateNotificationCredentials
+      >[0]
+    ) => mediaTrackerApi.user.updateNotificationCredentials(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notificationPlatformsCredentials'] });
+      queryClient.invalidateQueries({
+        queryKey: ['notificationPlatformsCredentials'],
+      });
     },
   });
 

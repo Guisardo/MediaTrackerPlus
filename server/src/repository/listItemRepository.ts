@@ -96,8 +96,7 @@ class ListItemRepository extends repository<ListItem>({
     const existingItems = await trx('listItem').where({
       listId: listId,
       mediaItemId: mediaItemId,
-      seasonId:
-        episodeId == undefined ? definedOrNull(seasonId) : null,
+      seasonId: episodeId == undefined ? definedOrNull(seasonId) : null,
       episodeId: definedOrNull(episodeId),
     });
 
@@ -108,8 +107,7 @@ class ListItemRepository extends repository<ListItem>({
     await trx('listItem').insert({
       listId: listId,
       mediaItemId: mediaItemId,
-      seasonId:
-        episodeId == undefined ? definedOrNull(seasonId) : null,
+      seasonId: episodeId == undefined ? definedOrNull(seasonId) : null,
       episodeId: definedOrNull(episodeId),
       addedAt: new Date().getTime(),
     });

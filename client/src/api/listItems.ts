@@ -21,6 +21,7 @@ export const useListItems = (args: { listId: number; sortBy?: ListSortBy }) => {
     listItems: data,
     isLoading,
     isError,
-    invalidateListItemsQuery: () => queryClient.invalidateQueries({ queryKey: key }),
+    invalidateListItemsQuery: () =>
+      queryClient.invalidateQueries({ queryKey: key }),
   };
 };

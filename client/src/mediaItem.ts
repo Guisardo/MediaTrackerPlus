@@ -71,7 +71,8 @@ export const hasBeenSeenAtLeastOnce = (
   value: MediaItemDetailsResponse | TvSeason | TvEpisode
 ) => {
   return isSeason(value)
-    ? (value.episodes?.filter((episode) => (episode.seenHistory?.length ?? 0) > 0)
-        .length ?? 0) > 0
+    ? (value.episodes?.filter(
+        (episode) => (episode.seenHistory?.length ?? 0) > 0
+      ).length ?? 0) > 0
     : (value.seenHistory?.length ?? 0) > 0;
 };

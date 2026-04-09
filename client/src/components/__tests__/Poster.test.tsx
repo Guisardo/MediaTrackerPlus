@@ -26,7 +26,12 @@ import { render, screen, fireEvent } from '@testing-library/react';
 // Mocks
 // ---------------------------------------------------------------------------
 
-jest.mock('clsx', () => (...args: unknown[]) => args.filter(Boolean).join(' '));
+jest.mock(
+  'clsx',
+  () =>
+    (...args: unknown[]) =>
+      args.filter(Boolean).join(' ')
+);
 
 // ---------------------------------------------------------------------------
 // Import component under test

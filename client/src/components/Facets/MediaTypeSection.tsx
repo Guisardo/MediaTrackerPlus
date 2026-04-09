@@ -117,15 +117,25 @@ const MediaTypeSectionInner: FunctionComponent<{
       title={t`Media Type`}
       hasActiveSelection={selectedMediaTypes.length > 0}
     >
-      <ExpandableList items={mediaTypesWithDisplayLabels as unknown[]} maxVisible={15}>
+      <ExpandableList
+        items={mediaTypesWithDisplayLabels as unknown[]}
+        maxVisible={15}
+      >
         {(visibleItems) => (
           <ul className="space-y-1">
-            {(visibleItems as Array<FacetOption & { displayLabel: string }>).map((option) => {
+            {(
+              visibleItems as Array<FacetOption & { displayLabel: string }>
+            ).map((option) => {
               const isChecked = selectedMediaTypes.includes(option.value);
-              const inputId = `facet-checkbox-${option.value.replace(/\s+/g, '-').toLowerCase()}`;
+              const inputId = `facet-checkbox-${option.value
+                .replace(/\s+/g, '-')
+                .toLowerCase()}`;
 
               return (
-                <li key={option.value} className="flex items-center justify-between">
+                <li
+                  key={option.value}
+                  className="flex items-center justify-between"
+                >
                   <label
                     htmlFor={inputId}
                     className="flex items-center gap-2 cursor-pointer text-sm text-zinc-800 dark:text-zinc-200 select-none min-w-0 flex-1"
@@ -135,7 +145,9 @@ const MediaTypeSectionInner: FunctionComponent<{
                       type="checkbox"
                       className="flex-shrink-0 accent-blue-500 cursor-pointer"
                       checked={isChecked}
-                      onChange={(e) => handleToggle(option.value, e.target.checked)}
+                      onChange={(e) =>
+                        handleToggle(option.value, e.target.checked)
+                      }
                     />
                     <span className="truncate">{option.displayLabel}</span>
                   </label>

@@ -65,10 +65,16 @@ jest.mock('@lingui/react', () => {
         locale: 'en',
       },
     }),
-    Trans: ({ message, children }: { message?: string; children?: React.ReactNode }) => (
-      <>{message || children}</>
+    Trans: ({
+      message,
+      children,
+    }: {
+      message?: string;
+      children?: React.ReactNode;
+    }) => <>{message || children}</>,
+    I18nProvider: ({ children }: { children: React.ReactNode }) => (
+      <>{children}</>
     ),
-    I18nProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   };
 });
 
@@ -146,8 +152,7 @@ jest.mock('src/hooks/translations', () => {
     keys: Object.keys(map),
     translations: Object.values(map),
     entries: Object.entries(map) as [string, string][],
-    translationToKey: (t: string) =>
-      Object.keys(map).find((k) => map[k] === t),
+    translationToKey: (t: string) => Object.keys(map).find((k) => map[k] === t),
     keyToTranslation: (k: string) => map[k],
   });
 
@@ -246,7 +251,6 @@ beforeEach(() => {
 // ---------------------------------------------------------------------------
 
 describe('AddListButton – create mode', () => {
-
   it('renders an "Add list" button', () => {
     renderAddButton();
     expect(
@@ -373,7 +377,9 @@ describe('EditListButton – edit mode', () => {
 
     await user.click(screen.getByRole('button', { name: 'Edit list' }));
 
-    const descInput = screen.getByLabelText(/Description/i) as HTMLTextAreaElement;
+    const descInput = screen.getByLabelText(
+      /Description/i
+    ) as HTMLTextAreaElement;
     expect(descInput.value).toBe('Best films');
   });
 
@@ -513,7 +519,9 @@ describe('EditListButton – watchlist restrictions', () => {
 
     await user.click(screen.getByRole('button', { name: 'Edit list' }));
 
-    const descTextarea = screen.getByLabelText(/Description/i) as HTMLTextAreaElement;
+    const descTextarea = screen.getByLabelText(
+      /Description/i
+    ) as HTMLTextAreaElement;
     expect(descTextarea).toBeDisabled();
   });
 });

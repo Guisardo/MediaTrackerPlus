@@ -102,7 +102,11 @@ export const TraktTvImportPage: FunctionComponent = () => {
 
             {state.state === 'imported' && (
               <>
-                <Button variant="outline" className="mt-2" onClick={() => startOver()}>
+                <Button
+                  variant="outline"
+                  className="mt-2"
+                  onClick={() => startOver()}
+                >
                   <Trans>Start over</Trans>
                 </Button>
               </>
@@ -160,10 +164,12 @@ const TraktImportSummaryTableComponent: FunctionComponent<{
   const { state } = props;
 
   const importedListsByTraktId =
-    state.importSummary?.lists?.reduce<Record<string, { movies?: number; shows?: number; seasons?: number; episodes?: number }>>(
-      (prev, current) => ({ [current.listId]: current, ...prev }),
-      {}
-    ) ?? {};
+    state.importSummary?.lists?.reduce<
+      Record<
+        string,
+        { movies?: number; shows?: number; seasons?: number; episodes?: number }
+      >
+    >((prev, current) => ({ [current.listId]: current, ...prev }), {}) ?? {};
 
   return (
     <TvImportSummaryTable
@@ -243,7 +249,9 @@ const NotImportedItems: FunctionComponent<{
       <div className="self-start">
         <NotImportedItemsSubList
           title={t`Watchlist - movies`}
-          items={notImportedItems.watchlist.movies?.map(formatMovieOrShow) ?? []}
+          items={
+            notImportedItems.watchlist.movies?.map(formatMovieOrShow) ?? []
+          }
         />
 
         <NotImportedItemsSubList
@@ -253,12 +261,16 @@ const NotImportedItems: FunctionComponent<{
 
         <NotImportedItemsSubList
           title={t`Watchlist - season`}
-          items={notImportedItems.watchlist.seasons?.map(formatSeasonTitle) ?? []}
+          items={
+            notImportedItems.watchlist.seasons?.map(formatSeasonTitle) ?? []
+          }
         />
 
         <NotImportedItemsSubList
           title={t`Watchlist - episodes`}
-          items={notImportedItems.watchlist.episodes?.map(formatEpisodeTitle) ?? []}
+          items={
+            notImportedItems.watchlist.episodes?.map(formatEpisodeTitle) ?? []
+          }
         />
 
         <NotImportedItemsSubList
@@ -288,7 +300,9 @@ const NotImportedItems: FunctionComponent<{
 
         <NotImportedItemsSubList
           title={t`Ratings - episodes`}
-          items={notImportedItems.ratings.episodes?.map(formatEpisodeTitle) ?? []}
+          items={
+            notImportedItems.ratings.episodes?.map(formatEpisodeTitle) ?? []
+          }
         />
 
         {notImportedItems.lists?.map((item) => (
@@ -339,7 +353,13 @@ const NotImportedItemsSubList: FunctionComponent<{
           </div>
 
           {items?.map((item) => (
-            <a key={item.title} href={item.url} className="block" target="_blank" rel="noopener noreferrer">
+            <a
+              key={item.title}
+              href={item.url}
+              className="block"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {item.title}
             </a>
           ))}

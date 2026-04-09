@@ -20,18 +20,30 @@ jest.mock('@lingui/macro', () => {
   const React = require('react');
   return {
     Trans: ({ children, message, id }: any) =>
-      React.createElement(React.Fragment, null, children ?? message ?? id ?? null),
+      React.createElement(
+        React.Fragment,
+        null,
+        children ?? message ?? id ?? null
+      ),
     t: (strings: TemplateStringsArray | string, ...values: unknown[]) => {
       if (typeof strings === 'string') return strings;
       if ((strings as TemplateStringsArray).raw)
         return String.raw(strings as TemplateStringsArray, ...values);
       return (strings as TemplateStringsArray)[0];
     },
-    Plural: ({ value, one, other }: { value: number; one: string; other: string }) =>
+    Plural: ({
+      value,
+      one,
+      other,
+    }: {
+      value: number;
+      one: string;
+      other: string;
+    }) =>
       React.createElement(
         React.Fragment,
         null,
-        value === 1 ? one : other.replace('#', String(value)),
+        value === 1 ? one : other.replace('#', String(value))
       ),
   };
 });
@@ -47,7 +59,11 @@ jest.mock('@lingui/react', () => {
       },
     }),
     Trans: ({ children, message, id }: any) =>
-      React.createElement(React.Fragment, null, children ?? message ?? id ?? null),
+      React.createElement(
+        React.Fragment,
+        null,
+        children ?? message ?? id ?? null
+      ),
     I18nProvider: ({ children }: any) =>
       React.createElement(React.Fragment, null, children),
   };
@@ -157,7 +173,10 @@ function makeGenericError(status = 404): FetchError {
   return new FetchError({
     status,
     statusText: 'Not Found',
-    body: JSON.stringify({ errorMessage: 'Not found', MediaTrackerError: true }),
+    body: JSON.stringify({
+      errorMessage: 'Not found',
+      MediaTrackerError: true,
+    }),
   });
 }
 
@@ -204,7 +223,9 @@ describe('DetailsPage – restricted-details error state', () => {
     render(<DetailsPage />);
 
     expect(screen.getByText(/Content restricted/i)).toBeInTheDocument();
-    expect(screen.getByText(/age-based content filtering/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/age-based content filtering/i)
+    ).toBeInTheDocument();
   });
 
   it('does NOT show the details content when the API returns AGE_RESTRICTED', () => {

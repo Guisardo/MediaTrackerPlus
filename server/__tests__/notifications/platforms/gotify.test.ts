@@ -9,7 +9,9 @@ const mockedAxios = axios as jest.Mocked<typeof axios>;
 /**
  * Builds a complete FormattedNotification for use in tests.
  */
-function buildFormattedNotification(overrides: Partial<FormattedNotification> = {}): FormattedNotification {
+function buildFormattedNotification(
+  overrides: Partial<FormattedNotification> = {}
+): FormattedNotification {
   return {
     plainText: 'Plain text body',
     markdown: '**Markdown body**',
@@ -74,7 +76,9 @@ describe('gotify notification platform', () => {
       });
 
       const [, , config] = mockedAxios.post.mock.calls[0];
-      expect(config?.headers).toMatchObject({ 'X-Gotify-Key': 'my-token-value' });
+      expect(config?.headers).toMatchObject({
+        'X-Gotify-Key': 'my-token-value',
+      });
     });
 
     test('sends the notification title in the payload', async () => {
@@ -90,7 +94,9 @@ describe('gotify notification platform', () => {
     });
 
     test('sends the markdown body as "message" in the payload', async () => {
-      const body = buildFormattedNotification({ markdown: '**Breaking Bad** S05E16 is out' });
+      const body = buildFormattedNotification({
+        markdown: '**Breaking Bad** S05E16 is out',
+      });
 
       await gotify.sendFunction({
         credentials: { url: serverUrl, token, priority },
@@ -149,7 +155,9 @@ describe('gotify notification platform', () => {
 
     test('sends a complete, correctly-shaped payload', async () => {
       const title = 'Complete Payload Test';
-      const body = buildFormattedNotification({ markdown: 'Markdown content here' });
+      const body = buildFormattedNotification({
+        markdown: 'Markdown content here',
+      });
 
       await gotify.sendFunction({
         credentials: { url: serverUrl, token: 'tok', priority: '3' },

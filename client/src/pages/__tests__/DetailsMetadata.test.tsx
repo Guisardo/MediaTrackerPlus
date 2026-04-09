@@ -25,14 +25,26 @@ jest.mock('@lingui/macro', () => {
   const React = require('react');
   return {
     Trans: ({ children, message, id }: any) =>
-      React.createElement(React.Fragment, null, children ?? message ?? id ?? null),
+      React.createElement(
+        React.Fragment,
+        null,
+        children ?? message ?? id ?? null
+      ),
     t: (strings: TemplateStringsArray | string, ...values: unknown[]) => {
       if (typeof strings === 'string') return strings;
       if ((strings as TemplateStringsArray).raw)
         return String.raw(strings as TemplateStringsArray, ...values);
       return (strings as TemplateStringsArray)[0];
     },
-    Plural: ({ value, one, other }: { value: number; one: string; other: string }) =>
+    Plural: ({
+      value,
+      one,
+      other,
+    }: {
+      value: number;
+      one: string;
+      other: string;
+    }) =>
       React.createElement(
         React.Fragment,
         null,
@@ -52,17 +64,29 @@ jest.mock('@lingui/react', () => {
       },
     }),
     Trans: ({ children, message, id }: any) =>
-      React.createElement(React.Fragment, null, children ?? message ?? id ?? null),
+      React.createElement(
+        React.Fragment,
+        null,
+        children ?? message ?? id ?? null
+      ),
     I18nProvider: ({ children }: any) =>
       React.createElement(React.Fragment, null, children),
   };
 });
 
 jest.mock('src/components/StarRating', () => ({ BadgeRating: () => null }));
-jest.mock('src/components/MetadataLocaleBadge', () => ({ MetadataLocaleBadge: () => null }));
-jest.mock('src/components/SelectSeenDate', () => ({ SelectSeenDate: () => null }));
-jest.mock('src/components/SetProgress', () => ({ SetProgressComponent: () => null }));
-jest.mock('src/components/AddToListModal', () => ({ AddToListButtonWithModal: () => null }));
+jest.mock('src/components/MetadataLocaleBadge', () => ({
+  MetadataLocaleBadge: () => null,
+}));
+jest.mock('src/components/SelectSeenDate', () => ({
+  SelectSeenDate: () => null,
+}));
+jest.mock('src/components/SetProgress', () => ({
+  SetProgressComponent: () => null,
+}));
+jest.mock('src/components/AddToListModal', () => ({
+  AddToListButtonWithModal: () => null,
+}));
 jest.mock('src/components/AddAndRemoveFromSeenHistoryButton', () => ({
   AddToSeenHistoryButton: () => null,
   RemoveFromSeenHistoryButton: () => null,
@@ -99,7 +123,11 @@ jest.mock('src/components/Modal', () => ({
 }));
 jest.mock('src/api/details', () => ({
   useDetails: jest.fn(),
-  useUpdateMetadata: jest.fn(() => ({ updateMetadata: jest.fn(), isLoading: false, isError: false })),
+  useUpdateMetadata: jest.fn(() => ({
+    updateMetadata: jest.fn(),
+    isLoading: false,
+    isError: false,
+  })),
   addToProgress: jest.fn(),
   addToWatchlist: jest.fn(),
   removeFromWatchlist: jest.fn(),
@@ -115,7 +143,11 @@ jest.mock('src/api/configuration', () => ({
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useParams: jest.fn(() => ({ mediaItemId: '1' })),
-  Link: ({ children, to }: any) => <a href="#" data-to={String(to)}>{children}</a>,
+  Link: ({ children, to }: any) => (
+    <a href="#" data-to={String(to)}>
+      {children}
+    </a>
+  ),
 }));
 
 // ---------------------------------------------------------------------------
@@ -197,7 +229,10 @@ describe('DetailsPage – Director metadata', () => {
     render(<DetailsPage />);
     expect(screen.getByText('Christopher Nolan')).toBeInTheDocument();
     const link = screen.getByText('Christopher Nolan').closest('a');
-    expect(link).toHaveAttribute('data-to', '/movies?creators=Christopher+Nolan');
+    expect(link).toHaveAttribute(
+      'data-to',
+      '/movies?creators=Christopher+Nolan'
+    );
   });
 
   it('omits Director row when director is null', () => {
@@ -263,7 +298,10 @@ describe('DetailsPage – Publisher metadata (game)', () => {
     render(<DetailsPage />);
     expect(screen.getByText('Sony Interactive')).toBeInTheDocument();
     const link = screen.getByText('Sony Interactive').closest('a');
-    expect(link).toHaveAttribute('data-to', '/games?publishers=Sony+Interactive');
+    expect(link).toHaveAttribute(
+      'data-to',
+      '/games?publishers=Sony+Interactive'
+    );
   });
 
   it('omits Publisher row when publisher is null', () => {
@@ -284,7 +322,10 @@ describe('DetailsPage – Authors metadata (book)', () => {
     setup({ mediaType: 'book', authors: ['J.R.R. Tolkien', 'C.S. Lewis'] });
     render(<DetailsPage />);
     const tolkien = screen.getByText('J.R.R. Tolkien').closest('a');
-    expect(tolkien).toHaveAttribute('data-to', '/books?creators=J.R.R.+Tolkien');
+    expect(tolkien).toHaveAttribute(
+      'data-to',
+      '/books?creators=J.R.R.+Tolkien'
+    );
     const lewis = screen.getByText('C.S. Lewis').closest('a');
     expect(lewis).toHaveAttribute('data-to', '/books?creators=C.S.+Lewis');
   });
@@ -300,9 +341,18 @@ describe('DetailsPage – Authors metadata (book)', () => {
   it('renders all authors as separate clickable pills', () => {
     setup({ mediaType: 'book', authors: ['Alice', 'Bob', 'Carol'] });
     render(<DetailsPage />);
-    expect(screen.getByText('Alice').closest('a')).toHaveAttribute('data-to', '/books?creators=Alice');
-    expect(screen.getByText('Bob').closest('a')).toHaveAttribute('data-to', '/books?creators=Bob');
-    expect(screen.getByText('Carol').closest('a')).toHaveAttribute('data-to', '/books?creators=Carol');
+    expect(screen.getByText('Alice').closest('a')).toHaveAttribute(
+      'data-to',
+      '/books?creators=Alice'
+    );
+    expect(screen.getByText('Bob').closest('a')).toHaveAttribute(
+      'data-to',
+      '/books?creators=Bob'
+    );
+    expect(screen.getByText('Carol').closest('a')).toHaveAttribute(
+      'data-to',
+      '/books?creators=Carol'
+    );
   });
 
   it('omits Authors row when authors array is empty', () => {

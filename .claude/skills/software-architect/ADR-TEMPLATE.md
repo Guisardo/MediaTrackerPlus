@@ -43,14 +43,17 @@ Chosen option: **<Option X>**, because <concise justification referencing the de
 ## Consequences
 
 ### Positive
+
 - <positive outcome 1>
 - <positive outcome 2>
 
 ### Negative
+
 - <negative outcome / tradeoff 1>
 - <negative outcome / tradeoff 2>
 
 ### Neutral
+
 - <neutral consequence — things that change but are neither good nor bad>
 
 ## Compliance
@@ -96,15 +99,18 @@ Chosen option: **Repository pattern**, because it isolates SQL from HTTP logic, 
 ## Consequences
 
 ### Positive
+
 - Controllers have zero SQL — testable with mocked repositories
 - All queries for an entity are in one file — easy to audit and optimise
 - Knex can be replaced by changing repository files only
 
 ### Negative
+
 - More files to maintain (one per entity)
 - Simple lookups require a round-trip through the repository even when the query is trivial
 
 ### Neutral
+
 - Repository files become the canonical source for understanding the data model
 
 ## Compliance
@@ -121,9 +127,9 @@ When creating a new ADR, add it to `docs/adr/README.md`:
 ```markdown
 # Architecture Decision Records
 
-| ADR | Title | Status | Date |
-|---|---|---|---|
-| [0001](0001-use-knex-as-query-builder.md) | Use Knex as Query Builder | Accepted | 2023-06-01 |
+| ADR                                        | Title                      | Status   | Date       |
+| ------------------------------------------ | -------------------------- | -------- | ---------- |
+| [0001](0001-use-knex-as-query-builder.md)  | Use Knex as Query Builder  | Accepted | 2023-06-01 |
 | [0002](0002-sqlite-as-default-database.md) | SQLite as Default Database | Accepted | 2023-06-01 |
-| [NNNN](NNNN-title.md) | <Title> | <Status> | <Date> |
+| [NNNN](NNNN-title.md)                      | <Title>                    | <Status> | <Date>     |
 ```

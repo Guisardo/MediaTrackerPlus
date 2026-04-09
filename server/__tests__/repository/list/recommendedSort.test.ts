@@ -28,14 +28,8 @@ type SimplifiedListItem = {
 
 function sortByRecommended(items: SimplifiedListItem[]): SimplifiedListItem[] {
   return [...items].sort((a, b) => {
-    const scoreA = computeScore(
-      a.estimatedRating,
-      a.mediaItem.tmdbRating
-    );
-    const scoreB = computeScore(
-      b.estimatedRating,
-      b.mediaItem.tmdbRating
-    );
+    const scoreA = computeScore(a.estimatedRating, a.mediaItem.tmdbRating);
+    const scoreB = computeScore(b.estimatedRating, b.mediaItem.tmdbRating);
 
     if (scoreA == null && scoreB == null) {
       return a.mediaItem.title.localeCompare(b.mediaItem.title);
@@ -106,9 +100,18 @@ describe('recommended sort — ordering (pure unit tests)', () => {
 
   test('null estimatedRating sorts last — after all scored items', () => {
     const items: SimplifiedListItem[] = [
-      { estimatedRating: null, mediaItem: { title: 'No score', tmdbRating: 9.0 } },
-      { estimatedRating: 3.0, mediaItem: { title: 'Low score', tmdbRating: null } },
-      { estimatedRating: 8.0, mediaItem: { title: 'High score', tmdbRating: null } },
+      {
+        estimatedRating: null,
+        mediaItem: { title: 'No score', tmdbRating: 9.0 },
+      },
+      {
+        estimatedRating: 3.0,
+        mediaItem: { title: 'Low score', tmdbRating: null },
+      },
+      {
+        estimatedRating: 8.0,
+        mediaItem: { title: 'High score', tmdbRating: null },
+      },
     ];
     const sorted = sortByRecommended(items);
     expect(sorted[0].mediaItem.title).toBe('High score');
@@ -121,7 +124,10 @@ describe('recommended sort — ordering (pure unit tests)', () => {
     // Item B: estimatedRating=6, tmdbRating=9   → score=6*0.6+9*0.4=3.6+3.6=7.2
     const items: SimplifiedListItem[] = [
       { estimatedRating: 6.0, mediaItem: { title: 'Item B', tmdbRating: 9.0 } },
-      { estimatedRating: 7.0, mediaItem: { title: 'Item A', tmdbRating: null } },
+      {
+        estimatedRating: 7.0,
+        mediaItem: { title: 'Item A', tmdbRating: null },
+      },
     ];
     const sorted = sortByRecommended(items);
     // Item B score=7.2 > Item A score=7.0 → B first
@@ -133,7 +139,10 @@ describe('recommended sort — ordering (pure unit tests)', () => {
     const items: SimplifiedListItem[] = [
       { estimatedRating: null, mediaItem: { title: 'Zebra', tmdbRating: 8.0 } },
       { estimatedRating: null, mediaItem: { title: 'Alpha', tmdbRating: 5.0 } },
-      { estimatedRating: 5.0, mediaItem: { title: 'Middle', tmdbRating: null } },
+      {
+        estimatedRating: 5.0,
+        mediaItem: { title: 'Middle', tmdbRating: null },
+      },
     ];
     const sorted = sortByRecommended(items);
     expect(sorted[0].mediaItem.title).toBe('Middle');
@@ -155,7 +164,10 @@ describe('recommended sort — ordering (pure unit tests)', () => {
     const items: SimplifiedListItem[] = [
       { estimatedRating: null, mediaItem: { title: 'Zorro', tmdbRating: 9.0 } },
       { estimatedRating: null, mediaItem: { title: 'Alpha', tmdbRating: 5.0 } },
-      { estimatedRating: null, mediaItem: { title: 'Middle', tmdbRating: null } },
+      {
+        estimatedRating: null,
+        mediaItem: { title: 'Middle', tmdbRating: null },
+      },
     ];
     const sorted = sortByRecommended(items);
     expect(sorted[0].mediaItem.title).toBe('Alpha');
@@ -420,7 +432,9 @@ describe("mediaItemRepository.items({ orderBy: 'recommended' }) — SQL integrat
       expect(items[2].title).toBe('Aaaa');
       expect(items[3].title).toBe('Gamma');
     } finally {
-      await Database.knex('listItem').where('mediaItemId', itemAaaa.id).delete();
+      await Database.knex('listItem')
+        .where('mediaItemId', itemAaaa.id)
+        .delete();
       await Database.knex('mediaItem').where('id', itemAaaa.id).delete();
     }
   });

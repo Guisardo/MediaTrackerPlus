@@ -6,13 +6,13 @@ Reindexing rebuilds navigation artifacts: the master index, per-directory tables
 
 ## What Reindexing Covers
 
-| Artifact | File | Description |
-|----------|------|-------------|
-| Master index | `docs/INDEX.md` | Single entry point listing every doc file |
-| Directory READMEs | `docs/*/README.md` | Per-section file lists with one-liner descriptions |
-| Table of contents | Inside each large `.md` file | Auto-generated `## Contents` section |
-| Cross-references | All relative links in `.md` files | Verified to resolve after file moves |
-| API index | `docs/api/README.md` | Endpoints extracted from `server/openapi.json` |
+| Artifact          | File                              | Description                                        |
+| ----------------- | --------------------------------- | -------------------------------------------------- |
+| Master index      | `docs/INDEX.md`                   | Single entry point listing every doc file          |
+| Directory READMEs | `docs/*/README.md`                | Per-section file lists with one-liner descriptions |
+| Table of contents | Inside each large `.md` file      | Auto-generated `## Contents` section               |
+| Cross-references  | All relative links in `.md` files | Verified to resolve after file moves               |
+| API index         | `docs/api/README.md`              | Endpoints extracted from `server/openapi.json`     |
 
 ---
 
@@ -41,21 +41,24 @@ The master index must exist and be the single navigation hub.
 ## All Files
 
 ### Root
-| File | Description |
-|------|-------------|
-| [README.md](../README.md) | Project overview and quick-start |
-| [CONTRIBUTING.md](../CONTRIBUTING.md) | Contribution guidelines |
-| [CHANGELOG.md](../CHANGELOG.md) | Version history |
+
+| File                                  | Description                      |
+| ------------------------------------- | -------------------------------- |
+| [README.md](../README.md)             | Project overview and quick-start |
+| [CONTRIBUTING.md](../CONTRIBUTING.md) | Contribution guidelines          |
+| [CHANGELOG.md](../CHANGELOG.md)       | Version history                  |
 
 ### API
-| File | Description |
-|------|-------------|
+
+| File                           | Description  |
+| ------------------------------ | ------------ |
 | [api/README.md](api/README.md) | API overview |
 
 ... (continued per directory)
 ```
 
 **Rules:**
+
 - Never hand-edit this file — always regenerate with `build_index.py`
 - Add `> Last updated:` timestamp on every regeneration
 - Sort entries alphabetically within each section
@@ -78,10 +81,12 @@ For any `.md` file with more than **5 H2 sections**, insert a `## Contents` sect
 ---
 
 ## Section One
+
 ...
 ```
 
 **Anchor rules:**
+
 - GitHub-flavored Markdown anchors: lowercase, spaces → hyphens, strip special chars except `-`
 - `## Section Two — Details` → `#section-two--details`
 - `### Rule N1 — File Encoding` → `#rule-n1--file-encoding`
@@ -91,6 +96,7 @@ For any `.md` file with more than **5 H2 sections**, insert a `## Contents` sect
 Every relative link in every `.md` file must resolve. Broken links are hard errors.
 
 Categories:
+
 1. **File links** — `[text](path/to/file.md)` — target file must exist
 2. **Anchor links** — `[text](file.md#anchor)` — anchor must exist in target file
 3. **Image links** — `![alt](path/to/img.png)` — image file must exist
@@ -113,14 +119,17 @@ Full interactive documentation: https://dnlwttnbrg.github.io/MediaTrackerPlus/
 ## Endpoints
 
 ### Authentication
-| Method | Path | Summary |
-|--------|------|---------|
-| POST | `/api/v1/auth/login` | Authenticate user |
+
+| Method | Path                 | Summary           |
+| ------ | -------------------- | ----------------- |
+| POST   | `/api/v1/auth/login` | Authenticate user |
 
 ### Media Items
-| Method | Path | Summary |
-|--------|------|---------|
-| GET | `/api/v1/items` | List all media items |
+
+| Method | Path            | Summary              |
+| ------ | --------------- | -------------------- |
+| GET    | `/api/v1/items` | List all media items |
+
 ...
 ```
 
@@ -168,6 +177,7 @@ After running the scripts, verify:
 ## Manual Override: When Not to Regenerate
 
 Do **not** regenerate `docs/INDEX.md` if:
+
 - The directory structure changed but files were not yet committed (links would break)
 - `scan_docs.py` has not been run since the last file move
 

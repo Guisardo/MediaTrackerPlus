@@ -14,5 +14,5 @@ module.exports = {
   ],
   reporters: ['default', 'jest-junit'],
   testLocationInResults: true,
-  testTimeout: 30000
+  testTimeout: 30000,
 };

@@ -2,7 +2,9 @@ import { Knex } from 'knex';
 
 export async function up(knex: Knex): Promise<void> {
   // Create mediaItemTranslation table
-  const hasMediaItemTranslation = await knex.schema.hasTable('mediaItemTranslation');
+  const hasMediaItemTranslation = await knex.schema.hasTable(
+    'mediaItemTranslation'
+  );
   if (!hasMediaItemTranslation) {
     await knex.schema.createTable('mediaItemTranslation', (table) => {
       table.increments('id').primary();
@@ -41,7 +43,9 @@ export async function up(knex: Knex): Promise<void> {
   }
 
   // Create episodeTranslation table
-  const hasEpisodeTranslation = await knex.schema.hasTable('episodeTranslation');
+  const hasEpisodeTranslation = await knex.schema.hasTable(
+    'episodeTranslation'
+  );
   if (!hasEpisodeTranslation) {
     await knex.schema.createTable('episodeTranslation', (table) => {
       table.increments('id').primary();
@@ -62,7 +66,9 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
   // Drop tables in reverse dependency order (children first)
-  const hasEpisodeTranslation = await knex.schema.hasTable('episodeTranslation');
+  const hasEpisodeTranslation = await knex.schema.hasTable(
+    'episodeTranslation'
+  );
   if (hasEpisodeTranslation) {
     await knex.schema.dropTable('episodeTranslation');
   }
@@ -72,7 +78,9 @@ export async function down(knex: Knex): Promise<void> {
     await knex.schema.dropTable('seasonTranslation');
   }
 
-  const hasMediaItemTranslation = await knex.schema.hasTable('mediaItemTranslation');
+  const hasMediaItemTranslation = await knex.schema.hasTable(
+    'mediaItemTranslation'
+  );
   if (hasMediaItemTranslation) {
     await knex.schema.dropTable('mediaItemTranslation');
   }

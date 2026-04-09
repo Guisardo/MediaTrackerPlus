@@ -17,9 +17,7 @@ export const serializeDescriptors = (
  * Deserialize contentRatingDescriptors from a JSON string (DB) to string[].
  * Returns null for null/undefined/empty values or invalid JSON.
  */
-export const deserializeDescriptors = (
-  raw: unknown
-): string[] | null => {
+export const deserializeDescriptors = (raw: unknown): string[] | null => {
   if (raw == null || raw === '') {
     return null;
   }
@@ -122,36 +120,36 @@ export const REGION_PRECEDENCE: readonly string[] = [
 export const RATING_AGE_MAP: Record<string, Record<string, number | null>> = {
   // MPAA (US film ratings)
   MPAA: {
-    'G': 0,
-    'PG': 0,
+    G: 0,
+    PG: 0,
     'PG-13': 13,
-    'R': 17,
+    R: 17,
     'NC-17': 18,
-    'NR': null,
+    NR: null,
   },
 
   // BBFC (UK film/TV ratings)
   BBFC: {
-    'U': 0,
-    'PG': 0,
+    U: 0,
+    PG: 0,
     '12A': 12,
     '12': 12,
     '15': 15,
     '18': 18,
-    'R18': 18,
+    R18: 18,
   },
 
   // ACB (Australia)
   ACB: {
-    'G': 0,
-    'PG': 0,
-    'M': 15,
+    G: 0,
+    PG: 0,
+    M: 15,
     'MA15+': 15,
     'MA 15+': 15,
     'R18+': 18,
     'R 18+': 18,
     'X18+': 18,
-    'RC': null,
+    RC: null,
   },
 
   // US TV content ratings
@@ -162,7 +160,7 @@ export const RATING_AGE_MAP: Record<string, Record<string, number | null>> = {
     'TV-PG': 0,
     'TV-14': 14,
     'TV-MA': 17,
-    'NR': null,
+    NR: null,
   },
 
   // FSK (Germany)
@@ -176,14 +174,14 @@ export const RATING_AGE_MAP: Record<string, Record<string, number | null>> = {
 
   // ESRB (US video game ratings)
   ESRB: {
-    'EC': 3,
-    'E': 6,
+    EC: 3,
+    E: 6,
     'E10+': 10,
-    'E10': 10,
-    'T': 13,
-    'M': 17,
-    'AO': 18,
-    'RP': null,
+    E10: 10,
+    T: 13,
+    M: 17,
+    AO: 18,
+    RP: null,
   },
 
   // PEGI (Europe video game ratings)
@@ -206,16 +204,16 @@ export const RATING_AGE_MAP: Record<string, Record<string, number | null>> = {
 
   // CERO (Japan video game ratings)
   CERO: {
-    'A': 0,
-    'B': 12,
-    'C': 15,
-    'D': 17,
-    'Z': 18,
+    A: 0,
+    B: 12,
+    C: 15,
+    D: 17,
+    Z: 18,
   },
 
   // GRAC (South Korea video game ratings)
   GRAC: {
-    'ALL': 0,
+    ALL: 0,
     '12': 12,
     '15': 15,
     '18': 18,
@@ -223,8 +221,8 @@ export const RATING_AGE_MAP: Record<string, Record<string, number | null>> = {
 
   // Audible (coarse adult flag only)
   AUDIBLE: {
-    'ADULT': 18,
-    'NOT_ADULT': 0,
+    ADULT: 18,
+    NOT_ADULT: 0,
   },
 };
 
@@ -316,9 +314,7 @@ const buildResultFromCert = (
   contentRatingRegion: cert.region,
   contentRatingLabel: cert.label,
   contentRatingDescriptors:
-    cert.descriptors && cert.descriptors.length > 0
-      ? cert.descriptors
-      : null,
+    cert.descriptors && cert.descriptors.length > 0 ? cert.descriptors : null,
   parentalGuidanceSummary: options?.guidanceSummary ?? null,
   parentalGuidanceCategories: options?.guidanceCategories ?? null,
 });

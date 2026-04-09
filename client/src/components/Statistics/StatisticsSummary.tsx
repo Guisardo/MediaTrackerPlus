@@ -10,8 +10,6 @@ export const StatisticsSummary: FunctionComponent = () => {
   });
 
   return (
-    <>
-      {data ? <StatisticsSegmant data={data}></StatisticsSegmant> : null}
-    </>
+    <>{data ? <StatisticsSegmant data={data}></StatisticsSegmant> : null}</>
   );
 };

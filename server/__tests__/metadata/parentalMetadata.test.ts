@@ -50,7 +50,11 @@ describe('parentalMetadata module', () => {
 
   describe('serializeCategories / deserializeCategories', () => {
     const categories: ParentalGuidanceCategory[] = [
-      { category: 'Violence', severity: 'Moderate', description: 'Some fights' },
+      {
+        category: 'Violence',
+        severity: 'Moderate',
+        description: 'Some fights',
+      },
       { category: 'Language', severity: 'Mild' },
     ];
 
@@ -287,9 +291,9 @@ describe('parentalMetadata module', () => {
   describe('normalizeStrictestCertification', () => {
     test('selects the certification with the highest minimumAge', () => {
       const certs: ProviderCertification[] = [
-        { region: 'US', system: 'ESRB', label: 'T' },    // 13
-        { region: 'EU', system: 'PEGI', label: '18' },    // 18
-        { region: 'DE', system: 'USK', label: '12' },     // 12
+        { region: 'US', system: 'ESRB', label: 'T' }, // 13
+        { region: 'EU', system: 'PEGI', label: '18' }, // 18
+        { region: 'DE', system: 'USK', label: '12' }, // 12
       ];
       const result = normalizeStrictestCertification(certs);
       expect(result.minimumAge).toBe(18);
@@ -299,8 +303,8 @@ describe('parentalMetadata module', () => {
 
     test('uses first certification in input order when ages tie', () => {
       const certs: ProviderCertification[] = [
-        { region: 'US', system: 'ESRB', label: 'AO' },   // 18
-        { region: 'EU', system: 'PEGI', label: '18' },    // 18
+        { region: 'US', system: 'ESRB', label: 'AO' }, // 18
+        { region: 'EU', system: 'PEGI', label: '18' }, // 18
       ];
       const result = normalizeStrictestCertification(certs);
       expect(result.contentRatingSystem).toBe('ESRB');
@@ -310,7 +314,7 @@ describe('parentalMetadata module', () => {
     test('skips unrecognized systems and labels', () => {
       const certs: ProviderCertification[] = [
         { region: 'XX', system: 'FAKE', label: 'ZZZ' },
-        { region: 'US', system: 'ESRB', label: 'E' },    // 6
+        { region: 'US', system: 'ESRB', label: 'E' }, // 6
       ];
       const result = normalizeStrictestCertification(certs);
       expect(result.minimumAge).toBe(6);
@@ -325,9 +329,11 @@ describe('parentalMetadata module', () => {
 
     test('adult flag raises minimumAge to 18', () => {
       const certs: ProviderCertification[] = [
-        { region: 'US', system: 'ESRB', label: 'T' },    // 13
+        { region: 'US', system: 'ESRB', label: 'T' }, // 13
       ];
-      const result = normalizeStrictestCertification(certs, { adultFlag: true });
+      const result = normalizeStrictestCertification(certs, {
+        adultFlag: true,
+      });
       expect(result.minimumAge).toBe(18);
     });
 
@@ -338,7 +344,12 @@ describe('parentalMetadata module', () => {
 
     test('includes descriptors from the strictest certification', () => {
       const certs: ProviderCertification[] = [
-        { region: 'US', system: 'ESRB', label: 'E', descriptors: ['Mild Violence'] },
+        {
+          region: 'US',
+          system: 'ESRB',
+          label: 'E',
+          descriptors: ['Mild Violence'],
+        },
         {
           region: 'EU',
           system: 'PEGI',

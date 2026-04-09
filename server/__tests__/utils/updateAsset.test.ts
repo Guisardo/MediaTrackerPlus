@@ -110,9 +110,7 @@ describe('updateAsset', () => {
 
     expect(updatedMediaItem.posterId).toBeDefined();
     expect(updatedSeason.posterId).toBeDefined();
-    expect(updatedSeason.posterId).not.toBe(
-      seasonWithImage.posterId
-    );
+    expect(updatedSeason.posterId).not.toBe(seasonWithImage.posterId);
     expect(rmSpy).toBeCalled();
 
     rmSpy.mockReset();

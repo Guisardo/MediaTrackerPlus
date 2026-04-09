@@ -21,7 +21,11 @@ jest.mock('@lingui/macro', () => {
   const React = require('react');
   return {
     Trans: ({ children, message, id }: any) =>
-      React.createElement(React.Fragment, null, children ?? message ?? id ?? null),
+      React.createElement(
+        React.Fragment,
+        null,
+        children ?? message ?? id ?? null
+      ),
     t: (strings: any, ...values: any[]) =>
       typeof strings === 'string'
         ? strings
@@ -58,7 +62,11 @@ jest.mock('src/components/GridItem', () => {
   const React = require('react');
   return {
     GridItem: ({ mediaItem }: any) =>
-      React.createElement('div', { 'data-testid': `grid-item-${mediaItem.id}` }, mediaItem.title),
+      React.createElement(
+        'div',
+        { 'data-testid': `grid-item-${mediaItem.id}` },
+        mediaItem.title
+      ),
     GridItemAppearanceArgs: {},
   };
 });
@@ -142,7 +150,9 @@ describe('HomePage – age-gated fallback messaging', () => {
     render(<HomePage />);
 
     expect(
-      screen.getByText(/Content is hidden based on your age-based content filtering/i)
+      screen.getByText(
+        /Content is hidden based on your age-based content filtering/i
+      )
     ).toBeInTheDocument();
   });
 
@@ -152,7 +162,9 @@ describe('HomePage – age-gated fallback messaging', () => {
     render(<HomePage />);
 
     expect(
-      screen.queryByText(/Content is hidden based on your age-based content filtering/i)
+      screen.queryByText(
+        /Content is hidden based on your age-based content filtering/i
+      )
     ).not.toBeInTheDocument();
   });
 
@@ -168,7 +180,9 @@ describe('HomePage – age-gated fallback messaging', () => {
     render(<HomePage />);
 
     expect(
-      screen.queryByText(/Content is hidden based on your age-based content filtering/i)
+      screen.queryByText(
+        /Content is hidden based on your age-based content filtering/i
+      )
     ).not.toBeInTheDocument();
   });
 
@@ -186,7 +200,9 @@ describe('HomePage – age-gated fallback messaging', () => {
     render(<HomePage />);
 
     expect(
-      screen.queryByText(/Content is hidden based on your age-based content filtering/i)
+      screen.queryByText(
+        /Content is hidden based on your age-based content filtering/i
+      )
     ).not.toBeInTheDocument();
   });
 
@@ -202,7 +218,9 @@ describe('HomePage – age-gated fallback messaging', () => {
 
     // anyAgeGating=true AND allSectionsEmpty=true → message SHOULD show
     expect(
-      screen.getByText(/Content is hidden based on your age-based content filtering/i)
+      screen.getByText(
+        /Content is hidden based on your age-based content filtering/i
+      )
     ).toBeInTheDocument();
   });
 
@@ -213,7 +231,14 @@ describe('HomePage – age-gated fallback messaging', () => {
       // Upcoming section (call 1) has items
       if (callCount === 1) {
         return {
-          items: [{ id: 2, title: 'Upcoming Show', mediaType: 'tv', lastAiring: null }],
+          items: [
+            {
+              id: 2,
+              title: 'Upcoming Show',
+              mediaType: 'tv',
+              lastAiring: null,
+            },
+          ],
           ageGatingActive: false,
           isLoading: false,
         };

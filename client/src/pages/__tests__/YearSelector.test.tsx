@@ -21,8 +21,11 @@ import userEvent from '@testing-library/user-event';
 jest.mock('radix-ui', () => {
   const React = require('react');
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  const SelectContext = React.createContext({ value: '', onChange: (_v: string): void => {} });
+  const SelectContext = React.createContext({
+    value: '',
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    onChange: (_v: string): void => {},
+  });
 
   const Root = ({ children, value, onValueChange, defaultValue }: any) => {
     const [internalValue, setInternalValue] = React.useState(
@@ -39,21 +42,16 @@ jest.mock('radix-ui', () => {
     };
 
     return (
-      <SelectContext.Provider value={{ value: internalValue, onChange: handleChange }}>
+      <SelectContext.Provider
+        value={{ value: internalValue, onChange: handleChange }}
+      >
         <div data-radix-select-root>{children}</div>
       </SelectContext.Provider>
     );
   };
 
   const Trigger = React.forwardRef(
-    (
-      {
-        children,
-        'aria-label': ariaLabel,
-        ...props
-      }: any,
-      ref: any
-    ) => (
+    ({ children, 'aria-label': ariaLabel, ...props }: any, ref: any) => (
       <button ref={ref} role="combobox" aria-label={ariaLabel} {...props}>
         {children}
       </button>
@@ -62,9 +60,7 @@ jest.mock('radix-ui', () => {
 
   const Value = ({ placeholder }: any) => {
     const { value } = React.useContext(SelectContext);
-    return (
-      <span data-testid="select-value">{value || placeholder || ''}</span>
-    );
+    return <span data-testid="select-value">{value || placeholder || ''}</span>;
   };
 
   const Icon = ({ children }: any) => <>{children}</>;

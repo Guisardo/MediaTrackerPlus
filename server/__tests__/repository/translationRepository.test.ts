@@ -462,7 +462,9 @@ describe('translationRepository', () => {
       expect(translations.get(Data.tvShow.id)?.language).toBe('es');
       expect(translations.get(Data.tvShow.id)?.title).toBe('Titulo TV');
       expect(translations.get(Data.movie.id)?.language).toBe('en');
-      expect(translations.get(Data.movie.id)?.title).toBe('English Movie Title');
+      expect(translations.get(Data.movie.id)?.title).toBe(
+        'English Movie Title'
+      );
     });
 
     test('prefers exact regional locale over base locale when both exist', async () => {

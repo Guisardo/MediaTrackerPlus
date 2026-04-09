@@ -1,13 +1,5 @@
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import {
-  Dialog,
-  DialogContent,
-} from '@/components/ui/dialog';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 
 export type ModalArgs<T> = {
   onClosed?: (arg?: T) => void;

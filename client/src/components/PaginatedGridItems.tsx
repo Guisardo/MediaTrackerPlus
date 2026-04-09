@@ -85,8 +85,12 @@ const renderItemsSummary = (args: {
   return (
     <Plural
       value={numberOfItemsTotal}
-      one={`1 item ${year ? 'in ' + year : ''} ${genre ? 'with genre ' + genre : ''}`}
-      other={`# item ${year ? 'in ' + year : ''} ${genre ? 'with genre ' + genre : ''}`}
+      one={`1 item ${year ? 'in ' + year : ''} ${
+        genre ? 'with genre ' + genre : ''
+      }`}
+      other={`# item ${year ? 'in ' + year : ''} ${
+        genre ? 'with genre ' + genre : ''
+      }`}
     />
   );
 };
@@ -260,10 +264,12 @@ export const PaginatedGridItems: FunctionComponent<{
     handleFilterChange: handleArgumentChange,
   });
 
-  const { selectedGroupId, GroupSelectorComponent } = useGroupSelectorComponent({
-    orderBy,
-    handleFilterChange: handleArgumentChange,
-  });
+  const { selectedGroupId, GroupSelectorComponent } = useGroupSelectorComponent(
+    {
+      orderBy,
+      handleFilterChange: handleArgumentChange,
+    }
+  );
 
   // useFilterBy hook must remain unconditional (React hooks rules).
   // When showFacets=true, the FilterByComponent JSX is suppressed, but the
@@ -364,15 +370,11 @@ export const PaginatedGridItems: FunctionComponent<{
     <>
       <div className="flex justify-center w-full">
         {/* Desktop facet sidebar — hidden on < 1024px */}
-        {showFacets && (
-          <FacetPanel facets={facets}>{facetSections}</FacetPanel>
-        )}
+        {showFacets && <FacetPanel facets={facets}>{facetSections}</FacetPanel>}
 
         <div className="flex flex-row flex-wrap items-grid flex-1 min-w-0">
           <div className="mb-1 header w-full">
-            {showSearch && mediaTypeArg && (
-              <Search onSearch={setSearchQuery} />
-            )}
+            {showSearch && mediaTypeArg && <Search onSearch={setSearchQuery} />}
 
             {showSearch && noItems ? (
               <div className="flex ali">
@@ -425,10 +427,7 @@ export const PaginatedGridItems: FunctionComponent<{
 
                 {/* Active facet chips row — rendered between toolbar and grid */}
                 {showFacets && (
-                  <ActiveFacetChips
-                    facets={facets}
-                    mediaType={mediaTypeArg}
-                  />
+                  <ActiveFacetChips facets={facets} mediaType={mediaTypeArg} />
                 )}
               </>
             )}
@@ -468,16 +467,18 @@ export const PaginatedGridItems: FunctionComponent<{
                   !isLoadingItems &&
                   numberOfPages !== undefined &&
                   numberOfPages > 1 && (
-                  <Pagination
-                    numberOfPages={numberOfPages}
-                    page={page}
-                    setPage={(value: number) => {
-                      _setPage(value);
-                      window.document.body.scrollIntoView({ behavior: 'auto' });
-                      updateSearchParams(value);
-                    }}
-                  />
-                )}
+                    <Pagination
+                      numberOfPages={numberOfPages}
+                      page={page}
+                      setPage={(value: number) => {
+                        _setPage(value);
+                        window.document.body.scrollIntoView({
+                          behavior: 'auto',
+                        });
+                        updateSearchParams(value);
+                      }}
+                    />
+                  )}
               </div>
             </>
           )}

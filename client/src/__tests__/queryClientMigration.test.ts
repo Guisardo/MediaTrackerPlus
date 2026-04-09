@@ -32,7 +32,9 @@ jest.mock('src/api/api', () => ({
 jest.mock('src/hooks/darkMode', () => ({}));
 jest.mock('src/Router', () => ({}));
 jest.mock('src/i18n/i18n', () => ({ setupI18n: jest.fn() }));
-jest.mock('src/hooks/fonts', () => ({ useFonts: jest.fn(() => ({ loaded: true })) }));
+jest.mock('src/hooks/fonts', () => ({
+  useFonts: jest.fn(() => ({ loaded: true })),
+}));
 jest.mock('@lingui/core', () => ({ i18n: {} }));
 jest.mock('@lingui/react', () => ({ I18nProvider: jest.fn() }));
 jest.mock('@lingui/macro', () => ({ Trans: jest.fn() }));
@@ -76,12 +78,16 @@ describe('keepPreviousData sentinel', () => {
   it('returns the previous data when called with (previousData, query)', () => {
     const previous = { items: [1, 2, 3] };
     // In v5, keepPreviousData is (previousData, query) => previousData
-    const result = (keepPreviousData as (prevData: unknown, query: unknown) => unknown)(previous, {});
+    const result = (
+      keepPreviousData as (prevData: unknown, query: unknown) => unknown
+    )(previous, {});
     expect(result).toBe(previous);
   });
 
   it('returns undefined when there is no previous data', () => {
-    const result = (keepPreviousData as (prevData: unknown, query: unknown) => unknown)(undefined, {});
+    const result = (
+      keepPreviousData as (prevData: unknown, query: unknown) => unknown
+    )(undefined, {});
     expect(result).toBeUndefined();
   });
 });

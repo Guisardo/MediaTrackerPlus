@@ -231,20 +231,18 @@ export const ActiveFacetChips: FunctionComponent<{
         <FacetChip
           key={`language-${lang}`}
           dimensionLabel={t`Language`}
-          value={
-            (() => {
-              try {
-                return new Intl.DisplayNames(['en'], {
+          value={(() => {
+            try {
+              return (
+                new Intl.DisplayNames(['en'], {
                   type: 'language',
-                }).of(lang) ?? lang;
-              } catch {
-                return lang;
-              }
-            })()
-          }
-          onRemove={() =>
-            setLanguages(languages.filter((l) => l !== lang))
-          }
+                }).of(lang) ?? lang
+              );
+            } catch {
+              return lang;
+            }
+          })()}
+          onRemove={() => setLanguages(languages.filter((l) => l !== lang))}
         />
       ))}
 
@@ -254,9 +252,7 @@ export const ActiveFacetChips: FunctionComponent<{
           key={`creator-${creator}`}
           dimensionLabel={creatorDimensionLabel}
           value={creator}
-          onRemove={() =>
-            setCreators(creators.filter((c) => c !== creator))
-          }
+          onRemove={() => setCreators(creators.filter((c) => c !== creator))}
         />
       ))}
 
@@ -278,9 +274,7 @@ export const ActiveFacetChips: FunctionComponent<{
           key={`mediatype-${mt}`}
           dimensionLabel={t`Media Type`}
           value={getMediaTypeDisplayLabel(mt)}
-          onRemove={() =>
-            setMediaTypes(mediaTypes.filter((m) => m !== mt))
-          }
+          onRemove={() => setMediaTypes(mediaTypes.filter((m) => m !== mt))}
         />
       ))}
 
@@ -290,9 +284,7 @@ export const ActiveFacetChips: FunctionComponent<{
           key={`status-${statusKey}`}
           dimensionLabel={t`Status`}
           value={getStatusChipLabel(statusKey, mediaType)}
-          onRemove={() =>
-            setStatus(status.filter((s) => s !== statusKey))
-          }
+          onRemove={() => setStatus(status.filter((s) => s !== statusKey))}
         />
       ))}
 

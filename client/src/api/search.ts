@@ -12,8 +12,10 @@ export const useItemsKey = (
 ) => ['items', mediaType, orderBy, sortOrder, filter, page];
 
 export const useSearch = () => {
-  const [query, setQuery] =
-    useState<{ mediaType: MediaType; query: string } | null>(null);
+  const [query, setQuery] = useState<{
+    mediaType: MediaType;
+    query: string;
+  } | null>(null);
 
   const { isLoading, error, data } = useQuery({
     queryKey: ['search', query],

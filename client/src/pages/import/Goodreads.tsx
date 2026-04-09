@@ -6,7 +6,10 @@ import { ImportSummaryTable } from 'src/components/ImportSummaryTable';
 import { Button } from 'src/components/ui/button';
 
 const useGoodreadsImport = () => {
-  const importMutation = useMutation({ mutationFn: (data: { url: string }) => mediaTrackerApi.importGoodreads.import(data) });
+  const importMutation = useMutation({
+    mutationFn: (data: { url: string }) =>
+      mediaTrackerApi.importGoodreads.import(data),
+  });
 
   return {
     goodreadsImport: importMutation.mutate,

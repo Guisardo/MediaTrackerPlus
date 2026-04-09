@@ -35,7 +35,12 @@ jest.mock('@lingui/macro', () => ({
   Trans: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
-jest.mock('clsx', () => (...args: unknown[]) => args.filter(Boolean).join(' '));
+jest.mock(
+  'clsx',
+  () =>
+    (...args: unknown[]) =>
+      args.filter(Boolean).join(' ')
+);
 
 // Controlled useUserGroups mock
 let mockGroups: GroupResponse[] | undefined = [];
@@ -73,7 +78,9 @@ interface HarnessProps {
 let capturedSearchString = '';
 
 const SearchCapture: React.FC = () => {
-  const [params] = React.useState(() => new URLSearchParams(window.location.search));
+  const [params] = React.useState(
+    () => new URLSearchParams(window.location.search)
+  );
   // Use a hook to track search params from react-router
   const { useSearchParams } = require('react-router-dom');
   const [searchParams] = useSearchParams();
@@ -241,7 +248,10 @@ describe('GroupSelector – groupId URL param management', () => {
     mockGroups = [GROUP_A];
     const handleFilterChange = jest.fn();
     const user = userEvent.setup();
-    renderHarness({ orderBy: 'platformRecommended', onFilterChange: handleFilterChange });
+    renderHarness({
+      orderBy: 'platformRecommended',
+      onFilterChange: handleFilterChange,
+    });
 
     // Open the menu
     await user.click(screen.getByText('All Users'));
@@ -257,14 +267,18 @@ describe('GroupSelector – groupId URL param management', () => {
     mockGroups = [GROUP_A];
     const handleFilterChange = jest.fn();
     const user = userEvent.setup();
-    renderHarness({
-      orderBy: 'platformRecommended',
-      onFilterChange: handleFilterChange,
-    }, '/?groupId=1');
+    renderHarness(
+      {
+        orderBy: 'platformRecommended',
+        onFilterChange: handleFilterChange,
+      },
+      '/?groupId=1'
+    );
 
     await user.click(screen.getByText('Family'));
     const allUsersOptions = screen.getAllByText('All Users');
-    const allUsersLi = allUsersOptions.find((el) => el.tagName === 'LI') || allUsersOptions[0];
+    const allUsersLi =
+      allUsersOptions.find((el) => el.tagName === 'LI') || allUsersOptions[0];
     await user.click(allUsersLi);
 
     expect(handleFilterChange).toHaveBeenCalledTimes(1);
@@ -299,7 +313,8 @@ describe('GroupSelector – orderBy change cleanup', () => {
     onFilterChange?: jest.Mock;
     onGroupIdChange?: (hasGroupId: boolean) => void;
   }> = ({ initialOrderBy, onFilterChange = jest.fn(), onGroupIdChange }) => {
-    const [orderBy, setOrderBy] = React.useState<MediaItemOrderBy>(initialOrderBy);
+    const [orderBy, setOrderBy] =
+      React.useState<MediaItemOrderBy>(initialOrderBy);
     const [, setSearchParams] = require('react-router-dom').useSearchParams();
     const { GroupSelectorComponent } = useGroupSelectorComponent({
       orderBy,
@@ -330,7 +345,9 @@ describe('GroupSelector – orderBy change cleanup', () => {
     const user = userEvent.setup();
 
     render(
-      <MemoryRouter initialEntries={['/?groupId=1&orderBy=platformRecommended']}>
+      <MemoryRouter
+        initialEntries={['/?groupId=1&orderBy=platformRecommended']}
+      >
         <DynamicHarness
           initialOrderBy="platformRecommended"
           onGroupIdChange={(v) => groupIdChanges.push(v)}

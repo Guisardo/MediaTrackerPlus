@@ -47,7 +47,9 @@ export async function up(knex: Knex): Promise<void> {
   }
 
   // Create groupPlatformRating table
-  const hasGroupPlatformRatingTable = await knex.schema.hasTable('groupPlatformRating');
+  const hasGroupPlatformRatingTable = await knex.schema.hasTable(
+    'groupPlatformRating'
+  );
   if (!hasGroupPlatformRatingTable) {
     await knex.schema.createTable('groupPlatformRating', (table) => {
       table.increments('id').primary();
@@ -73,7 +75,9 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
   // Drop tables in reverse order (respecting FK constraints)
-  const hasGroupPlatformRatingTable = await knex.schema.hasTable('groupPlatformRating');
+  const hasGroupPlatformRatingTable = await knex.schema.hasTable(
+    'groupPlatformRating'
+  );
   if (hasGroupPlatformRatingTable) {
     await knex.schema.dropTable('groupPlatformRating');
   }

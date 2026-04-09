@@ -11,13 +11,13 @@ Designs, documents, and reviews the architecture of MediaTrackerPlus across the 
 
 ## Quick Reference
 
-| Task | Reference |
-|---|---|
+| Task                               | Reference                          |
+| ---------------------------------- | ---------------------------------- |
 | ADR format and storage conventions | [ADR-TEMPLATE.md](ADR-TEMPLATE.md) |
-| Common schema and code patterns | [PATTERNS.md](PATTERNS.md) |
-| Mermaid diagram templates | [DIAGRAMS.md](DIAGRAMS.md) |
-| Layer rules and invariants | Agent system prompt |
-| Stack + technology inventory | Agent system prompt |
+| Common schema and code patterns    | [PATTERNS.md](PATTERNS.md)         |
+| Mermaid diagram templates          | [DIAGRAMS.md](DIAGRAMS.md)         |
+| Layer rules and invariants         | Agent system prompt                |
+| Stack + technology inventory       | Agent system prompt                |
 
 ## Decision Tree
 
@@ -91,21 +91,21 @@ Read [ADR-TEMPLATE.md](ADR-TEMPLATE.md) before writing any ADR.
 
 ## Common Pattern Quick-Picks
 
-| Need | Pattern | See |
-|---|---|---|
-| New DB table | User-owned data pattern | PATTERNS.md §1 |
-| Shared across user group | Group-shared data pattern | PATTERNS.md §2 |
-| Many-to-many relationship | Junction table pattern | PATTERNS.md §3 |
-| Soft delete | Soft delete pattern | PATTERNS.md §4 |
-| External API integration | MetadataProvider pattern | PATTERNS.md §5 |
-| Cross-layer concern | Middleware injection pattern | PATTERNS.md §6 |
+| Need                      | Pattern                      | See            |
+| ------------------------- | ---------------------------- | -------------- |
+| New DB table              | User-owned data pattern      | PATTERNS.md §1 |
+| Shared across user group  | Group-shared data pattern    | PATTERNS.md §2 |
+| Many-to-many relationship | Junction table pattern       | PATTERNS.md §3 |
+| Soft delete               | Soft delete pattern          | PATTERNS.md §4 |
+| External API integration  | MetadataProvider pattern     | PATTERNS.md §5 |
+| Cross-layer concern       | Middleware injection pattern | PATTERNS.md §6 |
 
 ## Diagram Type Guide
 
-| Scenario | Diagram type | See |
-|---|---|---|
+| Scenario                   | Diagram type         | See            |
+| -------------------------- | -------------------- | -------------- |
 | Feature placement in stack | C4 Container diagram | DIAGRAMS.md §1 |
-| Multi-layer data flow | Sequence diagram | DIAGRAMS.md §2 |
-| New DB schema | ER diagram | DIAGRAMS.md §3 |
-| Decision / branching logic | Flowchart | DIAGRAMS.md §4 |
-| Module dependencies | Graph diagram | DIAGRAMS.md §5 |
+| Multi-layer data flow      | Sequence diagram     | DIAGRAMS.md §2 |
+| New DB schema              | ER diagram           | DIAGRAMS.md §3 |
+| Decision / branching logic | Flowchart            | DIAGRAMS.md §4 |
+| Module dependencies        | Graph diagram        | DIAGRAMS.md §5 |

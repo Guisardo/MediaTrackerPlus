@@ -110,7 +110,13 @@ describe('facetFilters', () => {
   beforeAll(async () => {
     await runMigrations();
     await userRepository.create(user);
-    await mediaItemRepository.createMany([movie1, movie2, tvShow1, game1, book1]);
+    await mediaItemRepository.createMany([
+      movie1,
+      movie2,
+      tvShow1,
+      game1,
+      book1,
+    ]);
 
     // Add all items to user's library (watchlist or seen)
     await addToWatchlistAndSeen(user.id, movie1.id!, true, true);

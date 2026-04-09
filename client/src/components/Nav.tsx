@@ -164,7 +164,9 @@ export const NavComponent: FunctionComponent = () => {
               >
                 {darkMode ? <>light_mode</> : <>mode_night</>}
               </span>
-              <a href="#/settings" className="text-zinc-700 dark:text-zinc-200">{user.name}</a>
+              <a href="#/settings" className="text-zinc-700 dark:text-zinc-200">
+                {user.name}
+              </a>
               <span className="px-1 text-zinc-700 dark:text-zinc-200">|</span>
               <a
                 href="/logout"

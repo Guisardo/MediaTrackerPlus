@@ -9,7 +9,9 @@ const mockedAxios = axios as jest.Mocked<typeof axios>;
 /**
  * Builds a complete FormattedNotification for use in tests.
  */
-function buildFormattedNotification(overrides: Partial<FormattedNotification> = {}): FormattedNotification {
+function buildFormattedNotification(
+  overrides: Partial<FormattedNotification> = {}
+): FormattedNotification {
   return {
     plainText: 'Plain text body',
     markdown: '**Markdown body**',
@@ -80,7 +82,9 @@ describe('ntfy notification platform', () => {
 
   describe('sendFunction — payload', () => {
     test('sends the plainText body as the POST body', async () => {
-      const body = buildFormattedNotification({ plainText: 'Episode S01E01 is now available' });
+      const body = buildFormattedNotification({
+        plainText: 'Episode S01E01 is now available',
+      });
 
       await ntfy.sendFunction({
         credentials: { topic, url: customServerUrl, priority },

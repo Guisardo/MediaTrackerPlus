@@ -1,5 +1,9 @@
 import _ from 'lodash';
-import { ExternalIds, MediaItemForProvider, MediaType } from 'src/entity/mediaItem';
+import {
+  ExternalIds,
+  MediaItemForProvider,
+  MediaType,
+} from 'src/entity/mediaItem';
 import { logger } from 'src/logger';
 import { Audible } from 'src/metadata/provider/audible';
 import { IGDB } from 'src/metadata/provider/igdb';

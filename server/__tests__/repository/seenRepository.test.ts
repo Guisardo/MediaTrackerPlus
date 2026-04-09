@@ -178,9 +178,7 @@ describe('seenRepository', () => {
         userId: Data.user.id,
       });
 
-      user1History.forEach((entry) =>
-        expect(entry.userId).toBe(Data.user.id)
-      );
+      user1History.forEach((entry) => expect(entry.userId).toBe(Data.user.id));
     });
 
     test('returns seen entries filtered by mediaItemId', async () => {

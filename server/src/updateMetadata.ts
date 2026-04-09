@@ -85,8 +85,7 @@ type UpdateMediaItemPreloadedData = {
   gameLocalizations?: Array<{ regionId: number; name: string }>;
 };
 
-const METADATA_SYNC_FETCH_CONCURRENCY =
-  Config.METADATA_SYNC_FETCH_CONCURRENCY;
+const METADATA_SYNC_FETCH_CONCURRENCY = Config.METADATA_SYNC_FETCH_CONCURRENCY;
 
 const METADATA_SYNC_BATCH_SIZE = Config.METADATA_SYNC_BATCH_SIZE;
 
@@ -121,7 +120,10 @@ const mapWithConcurrency = async <T, Result>(
           return;
         }
 
-        results[currentIndex] = await worker(items[currentIndex]!, currentIndex);
+        results[currentIndex] = await worker(
+          items[currentIndex]!,
+          currentIndex
+        );
       }
     })
   );
@@ -297,8 +299,7 @@ const notifyStatusChange = async (args: {
 
   await send({
     message: formatNotification(
-      (f) =>
-        t`Status changed for ${f.mediaItemUrl(newMediaItem)}: "${status}"`
+      (f) => t`Status changed for ${f.mediaItemUrl(newMediaItem)}: "${status}"`
     ),
     filter: (user) => user.sendNotificationWhenStatusChanges === true,
   });
@@ -415,7 +416,8 @@ const notifyNewSeason = async (args: {
             newMediaItem
           )} will be released at ${releaseDate}`
       ),
-      filter: (user) => user.sendNotificationWhenNumberOfSeasonsChanges === true,
+      filter: (user) =>
+        user.sendNotificationWhenNumberOfSeasonsChanges === true,
     });
     return;
   }
@@ -543,20 +545,16 @@ const buildSeasonEpisodeIdMaps = (seasons: TvSeason[]): SeasonEpisodeIdMaps => {
 };
 
 const collectSeasonEpisodeTranslationRows = (args: {
-  seasons: MediaItemBaseWithSeasons['seasons'],
-  language: string,
-  seasonIdByNumber: Map<number, number>,
-  episodeIdBySeasonAndEpisode: Map<string, number>
+  seasons: MediaItemBaseWithSeasons['seasons'];
+  language: string;
+  seasonIdByNumber: Map<number, number>;
+  episodeIdBySeasonAndEpisode: Map<string, number>;
 }): {
   seasonRows: SeasonTranslationUpsertRow[];
   episodeRows: EpisodeTranslationUpsertRow[];
 } => {
-  const {
-    seasons,
-    language,
-    seasonIdByNumber,
-    episodeIdBySeasonAndEpisode,
-  } = args;
+  const { seasons, language, seasonIdByNumber, episodeIdBySeasonAndEpisode } =
+    args;
   const seasonRows: SeasonTranslationUpsertRow[] = [];
   const episodeRows: EpisodeTranslationUpsertRow[] = [];
 
@@ -608,7 +606,10 @@ const fetchLocalizedDetails = async (
 
   for (const language of languages) {
     try {
-      const localizedData = await provider.localizedDetails(oldMediaItem, language);
+      const localizedData = await provider.localizedDetails(
+        oldMediaItem,
+        language
+      );
 
       if (localizedData) {
         localizedDetails.push({
@@ -746,11 +747,11 @@ const upsertPreparedGameLocalizations = async (args: {
   await upsertMediaItemTranslations(rows);
 };
 
-const logMediaItemUpdateStart = (
-  mediaItem: MediaItemBaseWithSeasons
-): void => {
+const logMediaItemUpdateStart = (mediaItem: MediaItemBaseWithSeasons): void => {
   if (mediaItem.lastTimeUpdated) {
-    const date = chalk.blue(new Date(mediaItem.lastTimeUpdated).toLocaleString());
+    const date = chalk.blue(
+      new Date(mediaItem.lastTimeUpdated).toLocaleString()
+    );
     logger.info(t`Updating: ${mediaItem.title} (last updated at: ${date})`);
     return;
   }
@@ -907,10 +908,12 @@ export const updateMediaItem = async (
   await mediaItemRepository.lock(oldMediaItem.id);
 
   try {
-    const { metadataProvider, newMediaItem } = await resolveUpdateMediaItemData({
-      oldMediaItem,
-      preloaded,
-    });
+    const { metadataProvider, newMediaItem } = await resolveUpdateMediaItemData(
+      {
+        oldMediaItem,
+        preloaded,
+      }
+    );
     const updatedMediaItem = await buildUpdatedMediaItem({
       oldMediaItem,
       newMediaItem,
@@ -1130,7 +1133,10 @@ const handleUpstream404WithoutPreparedApply = async (
 const prepareMediaItemFetch = async (
   mediaItem: MediaItemBaseWithSeasons
 ): Promise<PreparedMediaItemFetch> => {
-  const metadataProvider = metadataProviders.get(mediaItem.mediaType, mediaItem.source);
+  const metadataProvider = metadataProviders.get(
+    mediaItem.mediaType,
+    mediaItem.source
+  );
 
   if (!metadataProvider) {
     return {
@@ -1153,7 +1159,11 @@ const prepareMediaItemFetch = async (
     }
 
     const [localizedDetails, gameLocalizations] = await Promise.all([
-      fetchLocalizedDetails(metadataProvider, mediaItem, getMetadataLanguages()),
+      fetchLocalizedDetails(
+        metadataProvider,
+        mediaItem,
+        getMetadataLanguages()
+      ),
       fetchGameLocalizations(metadataProvider, mediaItem),
     ]);
 
@@ -1197,7 +1207,9 @@ const shouldCancelMetadataUpdate = (
 };
 
 const logMetadataUpdateError = (error: unknown): void => {
-  logger.error(chalk.red(error instanceof Error ? error.toString() : String(error)));
+  logger.error(
+    chalk.red(error instanceof Error ? error.toString() : String(error))
+  );
 };
 
 const logUpstream404Skip = (title: string): void => {
@@ -1277,14 +1289,9 @@ const applyPreparedMediaItemUpdate = async (args: {
   }
 };
 
-const logMetadataUpdateSummary = (
-  counters: MetadataUpdateCounters
-): void => {
-  const {
-    numberOfUpdatedItems,
-    numberOfSkippedItems,
-    numberOfFailures,
-  } = counters;
+const logMetadataUpdateSummary = (counters: MetadataUpdateCounters): void => {
+  const { numberOfUpdatedItems, numberOfSkippedItems, numberOfFailures } =
+    counters;
 
   if (
     numberOfUpdatedItems === 0 &&
@@ -1399,6 +1406,7 @@ export const runLockedMetadataUpdate = createLock(
 
 export const updateMetadata = async (): Promise<void> => {
   await runLockedMetadataUpdate({
-    selectMediaItems: async () => await mediaItemRepository.itemsToPossiblyUpdate(),
+    selectMediaItems: async () =>
+      await mediaItemRepository.itemsToPossiblyUpdate(),
   });
 };

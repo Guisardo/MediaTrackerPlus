@@ -99,7 +99,11 @@ describe('IGDB.fetchGameLocalizations', () => {
         if (url.includes('twitch.tv')) {
           return Promise.resolve({
             status: 200,
-            data: { access_token: 'test-token', expires_in: 999999999, token_type: 'bearer' },
+            data: {
+              access_token: 'test-token',
+              expires_in: 999999999,
+              token_type: 'bearer',
+            },
           });
         }
         return Promise.resolve({ data: [] });
@@ -107,8 +111,8 @@ describe('IGDB.fetchGameLocalizations', () => {
 
       await igdb.fetchGameLocalizations({ igdbId: 1234 });
 
-      const localizationCall = mockedAxios.post.mock.calls.find(([url]) =>
-        typeof url === 'string' && url.includes('game_localizations')
+      const localizationCall = mockedAxios.post.mock.calls.find(
+        ([url]) => typeof url === 'string' && url.includes('game_localizations')
       );
 
       expect(localizationCall).toBeDefined();
@@ -127,7 +131,11 @@ describe('IGDB.fetchGameLocalizations', () => {
         if (url.includes('twitch.tv')) {
           return Promise.resolve({
             status: 200,
-            data: { access_token: 'test-token', expires_in: 999999999, token_type: 'bearer' },
+            data: {
+              access_token: 'test-token',
+              expires_in: 999999999,
+              token_type: 'bearer',
+            },
           });
         }
         return Promise.resolve({
@@ -142,8 +150,14 @@ describe('IGDB.fetchGameLocalizations', () => {
       const result = await igdb.fetchGameLocalizations({ igdbId: 1942 });
 
       expect(result).toHaveLength(3);
-      expect(result[0]).toEqual({ regionId: 1, name: 'The Witcher 3: Wild Hunt' });
-      expect(result[1]).toEqual({ regionId: 2, name: 'The Witcher 3: Wild Hunt' });
+      expect(result[0]).toEqual({
+        regionId: 1,
+        name: 'The Witcher 3: Wild Hunt',
+      });
+      expect(result[1]).toEqual({
+        regionId: 2,
+        name: 'The Witcher 3: Wild Hunt',
+      });
       expect(result[2]).toEqual({ regionId: 5, name: 'ウィッチャー3' });
     });
 
@@ -152,13 +166,17 @@ describe('IGDB.fetchGameLocalizations', () => {
         if (url.includes('twitch.tv')) {
           return Promise.resolve({
             status: 200,
-            data: { access_token: 'test-token', expires_in: 999999999, token_type: 'bearer' },
+            data: {
+              access_token: 'test-token',
+              expires_in: 999999999,
+              token_type: 'bearer',
+            },
           });
         }
         return Promise.resolve({
           data: [
             { id: 1, name: 'Valid Name', region: 2 },
-            { id: 2, name: null, region: 1 },     // no name — filtered out
+            { id: 2, name: null, region: 1 }, // no name — filtered out
             { id: 3, name: 'Another Name', region: null }, // no region — filtered out
           ],
         });
@@ -175,7 +193,11 @@ describe('IGDB.fetchGameLocalizations', () => {
         if (url.includes('twitch.tv')) {
           return Promise.resolve({
             status: 200,
-            data: { access_token: 'test-token', expires_in: 999999999, token_type: 'bearer' },
+            data: {
+              access_token: 'test-token',
+              expires_in: 999999999,
+              token_type: 'bearer',
+            },
           });
         }
         return Promise.resolve({ data: [] });
@@ -191,7 +213,11 @@ describe('IGDB.fetchGameLocalizations', () => {
         if (url.includes('twitch.tv')) {
           return Promise.resolve({
             status: 200,
-            data: { access_token: 'test-token', expires_in: 999999999, token_type: 'bearer' },
+            data: {
+              access_token: 'test-token',
+              expires_in: 999999999,
+              token_type: 'bearer',
+            },
           });
         }
         return Promise.resolve({
@@ -214,7 +240,15 @@ describe('IGDB.fetchGameLocalizations', () => {
 
 describe('IGDB_REGION_MAP', () => {
   test('maps region 1 (europe) to European language codes', () => {
-    expect(IGDB_REGION_MAP[1]).toEqual(['de', 'fr', 'es', 'it', 'nl', 'pl', 'pt']);
+    expect(IGDB_REGION_MAP[1]).toEqual([
+      'de',
+      'fr',
+      'es',
+      'it',
+      'nl',
+      'pl',
+      'pt',
+    ]);
   });
 
   test('maps region 2 (north_america) to ["en"]', () => {

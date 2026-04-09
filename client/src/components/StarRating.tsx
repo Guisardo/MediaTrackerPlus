@@ -172,7 +172,11 @@ const StarRatingModal: FunctionComponent<
           <Button variant="default">
             <Trans>Save review</Trans>
           </Button>
-          <Button variant="destructive" className="ml-auto" onClick={() => _closeModal()}>
+          <Button
+            variant="destructive"
+            className="ml-auto"
+            onClick={() => _closeModal()}
+          >
             <Trans>Cancel</Trans>
           </Button>
         </div>

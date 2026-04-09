@@ -43,7 +43,8 @@ jest.mock('@lingui/macro', () => {
   return {
     t: (strings: TemplateStringsArray | string, ...values: unknown[]) => {
       if (typeof strings === 'string') return strings;
-      if (strings.raw) return String.raw(strings as TemplateStringsArray, ...values);
+      if (strings.raw)
+        return String.raw(strings as TemplateStringsArray, ...values);
       return (strings as TemplateStringsArray)[0];
     },
     Trans: ({ children }: { children: React.ReactNode }) => <>{children}</>,
@@ -72,9 +73,13 @@ jest.mock('@lingui/react', () => {
         locale: 'en',
       },
     }),
-    Trans: ({ message, children }: { message?: string; children?: React.ReactNode }) => (
-      <>{message || children}</>
-    ),
+    Trans: ({
+      message,
+      children,
+    }: {
+      message?: string;
+      children?: React.ReactNode;
+    }) => <>{message || children}</>,
     I18nProvider: ({ children }: { children: React.ReactNode }) => (
       <>{children}</>
     ),
@@ -317,9 +322,13 @@ describe('GroupDetailPage – viewer view', () => {
 
   it('renders the group name as a plain heading (not editable)', () => {
     renderGroupDetailPage();
-    expect(screen.getByRole('heading', { name: 'Work Colleagues' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'Work Colleagues' })
+    ).toBeInTheDocument();
     // No editable input for the name
-    expect(screen.queryByRole('textbox', { name: /Group name/i })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('textbox', { name: /Group name/i })
+    ).not.toBeInTheDocument();
   });
 
   it('renders the members list in read-only mode', () => {
@@ -330,7 +339,9 @@ describe('GroupDetailPage – viewer view', () => {
 
   it('does NOT render Remove buttons for viewer', () => {
     renderGroupDetailPage();
-    expect(screen.queryByRole('button', { name: /Remove/i })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /Remove/i })
+    ).not.toBeInTheDocument();
   });
 
   it('does NOT render role dropdowns for viewer', () => {
@@ -404,7 +415,9 @@ describe('GroupDetailPage – remove member', () => {
     renderGroupDetailPage();
 
     // Find the Remove button for Bob (userId=20)
-    const removeButtons = screen.getAllByRole('button', { name: /Remove Bob/i });
+    const removeButtons = screen.getAllByRole('button', {
+      name: /Remove Bob/i,
+    });
     await user.click(removeButtons[0]);
 
     await waitFor(() => {
@@ -417,7 +430,9 @@ describe('GroupDetailPage – remove member', () => {
     mockConfirmResult = false;
     renderGroupDetailPage();
 
-    const removeButtons = screen.getAllByRole('button', { name: /Remove Bob/i });
+    const removeButtons = screen.getAllByRole('button', {
+      name: /Remove Bob/i,
+    });
     await user.click(removeButtons[0]);
 
     await waitFor(() => {
@@ -524,7 +539,7 @@ describe('GroupDetailPage – add member', () => {
 
     // Alice (userId=10) and Bob (userId=20) are already members
     mockSearchUsers.mockResolvedValue([
-      { id: 10, name: 'Alice' },  // existing — should be filtered out
+      { id: 10, name: 'Alice' }, // existing — should be filtered out
       { id: 30, name: 'Charlie' }, // not a member — should appear
     ]);
 

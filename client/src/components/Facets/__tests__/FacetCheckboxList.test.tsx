@@ -7,16 +7,30 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 jest.mock('@lingui/macro', () => ({
-  Trans: ({ children, message, id }: { children?: React.ReactNode; message?: string; id?: string }) =>
-    children ?? message ?? id ?? null,
+  Trans: ({
+    children,
+    message,
+    id,
+  }: {
+    children?: React.ReactNode;
+    message?: string;
+    id?: string;
+  }) => children ?? message ?? id ?? null,
   t: (s: TemplateStringsArray) => (typeof s === 'string' ? s : s[0]),
 }));
 
 jest.mock('@lingui/react', () => ({
   I18nProvider: ({ children }: { children: React.ReactNode }) => children,
   useLingui: () => ({ i18n: { _: (id: unknown) => id } }),
-  Trans: ({ children, message, id }: { children?: React.ReactNode; message?: string; id?: string }) =>
-    children ?? message ?? id ?? null,
+  Trans: ({
+    children,
+    message,
+    id,
+  }: {
+    children?: React.ReactNode;
+    message?: string;
+    id?: string;
+  }) => children ?? message ?? id ?? null,
 }));
 
 import { FacetCheckboxList } from 'src/components/Facets/FacetCheckboxList';

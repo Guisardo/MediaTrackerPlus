@@ -65,7 +65,9 @@ jest.mock('src/api/api', () => ({
 const mockUseGenreSeen = jest.fn();
 jest.mock('src/hooks/statisticHooks', () => ({
   useGenreSeen: (...args: any[]) => mockUseGenreSeen(...args),
-  useSeen: jest.fn().mockReturnValue({ data: undefined, isFetched: false, error: null }),
+  useSeen: jest
+    .fn()
+    .mockReturnValue({ data: undefined, isFetched: false, error: null }),
 }));
 
 jest.mock('src/components/Statistics/StatisticsGenreSegment', () => {
@@ -98,7 +100,11 @@ const renderComponent = (props = defaultProps) =>
 
 beforeEach(() => {
   mockOnYearChange.mockClear();
-  mockUseGenreSeen.mockReturnValue({ data: undefined, isFetched: false, error: null });
+  mockUseGenreSeen.mockReturnValue({
+    data: undefined,
+    isFetched: false,
+    error: null,
+  });
 });
 
 describe('StatsticsGenre', () => {

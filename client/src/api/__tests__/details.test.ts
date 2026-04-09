@@ -120,7 +120,11 @@ const DetailsHarness: React.FC<{ mediaItemId: number }> = ({ mediaItemId }) => {
   return React.createElement(
     React.Fragment,
     null,
-    React.createElement('span', { 'data-testid': 'isLoading' }, String(result.isLoading)),
+    React.createElement(
+      'span',
+      { 'data-testid': 'isLoading' },
+      String(result.isLoading)
+    ),
     React.createElement(
       'span',
       { 'data-testid': 'mediaItem' },
@@ -276,7 +280,9 @@ describe('setRating', () => {
 
 describe('removeFromWatchlist', () => {
   it('calls watchlist.delete with mediaItemId', async () => {
-    (mediaTrackerApi.watchlist.delete as jest.Mock).mockResolvedValue(undefined);
+    (mediaTrackerApi.watchlist.delete as jest.Mock).mockResolvedValue(
+      undefined
+    );
 
     const mediaItem = makeMediaItem({ id: 3 });
     await removeFromWatchlist({ mediaItem });
@@ -287,18 +293,28 @@ describe('removeFromWatchlist', () => {
   });
 
   it('invalidates list queries after removing from watchlist', async () => {
-    (mediaTrackerApi.watchlist.delete as jest.Mock).mockResolvedValue(undefined);
+    (mediaTrackerApi.watchlist.delete as jest.Mock).mockResolvedValue(
+      undefined
+    );
 
     const mediaItem = makeMediaItem({ id: 3 });
     await removeFromWatchlist({ mediaItem });
 
-    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith({ queryKey: ['list'] });
-    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith({ queryKey: ['lists'] });
-    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith({ queryKey: ['listItems'] });
+    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith({
+      queryKey: ['list'],
+    });
+    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith({
+      queryKey: ['lists'],
+    });
+    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith({
+      queryKey: ['listItems'],
+    });
   });
 
   it('passes seasonId when a season is provided', async () => {
-    (mediaTrackerApi.watchlist.delete as jest.Mock).mockResolvedValue(undefined);
+    (mediaTrackerApi.watchlist.delete as jest.Mock).mockResolvedValue(
+      undefined
+    );
 
     const mediaItem = makeMediaItem({ id: 3 });
     const season = makeSeason({ id: 20, tvShowId: 3 });
@@ -332,8 +348,12 @@ describe('addToWatchlist', () => {
     const mediaItem = makeMediaItem({ id: 4 });
     await addToWatchlist({ mediaItem });
 
-    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith({ queryKey: ['list'] });
-    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith({ queryKey: ['lists'] });
+    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith({
+      queryKey: ['list'],
+    });
+    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith({
+      queryKey: ['lists'],
+    });
   });
 });
 
@@ -410,7 +430,11 @@ describe('addToProgress', () => {
     await addToProgress({ mediaItemId: 7, progress: 0.5, duration: 7200000 });
 
     expect(mediaTrackerApi.progress.add).toHaveBeenCalledWith(
-      expect.objectContaining({ mediaItemId: 7, progress: 0.5, duration: 7200000 })
+      expect.objectContaining({
+        mediaItemId: 7,
+        progress: 0.5,
+        duration: 7200000,
+      })
     );
   });
 
@@ -419,10 +443,12 @@ describe('addToProgress', () => {
 
     await addToProgress({ mediaItemId: 7, progress: 0.5 });
 
-    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith(
-      { queryKey: detailsKey(7) }
-    );
-    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith({ queryKey: ['items'] });
+    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith({
+      queryKey: detailsKey(7),
+    });
+    expect(appQueryClient.invalidateQueries).toHaveBeenCalledWith({
+      queryKey: ['items'],
+    });
   });
 });
 

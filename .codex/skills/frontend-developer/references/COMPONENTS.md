@@ -4,55 +4,55 @@ Complete inventory and shadcn/ui migration mapping for MediaTrackerPlus `client/
 
 ## Migration Status Key
 
-| Symbol | Meaning |
-|---|---|
-| ✅ | Fully migrated to Tailwind + shadcn/ui |
-| 🔄 | Partially migrated — styled-components or SCSS still present |
-| ❌ | Not yet migrated — still uses styled-components or SCSS |
-| 🆕 | New component — use shadcn/ui from the start |
+| Symbol | Meaning                                                      |
+| ------ | ------------------------------------------------------------ |
+| ✅     | Fully migrated to Tailwind + shadcn/ui                       |
+| 🔄     | Partially migrated — styled-components or SCSS still present |
+| ❌     | Not yet migrated — still uses styled-components or SCSS      |
+| 🆕     | New component — use shadcn/ui from the start                 |
 
 ## Core Layout Components
 
-| Component | File | Status | shadcn/ui Equivalent |
-|---|---|---|---|
-| `Nav` | `Nav.tsx` | 🔄 | No direct equivalent — keep custom, use shadcn `NavigationMenu` primitives |
-| `Modal` | `Modal.tsx` | 🔄 | `Dialog` from shadcn/ui — replaces React Spring animation |
-| `Portal` | `Portal.tsx` | ✅ | Keep as-is (React portal, no styling) |
-| `FacetDrawer` | `FacetDrawer.tsx` | 🔄 | `Sheet` from shadcn/ui (slide-in panel) |
-| `Facets` | `Facets.tsx` | ❌ | Compose using shadcn `Accordion` + `Checkbox` + `Slider` |
-| `PaginatedGridItems` | `PaginatedGridItems.tsx` | 🔄 | Keep custom grid, remove styled-components wrapper |
+| Component            | File                     | Status | shadcn/ui Equivalent                                                       |
+| -------------------- | ------------------------ | ------ | -------------------------------------------------------------------------- |
+| `Nav`                | `Nav.tsx`                | 🔄     | No direct equivalent — keep custom, use shadcn `NavigationMenu` primitives |
+| `Modal`              | `Modal.tsx`              | 🔄     | `Dialog` from shadcn/ui — replaces React Spring animation                  |
+| `Portal`             | `Portal.tsx`             | ✅     | Keep as-is (React portal, no styling)                                      |
+| `FacetDrawer`        | `FacetDrawer.tsx`        | 🔄     | `Sheet` from shadcn/ui (slide-in panel)                                    |
+| `Facets`             | `Facets.tsx`             | ❌     | Compose using shadcn `Accordion` + `Checkbox` + `Slider`                   |
+| `PaginatedGridItems` | `PaginatedGridItems.tsx` | 🔄     | Keep custom grid, remove styled-components wrapper                         |
 
 ## Media Display Components
 
-| Component | File | Status | shadcn/ui Equivalent |
-|---|---|---|---|
-| `GridItem` | `GridItem.tsx` | ❌ | Custom — remove styled-components, rewrite with Tailwind |
-| `Poster` | `Poster.tsx` | 🔄 | Custom — uses `aspect-[2/3]` Tailwind class |
-| `PosterCard` | `PosterCard.tsx` | 🔄 | Compose with shadcn `Card` + custom poster area |
-| `MediaTypeBadge` | `MediaTypeBadge.tsx` | 🔄 | `Badge` from shadcn/ui |
-| `SeasonList` | `SeasonList.tsx` | ❌ | Custom + shadcn `Collapsible` |
-| `EpisodeList` | `EpisodeList.tsx` | ❌ | Custom |
+| Component        | File                 | Status | shadcn/ui Equivalent                                     |
+| ---------------- | -------------------- | ------ | -------------------------------------------------------- |
+| `GridItem`       | `GridItem.tsx`       | ❌     | Custom — remove styled-components, rewrite with Tailwind |
+| `Poster`         | `Poster.tsx`         | 🔄     | Custom — uses `aspect-[2/3]` Tailwind class              |
+| `PosterCard`     | `PosterCard.tsx`     | 🔄     | Compose with shadcn `Card` + custom poster area          |
+| `MediaTypeBadge` | `MediaTypeBadge.tsx` | 🔄     | `Badge` from shadcn/ui                                   |
+| `SeasonList`     | `SeasonList.tsx`     | ❌     | Custom + shadcn `Collapsible`                            |
+| `EpisodeList`    | `EpisodeList.tsx`    | ❌     | Custom                                                   |
 
 ## Interactive / Form Components
 
-| Component | File | Status | shadcn/ui Equivalent |
-|---|---|---|---|
-| `StarRating` | `StarRating.tsx` | ❌ | Custom — use Radix `Slider` primitive (already installed) |
-| `SetProgress` | `SetProgress.tsx` | 🔄 | `Slider` from shadcn/ui (wraps `@radix-ui/react-slider`) |
-| `SelectSeenDate` | `SelectSeenDate.tsx` | ❌ | `Popover` + `Calendar` from shadcn/ui |
-| `Checkbox` | `Checkbox.tsx` | 🔄 | `Checkbox` from shadcn/ui |
-| `AddToListModal` | `AddToListModal.tsx` | ❌ | `Dialog` + `Command` from shadcn/ui |
-| `AddOrEditGroupButton` | `AddOrEditGroupButton.tsx` | ❌ | `Dialog` + `Button` from shadcn/ui |
-| `GroupSelector` | `GroupSelector.tsx` | ❌ | `Select` or `Combobox` from shadcn/ui |
+| Component              | File                       | Status | shadcn/ui Equivalent                                      |
+| ---------------------- | -------------------------- | ------ | --------------------------------------------------------- |
+| `StarRating`           | `StarRating.tsx`           | ❌     | Custom — use Radix `Slider` primitive (already installed) |
+| `SetProgress`          | `SetProgress.tsx`          | 🔄     | `Slider` from shadcn/ui (wraps `@radix-ui/react-slider`)  |
+| `SelectSeenDate`       | `SelectSeenDate.tsx`       | ❌     | `Popover` + `Calendar` from shadcn/ui                     |
+| `Checkbox`             | `Checkbox.tsx`             | 🔄     | `Checkbox` from shadcn/ui                                 |
+| `AddToListModal`       | `AddToListModal.tsx`       | ❌     | `Dialog` + `Command` from shadcn/ui                       |
+| `AddOrEditGroupButton` | `AddOrEditGroupButton.tsx` | ❌     | `Dialog` + `Button` from shadcn/ui                        |
+| `GroupSelector`        | `GroupSelector.tsx`        | ❌     | `Select` or `Combobox` from shadcn/ui                     |
 
 ## Data Display Components
 
-| Component | File | Status | shadcn/ui Equivalent |
-|---|---|---|---|
-| `StatisticsSummary` | `StatisticsSummary.tsx` | ❌ | `Card` from shadcn/ui |
-| `StatisticsSegment` | `StatisticsSegment.tsx` | ❌ | Custom charts — keep custom or add `recharts` |
-| `StatisticsGenreSegment` | `StatisticsGenreSegment.tsx` | ❌ | Custom |
-| `Calendar` | Calendar components | ❌ | FullCalendar — keep, just style-override with Tailwind |
+| Component                | File                         | Status | shadcn/ui Equivalent                                   |
+| ------------------------ | ---------------------------- | ------ | ------------------------------------------------------ |
+| `StatisticsSummary`      | `StatisticsSummary.tsx`      | ❌     | `Card` from shadcn/ui                                  |
+| `StatisticsSegment`      | `StatisticsSegment.tsx`      | ❌     | Custom charts — keep custom or add `recharts`          |
+| `StatisticsGenreSegment` | `StatisticsGenreSegment.tsx` | ❌     | Custom                                                 |
+| `Calendar`               | Calendar components          | ❌     | FullCalendar — keep, just style-override with Tailwind |
 
 ## shadcn/ui Component Installation
 
@@ -82,10 +82,11 @@ Components are installed into `client/src/components/ui/`. Always check there be
 `GridItem.tsx` is the most-used component and the most critical to migrate. It uses `styled-components` extensively.
 
 Current pattern (to remove):
+
 ```tsx
 // ❌ Current — styled-components
 const StyledCard = styled.div<{ highlighted?: boolean }>`
-  background: ${props => props.highlighted ? '#ff0' : 'transparent'};
+  background: ${(props) => (props.highlighted ? '#ff0' : 'transparent')};
   border-radius: 8px;
   padding: 12px;
 `;
@@ -94,6 +95,7 @@ return <StyledCard highlighted={isHighlighted}>...</StyledCard>;
 ```
 
 Migrated pattern:
+
 ```tsx
 // ✅ Target — Tailwind + clsx
 import { clsx } from 'clsx';
@@ -181,7 +183,9 @@ export function FilterSheet({ open, onOpenChange, children }: Props) {
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="left" className="w-[300px] sm:w-[350px]">
         <SheetHeader>
-          <SheetTitle><Trans>Filters</Trans></SheetTitle>
+          <SheetTitle>
+            <Trans>Filters</Trans>
+          </SheetTitle>
         </SheetHeader>
         {children}
       </SheetContent>
@@ -205,7 +209,11 @@ interface StarRatingProps {
   readonly?: boolean;
 }
 
-export function StarRating({ value, onChange, readonly = false }: StarRatingProps) {
+export function StarRating({
+  value,
+  onChange,
+  readonly = false,
+}: StarRatingProps) {
   return (
     <SliderPrimitive.Root
       className="relative flex h-5 w-full touch-none select-none items-center"

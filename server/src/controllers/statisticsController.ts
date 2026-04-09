@@ -38,7 +38,11 @@ export class StatisticsController {
     const userId = Number(req.user);
     const selfUser = await userRepository.findOneSelf({ id: userId });
     const viewerAge = computeViewerAge(selfUser?.dateOfBirth);
-    const statistics = await userStatisticsSummary(userId, req.query.year, viewerAge);
+    const statistics = await userStatisticsSummary(
+      userId,
+      req.query.year,
+      viewerAge
+    );
     // nosemgrep: javascript.express.security.audit.xss.direct-response-write.direct-response-write
     res.send(statistics);
   });
@@ -52,7 +56,11 @@ export class StatisticsController {
     const userId = Number(req.user);
     const selfUser = await userRepository.findOneSelf({ id: userId });
     const viewerAge = computeViewerAge(selfUser?.dateOfBirth);
-    const statistics = await userGenreStatistics(userId, req.query.year, viewerAge);
+    const statistics = await userGenreStatistics(
+      userId,
+      req.query.year,
+      viewerAge
+    );
     // nosemgrep: javascript.express.security.audit.xss.direct-response-write.direct-response-write
     res.send(statistics);
   });

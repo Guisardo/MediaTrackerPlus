@@ -63,7 +63,9 @@ describe('tvEpisodeRepository', () => {
         isSpecialEpisode: false,
       });
 
-      const row: TvEpisode = await Database.knex('episode').where({ id }).first();
+      const row: TvEpisode = await Database.knex('episode')
+        .where({ id })
+        .first();
 
       // seasonNumber(2) * 1000 + episodeNumber(3) = 2003
       expect(row.seasonAndEpisodeNumber).toBe(2003);
@@ -82,7 +84,9 @@ describe('tvEpisodeRepository', () => {
         runtime: 42,
       });
 
-      const row: TvEpisode = await Database.knex('episode').where({ id }).first();
+      const row: TvEpisode = await Database.knex('episode')
+        .where({ id })
+        .first();
 
       expect(row.title).toBe('The One With All The Tests');
       expect(row.description).toBe('A great episode');

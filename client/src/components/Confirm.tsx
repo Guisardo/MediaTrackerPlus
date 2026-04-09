@@ -63,14 +63,19 @@ const ConfirmDialog: FunctionComponent<{
   };
 
   return (
-    <Dialog open={open} onOpenChange={(isOpen) => {
-      if (!isOpen) {
-        handleResolve(false);
-      }
-    }}>
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) {
+          handleResolve(false);
+        }
+      }}
+    >
       <DialogContent showCloseButton={false}>
         <DialogHeader>
-          <DialogTitle><Trans>Confirm</Trans></DialogTitle>
+          <DialogTitle>
+            <Trans>Confirm</Trans>
+          </DialogTitle>
           <DialogDescription>{message}</DialogDescription>
         </DialogHeader>
         <DialogFooter>

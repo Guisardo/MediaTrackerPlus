@@ -7,8 +7,15 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 jest.mock('@lingui/macro', () => ({
-  Trans: ({ children, message, id }: { children?: React.ReactNode; message?: string; id?: string }) =>
-    children ?? message ?? id ?? null,
+  Trans: ({
+    children,
+    message,
+    id,
+  }: {
+    children?: React.ReactNode;
+    message?: string;
+    id?: string;
+  }) => children ?? message ?? id ?? null,
   t: (strings: TemplateStringsArray, ...values: unknown[]) =>
     typeof strings === 'string'
       ? strings
@@ -20,8 +27,15 @@ jest.mock('@lingui/macro', () => ({
 jest.mock('@lingui/react', () => ({
   I18nProvider: ({ children }: { children: React.ReactNode }) => children,
   useLingui: () => ({ i18n: { _: (id: unknown) => id } }),
-  Trans: ({ children, message, id }: { children?: React.ReactNode; message?: string; id?: string }) =>
-    children ?? message ?? id ?? null,
+  Trans: ({
+    children,
+    message,
+    id,
+  }: {
+    children?: React.ReactNode;
+    message?: string;
+    id?: string;
+  }) => children ?? message ?? id ?? null,
 }));
 
 jest.mock('src/utils', () => ({
@@ -37,7 +51,9 @@ import type { UseFacetsResult } from 'src/hooks/facets';
 // Factory for mock facets
 // ---------------------------------------------------------------------------
 
-const makeFacets = (overrides: Partial<UseFacetsResult> = {}): UseFacetsResult => ({
+const makeFacets = (
+  overrides: Partial<UseFacetsResult> = {}
+): UseFacetsResult => ({
   genres: [],
   setGenres: jest.fn(),
   languages: [],
@@ -101,7 +117,9 @@ describe('ActiveFacetChips', () => {
 
     render(React.createElement(ActiveFacetChips, { facets }));
 
-    expect(screen.getByRole('button', { name: /clear all/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /clear all/i })
+    ).toBeInTheDocument();
   });
 
   it('calls clearAllFacets when "Clear all" button is clicked', async () => {
@@ -213,7 +231,9 @@ describe('ActiveFacetChips', () => {
       status: ['seen'],
       activeFacetCount: 1,
     });
-    render(React.createElement(ActiveFacetChips, { facets, mediaType: 'audiobook' }));
+    render(
+      React.createElement(ActiveFacetChips, { facets, mediaType: 'audiobook' })
+    );
     expect(screen.getByText('Listened')).toBeInTheDocument();
   });
 
@@ -225,7 +245,9 @@ describe('ActiveFacetChips', () => {
       status: ['seen'],
       activeFacetCount: 1,
     });
-    render(React.createElement(ActiveFacetChips, { facets, mediaType: 'book' }));
+    render(
+      React.createElement(ActiveFacetChips, { facets, mediaType: 'book' })
+    );
     expect(screen.getByText('Read')).toBeInTheDocument();
   });
 
@@ -237,7 +259,9 @@ describe('ActiveFacetChips', () => {
       status: ['seen'],
       activeFacetCount: 1,
     });
-    render(React.createElement(ActiveFacetChips, { facets, mediaType: 'video_game' }));
+    render(
+      React.createElement(ActiveFacetChips, { facets, mediaType: 'video_game' })
+    );
     expect(screen.getByText('Played')).toBeInTheDocument();
   });
 
@@ -284,7 +308,9 @@ describe('ActiveFacetChips', () => {
       creators: ['Nolan'],
       activeFacetCount: 1,
     });
-    render(React.createElement(ActiveFacetChips, { facets, mediaType: 'movie' }));
+    render(
+      React.createElement(ActiveFacetChips, { facets, mediaType: 'movie' })
+    );
     expect(screen.getByText('Director:')).toBeInTheDocument();
   });
 
@@ -302,7 +328,9 @@ describe('ActiveFacetChips', () => {
       creators: ['Tolkien'],
       activeFacetCount: 1,
     });
-    render(React.createElement(ActiveFacetChips, { facets, mediaType: 'book' }));
+    render(
+      React.createElement(ActiveFacetChips, { facets, mediaType: 'book' })
+    );
     expect(screen.getByText('Author:')).toBeInTheDocument();
   });
 
@@ -311,7 +339,9 @@ describe('ActiveFacetChips', () => {
       creators: ['Tolkien'],
       activeFacetCount: 1,
     });
-    render(React.createElement(ActiveFacetChips, { facets, mediaType: 'audiobook' }));
+    render(
+      React.createElement(ActiveFacetChips, { facets, mediaType: 'audiobook' })
+    );
     expect(screen.getByText('Author:')).toBeInTheDocument();
   });
 
@@ -320,7 +350,9 @@ describe('ActiveFacetChips', () => {
       creators: ['Nintendo'],
       activeFacetCount: 1,
     });
-    render(React.createElement(ActiveFacetChips, { facets, mediaType: 'video_game' }));
+    render(
+      React.createElement(ActiveFacetChips, { facets, mediaType: 'video_game' })
+    );
     expect(screen.getByText('Developer:')).toBeInTheDocument();
   });
 

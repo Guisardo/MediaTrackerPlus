@@ -41,21 +41,18 @@ describe('requestDebugMiddleware', () => {
 
     requestDebugMiddleware(req, {} as Response, next);
 
-    expect(logger.debug).toHaveBeenCalledWith(
-      'request POST /api/user/login',
-      {
-        body: {
-          username: 'demo',
-          password: '[redacted]',
-        },
-        params: {
-          groupId: '12',
-        },
-        query: {
-          include: 'members',
-        },
-      }
-    );
+    expect(logger.debug).toHaveBeenCalledWith('request POST /api/user/login', {
+      body: {
+        username: 'demo',
+        password: '[redacted]',
+      },
+      params: {
+        groupId: '12',
+      },
+      query: {
+        include: 'members',
+      },
+    });
     expect(next).toHaveBeenCalledTimes(1);
   });
 

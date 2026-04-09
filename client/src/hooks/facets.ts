@@ -110,8 +110,10 @@ export const useFacets = (
   );
   const { values: languages, setValues: setLanguages } =
     useMultiValueSearchParam('languages', handleArgumentChange);
-  const { values: creators, setValues: setCreators } =
-    useMultiValueSearchParam('creators', handleArgumentChange);
+  const { values: creators, setValues: setCreators } = useMultiValueSearchParam(
+    'creators',
+    handleArgumentChange
+  );
   const { values: publishers, setValues: setPublishers } =
     useMultiValueSearchParam('publishers', handleArgumentChange);
   const { values: mediaTypes, setValues: setMediaTypes } =
@@ -245,9 +247,7 @@ export const useFacets = (
       'page',
     ]);
     const preserved = Object.fromEntries(
-      Object.entries(currentEntries).filter(
-        ([key]) => !facetParamSet.has(key)
-      )
+      Object.entries(currentEntries).filter(([key]) => !facetParamSet.has(key))
     );
     setSearchParams(preserved);
 

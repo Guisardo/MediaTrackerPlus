@@ -44,10 +44,15 @@ export const FacetCheckboxList: FunctionComponent<{
         <ul className="space-y-1">
           {(visibleItems as FacetOption[]).map((option) => {
             const isChecked = selectedValues.includes(option.value);
-            const inputId = `facet-checkbox-${option.value.replace(/\s+/g, '-').toLowerCase()}`;
+            const inputId = `facet-checkbox-${option.value
+              .replace(/\s+/g, '-')
+              .toLowerCase()}`;
 
             return (
-              <li key={option.value} className="flex items-center justify-between">
+              <li
+                key={option.value}
+                className="flex items-center justify-between"
+              >
                 <label
                   htmlFor={inputId}
                   className="flex items-center gap-2 cursor-pointer text-sm text-zinc-800 dark:text-zinc-200 select-none min-w-0 flex-1"
@@ -57,7 +62,9 @@ export const FacetCheckboxList: FunctionComponent<{
                     type="checkbox"
                     className="flex-shrink-0 accent-blue-500 cursor-pointer"
                     checked={isChecked}
-                    onChange={(e) => handleToggle(option.value, e.target.checked)}
+                    onChange={(e) =>
+                      handleToggle(option.value, e.target.checked)
+                    }
                   />
                   <span className="truncate">{option.value}</span>
                 </label>

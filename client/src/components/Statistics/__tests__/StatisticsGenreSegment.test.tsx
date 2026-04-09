@@ -66,9 +66,17 @@ jest.mock('src/components/ui/card', () => {
   const React = require('react');
   return {
     Card: ({ children, className, ...rest }: any) =>
-      React.createElement('div', { 'data-testid': 'card', className, ...rest }, children),
+      React.createElement(
+        'div',
+        { 'data-testid': 'card', className, ...rest },
+        children
+      ),
     CardContent: ({ children, className }: any) =>
-      React.createElement('div', { 'data-testid': 'card-content', className }, children),
+      React.createElement(
+        'div',
+        { 'data-testid': 'card-content', className },
+        children
+      ),
   };
 });
 
@@ -128,7 +136,12 @@ describe('StatisticsGenreSegment', () => {
 
   it('renders genre items as clickable rows', () => {
     const { container } = renderComponent(
-      { tv: [{ genre: 'Action', count: 5 }, { genre: 'Comedy', count: 2 }] },
+      {
+        tv: [
+          { genre: 'Action', count: 5 },
+          { genre: 'Comedy', count: 2 },
+        ],
+      },
       '2023'
     );
     const clickableRows = container.querySelectorAll('.hover\\:underline');

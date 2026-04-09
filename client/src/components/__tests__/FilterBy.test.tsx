@@ -33,7 +33,12 @@ jest.mock('@lingui/macro', () => ({
 
 // clsx is a tiny utility; return its arguments joined as a string so class
 // assertions still work with partial substring checks.
-jest.mock('clsx', () => (...args: unknown[]) => args.filter(Boolean).join(' '));
+jest.mock(
+  'clsx',
+  () =>
+    (...args: unknown[]) =>
+      args.filter(Boolean).join(' ')
+);
 
 // ---------------------------------------------------------------------------
 // Test harness – drives useFilterBy and mounts FilterByComponent
@@ -149,7 +154,8 @@ describe('useFilterBy (movie, normal page) – FilterByComponent menu options', 
     // dark:bg-zinc-700 applied by clsx inside useMenuComponent.
     // 'All' appears in both the trigger and the dropdown <li>; find the <li> element.
     const allElements = screen.getAllByText('All');
-    const allOption = allElements.find((el) => el.tagName === 'LI') || allElements[0];
+    const allOption =
+      allElements.find((el) => el.tagName === 'LI') || allElements[0];
     expect(allOption.className).toContain('bg-zinc-300');
   });
 
@@ -166,10 +172,12 @@ describe('useFilterBy (movie, normal page) – FilterByComponent menu options', 
 
     // 'Unrated' now appears in the trigger and the <li>; find the <li>
     const unratedElements = screen.getAllByText('Unrated');
-    const unratedOption = unratedElements.find((el) => el.tagName === 'LI') || unratedElements[0];
+    const unratedOption =
+      unratedElements.find((el) => el.tagName === 'LI') || unratedElements[0];
     // 'All' may appear in multiple places; find the <li> element in the dropdown
     const allElements = screen.getAllByText('All');
-    const allOption = allElements.find((el) => el.tagName === 'LI') || allElements[0];
+    const allOption =
+      allElements.find((el) => el.tagName === 'LI') || allElements[0];
 
     expect(unratedOption.className).toContain('bg-zinc-300');
     expect(allOption.className).not.toContain('bg-zinc-300');

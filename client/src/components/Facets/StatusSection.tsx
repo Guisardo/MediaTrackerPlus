@@ -18,7 +18,7 @@ import { FacetSection } from './FacetSection';
  * The "seen" label is media-type-aware (Watched / Played / Read / Listened).
  */
 const STATUS_KEYS = ['rated', 'unrated', 'watchlist', 'seen'] as const;
-type StatusKey = (typeof STATUS_KEYS)[number];
+type StatusKey = typeof STATUS_KEYS[number];
 
 /**
  * Returns the media-type-aware display label for the "seen" status option.

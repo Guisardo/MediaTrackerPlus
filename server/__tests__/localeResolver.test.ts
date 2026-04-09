@@ -95,12 +95,19 @@ describe('resolveLocale', () => {
   // ---------------------------------------------------------------------------
 
   test('handles complex Accept-Language header with multiple languages', () => {
-    const result = resolveLocale('zh-TW;q=1.0, ja;q=0.9, es-419;q=0.8', availableLanguages);
+    const result = resolveLocale(
+      'zh-TW;q=1.0, ja;q=0.9, es-419;q=0.8',
+      availableLanguages
+    );
     expect(result).toBe('es-419');
   });
 
   test('keeps Accept-Language quality ordering when falling back from regional to base locale', () => {
-    const result = resolveLocale('fr-CA;q=0.9, es-AR;q=0.8', ['en', 'fr', 'es']);
+    const result = resolveLocale('fr-CA;q=0.9, es-AR;q=0.8', [
+      'en',
+      'fr',
+      'es',
+    ]);
     expect(result).toBe('fr');
   });
 

@@ -164,7 +164,9 @@ export function _resetAudibleLangMapCache(): void {
  * 1 = europe, 2 = north_america, 3 = australia, 4 = new_zealand,
  * 5 = japan, 6 = china, 7 = asia, 8 = worldwide, 9 = korea
  */
-export const IGDB_REGION_MAP: Readonly<Record<number, readonly string[] | 'all'>> = {
+export const IGDB_REGION_MAP: Readonly<
+  Record<number, readonly string[] | 'all'>
+> = {
   1: ['de', 'fr', 'es', 'it', 'nl', 'pl', 'pt'],
   2: ['en'],
   3: ['en'],

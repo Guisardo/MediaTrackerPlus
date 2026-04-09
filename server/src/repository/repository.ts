@@ -185,7 +185,9 @@ export const repository = <T extends object>(args: {
       uniqueBy: (value: Partial<T>) => Partial<T>,
       limitQuery?: Partial<T>
     ) {
-      const normalizeUniqueKey = (item: Partial<T>): Record<string, unknown> => {
+      const normalizeUniqueKey = (
+        item: Partial<T>
+      ): Record<string, unknown> => {
         const key = uniqueBy(item);
         const normalized: Record<string, unknown> = {};
         for (const [k, v] of Object.entries(key as Record<string, unknown>)) {
@@ -194,7 +196,8 @@ export const repository = <T extends object>(args: {
         return normalized;
       };
 
-      const serialize = (item: Partial<T>) => JSON.stringify(normalizeUniqueKey(item));
+      const serialize = (item: Partial<T>) =>
+        JSON.stringify(normalizeUniqueKey(item));
 
       return await Database.knex.transaction(async (trx) => {
         const fetchAllItems = async () => {
@@ -271,10 +274,7 @@ export const repository = <T extends object>(args: {
       );
 
       if (value[primaryColumnName] !== undefined) {
-        qb.where(
-          primaryColumnName as string,
-          value[primaryColumnName] as any
-        );
+        qb.where(primaryColumnName as string, value[primaryColumnName] as any);
       }
 
       await qb;

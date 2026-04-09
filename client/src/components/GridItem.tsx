@@ -183,7 +183,9 @@ export const GridItem: FunctionComponent<{
                     )}
                   {topBar.showUnwatchedEpisodesCount &&
                     (mediaItem.unseenEpisodesCount ?? 0) > 0 && (
-                      <ItemBadge>{mediaItem.unseenEpisodesCount ?? 0}</ItemBadge>
+                      <ItemBadge>
+                        {mediaItem.unseenEpisodesCount ?? 0}
+                      </ItemBadge>
                     )}
                   {topBar.showUnwatchedEpisodesCount && mediaItem.seen == true && (
                     <ItemBadge>

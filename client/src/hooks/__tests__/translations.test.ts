@@ -523,7 +523,9 @@ describe('all translation hooks – independence', () => {
     expect(r1.current.translations).toEqual(firstTranslations);
     expect(r1.current.entries).toEqual(firstEntries);
 
-    const { result: r2, rerender: re2 } = renderHook(() => useListPrivacyKeys());
+    const { result: r2, rerender: re2 } = renderHook(() =>
+      useListPrivacyKeys()
+    );
     const firstPrivacyKeys = r2.current.keys;
     const firstPrivacyTranslations = r2.current.translations;
     re2();
@@ -536,6 +538,5 @@ describe('all translation hooks – independence', () => {
     re3();
     expect(r3.current.keys).toEqual(firstOrderKeys);
     expect(r3.current.translations).toEqual(firstOrderTranslations);
-
   });
 });

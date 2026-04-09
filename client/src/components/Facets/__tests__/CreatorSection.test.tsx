@@ -4,7 +4,11 @@ import { CreatorSection } from '../CreatorSection';
 
 jest.mock('@lingui/macro', () => ({
   t: (strings: TemplateStringsArray, ...values: unknown[]) =>
-    typeof strings === 'string' ? strings : strings.raw ? String.raw(strings, ...values) : strings[0],
+    typeof strings === 'string'
+      ? strings
+      : strings.raw
+      ? String.raw(strings, ...values)
+      : strings[0],
   Trans: ({ children, message, id }: any) => children ?? message ?? id ?? null,
 }));
 
@@ -12,7 +16,9 @@ jest.mock('src/components/Facets/FacetSection', () => {
   const React = require('react');
   return {
     FacetSection: ({ title, children }: any) =>
-      React.createElement('div', { 'data-testid': 'facet-section' },
+      React.createElement(
+        'div',
+        { 'data-testid': 'facet-section' },
         React.createElement('span', { 'data-testid': 'facet-title' }, title),
         children
       ),
@@ -23,7 +29,10 @@ jest.mock('src/components/Facets/FacetCheckboxList', () => {
   const React = require('react');
   return {
     FacetCheckboxList: ({ items }: any) =>
-      React.createElement('div', { 'data-testid': 'facet-checkbox-list', 'data-count': items.length }),
+      React.createElement('div', {
+        'data-testid': 'facet-checkbox-list',
+        'data-count': items.length,
+      }),
   };
 });
 
@@ -124,6 +133,8 @@ describe('CreatorSection', () => {
         mediaType: 'movie',
       })
     );
-    expect(screen.getByTestId('facet-checkbox-list').getAttribute('data-count')).toBe('2');
+    expect(
+      screen.getByTestId('facet-checkbox-list').getAttribute('data-count')
+    ).toBe('2');
   });
 });
