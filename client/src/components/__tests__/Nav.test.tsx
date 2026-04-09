@@ -437,6 +437,18 @@ describe('NavComponent – dark mode legibility classes (issue #44)', () => {
     const logoutLink = screen.getByRole('link', { name: 'Logout' });
     expect(logoutLink.className).toContain('text-zinc-700');
   });
+
+  it('separator span has dark:text-zinc-200 and text-zinc-700 classes', () => {
+    renderNav('/');
+    const separatorSpan = screen
+      .getAllByText('|')
+      .find(
+        (el) =>
+          el.className.includes('text-zinc-700') &&
+          el.className.includes('dark:text-zinc-200')
+      );
+    expect(separatorSpan).toBeDefined();
+  });
 });
 
 // ---------------------------------------------------------------------------
