@@ -2,10 +2,7 @@ const j = require('./coverage/coverage-summary.json');
 const rows = Object.entries(j)
   .filter(([k]) => k !== 'total')
   .map(([k, v]) => ({
-    file: k.replace(
-      '/Users/lucas.rancez/Documents/Code/MediaTrackerPlus/trees/kevin/client/',
-      ''
-    ),
+    file: k.replace(/^.*\/client\//, ''),
     stmts: v.statements.pct,
     branches: v.branches.pct,
     funcs: v.functions.pct,
