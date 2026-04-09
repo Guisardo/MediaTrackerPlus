@@ -19,9 +19,9 @@ import userEvent from '@testing-library/user-event';
 // ---------------------------------------------------------------------------
 jest.mock('radix-ui', () => {
   const React = require('react');
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   const SelectContext = React.createContext({
     value: '',
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     onChange: (_: string): void => {},
   });
 
