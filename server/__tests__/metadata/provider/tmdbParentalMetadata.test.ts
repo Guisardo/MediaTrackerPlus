@@ -646,7 +646,9 @@ function buildTvDetailsResponse(
     last_episode_to_air: null,
     name: 'Test Show',
     next_episode_to_air: null,
-    networks: [{ name: 'Test Network', id: 1, logo_path: '', origin_country: 'US' }],
+    networks: [
+      { name: 'Test Network', id: 1, logo_path: '', origin_country: 'US' },
+    ],
     number_of_episodes: 10,
     number_of_seasons: 1,
     origin_country: ['US'],

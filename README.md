@@ -148,11 +148,11 @@ Migration file: `server/src/migrations/20990101000000_listItemEstimatedRating.ts
 
 ### Credential requirements
 
-| Feature | Credential | Where to configure |
-|---------|------------|-------------------|
-| Movie and TV recommendations | None (uses embedded TMDB key) | — |
-| Game recommendations | `IGDB_CLIENT_ID` and `IGDB_CLIENT_SECRET` | Settings → Configuration in the UI |
-| Book recommendations | None (OpenLibrary is public) | — |
+| Feature                      | Credential                                | Where to configure                 |
+| ---------------------------- | ----------------------------------------- | ---------------------------------- |
+| Movie and TV recommendations | None (uses embedded TMDB key)             | —                                  |
+| Game recommendations         | `IGDB_CLIENT_ID` and `IGDB_CLIENT_SECRET` | Settings → Configuration in the UI |
+| Book recommendations         | None (OpenLibrary is public)              | —                                  |
 
 > **Note:** IGDB credentials are also required for game metadata search. If games already appear when you search, game recommendations will work automatically. Credentials can be obtained at <https://api-docs.igdb.com/#account-creation>.
 

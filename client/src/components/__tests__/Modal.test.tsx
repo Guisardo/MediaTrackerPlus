@@ -24,7 +24,10 @@ jest.mock('radix-ui', () => {
       <div data-testid="dialog-root" data-open={open} {...rest}>
         {React.Children.map(children, (child: React.ReactElement) => {
           if (!React.isValidElement(child)) return child;
-          return React.cloneElement(child, { __open: open, __onOpenChange: onOpenChange } as any);
+          return React.cloneElement(child, {
+            __open: open,
+            __onOpenChange: onOpenChange,
+          } as any);
         })}
       </div>
     );
@@ -34,35 +37,55 @@ jest.mock('radix-ui', () => {
 
   const Overlay = React.forwardRef(({ children, ...props }: any, ref: any) => {
     const { __open, __onOpenChange, ...rest } = props;
-    return <div data-testid="dialog-overlay" ref={ref} {...rest}>{children}</div>;
-  });
-
-  const Content = React.forwardRef(({ children, __open, __onOpenChange, ...props }: any, ref: any) => {
-    if (!__open) return null;
     return (
-      <div data-testid="dialog-content" ref={ref} {...props}>
+      <div data-testid="dialog-overlay" ref={ref} {...rest}>
         {children}
       </div>
     );
   });
 
+  const Content = React.forwardRef(
+    ({ children, __open, __onOpenChange, ...props }: any, ref: any) => {
+      if (!__open) return null;
+      return (
+        <div data-testid="dialog-content" ref={ref} {...props}>
+          {children}
+        </div>
+      );
+    }
+  );
+
   const Close = React.forwardRef((props: any, ref: any) => {
     const { children, ...rest } = props;
-    return <button ref={ref} {...rest}>{children}</button>;
+    return (
+      <button ref={ref} {...rest}>
+        {children}
+      </button>
+    );
   });
 
   const Trigger = React.forwardRef((props: any, ref: any) => {
     const { children, ...rest } = props;
-    return <button ref={ref} {...rest}>{children}</button>;
+    return (
+      <button ref={ref} {...rest}>
+        {children}
+      </button>
+    );
   });
 
   const Title = React.forwardRef(({ children, ...props }: any, ref: any) => (
-    <h2 ref={ref} {...props}>{children}</h2>
+    <h2 ref={ref} {...props}>
+      {children}
+    </h2>
   ));
 
-  const Description = React.forwardRef(({ children, ...props }: any, ref: any) => (
-    <p ref={ref} {...props}>{children}</p>
-  ));
+  const Description = React.forwardRef(
+    ({ children, ...props }: any, ref: any) => (
+      <p ref={ref} {...props}>
+        {children}
+      </p>
+    )
+  );
 
   return {
     Dialog: {

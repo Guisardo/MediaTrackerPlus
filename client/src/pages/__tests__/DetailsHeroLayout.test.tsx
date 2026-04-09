@@ -23,14 +23,26 @@ jest.mock('@lingui/macro', () => {
   const React = require('react');
   return {
     Trans: ({ children, message, id }: any) =>
-      React.createElement(React.Fragment, null, children ?? message ?? id ?? null),
+      React.createElement(
+        React.Fragment,
+        null,
+        children ?? message ?? id ?? null
+      ),
     t: (strings: TemplateStringsArray | string, ...values: unknown[]) => {
       if (typeof strings === 'string') return strings;
       if ((strings as TemplateStringsArray).raw)
         return String.raw(strings as TemplateStringsArray, ...values);
       return (strings as TemplateStringsArray)[0];
     },
-    Plural: ({ value, one, other }: { value: number; one: string; other: string }) =>
+    Plural: ({
+      value,
+      one,
+      other,
+    }: {
+      value: number;
+      one: string;
+      other: string;
+    }) =>
       React.createElement(
         React.Fragment,
         null,
@@ -50,7 +62,11 @@ jest.mock('@lingui/react', () => {
       },
     }),
     Trans: ({ children, message, id }: any) =>
-      React.createElement(React.Fragment, null, children ?? message ?? id ?? null),
+      React.createElement(
+        React.Fragment,
+        null,
+        children ?? message ?? id ?? null
+      ),
     I18nProvider: ({ children }: any) =>
       React.createElement(React.Fragment, null, children),
   };
@@ -121,7 +137,11 @@ jest.mock('src/components/Modal', () => ({
 
 jest.mock('src/api/details', () => ({
   useDetails: jest.fn(),
-  useUpdateMetadata: jest.fn(() => ({ updateMetadata: jest.fn(), isLoading: false, isError: false })),
+  useUpdateMetadata: jest.fn(() => ({
+    updateMetadata: jest.fn(),
+    isLoading: false,
+    isError: false,
+  })),
   addToProgress: jest.fn(),
   addToWatchlist: jest.fn(),
   removeFromWatchlist: jest.fn(),
@@ -140,7 +160,11 @@ jest.mock('src/api/configuration', () => ({
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useParams: jest.fn(() => ({ mediaItemId: '1' })),
-  Link: ({ children, to }: any) => <a href="#" data-to={String(to)}>{children}</a>,
+  Link: ({ children, to }: any) => (
+    <a href="#" data-to={String(to)}>
+      {children}
+    </a>
+  ),
 }));
 
 // ---------------------------------------------------------------------------

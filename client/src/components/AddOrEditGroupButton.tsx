@@ -31,9 +31,7 @@ const AddGroupModal: FunctionComponent<{ closeModal: () => void }> = (
         const trimmedName = name.trim();
 
         if (!trimmedName) {
-          nameRef.current?.setCustomValidity(
-            'Group name cannot be empty'
-          );
+          nameRef.current?.setCustomValidity('Group name cannot be empty');
           nameRef.current?.reportValidity();
           return;
         }
@@ -66,7 +64,11 @@ const AddGroupModal: FunctionComponent<{ closeModal: () => void }> = (
           <Trans>Create group</Trans>
         </Button>
 
-        <Button variant="outline" className="ml-auto" onClick={() => closeModal()}>
+        <Button
+          variant="outline"
+          className="ml-auto"
+          onClick={() => closeModal()}
+        >
           <Trans>Close</Trans>
         </Button>
       </div>

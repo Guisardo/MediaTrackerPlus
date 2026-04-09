@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useState, useEffect, useCallback } from 'react';
+import React, {
+  FunctionComponent,
+  useState,
+  useEffect,
+  useCallback,
+} from 'react';
 import { Slider } from '@/components/ui/slider';
 
 /**

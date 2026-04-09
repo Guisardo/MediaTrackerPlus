@@ -7,7 +7,11 @@ jest.mock('@lingui/macro', () => {
   const React = require('react');
   return {
     Trans: ({ children, message, id }: any) =>
-      React.createElement(React.Fragment, null, children ?? message ?? id ?? null),
+      React.createElement(
+        React.Fragment,
+        null,
+        children ?? message ?? id ?? null
+      ),
   };
 });
 
@@ -22,7 +26,11 @@ jest.mock('@lingui/react', () => {
       },
     }),
     Trans: ({ children, message, id }: any) =>
-      React.createElement(React.Fragment, null, children ?? message ?? id ?? null),
+      React.createElement(
+        React.Fragment,
+        null,
+        children ?? message ?? id ?? null
+      ),
     I18nProvider: ({ children }: any) =>
       React.createElement(React.Fragment, null, children),
   };

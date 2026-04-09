@@ -30,7 +30,14 @@ type ListItem = {
   id: number;
   listedAt: string;
   estimatedRating?: number | null;
-  type: 'audiobook' | 'book' | 'episode' | 'movie' | 'season' | 'tv' | 'video_game';
+  type:
+    | 'audiobook'
+    | 'book'
+    | 'episode'
+    | 'movie'
+    | 'season'
+    | 'tv'
+    | 'video_game';
   mediaItem: MediaItemItemsResponse;
   season?: TvSeason | null;
   episode?: TvEpisode | null;
@@ -98,7 +105,12 @@ const renderSorted = (
   // avoid cross-test contamination.
   const items = listItems ? [...listItems] : listItems;
   const { result } = renderHook(() =>
-    useSortedList({ sortBy, sortOrder, listItems: items as unknown as import('mediatracker-api').ListItemsResponse })
+    useSortedList({
+      sortBy,
+      sortOrder,
+      listItems:
+        items as unknown as import('mediatracker-api').ListItemsResponse,
+    })
   );
   return result.current as unknown as ListItem[] | undefined;
 };
@@ -223,7 +235,11 @@ describe('useSortedList — recently-watched', () => {
     ];
 
     const result = renderSorted('recently-watched', 'desc', items);
-    expect(result!.map((i) => i.mediaItem.title)).toEqual(['New', 'Mid', 'Old']);
+    expect(result!.map((i) => i.mediaItem.title)).toEqual([
+      'New',
+      'Mid',
+      'Old',
+    ]);
   });
 
   it('sorts by lastSeenAt ascending', () => {

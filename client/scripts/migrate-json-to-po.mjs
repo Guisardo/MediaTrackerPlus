@@ -15,16 +15,13 @@
  *   node scripts/migrate-json-to-po.mjs
  */
 
-import { readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
-import { join } from "node:path";
+import { readFileSync, writeFileSync, readdirSync, statSync } from 'node:fs';
+import { join } from 'node:path';
 
-const LOCALES_DIR = new URL(
-  "../src/i18n/locales",
-  import.meta.url
-).pathname;
+const LOCALES_DIR = new URL('../src/i18n/locales', import.meta.url).pathname;
 
 /** Source locale -- already has msgstr == msgid, skip it. */
-const SOURCE_LOCALE = "en";
+const SOURCE_LOCALE = 'en';
 
 /**
  * Unescape a PO-encoded string to recover the literal message ID.
@@ -41,25 +38,25 @@ const SOURCE_LOCALE = "en";
  * @returns {string}     The unescaped string suitable for lookup in the JSON map.
  */
 function unescapePo(raw) {
-  let result = "";
+  let result = '';
   for (let i = 0; i < raw.length; i++) {
-    if (raw[i] === "\\" && i + 1 < raw.length) {
+    if (raw[i] === '\\' && i + 1 < raw.length) {
       const next = raw[i + 1];
       switch (next) {
         case '"':
           result += '"';
           i++;
           break;
-        case "\\":
-          result += "\\";
+        case '\\':
+          result += '\\';
           i++;
           break;
-        case "n":
-          result += "\n";
+        case 'n':
+          result += '\n';
           i++;
           break;
-        case "t":
-          result += "\t";
+        case 't':
+          result += '\t';
           i++;
           break;
         default:
@@ -88,10 +85,10 @@ function unescapePo(raw) {
  */
 function escapePo(value) {
   return value
-    .replace(/\\/g, "\\\\")
+    .replace(/\\/g, '\\\\')
     .replace(/"/g, '\\"')
-    .replace(/\n/g, "\\n")
-    .replace(/\t/g, "\\t");
+    .replace(/\n/g, '\\n')
+    .replace(/\t/g, '\\t');
 }
 
 /**
@@ -112,7 +109,7 @@ function escapePo(value) {
  *   - entries: map from *unescaped* msgid -> line index of the corresponding msgstr line
  */
 function parsePo(content) {
-  const lines = content.split("\n");
+  const lines = content.split('\n');
 
   /** @type {Map<string, number>} unescaped msgid -> index of msgstr line */
   const entries = new Map();
@@ -127,7 +124,7 @@ function parsePo(content) {
 
       // The next non-blank, non-comment line should be `msgstr "..."`
       let j = i + 1;
-      while (j < lines.length && !lines[j].startsWith("msgstr ")) {
+      while (j < lines.length && !lines[j].startsWith('msgstr ')) {
         j++;
       }
       if (j < lines.length && lines[j].startsWith('msgstr "')) {
@@ -147,13 +144,13 @@ function parsePo(content) {
  */
 function processLocale(locale) {
   const localeDir = join(LOCALES_DIR, locale);
-  const jsonPath = join(localeDir, "translation.json");
-  const poPath = join(localeDir, "translation.po");
+  const jsonPath = join(localeDir, 'translation.json');
+  const poPath = join(localeDir, 'translation.po');
 
   // ---------- Load JSON translations ----------
   let jsonData;
   try {
-    const jsonContent = readFileSync(jsonPath, "utf-8");
+    const jsonContent = readFileSync(jsonPath, 'utf-8');
     jsonData = JSON.parse(jsonContent);
   } catch (err) {
     console.warn(`  [WARN] Could not read ${jsonPath}: ${err.message}`);
@@ -163,7 +160,7 @@ function processLocale(locale) {
   // ---------- Load PO file ----------
   let poContent;
   try {
-    poContent = readFileSync(poPath, "utf-8");
+    poContent = readFileSync(poPath, 'utf-8');
   } catch (err) {
     console.warn(`  [WARN] Could not read ${poPath}: ${err.message}`);
     return { matched: 0, skipped: 0, total: 0 };
@@ -191,12 +188,12 @@ function processLocale(locale) {
     }
 
     // Skip empty translations (untranslated in JSON too)
-    if (typeof translation === "string" && translation === "") {
+    if (typeof translation === 'string' && translation === '') {
       skipped++;
       continue;
     }
 
-    if (typeof translation !== "string") {
+    if (typeof translation !== 'string') {
       console.warn(
         `  [WARN] Unexpected value type for "${msgid}": ${typeof translation}`
       );
@@ -211,8 +208,8 @@ function processLocale(locale) {
   }
 
   // ---------- Write updated PO file ----------
-  const updatedContent = lines.join("\n");
-  writeFileSync(poPath, updatedContent, "utf-8");
+  const updatedContent = lines.join('\n');
+  writeFileSync(poPath, updatedContent, 'utf-8');
 
   return { matched, skipped, total };
 }
@@ -221,7 +218,7 @@ function processLocale(locale) {
 // Main
 // =============================================================================
 
-console.log("=== Lingui JSON -> PO Migration ===\n");
+console.log('=== Lingui JSON -> PO Migration ===\n');
 console.log(`Locales directory: ${LOCALES_DIR}`);
 console.log(`Source locale (skipped): ${SOURCE_LOCALE}\n`);
 
@@ -254,9 +251,9 @@ for (const locale of localeDirs.sort()) {
   localesProcessed++;
 }
 
-console.log("\n=== Summary ===");
+console.log('\n=== Summary ===');
 console.log(`Locales processed: ${localesProcessed}`);
 console.log(`Total PO entries across all locales: ${totalEntries}`);
 console.log(`Total msgstr populated: ${totalMatched}`);
 console.log(`Total skipped (no JSON match or empty): ${totalSkipped}`);
-console.log("\nDone.");
+console.log('\nDone.');

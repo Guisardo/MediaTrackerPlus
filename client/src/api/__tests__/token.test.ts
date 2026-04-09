@@ -64,7 +64,11 @@ const TokensHarness: React.FC<TokensHarnessProps> = ({
   return React.createElement(
     React.Fragment,
     null,
-    React.createElement('span', { 'data-testid': 'isLoading' }, String(result.isLoading)),
+    React.createElement(
+      'span',
+      { 'data-testid': 'isLoading' },
+      String(result.isLoading)
+    ),
     React.createElement(
       'span',
       { 'data-testid': 'tokens' },

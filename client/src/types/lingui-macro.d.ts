@@ -68,7 +68,9 @@ export declare function t(
   ...placeholders: any[]
 ): string;
 
-export declare function msg(descriptor: MacroMessageDescriptor): MacroMessageDescriptor;
+export declare function msg(
+  descriptor: MacroMessageDescriptor
+): MacroMessageDescriptor;
 export declare function msg(
   literals: TemplateStringsArray,
   ...placeholders: any[]
@@ -79,7 +81,9 @@ export declare function plural(
   options: Record<string, string>
 ): string;
 
-export declare function defineMessage(descriptor: MacroMessageDescriptor): MacroMessageDescriptor;
+export declare function defineMessage(
+  descriptor: MacroMessageDescriptor
+): MacroMessageDescriptor;
 
 export declare function select(
   value: string,
@@ -94,7 +98,9 @@ export declare function selectOrdinal(
 export declare const Trans: (props: TransProps) => ReactElement | null;
 export declare const Plural: (props: PluralChoiceProps) => ReactElement | null;
 export declare const Select: (props: SelectChoiceProps) => ReactElement | null;
-export declare const SelectOrdinal: (props: PluralChoiceProps) => ReactElement | null;
+export declare const SelectOrdinal: (
+  props: PluralChoiceProps
+) => ReactElement | null;
 
 export declare function useLingui(): {
   i18n: I18n;

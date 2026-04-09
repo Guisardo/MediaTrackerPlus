@@ -52,7 +52,9 @@ const mockedMetadataProviders = metadataProviders as jest.Mocked<
 const mockedMediaItemRepository = mediaItemRepository as jest.Mocked<
   typeof mediaItemRepository
 >;
-const mockedUserRepository = userRepository as jest.Mocked<typeof userRepository>;
+const mockedUserRepository = userRepository as jest.Mocked<
+  typeof userRepository
+>;
 const mutableConfig = Config as unknown as {
   METADATA_LANGUAGES: string[] | null;
 };

@@ -112,8 +112,11 @@ describe('useUser.updateUser – query invalidation', () => {
       expect(mediaTrackerApi.user.update).toHaveBeenCalled();
     });
 
-    const invalidateCalls = (appQueryClient.invalidateQueries as jest.Mock).mock.calls;
-    const invalidatedKeys = invalidateCalls.map((call) => call[0]?.queryKey?.[0]);
+    const invalidateCalls = (appQueryClient.invalidateQueries as jest.Mock).mock
+      .calls;
+    const invalidatedKeys = invalidateCalls.map(
+      (call) => call[0]?.queryKey?.[0]
+    );
 
     expect(invalidatedKeys).not.toContain('items');
     expect(invalidatedKeys).not.toContain('facets');
@@ -137,8 +140,11 @@ describe('useUser.updateUser – query invalidation', () => {
       );
     });
 
-    const invalidateCalls = (appQueryClient.invalidateQueries as jest.Mock).mock.calls;
-    const invalidatedKeys = invalidateCalls.map((call) => call[0]?.queryKey?.[0]);
+    const invalidateCalls = (appQueryClient.invalidateQueries as jest.Mock).mock
+      .calls;
+    const invalidatedKeys = invalidateCalls.map(
+      (call) => call[0]?.queryKey?.[0]
+    );
 
     expect(invalidatedKeys).toContain('items');
     expect(invalidatedKeys).toContain('facets');
@@ -162,8 +168,11 @@ describe('useUser.updateUser – query invalidation', () => {
       );
     });
 
-    const invalidateCalls = (appQueryClient.invalidateQueries as jest.Mock).mock.calls;
-    const invalidatedKeys = invalidateCalls.map((call) => call[0]?.queryKey?.[0]);
+    const invalidateCalls = (appQueryClient.invalidateQueries as jest.Mock).mock
+      .calls;
+    const invalidatedKeys = invalidateCalls.map(
+      (call) => call[0]?.queryKey?.[0]
+    );
 
     expect(invalidatedKeys).toContain('items');
     expect(invalidatedKeys).toContain('facets');

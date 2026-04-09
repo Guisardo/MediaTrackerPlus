@@ -62,12 +62,16 @@ const mockedMetadataProviders = metadataProviders as jest.Mocked<
   typeof metadataProviders
 >;
 const mockedLogger = logger as jest.Mocked<typeof logger>;
-const mockedUserRepository = userRepository as jest.Mocked<typeof userRepository>;
+const mockedUserRepository = userRepository as jest.Mocked<
+  typeof userRepository
+>;
 
 describe('runLockedMetadataUpdate', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockedMediaItemRepository.unlockLockedMediaItems.mockResolvedValue(0 as never);
+    mockedMediaItemRepository.unlockLockedMediaItems.mockResolvedValue(
+      0 as never
+    );
     mockedUserRepository.findNotificationRecipientsForMediaItem.mockResolvedValue(
       [] as never
     );
@@ -80,9 +84,9 @@ describe('runLockedMetadataUpdate', () => {
       selectMediaItems,
     });
 
-    expect(mockedMediaItemRepository.unlockLockedMediaItems).toHaveBeenCalledTimes(
-      1
-    );
+    expect(
+      mockedMediaItemRepository.unlockLockedMediaItems
+    ).toHaveBeenCalledTimes(1);
     expect(selectMediaItems).toHaveBeenCalledTimes(1);
   });
 
@@ -90,7 +94,7 @@ describe('runLockedMetadataUpdate', () => {
     let releaseSelection!: () => void;
     const firstSelect = jest.fn(
       () =>
-        new Promise<[]>(resolve => {
+        new Promise<[]>((resolve) => {
           releaseSelection = () => resolve([]);
         })
     );

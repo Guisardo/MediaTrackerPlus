@@ -87,7 +87,11 @@ const parsePoCatalog = (contents) => {
     }
 
     const continuationMatch = line.match(/^(".*")$/);
-    if (continuationMatch != null && currentEntry != null && activeField != null) {
+    if (
+      continuationMatch != null &&
+      currentEntry != null &&
+      activeField != null
+    ) {
       appendValue(continuationMatch[1]);
     }
   }
@@ -110,7 +114,9 @@ const verifyClientTranslations = () => {
   const locales = parseJsonConfigLocales('client/.linguirc');
   const catalogRoot = path.join(rootDir, 'client', 'src', 'i18n', 'locales');
   const englishCatalogPath = path.join(catalogRoot, 'en', 'translation.po');
-  const englishEntries = parsePoCatalog(fs.readFileSync(englishCatalogPath, 'utf8'));
+  const englishEntries = parsePoCatalog(
+    fs.readFileSync(englishCatalogPath, 'utf8')
+  );
   const englishEntriesById = new Map(
     englishEntries.map((entry) => [entry.msgid, entry])
   );
@@ -120,7 +126,9 @@ const verifyClientTranslations = () => {
     const catalogPath = path.join(catalogRoot, locale, 'translation.po');
 
     if (!fs.existsSync(catalogPath)) {
-      errors.push(`Missing client catalog for locale "${locale}": ${catalogPath}`);
+      errors.push(
+        `Missing client catalog for locale "${locale}": ${catalogPath}`
+      );
       continue;
     }
 
@@ -137,12 +145,16 @@ const verifyClientTranslations = () => {
       const localeEntry = localeEntriesById.get(msgid);
 
       if (localeEntry == null) {
-        errors.push(`Missing client translation for locale "${locale}": ${msgid}`);
+        errors.push(
+          `Missing client translation for locale "${locale}": ${msgid}`
+        );
         continue;
       }
 
       if (isPoTranslationEmpty(localeEntry)) {
-        errors.push(`Empty client translation for locale "${locale}": ${msgid}`);
+        errors.push(
+          `Empty client translation for locale "${locale}": ${msgid}`
+        );
       }
     }
   }
@@ -154,7 +166,9 @@ const verifyServerTranslations = () => {
   const locales = parseJsonConfigLocales('server/.linguirc');
   const catalogRoot = path.join(rootDir, 'server', 'src', 'i18n', 'locales');
   const englishCatalogPath = path.join(catalogRoot, 'en', 'translation.json');
-  const englishCatalog = JSON.parse(fs.readFileSync(englishCatalogPath, 'utf8'));
+  const englishCatalog = JSON.parse(
+    fs.readFileSync(englishCatalogPath, 'utf8')
+  );
   const englishKeys = Object.keys(englishCatalog);
   const errors = [];
 
@@ -162,7 +176,9 @@ const verifyServerTranslations = () => {
     const catalogPath = path.join(catalogRoot, locale, 'translation.json');
 
     if (!fs.existsSync(catalogPath)) {
-      errors.push(`Missing server catalog for locale "${locale}": ${catalogPath}`);
+      errors.push(
+        `Missing server catalog for locale "${locale}": ${catalogPath}`
+      );
       continue;
     }
 
@@ -174,7 +190,9 @@ const verifyServerTranslations = () => {
 
     for (const key of englishKeys) {
       if (!Object.prototype.hasOwnProperty.call(localeCatalog, key)) {
-        errors.push(`Missing server translation for locale "${locale}": ${key}`);
+        errors.push(
+          `Missing server translation for locale "${locale}": ${key}`
+        );
         continue;
       }
 
@@ -188,10 +206,7 @@ const verifyServerTranslations = () => {
 };
 
 try {
-  const errors = [
-    ...verifyClientTranslations(),
-    ...verifyServerTranslations(),
-  ];
+  const errors = [...verifyClientTranslations(), ...verifyServerTranslations()];
 
   if (errors.length > 0) {
     fail(errors);

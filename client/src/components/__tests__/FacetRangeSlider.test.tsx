@@ -39,7 +39,10 @@ jest.mock('@/components/ui/slider', () => ({
           onValueChange(next);
         }}
         onMouseUp={(e) => {
-          onValueCommit([parseFloat((e.target as HTMLInputElement).value), value[1]]);
+          onValueCommit([
+            parseFloat((e.target as HTMLInputElement).value),
+            value[1],
+          ]);
         }}
       />
       <input
@@ -55,7 +58,10 @@ jest.mock('@/components/ui/slider', () => ({
           onValueChange(next);
         }}
         onMouseUp={(e) => {
-          onValueCommit([value[0], parseFloat((e.target as HTMLInputElement).value)]);
+          onValueCommit([
+            value[0],
+            parseFloat((e.target as HTMLInputElement).value),
+          ]);
         }}
       />
     </div>
@@ -179,12 +185,7 @@ describe('FacetRangeSlider', () => {
 
   it('calls onCommit with null bounds when slider released at extremes from an unset state', () => {
     const onCommit = jest.fn();
-    render(
-      <FacetRangeSlider
-        {...defaultProps}
-        onCommit={onCommit}
-      />
-    );
+    render(<FacetRangeSlider {...defaultProps} onCommit={onCommit} />);
 
     const minThumb = screen.getByTestId('slider-thumb-min');
     fireEvent.change(minThumb, { target: { value: '2000' } });

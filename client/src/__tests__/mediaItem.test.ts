@@ -33,9 +33,7 @@ import type {
 // ---------------------------------------------------------------------------
 jest.mock('@lingui/macro', () => ({
   t: (strings: TemplateStringsArray, ...values: unknown[]) =>
-    strings.raw
-      ? String.raw(strings, ...values)
-      : strings.join(''),
+    strings.raw ? String.raw(strings, ...values) : strings.join(''),
 }));
 
 // ---------------------------------------------------------------------------

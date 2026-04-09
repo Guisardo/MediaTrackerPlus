@@ -45,13 +45,14 @@ export const ListPage: FunctionComponent = () => {
     }
   }, [list?.sortOrder]);
 
-  const filteredItems = (searchQuery
-    ? (listItems ?? []).filter((listItem) =>
-        listItem.mediaItem.title
-          ?.toLowerCase()
-          ?.includes(searchQuery.toLowerCase())
-      )
-    : listItems) ?? [];
+  const filteredItems =
+    (searchQuery
+      ? (listItems ?? []).filter((listItem) =>
+          listItem.mediaItem.title
+            ?.toLowerCase()
+            ?.includes(searchQuery.toLowerCase())
+        )
+      : listItems) ?? [];
 
   const {
     currentPage,
@@ -82,11 +83,11 @@ export const ListPage: FunctionComponent = () => {
 
   const data =
     getPaginatedItems(
-    useSortedList({
-      listItems: filteredItems,
-      sortBy: sortBy,
-      sortOrder: sortOrder,
-    })
+      useSortedList({
+        listItems: filteredItems,
+        sortBy: sortBy,
+        sortOrder: sortOrder,
+      })
     ) ?? [];
 
   if (!listItems || !list) {
@@ -116,12 +117,18 @@ export const ListPage: FunctionComponent = () => {
           <div className="mb-3 whitespace-pre">{listDescription(list)}</div>
 
           <div>
-            <FormatDuration milliseconds={(list.totalRuntime ?? 0) * 60 * 1000} />
+            <FormatDuration
+              milliseconds={(list.totalRuntime ?? 0) * 60 * 1000}
+            />
           </div>
 
           {list.traktId && (
             <div className="py-4">
-              <a href={`https://trakt.tv/lists/${list.traktId}`} target="_blank" rel="noopener noreferrer">
+              <a
+                href={`https://trakt.tv/lists/${list.traktId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <img
                   src={
                     darkMode ? 'logo/trakt-white.svg' : 'logo/trakt-black.svg'

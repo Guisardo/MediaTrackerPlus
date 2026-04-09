@@ -14,8 +14,15 @@ import { render, screen } from '@testing-library/react';
 // ---------------------------------------------------------------------------
 
 jest.mock('@lingui/macro', () => ({
-  Trans: ({ children, message, id }: { children?: React.ReactNode; message?: string; id?: string }) =>
-    children ?? message ?? id ?? null,
+  Trans: ({
+    children,
+    message,
+    id,
+  }: {
+    children?: React.ReactNode;
+    message?: string;
+    id?: string;
+  }) => children ?? message ?? id ?? null,
   t: (strings: TemplateStringsArray, ...values: unknown[]) =>
     typeof strings === 'string'
       ? strings
@@ -27,8 +34,15 @@ jest.mock('@lingui/macro', () => ({
 jest.mock('@lingui/react', () => ({
   I18nProvider: ({ children }: { children: React.ReactNode }) => children,
   useLingui: () => ({ i18n: { _: (id: unknown) => id } }),
-  Trans: ({ children, message, id }: { children?: React.ReactNode; message?: string; id?: string }) =>
-    children ?? message ?? id ?? null,
+  Trans: ({
+    children,
+    message,
+    id,
+  }: {
+    children?: React.ReactNode;
+    message?: string;
+    id?: string;
+  }) => children ?? message ?? id ?? null,
 }));
 
 jest.mock('src/api/details', () => ({
@@ -50,7 +64,8 @@ jest.mock('src/components/Poster', () => {
 jest.mock('src/components/StarRating', () => {
   const React = require('react');
   return {
-    BadgeRating: () => React.createElement('span', { 'data-testid': 'badge-rating' }),
+    BadgeRating: () =>
+      React.createElement('span', { 'data-testid': 'badge-rating' }),
   };
 });
 
@@ -58,9 +73,17 @@ jest.mock('src/components/date', () => {
   const React = require('react');
   return {
     FormatDuration: ({ milliseconds }: { milliseconds: number }) =>
-      React.createElement('span', { 'data-testid': 'format-duration' }, String(milliseconds)),
+      React.createElement(
+        'span',
+        { 'data-testid': 'format-duration' },
+        String(milliseconds)
+      ),
     RelativeTime: ({ to }: { to: Date }) =>
-      React.createElement('span', { 'data-testid': 'relative-time' }, to.toString()),
+      React.createElement(
+        'span',
+        { 'data-testid': 'relative-time' },
+        to.toString()
+      ),
   };
 });
 
@@ -68,7 +91,11 @@ jest.mock('src/components/AddAndRemoveFromSeenHistoryButton', () => {
   const React = require('react');
   return {
     AddToSeenHistoryButton: () =>
-      React.createElement('button', { 'data-testid': 'add-to-seen' }, 'Mark as seen'),
+      React.createElement(
+        'button',
+        { 'data-testid': 'add-to-seen' },
+        'Mark as seen'
+      ),
   };
 });
 
@@ -76,7 +103,11 @@ jest.mock('src/pages/Details', () => {
   const React = require('react');
   return {
     AddToWatchlistButton: () =>
-      React.createElement('button', { 'data-testid': 'add-to-watchlist' }, 'Add to watchlist'),
+      React.createElement(
+        'button',
+        { 'data-testid': 'add-to-watchlist' },
+        'Add to watchlist'
+      ),
   };
 });
 
@@ -147,7 +178,11 @@ describe('GridItem – basic rendering', () => {
   });
 
   it('renders the media type label', () => {
-    render(React.createElement(GridItem, { mediaItem: makeMediaItem({ mediaType: 'movie' }) }));
+    render(
+      React.createElement(GridItem, {
+        mediaItem: makeMediaItem({ mediaType: 'movie' }),
+      })
+    );
 
     // t`Movie` → 'Movie' via our mock
     expect(screen.getByText('Movie')).toBeInTheDocument();
@@ -202,7 +237,9 @@ describe('GridItem – progress bar', () => {
       })
     );
 
-    expect(container.querySelector('div[style*="width"]')).not.toBeInTheDocument();
+    expect(
+      container.querySelector('div[style*="width"]')
+    ).not.toBeInTheDocument();
   });
 });
 
@@ -254,7 +291,10 @@ describe('GridItem – appearance flags', () => {
   it('renders AddToSeenHistoryButton when showAddToWatchlistAndMarkAsSeenButtons is true and item has been released', () => {
     render(
       React.createElement(GridItem, {
-        mediaItem: makeMediaItem({ onWatchlist: false, releaseDate: '2019-01-01' }),
+        mediaItem: makeMediaItem({
+          onWatchlist: false,
+          releaseDate: '2019-01-01',
+        }),
         appearance: { showAddToWatchlistAndMarkAsSeenButtons: true },
       })
     );
@@ -410,7 +450,11 @@ describe('GridItem – topBar: showOnWatchlistIcon', () => {
 describe('GridItem – topBar: showFirstUnwatchedEpisodeBadge', () => {
   it('renders episode badge when showFirstUnwatchedEpisodeBadge is true and firstUnwatchedEpisode exists', () => {
     const tvShow = makeTvShow({
-      firstUnwatchedEpisode: { seasonNumber: 1, episodeNumber: 3, releaseDate: '2021-01-01' },
+      firstUnwatchedEpisode: {
+        seasonNumber: 1,
+        episodeNumber: 3,
+        releaseDate: '2021-01-01',
+      },
     });
 
     const { container } = render(
@@ -480,8 +524,12 @@ describe('GridItem – topBar: showUnwatchedEpisodesCount for TV show', () => {
     );
 
     // No count should appear, no check icon
-    const checkIcons = Array.from(container.querySelectorAll('.material-icons'));
-    const checkIcon = checkIcons.find((el) => el.textContent === 'check_circle_outline');
+    const checkIcons = Array.from(
+      container.querySelectorAll('.material-icons')
+    );
+    const checkIcon = checkIcons.find(
+      (el) => el.textContent === 'check_circle_outline'
+    );
     expect(checkIcon).toBeUndefined();
   });
 });
@@ -515,7 +563,9 @@ describe('GridItem – topBar: showUnwatchedEpisodesCount for non-TV items', () 
     );
 
     const icons = Array.from(container.querySelectorAll('.material-icons'));
-    const checkIcon = icons.find((el) => el.textContent === 'check_circle_outline');
+    const checkIcon = icons.find(
+      (el) => el.textContent === 'check_circle_outline'
+    );
     expect(checkIcon).toBeUndefined();
   });
 });
@@ -569,12 +619,18 @@ describe('GridItem – poster href branches', () => {
     );
 
     // The component renders correctly with a season prop (season number appears in title area)
-    expect(container.querySelector('[data-testid="poster"]')).toBeInTheDocument();
+    expect(
+      container.querySelector('[data-testid="poster"]')
+    ).toBeInTheDocument();
   });
 
   it('uses episode href when episode prop is provided', () => {
     const tvShow = makeTvShow({ id: 10 });
-    const episode = makeEpisode({ tvShowId: 10, seasonNumber: 1, episodeNumber: 5 });
+    const episode = makeEpisode({
+      tvShowId: 10,
+      seasonNumber: 1,
+      episodeNumber: 5,
+    });
 
     const { container } = render(
       React.createElement(GridItem, {
@@ -583,7 +639,9 @@ describe('GridItem – poster href branches', () => {
       })
     );
 
-    expect(container.querySelector('[data-testid="poster"]')).toBeInTheDocument();
+    expect(
+      container.querySelector('[data-testid="poster"]')
+    ).toBeInTheDocument();
   });
 
   it('uses details href when neither season nor episode is provided', () => {
@@ -593,7 +651,9 @@ describe('GridItem – poster href branches', () => {
       })
     );
 
-    expect(container.querySelector('[data-testid="poster"]')).toBeInTheDocument();
+    expect(
+      container.querySelector('[data-testid="poster"]')
+    ).toBeInTheDocument();
   });
 });
 
@@ -637,7 +697,10 @@ describe('GridItem – showNextAiring', () => {
   });
 
   it('renders Release text for non-TV item with releaseDate', () => {
-    const movie = makeMediaItem({ releaseDate: '2025-09-15', mediaType: 'movie' });
+    const movie = makeMediaItem({
+      releaseDate: '2025-09-15',
+      mediaType: 'movie',
+    });
 
     const { container } = render(
       React.createElement(GridItem, {
@@ -704,7 +767,10 @@ describe('GridItem – showLastAiring', () => {
   });
 
   it('renders Released text for non-TV item with releaseDate', () => {
-    const movie = makeMediaItem({ releaseDate: '2020-05-15', mediaType: 'movie' });
+    const movie = makeMediaItem({
+      releaseDate: '2020-05-15',
+      mediaType: 'movie',
+    });
 
     const { container } = render(
       React.createElement(GridItem, {
@@ -833,7 +899,9 @@ describe('GridItem – showReleaseDate', () => {
     );
 
     // Just confirm it renders without crash, no date string present in meaningful way
-    expect(container.querySelector('[data-testid="poster"]')).toBeInTheDocument();
+    expect(
+      container.querySelector('[data-testid="poster"]')
+    ).toBeInTheDocument();
   });
 });
 
@@ -865,7 +933,9 @@ describe('GridItem – showLastSeenAt', () => {
       })
     );
 
-    expect(container.querySelector('[data-testid="poster"]')).toBeInTheDocument();
+    expect(
+      container.querySelector('[data-testid="poster"]')
+    ).toBeInTheDocument();
   });
 });
 
@@ -876,7 +946,11 @@ describe('GridItem – showLastSeenAt', () => {
 describe('GridItem – showMarksAsSeenFirstUnwatchedEpisode', () => {
   it('renders AddToSeenHistoryButton for TV show with firstUnwatchedEpisode', () => {
     const tvShow = makeTvShow({
-      firstUnwatchedEpisode: { seasonNumber: 1, episodeNumber: 1, releaseDate: '2021-01-01' },
+      firstUnwatchedEpisode: {
+        seasonNumber: 1,
+        episodeNumber: 1,
+        releaseDate: '2021-01-01',
+      },
     });
 
     render(
@@ -923,7 +997,11 @@ describe('GridItem – showMarksAsSeenFirstUnwatchedEpisode', () => {
 describe('GridItem – showMarksAsSeenLastAiredEpisode', () => {
   it('renders AddToSeenHistoryButton for TV show with lastAiredEpisode', () => {
     const tvShow = makeTvShow({
-      lastAiredEpisode: { seasonNumber: 2, episodeNumber: 5, releaseDate: '2022-05-10' },
+      lastAiredEpisode: {
+        seasonNumber: 2,
+        episodeNumber: 5,
+        releaseDate: '2022-05-10',
+      },
     });
 
     render(

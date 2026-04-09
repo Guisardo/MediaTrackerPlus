@@ -33,9 +33,9 @@ describe('normalizeCreatorField', () => {
   });
 
   test('deduplicates after trimming whitespace', () => {
-    expect(
-      normalizeCreatorField(['J.K. Rowling', '  J.K. Rowling  '])
-    ).toEqual(['J.K. Rowling']);
+    expect(normalizeCreatorField(['J.K. Rowling', '  J.K. Rowling  '])).toEqual(
+      ['J.K. Rowling']
+    );
   });
 
   test('returns empty array for all-empty input', () => {
@@ -47,9 +47,9 @@ describe('normalizeCreatorField', () => {
   });
 
   test('preserves First Last name format (no Last, First conversion)', () => {
-    expect(
-      normalizeCreatorField(['John Ronald Reuel Tolkien'])
-    ).toEqual(['John Ronald Reuel Tolkien']);
+    expect(normalizeCreatorField(['John Ronald Reuel Tolkien'])).toEqual([
+      'John Ronald Reuel Tolkien',
+    ]);
   });
 
   test('handles single-word names', () => {

@@ -19,22 +19,25 @@ export class LogsController {
       from?: string;
     };
     responseBody: LogEntry[];
-  }>(async (req, res, next) => {
-    await onlyForAdmin(req as never, res, next);
-  }, async (req, res) => {
-    const { count, from, error, warn, http, debug, info } = req.query;
+  }>(
+    async (req, res, next) => {
+      await onlyForAdmin(req as never, res, next);
+    },
+    async (req, res) => {
+      const { count, from, error, warn, http, debug, info } = req.query;
 
-    const logs = await getLogs({
-      levels: {
-        error,
-        warn,
-        http,
-        debug,
-        info,
-      },
-      count,
-      from,
-    });
-    res.send(logs);
-  });
+      const logs = await getLogs({
+        levels: {
+          error,
+          warn,
+          http,
+          debug,
+          info,
+        },
+        count,
+        from,
+      });
+      res.send(logs);
+    }
+  );
 }

@@ -37,9 +37,9 @@ describe('local development workflow', () => {
   });
 
   it('boots the server with an initial build before watch mode takes over', () => {
-    const serverPackage = readWorkspaceJson<{ scripts: Record<string, string> }>(
-      path.join('server', 'package.json')
-    );
+    const serverPackage = readWorkspaceJson<{
+      scripts: Record<string, string>;
+    }>(path.join('server', 'package.json'));
     const serverDevScript = readWorkspaceFile('server', 'scripts', 'dev.sh');
 
     expect(serverPackage.scripts.dev).toBe('sh ./scripts/dev.sh');

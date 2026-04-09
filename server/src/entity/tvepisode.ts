@@ -61,9 +61,7 @@ export class TvEpisodeFilters {
       return false;
     }
 
-    return (
-      parseISO(episode.releaseDate) <= new Date()
-    );
+    return parseISO(episode.releaseDate) <= new Date();
   };
 
   public static unreleasedEpisodes = (episode: TvEpisode) => {
@@ -71,9 +69,7 @@ export class TvEpisodeFilters {
       return true;
     }
 
-    return (
-      parseISO(episode.releaseDate) > new Date()
-    );
+    return parseISO(episode.releaseDate) > new Date();
   };
 
   public static withReleaseDateEpisodes = (episode: TvEpisode) => {

@@ -118,9 +118,9 @@ describe('useFacetsData', () => {
       expect(screen.getByTestId('isLoadingFacets').textContent).toBe('false');
     });
 
-    expect(
-      JSON.parse(screen.getByTestId('facetsData').textContent!)
-    ).toEqual(mockResponse);
+    expect(JSON.parse(screen.getByTestId('facetsData').textContent!)).toEqual(
+      mockResponse
+    );
   });
 
   it('does NOT call items.facets when enabled=false', async () => {

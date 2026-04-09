@@ -38,7 +38,15 @@ jest.mock('@lingui/macro', () => {
         ? String.raw(strings, ...values)
         : strings[0],
     Trans: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-    Plural: ({ value, one, other }: { value: number; one: string; other: string }) => {
+    Plural: ({
+      value,
+      one,
+      other,
+    }: {
+      value: number;
+      one: string;
+      other: string;
+    }) => {
       const template = value === 1 ? one : other;
       return <>{template.replace('#', String(value))}</>;
     },
@@ -55,9 +63,13 @@ jest.mock('@lingui/react', () => {
         locale: 'en',
       },
     }),
-    Trans: ({ message, children }: { message?: string; children?: React.ReactNode }) => (
-      <>{message || children}</>
-    ),
+    Trans: ({
+      message,
+      children,
+    }: {
+      message?: string;
+      children?: React.ReactNode;
+    }) => <>{message || children}</>,
     I18nProvider: ({ children }: { children: React.ReactNode }) => (
       <>{children}</>
     ),
@@ -92,7 +104,9 @@ jest.mock('src/components/Modal', () => {
 });
 
 // useCreateGroup mock
-const mockCreateGroup = jest.fn().mockResolvedValue({ id: 42, name: 'My Group' });
+const mockCreateGroup = jest
+  .fn()
+  .mockResolvedValue({ id: 42, name: 'My Group' });
 jest.mock('src/api/groups', () => ({
   useCreateGroup: () => ({
     createGroup: (...args: unknown[]) => mockCreateGroup(...args),
@@ -157,7 +171,9 @@ describe('AddGroupButton', () => {
     const user = userEvent.setup();
     renderAddGroupButton();
 
-    await user.click(screen.getAllByRole('button', { name: 'Create group' })[0]);
+    await user.click(
+      screen.getAllByRole('button', { name: 'Create group' })[0]
+    );
 
     expect(screen.getByText('New group')).toBeInTheDocument();
   });
@@ -166,7 +182,9 @@ describe('AddGroupButton', () => {
     const user = userEvent.setup();
     renderAddGroupButton();
 
-    await user.click(screen.getAllByRole('button', { name: 'Create group' })[0]);
+    await user.click(
+      screen.getAllByRole('button', { name: 'Create group' })[0]
+    );
 
     expect(screen.getByLabelText(/Name/i)).toBeInTheDocument();
   });
@@ -175,7 +193,9 @@ describe('AddGroupButton', () => {
     const user = userEvent.setup();
     renderAddGroupButton();
 
-    await user.click(screen.getAllByRole('button', { name: 'Create group' })[0]);
+    await user.click(
+      screen.getAllByRole('button', { name: 'Create group' })[0]
+    );
 
     const nameInput = screen.getByLabelText(/Name/i);
     await user.clear(nameInput);
@@ -195,7 +215,9 @@ describe('AddGroupButton', () => {
     const user = userEvent.setup();
     renderAddGroupButton();
 
-    await user.click(screen.getAllByRole('button', { name: 'Create group' })[0]);
+    await user.click(
+      screen.getAllByRole('button', { name: 'Create group' })[0]
+    );
 
     const nameInput = screen.getByLabelText(/Name/i);
     await user.clear(nameInput);
@@ -213,7 +235,9 @@ describe('AddGroupButton', () => {
     const user = userEvent.setup();
     renderAddGroupButton();
 
-    await user.click(screen.getAllByRole('button', { name: 'Create group' })[0]);
+    await user.click(
+      screen.getAllByRole('button', { name: 'Create group' })[0]
+    );
     expect(screen.getByText('New group')).toBeInTheDocument();
 
     const nameInput = screen.getByLabelText(/Name/i);
@@ -232,7 +256,9 @@ describe('AddGroupButton', () => {
     const user = userEvent.setup();
     renderAddGroupButton();
 
-    await user.click(screen.getAllByRole('button', { name: 'Create group' })[0]);
+    await user.click(
+      screen.getAllByRole('button', { name: 'Create group' })[0]
+    );
 
     await user.click(screen.getByText('Close'));
 

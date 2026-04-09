@@ -23,7 +23,10 @@ export const CheckboxWithTitleAndDescription: FunctionComponent<{
           onCheckedChange={onChange}
           id={`checkbox-${title.replace(/\s+/g, '-').toLowerCase()}`}
         />
-        <label htmlFor={`checkbox-${title.replace(/\s+/g, '-').toLowerCase()}`} className="cursor-pointer select-none text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+        <label
+          htmlFor={`checkbox-${title.replace(/\s+/g, '-').toLowerCase()}`}
+          className="cursor-pointer select-none text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        >
           {title}
         </label>
       </div>

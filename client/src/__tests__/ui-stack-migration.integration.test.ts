@@ -499,9 +499,8 @@ describe('Integration: Tailwind v4', () => {
   });
 
   it('tailwind.css uses @import "tailwindcss" directive', () => {
-    expect(readSrcFile('styles', 'tailwind.css')).toContain(
-      '@import "tailwindcss"'
-    );
+    const css = readSrcFile('styles', 'tailwind.css');
+    expect(css).toMatch(/@import ['"]tailwindcss['"]/);
   });
 
   it('tailwind.css has @theme block with --font-sans', () => {

@@ -14,23 +14,23 @@ You are a backend engineer specialized in the MediaTrackerPlus `server/` codebas
 
 ## Stack
 
-| Layer | Technology | Version |
-|---|---|---|
-| Runtime | Node.js | 18+ |
-| Framework | Express.js | 4.21.x |
-| Language | TypeScript (strict) | 4.7+ |
-| Build | Babel | — |
-| Database (default) | SQLite | better-sqlite3 11.x |
-| Database (optional) | PostgreSQL | pg 8.x |
-| Query builder | Knex.js | 3.1.x |
-| Auth | Passport.js (LocalStrategy) + Bearer tokens | — |
-| Password hashing | argon2 | 0.41.x |
-| HTTP logging | Winston | 3.x |
-| Session store | Custom DB-backed store | — |
-| Validation | AJV (JSON Schema) | 8.x |
-| Route generation | typescript-routes-to-openapi-server | — |
-| Testing | Jest + ts-jest | 28.x |
-| i18n | Lingui v3 | — |
+| Layer               | Technology                                  | Version             |
+| ------------------- | ------------------------------------------- | ------------------- |
+| Runtime             | Node.js                                     | 18+                 |
+| Framework           | Express.js                                  | 4.21.x              |
+| Language            | TypeScript (strict)                         | 4.7+                |
+| Build               | Babel                                       | —                   |
+| Database (default)  | SQLite                                      | better-sqlite3 11.x |
+| Database (optional) | PostgreSQL                                  | pg 8.x              |
+| Query builder       | Knex.js                                     | 3.1.x               |
+| Auth                | Passport.js (LocalStrategy) + Bearer tokens | —                   |
+| Password hashing    | argon2                                      | 0.41.x              |
+| HTTP logging        | Winston                                     | 3.x                 |
+| Session store       | Custom DB-backed store                      | —                   |
+| Validation          | AJV (JSON Schema)                           | 8.x                 |
+| Route generation    | typescript-routes-to-openapi-server         | —                   |
+| Testing             | Jest + ts-jest                              | 28.x                |
+| i18n                | Lingui v3                                   | —                   |
 
 ## Architecture: The Three Layers
 
@@ -85,6 +85,7 @@ export class ExampleController {
 ```
 
 **Rules:**
+
 - One class per resource domain (items, users, watchlist, etc.)
 - Every public method is an endpoint — add `@openapi_operationId` and `@openapi_tags`
 - Use `RequestError` for all HTTP error responses, never `res.status().json()` directly
@@ -102,9 +103,7 @@ import type { ExampleEntity } from '../entity/example';
 
 class ExampleRepository {
   async findById(id: number): Promise<ExampleEntity | undefined> {
-    return knex<ExampleEntity>('example')
-      .where({ id })
-      .first();
+    return knex<ExampleEntity>('example').where({ id }).first();
   }
 
   async findAll(userId: number): Promise<ExampleEntity[]> {
@@ -130,6 +129,7 @@ export const exampleRepository = new ExampleRepository();
 ```
 
 **Rules:**
+
 - Export a singleton instance, not the class itself
 - All methods are `async` — never use synchronous Knex
 - Use entity TypeScript types as Knex generics: `knex<EntityType>('table_name')`
@@ -154,6 +154,7 @@ export type ExampleEntity = {
 ```
 
 **Rules:**
+
 - Use `readonly` for all fields
 - Dates are `string` (ISO 8601), not `Date` objects
 - Nullable fields use `T | null`, never `T | undefined`
@@ -170,8 +171,18 @@ import type { Knex } from 'knex';
 export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTable('example', (table) => {
     table.increments('id').primary();
-    table.integer('userId').notNullable().references('id').inTable('user').onDelete('CASCADE');
-    table.integer('mediaItemId').notNullable().references('id').inTable('mediaItem').onDelete('CASCADE');
+    table
+      .integer('userId')
+      .notNullable()
+      .references('id')
+      .inTable('user')
+      .onDelete('CASCADE');
+    table
+      .integer('mediaItemId')
+      .notNullable()
+      .references('id')
+      .inTable('mediaItem')
+      .onDelete('CASCADE');
     table.text('value').nullable();
     table.timestamp('createdAt').notNullable().defaultTo(knex.fn.now());
     table.timestamp('updatedAt').notNullable().defaultTo(knex.fn.now());
@@ -185,6 +196,7 @@ export async function down(knex: Knex): Promise<void> {
 ```
 
 **Rules:**
+
 - File name format: `YYYYMMDDHHMMSS_description_in_snake_case.ts`
 - **Never edit an existing migration** — always create a new one
 - Always implement both `up` and `down`
@@ -226,14 +238,15 @@ const valid = await argon2.verify(hash, password);
 
 External API integrations live in `server/src/metadata/provider/`. Each implements the `MetadataProvider` interface.
 
-| Provider | File | Covers |
-|---|---|---|
-| TMDB | `tmdb.ts` | Movies, TV shows |
-| IGDB | `igdb.ts` | Video games |
-| OpenLibrary | `openlibrary.ts` | Books |
-| Audible | `audible.ts` | Audiobooks |
+| Provider    | File             | Covers           |
+| ----------- | ---------------- | ---------------- |
+| TMDB        | `tmdb.ts`        | Movies, TV shows |
+| IGDB        | `igdb.ts`        | Video games      |
+| OpenLibrary | `openlibrary.ts` | Books            |
+| Audible     | `audible.ts`     | Audiobooks       |
 
 When adding or modifying metadata providers:
+
 1. Implement the `MetadataProvider` interface
 2. Handle API errors gracefully — return `null` on 404, log and re-throw on 5xx
 3. Normalize external data to `MediaItemMetadata` type before returning
@@ -249,7 +262,11 @@ import { logger } from '../logger';
 // Correct levels
 logger.info('Metadata update started', { mediaItemId: id, source: 'tmdb' });
 logger.warn('Rate limit approaching', { requestsRemaining: 10 });
-logger.error('Failed to fetch metadata', { mediaItemId: id, error: err.message, stack: err.stack });
+logger.error('Failed to fetch metadata', {
+  mediaItemId: id,
+  error: err.message,
+  stack: err.stack,
+});
 
 // Always include contextual metadata as the second argument
 // Always include err.stack for error-level logs
@@ -290,6 +307,7 @@ Tests live in `server/__tests__/`. They use Jest with an in-memory SQLite databa
 Read [TESTING.md](TESTING.md) for the full testing guide and patterns.
 
 **Quick reference:**
+
 ```typescript
 // server/__tests__/controllers/example.test.ts
 import { runMigrations, clearDatabase } from '../__utils__/db';
@@ -326,6 +344,7 @@ describe('ExampleController', () => {
 ```
 
 **Key rules:**
+
 - Every new endpoint needs at least: success case, not found / invalid input, unauthorized
 - Use `createTestUser`, `createTestMediaItem`, and other builders from `__utils__/data.ts`
 - Never use a real external API in tests — mock the metadata providers
@@ -403,6 +422,7 @@ When reporting a completed backend task:
 ## Memory Usage
 
 After completing any backend task, record in project memory:
+
 - New tables or columns added and their purpose
 - New endpoints added and their routes
 - Repository methods added or changed

@@ -117,17 +117,12 @@ const FacetsHarness: React.FC<FacetsHarnessProps> = ({
         {JSON.stringify(facets.facetParams)}
       </span>
       <span data-testid="location-search">{location.search}</span>
-      {action && (
-        <button onClick={handleAction}>Execute Action</button>
-      )}
+      {action && <button onClick={handleAction}>Execute Action</button>}
     </>
   );
 };
 
-const renderFacets = (
-  props: FacetsHarnessProps = {},
-  initialEntry = '/'
-) =>
+const renderFacets = (props: FacetsHarnessProps = {}, initialEntry = '/') =>
   render(
     <MemoryRouter initialEntries={[initialEntry]}>
       <FacetsHarness {...props} />
@@ -405,10 +400,7 @@ describe('useFacets – setGenres', () => {
 describe('useFacets – setYearMin', () => {
   it('writes yearMin to URL as a number when called with a numeric value', async () => {
     const user = userEvent.setup();
-    renderFacets(
-      { action: { type: 'setYearMin', payload: 2015 } },
-      '/'
-    );
+    renderFacets({ action: { type: 'setYearMin', payload: 2015 } }, '/');
 
     await user.click(screen.getByRole('button', { name: 'Execute Action' }));
 
@@ -447,10 +439,7 @@ describe('useFacets – setYearMin', () => {
 describe('useFacets – setYearMax', () => {
   it('writes yearMax to URL when called with a numeric value', async () => {
     const user = userEvent.setup();
-    renderFacets(
-      { action: { type: 'setYearMax', payload: 2023 } },
-      '/'
-    );
+    renderFacets({ action: { type: 'setYearMax', payload: 2023 } }, '/');
 
     await user.click(screen.getByRole('button', { name: 'Execute Action' }));
 
@@ -473,10 +462,7 @@ describe('useFacets – setYearMax', () => {
 describe('useFacets – setRatingMin and setRatingMax', () => {
   it('writes ratingMin to URL', async () => {
     const user = userEvent.setup();
-    renderFacets(
-      { action: { type: 'setRatingMin', payload: 6.5 } },
-      '/'
-    );
+    renderFacets({ action: { type: 'setRatingMin', payload: 6.5 } }, '/');
 
     await user.click(screen.getByRole('button', { name: 'Execute Action' }));
 
@@ -497,10 +483,7 @@ describe('useFacets – setRatingMin and setRatingMax', () => {
 
   it('writes ratingMax to URL', async () => {
     const user = userEvent.setup();
-    renderFacets(
-      { action: { type: 'setRatingMax', payload: 9 } },
-      '/'
-    );
+    renderFacets({ action: { type: 'setRatingMax', payload: 9 } }, '/');
 
     await user.click(screen.getByRole('button', { name: 'Execute Action' }));
 
@@ -652,31 +635,23 @@ describe('useFacets – remaining multi-value setters', () => {
   testCases.forEach(({ type, paramName }) => {
     it(`${type} writes values to URL`, async () => {
       const user = userEvent.setup();
-      renderFacets(
-        { action: { type, payload: ['val1', 'val2'] } },
-        '/'
-      );
+      renderFacets({ action: { type, payload: ['val1', 'val2'] } }, '/');
 
       await user.click(screen.getByRole('button', { name: 'Execute Action' }));
 
-      const values = JSON.parse(
-        screen.getByTestId(paramName).textContent!
-      );
+      const values = JSON.parse(screen.getByTestId(paramName).textContent!);
       expect(values).toEqual(['val1', 'val2']);
     });
 
     it(`${type} clears values when called with an empty array`, async () => {
       const user = userEvent.setup();
-      renderFacets(
-        { action: { type, payload: [] } },
-        `/?${paramName}=val1`
-      );
+      renderFacets({ action: { type, payload: [] } }, `/?${paramName}=val1`);
 
       await user.click(screen.getByRole('button', { name: 'Execute Action' }));
 
-      expect(
-        JSON.parse(screen.getByTestId(paramName).textContent!)
-      ).toEqual([]);
+      expect(JSON.parse(screen.getByTestId(paramName).textContent!)).toEqual(
+        []
+      );
     });
 
     it(`${type} calls handleArgumentChange`, async () => {

@@ -44,41 +44,74 @@ jest.mock('radix-ui', () => {
     <div data-testid="dialog-root" {...rest}>
       {React.Children.map(children, (child: React.ReactElement) => {
         if (!React.isValidElement(child)) return child;
-        return React.cloneElement(child, { __open: open, __onOpenChange: onOpenChange } as any);
+        return React.cloneElement(child, {
+          __open: open,
+          __onOpenChange: onOpenChange,
+        } as any);
       })}
     </div>
   );
 
   const Portal = ({ children }: any) => <>{children}</>;
-  const Overlay = React.forwardRef(({ children, __open, __onOpenChange, ...props }: any, ref: any) => (
-    <div ref={ref} {...props}>{children}</div>
-  ));
-  const Content = React.forwardRef(({ children, __open, __onOpenChange, ...props }: any, ref: any) => {
-    if (!__open) return null;
-    return <div ref={ref} {...props}>{children}</div>;
-  });
+  const Overlay = React.forwardRef(
+    ({ children, __open, __onOpenChange, ...props }: any, ref: any) => (
+      <div ref={ref} {...props}>
+        {children}
+      </div>
+    )
+  );
+  const Content = React.forwardRef(
+    ({ children, __open, __onOpenChange, ...props }: any, ref: any) => {
+      if (!__open) return null;
+      return (
+        <div ref={ref} {...props}>
+          {children}
+        </div>
+      );
+    }
+  );
   const Close = React.forwardRef(({ children, ...props }: any, ref: any) => (
-    <button ref={ref} {...props}>{children}</button>
+    <button ref={ref} {...props}>
+      {children}
+    </button>
   ));
   const Trigger = React.forwardRef(({ children, ...props }: any, ref: any) => (
-    <button ref={ref} {...props}>{children}</button>
+    <button ref={ref} {...props}>
+      {children}
+    </button>
   ));
   const Title = React.forwardRef(({ children, ...props }: any, ref: any) => (
-    <h2 ref={ref} {...props}>{children}</h2>
+    <h2 ref={ref} {...props}>
+      {children}
+    </h2>
   ));
-  const Description = React.forwardRef(({ children, ...props }: any, ref: any) => (
-    <p ref={ref} {...props}>{children}</p>
-  ));
+  const Description = React.forwardRef(
+    ({ children, ...props }: any, ref: any) => (
+      <p ref={ref} {...props}>
+        {children}
+      </p>
+    )
+  );
 
   return {
-    Dialog: { Root, Portal, Overlay, Content, Close, Trigger, Title, Description },
+    Dialog: {
+      Root,
+      Portal,
+      Overlay,
+      Content,
+      Close,
+      Trigger,
+      Title,
+      Description,
+    },
   };
 });
 
 jest.mock('src/components/SelectSeenDate', () => {
   const React = require('react');
   return {
-    SelectSeenDate: () => React.createElement('div', null, 'SelectSeenDate mock'),
+    SelectSeenDate: () =>
+      React.createElement('div', null, 'SelectSeenDate mock'),
   };
 });
 
@@ -102,8 +135,7 @@ jest.mock('@lingui/react', () => {
   return {
     useLingui: () => ({
       i18n: {
-        _: (s: any) =>
-          typeof s === 'string' ? s : s?.message || s?.id || '',
+        _: (s: any) => (typeof s === 'string' ? s : s?.message || s?.id || ''),
         locale: 'en',
       },
     }),
@@ -373,7 +405,9 @@ describe('BadgeRating – rendering', () => {
     expect(screen.getByText('star')).toBeInTheDocument();
     // No numeric rating should be displayed for unrated items
     const spans = container.querySelectorAll('span');
-    const numericSpans = Array.from(spans).filter((s) => /^\d+$/.test(s.textContent || ''));
+    const numericSpans = Array.from(spans).filter((s) =>
+      /^\d+$/.test(s.textContent || '')
+    );
     expect(numericSpans).toHaveLength(0);
   });
 
@@ -400,7 +434,9 @@ describe('BadgeRating – rendering', () => {
     render(<BadgeRating mediaItem={makeMediaItem(3)} />);
 
     // Click the badge to open modal
-    const badge = screen.getByText('star').closest('span[class*="cursor-pointer"]');
+    const badge = screen
+      .getByText('star')
+      .closest('span[class*="cursor-pointer"]');
     await user.click(badge!);
 
     // StarRatingModal shows the title and a textarea for review
@@ -421,18 +457,28 @@ describe('StarRatingModal – interactions via BadgeRating', () => {
   it('displays season number in the modal title when season prop is provided', async () => {
     const user = userEvent.setup();
     const mediaItem = makeMediaItem(2);
-    const season = { id: 5, seasonNumber: 1, userRating: { rating: 2 }, seen: false } as any;
+    const season = {
+      id: 5,
+      seasonNumber: 1,
+      userRating: { rating: 2 },
+      seen: false,
+    } as any;
 
     render(<BadgeRating mediaItem={mediaItem} season={season} />);
 
-    const badge = screen.getByText('star').closest('span[class*="cursor-pointer"]');
+    const badge = screen
+      .getByText('star')
+      .closest('span[class*="cursor-pointer"]');
     await user.click(badge!);
 
     // Title div contains "Test Movie" + formatted season; use a substring matcher
-    const titleDiv = screen.getByText((content, element) =>
-      element?.tagName === 'DIV' &&
-      (element?.className ?? '').includes('text-4xl') &&
-      (content.includes('Test Movie') || element?.textContent?.includes('Season 1')) || false
+    const titleDiv = screen.getByText(
+      (content, element) =>
+        (element?.tagName === 'DIV' &&
+          (element?.className ?? '').includes('text-4xl') &&
+          (content.includes('Test Movie') ||
+            element?.textContent?.includes('Season 1'))) ||
+        false
     );
     expect(titleDiv.textContent).toContain('Season 1');
   });
@@ -450,14 +496,19 @@ describe('StarRatingModal – interactions via BadgeRating', () => {
 
     render(<BadgeRating mediaItem={mediaItem} episode={episode} />);
 
-    const badge = screen.getByText('star').closest('span[class*="cursor-pointer"]');
+    const badge = screen
+      .getByText('star')
+      .closest('span[class*="cursor-pointer"]');
     await user.click(badge!);
 
     // Title div contains "Test Movie" + formatted episode; use a substring matcher
-    const titleDiv = screen.getByText((content, element) =>
-      element?.tagName === 'DIV' &&
-      (element?.className ?? '').includes('text-4xl') &&
-      (content.includes('Test Movie') || element?.textContent?.includes('S01E01')) || false
+    const titleDiv = screen.getByText(
+      (content, element) =>
+        (element?.tagName === 'DIV' &&
+          (element?.className ?? '').includes('text-4xl') &&
+          (content.includes('Test Movie') ||
+            element?.textContent?.includes('S01E01'))) ||
+        false
     );
     expect(titleDiv.textContent).toContain('S01E01');
   });
@@ -467,7 +518,9 @@ describe('StarRatingModal – interactions via BadgeRating', () => {
     render(<BadgeRating mediaItem={makeMediaItem(0)} />);
 
     // Open the modal
-    const badge = screen.getByText('star').closest('span[class*="cursor-pointer"]');
+    const badge = screen
+      .getByText('star')
+      .closest('span[class*="cursor-pointer"]');
     await user.click(badge!);
 
     // The modal shows its own set of 5 stars; click the 3rd one
@@ -486,7 +539,9 @@ describe('StarRatingModal – interactions via BadgeRating', () => {
     render(<BadgeRating mediaItem={makeMediaItem(3)} />);
 
     // Open the modal
-    const badge = screen.getByText('star').closest('span[class*="cursor-pointer"]');
+    const badge = screen
+      .getByText('star')
+      .closest('span[class*="cursor-pointer"]');
     await user.click(badge!);
 
     // Click the 3rd star (index 2) which matches current rating=3
@@ -504,7 +559,9 @@ describe('StarRatingModal – interactions via BadgeRating', () => {
     const user = userEvent.setup();
     render(<BadgeRating mediaItem={makeMediaItem(3)} />);
 
-    const badge = screen.getByText('star').closest('span[class*="cursor-pointer"]');
+    const badge = screen
+      .getByText('star')
+      .closest('span[class*="cursor-pointer"]');
     await user.click(badge!);
 
     const textarea = screen.getByRole('textbox');
@@ -518,7 +575,9 @@ describe('StarRatingModal – interactions via BadgeRating', () => {
     const user = userEvent.setup();
     render(<BadgeRating mediaItem={makeMediaItem(3)} />);
 
-    const badge = screen.getByText('star').closest('span[class*="cursor-pointer"]');
+    const badge = screen
+      .getByText('star')
+      .closest('span[class*="cursor-pointer"]');
     await user.click(badge!);
 
     const textarea = screen.getByRole('textbox');
@@ -538,7 +597,9 @@ describe('StarRatingModal – interactions via BadgeRating', () => {
     const user = userEvent.setup();
     render(<BadgeRating mediaItem={makeMediaItem(3)} />);
 
-    const badge = screen.getByText('star').closest('span[class*="cursor-pointer"]');
+    const badge = screen
+      .getByText('star')
+      .closest('span[class*="cursor-pointer"]');
     await user.click(badge!);
 
     // The modal should be open showing the title
@@ -563,7 +624,9 @@ describe('StarRatingModal – interactions via BadgeRating', () => {
 
     render(<BadgeRating mediaItem={mediaItem} />);
 
-    const badge = screen.getByText('star').closest('span[class*="cursor-pointer"]');
+    const badge = screen
+      .getByText('star')
+      .closest('span[class*="cursor-pointer"]');
     await user.click(badge!);
 
     expect(screen.getByRole('textbox')).toHaveValue('Already reviewed');
@@ -572,7 +635,9 @@ describe('StarRatingModal – interactions via BadgeRating', () => {
   it('highlights stars on hover inside the modal', async () => {
     render(<BadgeRating mediaItem={makeMediaItem(0)} />);
 
-    const badge = screen.getByText('star').closest('span[class*="cursor-pointer"]');
+    const badge = screen
+      .getByText('star')
+      .closest('span[class*="cursor-pointer"]');
     fireEvent.click(badge!);
 
     const modalStars = screen.getAllByText(/^star(_border)?$/);

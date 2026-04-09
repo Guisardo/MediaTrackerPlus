@@ -12,7 +12,9 @@ import knexLib, { Knex } from 'knex';
 
 // Mock the module-level imports before any imports of the modules under test
 jest.mock('src/repository/groupPlatformRatingCache', () => ({
-  recalculateGroupPlatformRatingsForUser: jest.fn().mockResolvedValue(undefined),
+  recalculateGroupPlatformRatingsForUser: jest
+    .fn()
+    .mockResolvedValue(undefined),
   recalculateGroupPlatformRating: jest.fn().mockResolvedValue(undefined),
   recalculateAllGroupPlatformRatings: jest.fn().mockResolvedValue(undefined),
 }));
@@ -44,12 +46,14 @@ import { recalculateGroupPlatformRatingsForUser } from 'src/repository/groupPlat
 import { mediaItemRepository } from 'src/repository/mediaItem';
 import { SimilarItem } from 'src/metadata/types';
 
-const mockedRecalculateGroup = recalculateGroupPlatformRatingsForUser as jest.MockedFunction<
-  typeof recalculateGroupPlatformRatingsForUser
->;
-const mockedRecalculatePlatform = mediaItemRepository.recalculatePlatformRating as jest.MockedFunction<
-  typeof mediaItemRepository.recalculatePlatformRating
->;
+const mockedRecalculateGroup =
+  recalculateGroupPlatformRatingsForUser as jest.MockedFunction<
+    typeof recalculateGroupPlatformRatingsForUser
+  >;
+const mockedRecalculatePlatform =
+  mediaItemRepository.recalculatePlatformRating as jest.MockedFunction<
+    typeof mediaItemRepository.recalculatePlatformRating
+  >;
 
 // ─── WatchlistWriter Trigger ────────────────────────────────────────────────
 

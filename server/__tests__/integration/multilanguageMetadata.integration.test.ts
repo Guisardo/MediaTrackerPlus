@@ -72,7 +72,10 @@ const mockConfig = Config as unknown as {
 const originalMetadataLanguages = Config.METADATA_LANGUAGES;
 const originalAudibleLangMap = Config.AUDIBLE_LANG_MAP;
 
-const expectUniqueIndex = async (tableName: string, expectedColumns: string[]) => {
+const expectUniqueIndex = async (
+  tableName: string,
+  expectedColumns: string[]
+) => {
   const indexes = await Database.knex.raw(`PRAGMA index_list('${tableName}');`);
   const uniqueIndexes = indexes.filter(
     (index: { unique: number }) => index.unique === 1
@@ -206,30 +209,64 @@ describe('Multi-Language Metadata Integration Tests', () => {
         'mediaItemTranslation'
       );
       expect(hasMediaItemTranslation).toBe(true);
-      expect(await Database.knex.schema.hasColumn('mediaItemTranslation', 'id')).toBe(true);
-      expect(await Database.knex.schema.hasColumn('mediaItemTranslation', 'mediaItemId')).toBe(true);
-      expect(await Database.knex.schema.hasColumn('mediaItemTranslation', 'language')).toBe(true);
-      expect(await Database.knex.schema.hasColumn('mediaItemTranslation', 'title')).toBe(true);
-      expect(await Database.knex.schema.hasColumn('mediaItemTranslation', 'overview')).toBe(true);
-      expect(await Database.knex.schema.hasColumn('mediaItemTranslation', 'genres')).toBe(true);
+      expect(
+        await Database.knex.schema.hasColumn('mediaItemTranslation', 'id')
+      ).toBe(true);
+      expect(
+        await Database.knex.schema.hasColumn(
+          'mediaItemTranslation',
+          'mediaItemId'
+        )
+      ).toBe(true);
+      expect(
+        await Database.knex.schema.hasColumn('mediaItemTranslation', 'language')
+      ).toBe(true);
+      expect(
+        await Database.knex.schema.hasColumn('mediaItemTranslation', 'title')
+      ).toBe(true);
+      expect(
+        await Database.knex.schema.hasColumn('mediaItemTranslation', 'overview')
+      ).toBe(true);
+      expect(
+        await Database.knex.schema.hasColumn('mediaItemTranslation', 'genres')
+      ).toBe(true);
 
       const hasSeasonTranslation = await Database.knex.schema.hasTable(
         'seasonTranslation'
       );
       expect(hasSeasonTranslation).toBe(true);
-      expect(await Database.knex.schema.hasColumn('seasonTranslation', 'seasonId')).toBe(true);
-      expect(await Database.knex.schema.hasColumn('seasonTranslation', 'language')).toBe(true);
-      expect(await Database.knex.schema.hasColumn('seasonTranslation', 'title')).toBe(true);
-      expect(await Database.knex.schema.hasColumn('seasonTranslation', 'description')).toBe(true);
+      expect(
+        await Database.knex.schema.hasColumn('seasonTranslation', 'seasonId')
+      ).toBe(true);
+      expect(
+        await Database.knex.schema.hasColumn('seasonTranslation', 'language')
+      ).toBe(true);
+      expect(
+        await Database.knex.schema.hasColumn('seasonTranslation', 'title')
+      ).toBe(true);
+      expect(
+        await Database.knex.schema.hasColumn('seasonTranslation', 'description')
+      ).toBe(true);
 
       const hasEpisodeTranslation = await Database.knex.schema.hasTable(
         'episodeTranslation'
       );
       expect(hasEpisodeTranslation).toBe(true);
-      expect(await Database.knex.schema.hasColumn('episodeTranslation', 'episodeId')).toBe(true);
-      expect(await Database.knex.schema.hasColumn('episodeTranslation', 'language')).toBe(true);
-      expect(await Database.knex.schema.hasColumn('episodeTranslation', 'title')).toBe(true);
-      expect(await Database.knex.schema.hasColumn('episodeTranslation', 'description')).toBe(true);
+      expect(
+        await Database.knex.schema.hasColumn('episodeTranslation', 'episodeId')
+      ).toBe(true);
+      expect(
+        await Database.knex.schema.hasColumn('episodeTranslation', 'language')
+      ).toBe(true);
+      expect(
+        await Database.knex.schema.hasColumn('episodeTranslation', 'title')
+      ).toBe(true);
+      expect(
+        await Database.knex.schema.hasColumn(
+          'episodeTranslation',
+          'description'
+        )
+      ).toBe(true);
     });
 
     test('ON DELETE CASCADE removes translations when parent media item is deleted', async () => {
@@ -309,8 +346,12 @@ describe('Multi-Language Metadata Integration Tests', () => {
         .select('*');
 
       expect(rows).toHaveLength(2);
-      expect(rows.find((r: any) => r.language === 'en')?.title).toBe('English Title');
-      expect(rows.find((r: any) => r.language === 'es')?.title).toBe('Titulo Espanol');
+      expect(rows.find((r: any) => r.language === 'en')?.title).toBe(
+        'English Title'
+      );
+      expect(rows.find((r: any) => r.language === 'es')?.title).toBe(
+        'Titulo Espanol'
+      );
     });
 
     test('upsert updates existing row on conflict', async () => {
@@ -388,7 +429,15 @@ describe('Multi-Language Metadata Integration Tests', () => {
 
   describe('FR-5: Other provider import', () => {
     test('IGDB_REGION_MAP maps all 9 region IDs correctly', () => {
-      expect(IGDB_REGION_MAP[1]).toEqual(['de', 'fr', 'es', 'it', 'nl', 'pl', 'pt']);
+      expect(IGDB_REGION_MAP[1]).toEqual([
+        'de',
+        'fr',
+        'es',
+        'it',
+        'nl',
+        'pl',
+        'pt',
+      ]);
       expect(IGDB_REGION_MAP[2]).toEqual(['en']);
       expect(IGDB_REGION_MAP[3]).toEqual(['en']);
       expect(IGDB_REGION_MAP[4]).toEqual(['en']);
@@ -429,19 +478,30 @@ describe('Multi-Language Metadata Integration Tests', () => {
     beforeAll(async () => {
       // Seed core test data for API tests
       await Database.knex('user').insert(Data.user).onConflict('id').ignore();
-      await Database.knex('list').insert(Data.watchlist).onConflict('id').ignore();
-      await Database.knex('mediaItem').insert(Data.movie).onConflict('id').ignore();
-      await Database.knex('mediaItem').insert(Data.tvShow).onConflict('id').ignore();
+      await Database.knex('list')
+        .insert(Data.watchlist)
+        .onConflict('id')
+        .ignore();
+      await Database.knex('mediaItem')
+        .insert(Data.movie)
+        .onConflict('id')
+        .ignore();
+      await Database.knex('mediaItem')
+        .insert(Data.tvShow)
+        .onConflict('id')
+        .ignore();
 
       // Add items to watchlist (no unique constraint on listItem, so just insert)
       const now = Date.now();
       // Delete first to avoid duplicates if beforeAll runs again
-      await Database.knex('listItem')
-        .where('listId', Data.watchlist.id)
-        .del();
+      await Database.knex('listItem').where('listId', Data.watchlist.id).del();
       await Database.knex('listItem').insert([
         { listId: Data.watchlist.id, mediaItemId: Data.movie.id, addedAt: now },
-        { listId: Data.watchlist.id, mediaItemId: Data.tvShow.id, addedAt: now },
+        {
+          listId: Data.watchlist.id,
+          mediaItemId: Data.tvShow.id,
+          addedAt: now,
+        },
       ]);
 
       // Seed translations
@@ -457,10 +517,22 @@ describe('Multi-Language Metadata Integration Tests', () => {
       });
 
       // Season and episode data
-      await Database.knex('season').insert(Data.season).onConflict('id').ignore();
-      await Database.knex('episode').insert(Data.episode).onConflict('id').ignore();
-      await Database.knex('episode').insert(Data.episode2).onConflict('id').ignore();
-      await Database.knex('episode').insert(Data.episode3).onConflict('id').ignore();
+      await Database.knex('season')
+        .insert(Data.season)
+        .onConflict('id')
+        .ignore();
+      await Database.knex('episode')
+        .insert(Data.episode)
+        .onConflict('id')
+        .ignore();
+      await Database.knex('episode')
+        .insert(Data.episode2)
+        .onConflict('id')
+        .ignore();
+      await Database.knex('episode')
+        .insert(Data.episode3)
+        .onConflict('id')
+        .ignore();
 
       // Season + episode translations
       await upsertSeasonTranslation(Data.season.id, 'es', {

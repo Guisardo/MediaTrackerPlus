@@ -179,7 +179,10 @@ const NotificationPlatform: FunctionComponent = () => {
             });
           }}
         >
-          <SelectTrigger aria-label={t`Notification platform`} className="w-fit">
+          <SelectTrigger
+            aria-label={t`Notification platform`}
+            className="w-fit"
+          >
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

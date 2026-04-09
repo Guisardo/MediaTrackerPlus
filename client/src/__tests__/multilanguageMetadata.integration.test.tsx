@@ -22,11 +22,15 @@ jest.mock('@lingui/core', () => ({
   i18n: { locale: 'es' },
 }));
 
-jest.mock('mediatracker-api', () => {
-  return {
-    Api: jest.fn().mockImplementation(() => ({})),
-  };
-}, { virtual: true });
+jest.mock(
+  'mediatracker-api',
+  () => {
+    return {
+      Api: jest.fn().mockImplementation(() => ({})),
+    };
+  },
+  { virtual: true }
+);
 
 describe('FR-10: Frontend Accept-Language header injection', () => {
   let originalFetch: typeof global.fetch;
@@ -104,25 +108,19 @@ describe('FR-11: UI locale badge and fallback indicator', () => {
 
   describe('badge renders when metadataLanguage matches user locale', () => {
     test('exact match shows language badge with native display name', () => {
-      render(
-        <MetadataLocaleBadge metadataLanguage="en" userLocale="en" />
-      );
+      render(<MetadataLocaleBadge metadataLanguage="en" userLocale="en" />);
       const badge = screen.getByText('English');
       expect(badge).toBeInTheDocument();
       expect(badge.closest('div')).toHaveClass('bg-secondary');
     });
 
     test('base language match (pt vs pt-BR) shows badge', () => {
-      render(
-        <MetadataLocaleBadge metadataLanguage="pt-BR" userLocale="pt" />
-      );
+      render(<MetadataLocaleBadge metadataLanguage="pt-BR" userLocale="pt" />);
       expect(screen.getByText(/Portuguese/)).toBeInTheDocument();
     });
 
     test('badge uses text-xs sizing', () => {
-      render(
-        <MetadataLocaleBadge metadataLanguage="fr" userLocale="fr" />
-      );
+      render(<MetadataLocaleBadge metadataLanguage="fr" userLocale="fr" />);
       const badge = screen.getByText('French');
       expect(badge.closest('div')).toHaveClass('text-xs');
     });
@@ -130,9 +128,7 @@ describe('FR-11: UI locale badge and fallback indicator', () => {
 
   describe('fallback indicator renders when metadataLanguage differs from locale', () => {
     test('shows fallback message with both language names', () => {
-      render(
-        <MetadataLocaleBadge metadataLanguage="en" userLocale="es" />
-      );
+      render(<MetadataLocaleBadge metadataLanguage="en" userLocale="es" />);
       const indicator = screen.getByText(
         /Metadata not available in Spanish, showing English/
       );
@@ -140,9 +136,7 @@ describe('FR-11: UI locale badge and fallback indicator', () => {
     });
 
     test('fallback indicator has correct styling', () => {
-      render(
-        <MetadataLocaleBadge metadataLanguage="de" userLocale="fr" />
-      );
+      render(<MetadataLocaleBadge metadataLanguage="de" userLocale="fr" />);
       const indicator = screen.getByText(/Metadata not available/);
       expect(indicator).toHaveClass('text-sm');
       expect(indicator).toHaveClass('text-zinc-500');
@@ -175,22 +169,18 @@ describe('FR-11: UI locale badge and fallback indicator', () => {
       expect(screen.getByText('Spanish')).toBeInTheDocument();
 
       // Scenario 2: Mismatch
-      rerender(
-        <MetadataLocaleBadge metadataLanguage="en" userLocale="es" />
-      );
-      expect(screen.getByText(/Metadata not available in Spanish/)).toBeInTheDocument();
+      rerender(<MetadataLocaleBadge metadataLanguage="en" userLocale="es" />);
+      expect(
+        screen.getByText(/Metadata not available in Spanish/)
+      ).toBeInTheDocument();
 
       // Scenario 3: No translation
-      rerender(
-        <MetadataLocaleBadge metadataLanguage={null} userLocale="es" />
-      );
+      rerender(<MetadataLocaleBadge metadataLanguage={null} userLocale="es" />);
       expect(container.firstChild).toBeNull();
     });
 
     test('BCP 47 tag matching: es-419 metadata with es user locale shows badge', () => {
-      render(
-        <MetadataLocaleBadge metadataLanguage="es-419" userLocale="es" />
-      );
+      render(<MetadataLocaleBadge metadataLanguage="es-419" userLocale="es" />);
       // Base language 'es' matches — badge should render
       expect(screen.getByText(/Spanish/)).toBeInTheDocument();
     });

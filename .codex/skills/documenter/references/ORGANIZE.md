@@ -51,20 +51,22 @@ Each piece of information lives in **exactly one place**. Duplication is permitt
 ### Rule O2 — README at Every Level
 
 Every directory that contains documentation must have a `README.md`. It must:
+
 - Start with a one-sentence description of the directory's purpose
 - List all files in the directory with one-line descriptions
 - Link to the parent `README.md` or `docs/INDEX.md`
 
 ### Rule O3 — File Naming
 
-| Convention | Rule |
-|------------|------|
-| Case | **kebab-case** (all lowercase, hyphens) |
-| Extensions | `.md` for Markdown, `.json` for data |
-| Spaces | Never — use hyphens |
-| Version suffixes | Only for archives: `README-v0.1.md` |
+| Convention       | Rule                                    |
+| ---------------- | --------------------------------------- |
+| Case             | **kebab-case** (all lowercase, hyphens) |
+| Extensions       | `.md` for Markdown, `.json` for data    |
+| Spaces           | Never — use hyphens                     |
+| Version suffixes | Only for archives: `README-v0.1.md`     |
 
 Examples:
+
 ```
 environment-variables.md  ✓
 EnvironmentVariables.md   ✗
@@ -73,21 +75,22 @@ environment_variables.md  ✗
 
 ### Rule O4 — Scope Determines Location
 
-| Scope | Location |
-|-------|----------|
-| Project overview, badges, quick-start | `README.md` (root) |
-| Deployment instructions | `docs/deployment/` |
-| API reference | `docs/api/` |
-| Configuration details | `docs/configuration/` |
-| Third-party integrations | `docs/integrations/` |
-| Developer internals | `docs/development/` |
-| Planning/roadmap (internal) | `.planning/` (not committed unless intentional) |
+| Scope                                 | Location                                        |
+| ------------------------------------- | ----------------------------------------------- |
+| Project overview, badges, quick-start | `README.md` (root)                              |
+| Deployment instructions               | `docs/deployment/`                              |
+| API reference                         | `docs/api/`                                     |
+| Configuration details                 | `docs/configuration/`                           |
+| Third-party integrations              | `docs/integrations/`                            |
+| Developer internals                   | `docs/development/`                             |
+| Planning/roadmap (internal)           | `.planning/` (not committed unless intentional) |
 
 ### Rule O5 — Large READMEs
 
 If `README.md` exceeds **400 lines**, extract sections into dedicated files under `docs/` and replace the section in `README.md` with a summary paragraph and a link.
 
 Extraction candidates in this project:
+
 - Environment Variables table → `docs/configuration/environment-variables.md`
 - Metadata Providers table → `docs/configuration/metadata-providers.md`
 - Notification Platforms section → `docs/integrations/notifications.md`
@@ -96,6 +99,7 @@ Extraction candidates in this project:
 ### Rule O6 — Planning Files
 
 `.planning/` is for internal planning artifacts. These files:
+
 - Should NOT be committed to `main` in a final state
 - If they must be committed, add a note in `docs/development/README.md` pointing to them
 - Are never linked from user-facing docs
@@ -116,10 +120,10 @@ Extraction candidates in this project:
 
 ## Anti-Patterns to Fix
 
-| Anti-pattern | Fix |
-|--------------|-----|
-| Duplicate README (root + server/) | Remove content from `server/README.md`, add redirect |
-| Doc content inside source code comments | Extract to `docs/development/` |
-| Inline env var docs inside `config.ts` | Move to `docs/configuration/environment-variables.md` |
-| Markdown files in root with single-use content | Move to appropriate `docs/` subdirectory |
-| `docs/` files edited by hand | Source-control the generator, not the output |
+| Anti-pattern                                   | Fix                                                   |
+| ---------------------------------------------- | ----------------------------------------------------- |
+| Duplicate README (root + server/)              | Remove content from `server/README.md`, add redirect  |
+| Doc content inside source code comments        | Extract to `docs/development/`                        |
+| Inline env var docs inside `config.ts`         | Move to `docs/configuration/environment-variables.md` |
+| Markdown files in root with single-use content | Move to appropriate `docs/` subdirectory              |
+| `docs/` files edited by hand                   | Source-control the generator, not the output          |

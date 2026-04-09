@@ -105,7 +105,15 @@ const fetchDetailsData = async (
       userId,
     });
 
-    return { mediaItem, seasons, episodes, seenHistory, userRating, lists, progress };
+    return {
+      mediaItem,
+      seasons,
+      episodes,
+      seenHistory,
+      userRating,
+      lists,
+      progress,
+    };
   });
 };
 
@@ -124,7 +132,8 @@ const groupRatingsAndSeenHistory = (
     .forEach((ratings, seasonId) => {
       const key = Number(seasonId);
       if (!Number.isNaN(key)) {
-        groupedSeasonRating[key] = ratings?.length > 0 ? ratings[0] ?? null : null;
+        groupedSeasonRating[key] =
+          ratings?.length > 0 ? ratings[0] ?? null : null;
       }
     });
 
@@ -135,7 +144,8 @@ const groupRatingsAndSeenHistory = (
     .forEach((ratings, episodeId) => {
       const key = Number(episodeId);
       if (!Number.isNaN(key)) {
-        groupedEpisodesRating[key] = ratings?.length > 0 ? ratings[0] ?? null : null;
+        groupedEpisodesRating[key] =
+          ratings?.length > 0 ? ratings[0] ?? null : null;
       }
     });
 
@@ -150,7 +160,11 @@ const groupRatingsAndSeenHistory = (
       }
     });
 
-  return { groupedSeasonRating, groupedEpisodesRating, groupedEpisodesSeenHistory };
+  return {
+    groupedSeasonRating,
+    groupedEpisodesRating,
+    groupedEpisodesSeenHistory,
+  };
 };
 
 /**
@@ -186,8 +200,11 @@ const enrichEpisodesAndSeasons = (
   seasons: TvSeason[],
   grouped: GroupedRatingsAndHistory
 ): EnrichedSeasonsResult => {
-  const { groupedSeasonRating, groupedEpisodesRating, groupedEpisodesSeenHistory } =
-    grouped;
+  const {
+    groupedSeasonRating,
+    groupedEpisodesRating,
+    groupedEpisodesSeenHistory,
+  } = grouped;
 
   episodes.forEach((episode) => {
     if (episode.id != null) {
@@ -209,7 +226,8 @@ const enrichEpisodesAndSeasons = (
   );
 
   const seasonsWithPosters = seasons.map((season) => {
-    const seasonEpisodes = season.id != null ? groupedEpisodes[season.id] ?? [] : [];
+    const seasonEpisodes =
+      season.id != null ? groupedEpisodes[season.id] ?? [] : [];
     const releasedEpisodes = seasonEpisodes
       .filter(TvEpisodeFilters.withReleaseDateEpisodes)
       .filter(TvEpisodeFilters.releasedEpisodes);
@@ -218,12 +236,16 @@ const enrichEpisodesAndSeasons = (
       ...season,
       isSpecialSeason: Boolean(season.isSpecialSeason),
       poster: season.posterId ? `/img/${season.posterId}` : null,
-      posterSmall: season.posterId ? `/img/${season.posterId}?size=small` : null,
+      posterSmall: season.posterId
+        ? `/img/${season.posterId}?size=small`
+        : null,
       episodes: seasonEpisodes,
-      userRating: season.id != null ? groupedSeasonRating[season.id] ?? null : null,
+      userRating:
+        season.id != null ? groupedSeasonRating[season.id] ?? null : null,
       seen:
         releasedEpisodes.length > 0 &&
-        releasedEpisodes.filter(TvEpisodeFilters.unwatchedEpisodes).length === 0,
+        releasedEpisodes.filter(TvEpisodeFilters.unwatchedEpisodes).length ===
+          0,
     };
   });
 
@@ -328,7 +350,10 @@ const overlaySeasonAndEpisodeTranslations = async (
     const seasonTranslation =
       season.id != null ? seasonTranslationMap.get(season.id) : undefined;
 
-    const updatedSeason = { ...season, metadataLanguage: null as string | null };
+    const updatedSeason = {
+      ...season,
+      metadataLanguage: null as string | null,
+    };
     if (seasonTranslation) {
       if (seasonTranslation.title != null) {
         updatedSeason.title = seasonTranslation.title;
@@ -342,13 +367,18 @@ const overlaySeasonAndEpisodeTranslations = async (
     if (updatedSeason.episodes) {
       updatedSeason.episodes = updatedSeason.episodes.map((episode) => {
         const episodeTranslation =
-          episode.id != null ? episodeTranslationMap.get(episode.id) : undefined;
+          episode.id != null
+            ? episodeTranslationMap.get(episode.id)
+            : undefined;
 
         if (!episodeTranslation) {
           return { ...episode, metadataLanguage: null as string | null };
         }
 
-        const updatedEpisode = { ...episode, metadataLanguage: null as string | null };
+        const updatedEpisode = {
+          ...episode,
+          metadataLanguage: null as string | null,
+        };
         if (episodeTranslation.title != null) {
           updatedEpisode.title = episodeTranslation.title;
         }
@@ -379,11 +409,18 @@ export const getDetailsKnex = async (params: {
     metadataLanguagePreferences && metadataLanguagePreferences.length > 0
       ? metadataLanguagePreferences
       : language
-        ? [language]
-        : [];
+      ? [language]
+      : [];
 
-  const { mediaItem, seasons, episodes, seenHistory, userRating, lists, progress } =
-    await fetchDetailsData(mediaItemId, userId);
+  const {
+    mediaItem,
+    seasons,
+    episodes,
+    seenHistory,
+    userRating,
+    lists,
+    progress,
+  } = await fetchDetailsData(mediaItemId, userId);
 
   if (!mediaItem) {
     throw new Error(`Media item ${mediaItemId} not found`);
@@ -403,10 +440,14 @@ export const getDetailsKnex = async (params: {
   const mediaItemLists = lists.filter((row) => !row.seasonId && !row.episodeId);
 
   const nextAiring =
-    mediaItem.mediaType === 'tv' ? upcomingEpisode?.releaseDate : mediaItem.releaseDate;
+    mediaItem.mediaType === 'tv'
+      ? upcomingEpisode?.releaseDate
+      : mediaItem.releaseDate;
 
   const lastAiring =
-    mediaItem.mediaType === 'tv' ? lastAiredEpisode?.releaseDate : mediaItem.releaseDate;
+    mediaItem.mediaType === 'tv'
+      ? lastAiredEpisode?.releaseDate
+      : mediaItem.releaseDate;
 
   const seen =
     mediaItem.mediaType === 'tv'
@@ -425,9 +466,15 @@ export const getDetailsKnex = async (params: {
       : null,
     hasDetails: true,
     genres: (mediaItem.genres as unknown as string)?.split(','),
-    narrators: splitCreatorField((mediaItem.narrators as unknown as string) || null),
-    authors: splitCreatorField((mediaItem.authors as unknown as string) || null),
-    contentRatingDescriptors: deserializeDescriptors(mediaItem.contentRatingDescriptors),
+    narrators: splitCreatorField(
+      (mediaItem.narrators as unknown as string) || null
+    ),
+    authors: splitCreatorField(
+      (mediaItem.authors as unknown as string) || null
+    ),
+    contentRatingDescriptors: deserializeDescriptors(
+      mediaItem.contentRatingDescriptors
+    ),
     parentalGuidanceCategories: deserializeCategories(
       mediaItem.parentalGuidanceCategories
     ),
@@ -439,14 +486,18 @@ export const getDetailsKnex = async (params: {
     lastAiredEpisode: lastAiredEpisode,
     firstUnwatchedEpisode: firstUnwatchedEpisode,
     userRating: userRating.find(UserRatingFilters.mediaItemUserRating) || null,
-    onWatchlist: Boolean(mediaItemLists.find((list) => Boolean(list.isWatchlist))),
+    onWatchlist: Boolean(
+      mediaItemLists.find((list) => Boolean(list.isWatchlist))
+    ),
     unseenEpisodesCount: unseenEpisodesCount,
     nextAiring: nextAiring,
     lastAiring: lastAiring,
     numberOfEpisodes: numberOfEpisodes,
     lastSeenAt: _.first(seenHistory)?.date || null,
     poster: mediaItem.posterId ? `/img/${mediaItem.posterId}` : null,
-    posterSmall: mediaItem.posterId ? `/img/${mediaItem.posterId}?size=small` : null,
+    posterSmall: mediaItem.posterId
+      ? `/img/${mediaItem.posterId}?size=small`
+      : null,
     backdrop: mediaItem.backdropId ? `/img/${mediaItem.backdropId}` : null,
     lists: mediaItemLists.map(mapList),
     totalRuntime: totalRuntime || undefined,

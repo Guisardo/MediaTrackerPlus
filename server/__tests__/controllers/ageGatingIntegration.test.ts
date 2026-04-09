@@ -406,9 +406,7 @@ describe('Age Gating Integration', () => {
 
       // This test verifies the integration at the repository level
       // by calling items() with explicit mediaItemIds and viewerAge
-      const { mediaItemRepository } = await import(
-        'src/repository/mediaItem'
-      );
+      const { mediaItemRepository } = await import('src/repository/mediaItem');
 
       const result = await mediaItemRepository.items({
         userId: TEEN_USER_ID,
@@ -425,9 +423,7 @@ describe('Age Gating Integration', () => {
     });
 
     test('search returns all items when viewerAge is null', async () => {
-      const { mediaItemRepository } = await import(
-        'src/repository/mediaItem'
-      );
+      const { mediaItemRepository } = await import('src/repository/mediaItem');
 
       const result = await mediaItemRepository.items({
         userId: NO_DOB_USER_ID,

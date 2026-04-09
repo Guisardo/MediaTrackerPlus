@@ -39,14 +39,22 @@ describe('OpenLibrary.details — primary language only', () => {
       subjects: ['American fiction'],
       subject_people: [],
       key: '/works/OL468431W',
-      authors: [{ author: { key: '/authors/OL12345A' }, type: { key: '/type/author_role' } }],
+      authors: [
+        {
+          author: { key: '/authors/OL12345A' },
+          type: { key: '/type/author_role' },
+        },
+      ],
       first_publish_date: '1925',
       subject_times: [],
       type: { key: '/type/work' },
       latest_revision: 10,
       revision: 10,
       created: { type: '/type/datetime', value: '2009-10-15T11:34:21.437852' },
-      last_modified: { type: '/type/datetime', value: '2020-10-15T11:34:21.437852' },
+      last_modified: {
+        type: '/type/datetime',
+        value: '2020-10-15T11:34:21.437852',
+      },
       ...overrides,
     };
   }
@@ -54,7 +62,9 @@ describe('OpenLibrary.details — primary language only', () => {
   test('logs a DEBUG message "OpenLibrary: no language filter, storing primary language only"', async () => {
     mockedAxios.get.mockImplementation((url: string) => {
       if (url.includes('/authors/')) {
-        return Promise.resolve({ data: { name: 'F. Scott Fitzgerald', key: '/authors/OL12345A' } });
+        return Promise.resolve({
+          data: { name: 'F. Scott Fitzgerald', key: '/authors/OL12345A' },
+        });
       }
       return Promise.resolve({ data: buildDetailsResponse() });
     });
@@ -72,7 +82,9 @@ describe('OpenLibrary.details — primary language only', () => {
   test('logs the debug message on every call to details()', async () => {
     mockedAxios.get.mockImplementation((url: string) => {
       if (url.includes('/authors/')) {
-        return Promise.resolve({ data: { name: 'F. Scott Fitzgerald', key: '/authors/OL12345A' } });
+        return Promise.resolve({
+          data: { name: 'F. Scott Fitzgerald', key: '/authors/OL12345A' },
+        });
       }
       return Promise.resolve({ data: buildDetailsResponse() });
     });
@@ -94,7 +106,9 @@ describe('OpenLibrary.details — primary language only', () => {
   test('still returns the correct book data after logging', async () => {
     mockedAxios.get.mockImplementation((url: string) => {
       if (url.includes('/authors/')) {
-        return Promise.resolve({ data: { name: 'F. Scott Fitzgerald', key: '/authors/OL12345A' } });
+        return Promise.resolve({
+          data: { name: 'F. Scott Fitzgerald', key: '/authors/OL12345A' },
+        });
       }
       return Promise.resolve({
         data: buildDetailsResponse({
@@ -118,6 +132,9 @@ describe('OpenLibrary.details — primary language only', () => {
   });
 
   test('does NOT implement localizedDetails (no such method on OpenLibrary)', () => {
-    expect(typeof (openLibrary as unknown as Record<string, unknown>).localizedDetails).toBe('undefined');
+    expect(
+      typeof (openLibrary as unknown as Record<string, unknown>)
+        .localizedDetails
+    ).toBe('undefined');
   });
 });

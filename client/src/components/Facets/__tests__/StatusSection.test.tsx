@@ -4,7 +4,11 @@ import { StatusSection } from '../StatusSection';
 
 jest.mock('@lingui/macro', () => ({
   t: (strings: TemplateStringsArray, ...values: unknown[]) =>
-    typeof strings === 'string' ? strings : strings.raw ? String.raw(strings, ...values) : strings[0],
+    typeof strings === 'string'
+      ? strings
+      : strings.raw
+      ? String.raw(strings, ...values)
+      : strings[0],
   Trans: ({ children, message, id }: any) => children ?? message ?? id ?? null,
 }));
 jest.mock('@lingui/react', () => ({
@@ -23,7 +27,9 @@ jest.mock('src/components/Facets/FacetSection', () => {
   const React = require('react');
   return {
     FacetSection: ({ title, children }: any) =>
-      React.createElement('div', { 'data-testid': 'facet-section' },
+      React.createElement(
+        'div',
+        { 'data-testid': 'facet-section' },
         React.createElement('span', { 'data-testid': 'facet-title' }, title),
         children
       ),
@@ -96,7 +102,9 @@ describe('StatusSection', () => {
     );
     const ratedCheckbox = screen.getByLabelText('Rated') as HTMLInputElement;
     expect(ratedCheckbox.checked).toBe(true);
-    const unratedCheckbox = screen.getByLabelText('Unrated') as HTMLInputElement;
+    const unratedCheckbox = screen.getByLabelText(
+      'Unrated'
+    ) as HTMLInputElement;
     expect(unratedCheckbox.checked).toBe(false);
   });
 
@@ -131,7 +139,9 @@ describe('StatusSection', () => {
         setStatus: jest.fn(),
       })
     );
-    expect(screen.getByText('Item must match all selected statuses')).toBeInTheDocument();
+    expect(
+      screen.getByText('Item must match all selected statuses')
+    ).toBeInTheDocument();
   });
 
   it('does not show "match all" hint when no statuses selected', () => {
@@ -141,6 +151,8 @@ describe('StatusSection', () => {
         setStatus: jest.fn(),
       })
     );
-    expect(screen.queryByText('Item must match all selected statuses')).not.toBeInTheDocument();
+    expect(
+      screen.queryByText('Item must match all selected statuses')
+    ).not.toBeInTheDocument();
   });
 });

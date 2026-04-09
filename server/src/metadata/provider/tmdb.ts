@@ -52,7 +52,9 @@ const getPosterUrl = (p: string, size: PosterSize = 'original') => {
   return urljoin('https://image.tmdb.org/t/p/', size, path.basename(p));
 };
 
-const getBaseLanguage = (language: string | null | undefined): string | null => {
+const getBaseLanguage = (
+  language: string | null | undefined
+): string | null => {
   if (!language) {
     return null;
   }
@@ -61,7 +63,9 @@ const getBaseLanguage = (language: string | null | undefined): string | null => 
   return base || null;
 };
 
-const normalizeLanguage = (language: string | null | undefined): string | null => {
+const normalizeLanguage = (
+  language: string | null | undefined
+): string | null => {
   return language?.toLowerCase() ?? null;
 };
 
@@ -108,20 +112,18 @@ const trailerRank = (
   const trailerBase = getBaseLanguage(trailer.language);
 
   let languageRank = 3;
-  if (normalizedRequested && normalizedTrailerLanguage === normalizedRequested) {
-    languageRank = 0;
-  } else if (
-    normalizedBase &&
-    trailerBase &&
-    normalizedBase === trailerBase
+  if (
+    normalizedRequested &&
+    normalizedTrailerLanguage === normalizedRequested
   ) {
+    languageRank = 0;
+  } else if (normalizedBase && trailerBase && normalizedBase === trailerBase) {
     languageRank = 1;
   } else if (trailer.language == null) {
     languageRank = 2;
   }
 
-  const fallbackRank =
-    trailer.kind === 'trailer' && trailer.isOfficial ? 0 : 1;
+  const fallbackRank = trailer.kind === 'trailer' && trailer.isOfficial ? 0 : 1;
   const kindRank = trailer.kind === 'trailer' ? 0 : 1;
 
   return [languageRank, fallbackRank, kindRank, trailer.title.toLowerCase()];
@@ -235,13 +237,17 @@ abstract class TMDb extends MetadataProvider {
       if (status === 429) {
         const retryAfter = axiosError?.response?.headers?.['retry-after'];
         logger.warn(
-          `TMDB rate limit hit on ${endpointPath}. Retry-After: ${retryAfter ?? 'unknown'}`
+          `TMDB rate limit hit on ${endpointPath}. Retry-After: ${
+            retryAfter ?? 'unknown'
+          }`
         );
         return [];
       }
 
       throw new Error(
-        `TMDB API request failed with HTTP ${status ?? 'unknown'} for ${endpointPath}`
+        `TMDB API request failed with HTTP ${
+          status ?? 'unknown'
+        } for ${endpointPath}`
       );
     }
 
@@ -339,13 +345,17 @@ abstract class TMDb extends MetadataProvider {
       if (status === 429) {
         const retryAfter = axiosError?.response?.headers?.['retry-after'];
         logger.warn(
-          `TMDB rate limit hit on ${endpointPath}. Retry-After: ${retryAfter ?? 'unknown'}`
+          `TMDB rate limit hit on ${endpointPath}. Retry-After: ${
+            retryAfter ?? 'unknown'
+          }`
         );
         return [];
       }
 
       throw new Error(
-        `TMDB API request failed with HTTP ${status ?? 'unknown'} for ${endpointPath}`
+        `TMDB API request failed with HTTP ${
+          status ?? 'unknown'
+        } for ${endpointPath}`
       );
     }
 
@@ -406,7 +416,9 @@ export class TMDbMovie extends TMDb {
     }));
   }
 
-  override async details(mediaItem: ExternalIds): Promise<MediaItemForProvider> {
+  override async details(
+    mediaItem: ExternalIds
+  ): Promise<MediaItemForProvider> {
     if (!mediaItem.tmdbId) {
       throw new Error('TMDbMovie.details requires a tmdbId');
     }
@@ -430,7 +442,9 @@ export class TMDbMovie extends TMDb {
 
   override async similar(ids: ExternalIds): Promise<SimilarItem[]> {
     if (!ids.tmdbId) {
-      logger.warn(`TMDbMovie.similar: no tmdbId provided — returning empty results`);
+      logger.warn(
+        `TMDbMovie.similar: no tmdbId provided — returning empty results`
+      );
       return [];
     }
     return this.fetchTmdbSimilar(ids.tmdbId, 'movie');
@@ -473,14 +487,18 @@ export class TMDbMovie extends TMDb {
     language: string
   ): Promise<MetadataTrailer[]> {
     if (!ids.tmdbId) {
-      logger.warn(`TMDbMovie.trailers: no tmdbId provided — returning empty results`);
+      logger.warn(
+        `TMDbMovie.trailers: no tmdbId provided — returning empty results`
+      );
       return [];
     }
 
     return this.fetchTmdbTrailers(ids.tmdbId, 'movie', language);
   }
 
-  async findByImdbId(imdbId: string): Promise<MediaItemForProvider | undefined> {
+  async findByImdbId(
+    imdbId: string
+  ): Promise<MediaItemForProvider | undefined> {
     const res = await axios.get(`https://api.themoviedb.org/3/find/${imdbId}`, {
       params: {
         api_key: TMDB_API_KEY,
@@ -586,7 +604,9 @@ export class TMDbTv extends TMDb {
     }));
   }
 
-  override async details(mediaItem: ExternalIds): Promise<MediaItemForProvider> {
+  override async details(
+    mediaItem: ExternalIds
+  ): Promise<MediaItemForProvider> {
     if (!mediaItem.tmdbId) {
       throw new Error('TMDbTv.details requires a tmdbId');
     }
@@ -689,12 +709,14 @@ export class TMDbTv extends TMDb {
     if (tvShow.seasons) {
       for (const season of tvShow.seasons) {
         if (season.title === '') season.title = null as unknown as string;
-        if (season.description === '') season.description = null as unknown as string;
+        if (season.description === '')
+          season.description = null as unknown as string;
 
         if (season.episodes) {
           for (const episode of season.episodes) {
             if (episode.title === '') episode.title = null as unknown as string;
-            if (episode.description === '') episode.description = null as unknown as string;
+            if (episode.description === '')
+              episode.description = null as unknown as string;
           }
         }
       }
@@ -705,7 +727,9 @@ export class TMDbTv extends TMDb {
 
   override async similar(ids: ExternalIds): Promise<SimilarItem[]> {
     if (!ids.tmdbId) {
-      logger.warn(`TMDbTv.similar: no tmdbId provided — returning empty results`);
+      logger.warn(
+        `TMDbTv.similar: no tmdbId provided — returning empty results`
+      );
       return [];
     }
     return this.fetchTmdbSimilar(ids.tmdbId, 'tv');
@@ -716,14 +740,18 @@ export class TMDbTv extends TMDb {
     language: string
   ): Promise<MetadataTrailer[]> {
     if (!ids.tmdbId) {
-      logger.warn(`TMDbTv.trailers: no tmdbId provided — returning empty results`);
+      logger.warn(
+        `TMDbTv.trailers: no tmdbId provided — returning empty results`
+      );
       return [];
     }
 
     return this.fetchTmdbTrailers(ids.tmdbId, 'tv', language);
   }
 
-  async findByImdbId(imdbId: string): Promise<MediaItemForProvider | undefined> {
+  async findByImdbId(
+    imdbId: string
+  ): Promise<MediaItemForProvider | undefined> {
     const res = await axios.get(`https://api.themoviedb.org/3/find/${imdbId}`, {
       params: {
         api_key: TMDB_API_KEY,
@@ -743,7 +771,9 @@ export class TMDbTv extends TMDb {
     };
   }
 
-  async findByTvdbId(tvdbId: number): Promise<MediaItemForProvider | undefined> {
+  async findByTvdbId(
+    tvdbId: number
+  ): Promise<MediaItemForProvider | undefined> {
     const res = await axios.get(`https://api.themoviedb.org/3/find/${tvdbId}`, {
       params: {
         api_key: TMDB_API_KEY,
@@ -824,7 +854,8 @@ export class TMDbTv extends TMDb {
     tvShow.releaseDate = definedOrUndefined(item.first_air_date);
     tvShow.numberOfSeasons = item.number_of_seasons;
     tvShow.tmdbRating = item.vote_average;
-    tvShow.creator = item.created_by?.map((c) => c.name).join(', ') || undefined;
+    tvShow.creator =
+      item.created_by?.map((c) => c.name).join(', ') || undefined;
     tvShow.network = item.networks?.[0]?.name;
     tvShow.runtime = item.episode_run_time?.[0];
 

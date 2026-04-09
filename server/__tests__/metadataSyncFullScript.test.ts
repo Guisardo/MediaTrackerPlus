@@ -12,7 +12,10 @@ import { tmpdir } from 'os';
 import { join, resolve } from 'path';
 import { spawnSync } from 'child_process';
 
-const sourceScriptPath = resolve(__dirname, '../../scripts/metadata-sync-full.sh');
+const sourceScriptPath = resolve(
+  __dirname,
+  '../../scripts/metadata-sync-full.sh'
+);
 const shellExecutable = 'sh';
 const normalizeDirectory = (path: string) => {
   const resolved =
@@ -26,7 +29,10 @@ const createTempRepo = () => {
   const rootDir = mkdtempSync(join(tmpdir(), 'mediatracker-metadata-sync-'));
   mkdirSync(join(rootDir, 'scripts'), { recursive: true });
   mkdirSync(join(rootDir, 'server'), { recursive: true });
-  copyFileSync(sourceScriptPath, join(rootDir, 'scripts/metadata-sync-full.sh'));
+  copyFileSync(
+    sourceScriptPath,
+    join(rootDir, 'scripts/metadata-sync-full.sh')
+  );
   return rootDir;
 };
 
@@ -148,10 +154,7 @@ describe('metadata-sync-full.sh', () => {
 
     const fallbackBinDir = join(rootDir, 'fallback-bin');
     const fakeHomeDir = join(rootDir, 'fake-home');
-    const nvmBinDir = join(
-      fakeHomeDir,
-      '.nvm/versions/node/v22.12.0/bin'
-    );
+    const nvmBinDir = join(fakeHomeDir, '.nvm/versions/node/v22.12.0/bin');
     const fallbackNpmPath = join(fallbackBinDir, 'npm');
     const nvmNpmPath = join(nvmBinDir, 'npm');
     const argsFile = join(rootDir, 'captured-args.txt');

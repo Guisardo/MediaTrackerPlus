@@ -3,20 +3,29 @@ import { render, screen, fireEvent } from '@testing-library/react';
 
 jest.mock('@lingui/core', () => ({
   i18n: {
-    _: (d: any) => (typeof d === 'string' ? d : d?.message ?? d?.id ?? String(d)),
+    _: (d: any) =>
+      typeof d === 'string' ? d : d?.message ?? d?.id ?? String(d),
     activate: jest.fn(),
     on: jest.fn(),
   },
   setupI18n: () => ({
-    _: (d: any) => (typeof d === 'string' ? d : d?.message ?? d?.id ?? String(d)),
+    _: (d: any) =>
+      typeof d === 'string' ? d : d?.message ?? d?.id ?? String(d),
     activate: jest.fn(),
     on: jest.fn(),
   }),
 }));
 
 jest.mock('@lingui/macro', () => ({
-  Trans: ({ children, message, id }: { children?: React.ReactNode; message?: string; id?: string }) =>
-    children ?? message ?? id ?? null,
+  Trans: ({
+    children,
+    message,
+    id,
+  }: {
+    children?: React.ReactNode;
+    message?: string;
+    id?: string;
+  }) => children ?? message ?? id ?? null,
   t: (strings: TemplateStringsArray, ...values: unknown[]) =>
     typeof strings === 'string'
       ? strings
@@ -28,8 +37,15 @@ jest.mock('@lingui/macro', () => ({
 jest.mock('@lingui/react', () => ({
   I18nProvider: ({ children }: { children: React.ReactNode }) => children,
   useLingui: () => ({ i18n: { _: (id: unknown) => id } }),
-  Trans: ({ children, message, id }: { children?: React.ReactNode; message?: string; id?: string }) =>
-    children ?? message ?? id ?? null,
+  Trans: ({
+    children,
+    message,
+    id,
+  }: {
+    children?: React.ReactNode;
+    message?: string;
+    id?: string;
+  }) => children ?? message ?? id ?? null,
 }));
 
 jest.mock('date-fns/format', () => ({
@@ -46,7 +62,11 @@ jest.mock('src/components/SelectLastSeenEpisode', () => {
   const React = require('react');
   return {
     SelectLastSeenEpisode: ({ tvShow, closeModal }: any) =>
-      React.createElement('div', { 'data-testid': 'select-last-seen-episode' }, tvShow?.title),
+      React.createElement(
+        'div',
+        { 'data-testid': 'select-last-seen-episode' },
+        tvShow?.title
+      ),
   };
 });
 
@@ -56,7 +76,10 @@ jest.mock('src/utils', () => ({
   isMovie: (item: any) => (item?.mediaType ?? item) === 'movie',
   isTvShow: (item: any) => (item?.mediaType ?? item) === 'tv',
   isVideoGame: (item: any) => (item?.mediaType ?? item) === 'video_game',
-  formatEpisodeNumber: (ep: any) => `S${String(ep.seasonNumber).padStart(2, '0')}E${String(ep.episodeNumber).padStart(2, '0')}`,
+  formatEpisodeNumber: (ep: any) =>
+    `S${String(ep.seasonNumber).padStart(2, '0')}E${String(
+      ep.episodeNumber
+    ).padStart(2, '0')}`,
 }));
 
 import { SelectSeenDate, SelectSeenDateComponent } from '../SelectSeenDate';
@@ -73,7 +96,9 @@ describe('SelectSeenDate', () => {
   it('renders SelectLastSeenEpisode when mediaType is tv and no episode', () => {
     render(
       <SelectSeenDate
-        mediaItem={createMediaItem({ mediaType: 'tv', title: 'Breaking Bad' }) as any}
+        mediaItem={
+          createMediaItem({ mediaType: 'tv', title: 'Breaking Bad' }) as any
+        }
         closeModal={jest.fn()}
       />
     );
@@ -82,22 +107,33 @@ describe('SelectSeenDate', () => {
   });
 
   it('renders SelectSeenDateComponent when episode is provided for tv', () => {
-    const episode = { id: 1, seasonNumber: 1, episodeNumber: 1, title: 'Pilot' };
+    const episode = {
+      id: 1,
+      seasonNumber: 1,
+      episodeNumber: 1,
+      title: 'Pilot',
+    };
     render(
       <SelectSeenDate
-        mediaItem={createMediaItem({ mediaType: 'tv', title: 'Breaking Bad' }) as any}
+        mediaItem={
+          createMediaItem({ mediaType: 'tv', title: 'Breaking Bad' }) as any
+        }
         episode={episode as any}
         closeModal={jest.fn()}
       />
     );
-    expect(screen.queryByTestId('select-last-seen-episode')).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId('select-last-seen-episode')
+    ).not.toBeInTheDocument();
     expect(screen.getByText('Now')).toBeInTheDocument();
   });
 
   it('renders SelectSeenDateComponent for non-tv media', () => {
     render(
       <SelectSeenDate
-        mediaItem={createMediaItem({ mediaType: 'movie', title: 'Inception' }) as any}
+        mediaItem={
+          createMediaItem({ mediaType: 'movie', title: 'Inception' }) as any
+        }
         closeModal={jest.fn()}
       />
     );
@@ -134,7 +170,9 @@ describe('SelectSeenDateComponent', () => {
   it('renders date prompt for audiobook', () => {
     render(
       <SelectSeenDateComponent
-        mediaItem={createMediaItem({ mediaType: 'audiobook', title: 'Sapiens' }) as any}
+        mediaItem={
+          createMediaItem({ mediaType: 'audiobook', title: 'Sapiens' }) as any
+        }
         onSelected={jest.fn()}
         closeModal={jest.fn()}
       />
@@ -145,7 +183,9 @@ describe('SelectSeenDateComponent', () => {
   it('renders date prompt for video game', () => {
     render(
       <SelectSeenDateComponent
-        mediaItem={createMediaItem({ mediaType: 'video_game', title: 'Zelda' }) as any}
+        mediaItem={
+          createMediaItem({ mediaType: 'video_game', title: 'Zelda' }) as any
+        }
         onSelected={jest.fn()}
         closeModal={jest.fn()}
       />
@@ -154,10 +194,17 @@ describe('SelectSeenDateComponent', () => {
   });
 
   it('renders episode info for tv show with episode', () => {
-    const episode = { id: 1, seasonNumber: 2, episodeNumber: 5, title: 'Ozymandias' };
+    const episode = {
+      id: 1,
+      seasonNumber: 2,
+      episodeNumber: 5,
+      title: 'Ozymandias',
+    };
     render(
       <SelectSeenDateComponent
-        mediaItem={createMediaItem({ mediaType: 'tv', title: 'Breaking Bad' }) as any}
+        mediaItem={
+          createMediaItem({ mediaType: 'tv', title: 'Breaking Bad' }) as any
+        }
         episode={episode as any}
         onSelected={jest.fn()}
         closeModal={jest.fn()}
@@ -240,8 +287,12 @@ describe('SelectSeenDateComponent', () => {
         closeModal={jest.fn()}
       />
     );
-    const dateInput = container.querySelector('input[type="date"]') as HTMLInputElement;
-    const timeInput = container.querySelector('input[type="time"]') as HTMLInputElement;
+    const dateInput = container.querySelector(
+      'input[type="date"]'
+    ) as HTMLInputElement;
+    const timeInput = container.querySelector(
+      'input[type="time"]'
+    ) as HTMLInputElement;
     fireEvent.change(dateInput, { target: { value: '2024-06-15' } });
     fireEvent.change(timeInput, { target: { value: '14:30' } });
     const form = container.querySelector('form');

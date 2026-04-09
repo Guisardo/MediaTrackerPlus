@@ -51,9 +51,17 @@ jest.mock('src/components/ui/card', () => {
   const React = require('react');
   return {
     Card: ({ children, className }: any) =>
-      React.createElement('div', { 'data-testid': 'card', className }, children),
+      React.createElement(
+        'div',
+        { 'data-testid': 'card', className },
+        children
+      ),
     CardContent: ({ children, className }: any) =>
-      React.createElement('div', { 'data-testid': 'card-content', className }, children),
+      React.createElement(
+        'div',
+        { 'data-testid': 'card-content', className },
+        children
+      ),
   };
 });
 
@@ -75,10 +83,18 @@ jest.mock('@tanstack/react-query', () => {
       const [queryData, setQueryData] = React.useState(undefined);
       React.useEffect(() => {
         if (queryFn) {
-          Promise.resolve(queryFn()).then(setQueryData).catch((_e) => { /* ignore */ });
+          Promise.resolve(queryFn())
+            .then(setQueryData)
+            .catch((_e) => {
+              /* ignore */
+            });
         }
       }, []);
-      return { data: queryData, isLoading: queryData === undefined, error: null };
+      return {
+        data: queryData,
+        isLoading: queryData === undefined,
+        error: null,
+      };
     },
   };
 });
@@ -87,7 +103,11 @@ import { StatisticsSummary } from 'src/components/Statistics/StatisticsSummary';
 
 const renderComponent = () =>
   render(
-    React.createElement(MemoryRouter, null, React.createElement(StatisticsSummary))
+    React.createElement(
+      MemoryRouter,
+      null,
+      React.createElement(StatisticsSummary)
+    )
   );
 
 beforeEach(() => {

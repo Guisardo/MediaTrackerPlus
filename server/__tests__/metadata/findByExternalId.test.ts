@@ -74,22 +74,20 @@ const { logger: mockLogger } = jest.requireMock('src/logger') as {
   };
 };
 
-const {
-  __mockTMDbTv: mockTMDbTv,
-  __mockTMDbMovie: mockTMDbMovie,
-} = jest.requireMock('src/metadata/provider/tmdb') as {
-  __mockTMDbTv: {
-    findByTmdbId: jest.Mock;
-    findByImdbId: jest.Mock;
-    findByTvdbId: jest.Mock;
-    findByEpisodeImdbId: jest.Mock;
-    findByEpisodeTvdbId: jest.Mock;
+const { __mockTMDbTv: mockTMDbTv, __mockTMDbMovie: mockTMDbMovie } =
+  jest.requireMock('src/metadata/provider/tmdb') as {
+    __mockTMDbTv: {
+      findByTmdbId: jest.Mock;
+      findByImdbId: jest.Mock;
+      findByTvdbId: jest.Mock;
+      findByEpisodeImdbId: jest.Mock;
+      findByEpisodeTvdbId: jest.Mock;
+    };
+    __mockTMDbMovie: {
+      findByTmdbId: jest.Mock;
+      findByImdbId: jest.Mock;
+    };
   };
-  __mockTMDbMovie: {
-    findByTmdbId: jest.Mock;
-    findByImdbId: jest.Mock;
-  };
-};
 
 const { mediaItemRepository: mockMediaItemRepository } = jest.requireMock(
   'src/repository/mediaItem'

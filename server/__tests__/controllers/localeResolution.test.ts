@@ -5,9 +5,7 @@ import { Data } from '__tests__/__utils__/data';
 import { request } from '__tests__/__utils__/request';
 import { clearDatabase, runMigrations } from '__tests__/__utils__/utils';
 import { upsertMediaItemTranslation } from 'src/repository/translationRepository';
-import {
-  _resetMetadataLanguagesCache,
-} from 'src/metadataLanguages';
+import { _resetMetadataLanguagesCache } from 'src/metadataLanguages';
 import { Config } from 'src/config';
 
 /**
@@ -64,7 +62,9 @@ describe('Locale Resolution - Media Item API', () => {
 
   afterEach(() => {
     // Clean up config mock after each test
-    (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = null;
+    (
+      Config as unknown as { METADATA_LANGUAGES: string[] | null }
+    ).METADATA_LANGUAGES = null;
     _resetMetadataLanguagesCache();
   });
 
@@ -75,10 +75,9 @@ describe('Locale Resolution - Media Item API', () => {
   describe('GET /api/details/:mediaItemId', () => {
     test('Tier 1: exact locale match returns localized data with correct metadataLanguage', async () => {
       // Configure METADATA_LANGUAGES to include both 'en' and 'es'
-      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-        'en',
-        'es',
-      ];
+      (
+        Config as unknown as { METADATA_LANGUAGES: string[] | null }
+      ).METADATA_LANGUAGES = ['en', 'es'];
 
       const controller = new MediaItemController();
 
@@ -96,10 +95,9 @@ describe('Locale Resolution - Media Item API', () => {
     });
 
     test('Tier 2: regional request falls back to base locale before default', async () => {
-      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-        'en',
-        'es',
-      ];
+      (
+        Config as unknown as { METADATA_LANGUAGES: string[] | null }
+      ).METADATA_LANGUAGES = ['en', 'es'];
 
       const controller = new MediaItemController();
 
@@ -118,10 +116,9 @@ describe('Locale Resolution - Media Item API', () => {
 
     test('Tier 3: no exact/base locale match returns default-language fallback', async () => {
       // METADATA_LANGUAGES has en and es, request for 'fr' which has no translation
-      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-        'en',
-        'fr',
-      ];
+      (
+        Config as unknown as { METADATA_LANGUAGES: string[] | null }
+      ).METADATA_LANGUAGES = ['en', 'fr'];
 
       const controller = new MediaItemController();
 
@@ -141,9 +138,9 @@ describe('Locale Resolution - Media Item API', () => {
 
     test('Tier 4: no translation exists returns base fields with metadataLanguage null', async () => {
       // METADATA_LANGUAGES has 'de' only, but no German translation exists
-      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-        'de',
-      ];
+      (
+        Config as unknown as { METADATA_LANGUAGES: string[] | null }
+      ).METADATA_LANGUAGES = ['de'];
 
       const controller = new MediaItemController();
 
@@ -162,9 +159,9 @@ describe('Locale Resolution - Media Item API', () => {
 
     test('returns base fields when Accept-Language header is absent', async () => {
       // When no header, falls back to first language ('en') which has a translation
-      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-        'en',
-      ];
+      (
+        Config as unknown as { METADATA_LANGUAGES: string[] | null }
+      ).METADATA_LANGUAGES = ['en'];
 
       const controller = new MediaItemController();
 
@@ -182,9 +179,9 @@ describe('Locale Resolution - Media Item API', () => {
     });
 
     test('metadataLanguage field is present in response (not undefined)', async () => {
-      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-        'en',
-      ];
+      (
+        Config as unknown as { METADATA_LANGUAGES: string[] | null }
+      ).METADATA_LANGUAGES = ['en'];
 
       const controller = new MediaItemController();
 
@@ -206,10 +203,9 @@ describe('Locale Resolution - Media Item API', () => {
 
   describe('GET /api/items', () => {
     test('Tier 1: exact locale match applies translation overlay to all items', async () => {
-      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-        'en',
-        'es',
-      ];
+      (
+        Config as unknown as { METADATA_LANGUAGES: string[] | null }
+      ).METADATA_LANGUAGES = ['en', 'es'];
 
       const controller = new ItemsController();
 
@@ -230,10 +226,9 @@ describe('Locale Resolution - Media Item API', () => {
     });
 
     test('Tier 2: regional request falls back to base locale before default for all items', async () => {
-      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-        'en',
-        'es',
-      ];
+      (
+        Config as unknown as { METADATA_LANGUAGES: string[] | null }
+      ).METADATA_LANGUAGES = ['en', 'es'];
 
       const controller = new ItemsController();
 
@@ -253,10 +248,9 @@ describe('Locale Resolution - Media Item API', () => {
     });
 
     test('Tier 3: no exact/base match returns default-language fallback for all items', async () => {
-      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-        'en',
-        'fr',
-      ];
+      (
+        Config as unknown as { METADATA_LANGUAGES: string[] | null }
+      ).METADATA_LANGUAGES = ['en', 'fr'];
 
       const controller = new ItemsController();
 
@@ -278,9 +272,9 @@ describe('Locale Resolution - Media Item API', () => {
 
     test('Tier 4: items without translations get metadataLanguage null', async () => {
       // Only 'de' configured — no German translations seeded
-      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-        'de',
-      ];
+      (
+        Config as unknown as { METADATA_LANGUAGES: string[] | null }
+      ).METADATA_LANGUAGES = ['de'];
 
       const controller = new ItemsController();
 
@@ -301,9 +295,9 @@ describe('Locale Resolution - Media Item API', () => {
     });
 
     test('all items in response include metadataLanguage field', async () => {
-      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-        'en',
-      ];
+      (
+        Config as unknown as { METADATA_LANGUAGES: string[] | null }
+      ).METADATA_LANGUAGES = ['en'];
 
       const controller = new ItemsController();
 
@@ -328,10 +322,9 @@ describe('Locale Resolution - Media Item API', () => {
 
   describe('GET /api/items/paginated', () => {
     test('Tier 1: exact locale match applies to paginated results', async () => {
-      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-        'en',
-        'es',
-      ];
+      (
+        Config as unknown as { METADATA_LANGUAGES: string[] | null }
+      ).METADATA_LANGUAGES = ['en', 'es'];
 
       const controller = new ItemsController();
 
@@ -354,10 +347,9 @@ describe('Locale Resolution - Media Item API', () => {
     });
 
     test('Tier 2: paginated results fall back from regional request to base locale', async () => {
-      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-        'en',
-        'es',
-      ];
+      (
+        Config as unknown as { METADATA_LANGUAGES: string[] | null }
+      ).METADATA_LANGUAGES = ['en', 'es'];
 
       const controller = new ItemsController();
 

@@ -38,22 +38,36 @@ export class WatchlistWriter {
     this.getKnex = deps.knex ? () => deps.knex! : () => Database.knex;
   }
 
-  async write(userId: number, items: SimilarItem[], estimatedRating: number): Promise<WriteResult> {
+  async write(
+    userId: number,
+    items: SimilarItem[],
+    estimatedRating: number
+  ): Promise<WriteResult> {
     const result: WriteResult = { added: 0, updated: 0, skipped: 0 };
 
     for (const item of items) {
       const outcome = await this.processItem(userId, item, estimatedRating);
       switch (outcome) {
-        case 'added': result.added++; break;
-        case 'updated': result.updated++; break;
-        case 'skipped': result.skipped++; break;
+        case 'added':
+          result.added++;
+          break;
+        case 'updated':
+          result.updated++;
+          break;
+        case 'skipped':
+          result.skipped++;
+          break;
       }
     }
 
     return result;
   }
 
-  private async processItem(userId: number, item: SimilarItem, estimatedRating: number): Promise<'added' | 'updated' | 'skipped'> {
+  private async processItem(
+    userId: number,
+    item: SimilarItem,
+    estimatedRating: number
+  ): Promise<'added' | 'updated' | 'skipped'> {
     const mediaItem = await this.findMediaItemByExternalId({
       id: similarItemToExternalIds(item),
       mediaType: item.mediaType as MediaType,
@@ -70,10 +84,14 @@ export class WatchlistWriter {
     const mediaItemId = mediaItem.id;
 
     const outcome = await this.getKnex().transaction(async (trx) => {
-      const watchlist = await trx<List>('list').where({ userId, isWatchlist: true }).first();
+      const watchlist = await trx<List>('list')
+        .where({ userId, isWatchlist: true })
+        .first();
 
       if (!watchlist) {
-        logger.warn(`WatchlistWriter: No watchlist found for userId=${userId} — skipping item "${item.title}"`);
+        logger.warn(
+          `WatchlistWriter: No watchlist found for userId=${userId} — skipping item "${item.title}"`
+        );
         return 'skipped';
       }
 
@@ -84,40 +102,69 @@ export class WatchlistWriter {
         .first();
 
       if (userRating) {
-        logger.debug(`WatchlistWriter: mediaItemId=${mediaItemId} already rated by userId=${userId} — skipping`);
+        logger.debug(
+          `WatchlistWriter: mediaItemId=${mediaItemId} already rated by userId=${userId} — skipping`
+        );
         return 'skipped';
       }
 
-      const seen = await trx<Seen>('seen').where({ userId, mediaItemId }).whereNull('episodeId').first();
+      const seen = await trx<Seen>('seen')
+        .where({ userId, mediaItemId })
+        .whereNull('episodeId')
+        .first();
 
       if (seen) {
-        logger.debug(`WatchlistWriter: mediaItemId=${mediaItemId} already watched by userId=${userId} — skipping`);
+        logger.debug(
+          `WatchlistWriter: mediaItemId=${mediaItemId} already watched by userId=${userId} — skipping`
+        );
         return 'skipped';
       }
 
-      const existingListItem = await trx<ListItem>('listItem').where({ listId, mediaItemId }).first();
+      const existingListItem = await trx<ListItem>('listItem')
+        .where({ listId, mediaItemId })
+        .first();
 
       if (!existingListItem) {
-        await trx('listItem').insert({ listId, mediaItemId, addedAt: new Date().getTime(), estimatedRating });
-        logger.debug(`WatchlistWriter: Added mediaItemId=${mediaItemId} to watchlist for userId=${userId} with estimatedRating=${estimatedRating}`);
+        await trx('listItem').insert({
+          listId,
+          mediaItemId,
+          addedAt: new Date().getTime(),
+          estimatedRating,
+        });
+        logger.debug(
+          `WatchlistWriter: Added mediaItemId=${mediaItemId} to watchlist for userId=${userId} with estimatedRating=${estimatedRating}`
+        );
         return 'added';
       }
 
       const currentEstimatedRating = existingListItem.estimatedRating;
 
-      if (currentEstimatedRating === undefined || currentEstimatedRating === null) {
-        await trx('listItem').where({ id: existingListItem.id }).update({ estimatedRating });
-        logger.debug(`WatchlistWriter: Updated mediaItemId=${mediaItemId} estimatedRating from null to ${estimatedRating} for userId=${userId}`);
+      if (
+        currentEstimatedRating === undefined ||
+        currentEstimatedRating === null
+      ) {
+        await trx('listItem')
+          .where({ id: existingListItem.id })
+          .update({ estimatedRating });
+        logger.debug(
+          `WatchlistWriter: Updated mediaItemId=${mediaItemId} estimatedRating from null to ${estimatedRating} for userId=${userId}`
+        );
         return 'updated';
       }
 
       if (estimatedRating < currentEstimatedRating) {
-        await trx('listItem').where({ id: existingListItem.id }).update({ estimatedRating });
-        logger.debug(`WatchlistWriter: Updated mediaItemId=${mediaItemId} estimatedRating from ${currentEstimatedRating} to ${estimatedRating} for userId=${userId} (minimum-wins)`);
+        await trx('listItem')
+          .where({ id: existingListItem.id })
+          .update({ estimatedRating });
+        logger.debug(
+          `WatchlistWriter: Updated mediaItemId=${mediaItemId} estimatedRating from ${currentEstimatedRating} to ${estimatedRating} for userId=${userId} (minimum-wins)`
+        );
         return 'updated';
       }
 
-      logger.debug(`WatchlistWriter: Keeping mediaItemId=${mediaItemId} estimatedRating=${currentEstimatedRating} (incoming=${estimatedRating} is not lower) for userId=${userId}`);
+      logger.debug(
+        `WatchlistWriter: Keeping mediaItemId=${mediaItemId} estimatedRating=${currentEstimatedRating} (incoming=${estimatedRating} is not lower) for userId=${userId}`
+      );
       return 'skipped';
     });
 

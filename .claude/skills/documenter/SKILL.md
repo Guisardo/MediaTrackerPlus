@@ -11,13 +11,13 @@ This skill transforms scattered, inconsistent project documentation into a coher
 
 ## Quick Reference
 
-| Goal | Sub-skill | Script |
-|------|-----------|--------|
-| Fix formatting, headings, code fences | [NORMALIZE.md](NORMALIZE.md) | `scripts/normalize_markdown.py` |
-| Restructure file layout, naming, folders | [ORGANIZE.md](ORGANIZE.md) | `scripts/scan_docs.py` |
-| Rebuild TOC, cross-refs, indexes | [REINDEX.md](REINDEX.md) | `scripts/build_index.py` |
-| Validate internal links | [REINDEX.md](REINDEX.md) | `scripts/check_links.py` |
-| Project-specific patterns | [CONVENTIONS.md](CONVENTIONS.md) | — |
+| Goal                                     | Sub-skill                        | Script                          |
+| ---------------------------------------- | -------------------------------- | ------------------------------- |
+| Fix formatting, headings, code fences    | [NORMALIZE.md](NORMALIZE.md)     | `scripts/normalize_markdown.py` |
+| Restructure file layout, naming, folders | [ORGANIZE.md](ORGANIZE.md)       | `scripts/scan_docs.py`          |
+| Rebuild TOC, cross-refs, indexes         | [REINDEX.md](REINDEX.md)         | `scripts/build_index.py`        |
+| Validate internal links                  | [REINDEX.md](REINDEX.md)         | `scripts/check_links.py`        |
+| Project-specific patterns                | [CONVENTIONS.md](CONVENTIONS.md) | —                               |
 
 ## Three-Phase Pipeline
 
@@ -82,6 +82,7 @@ User asks about docs
 This is the **MediaTrackerPlus** project — a self-hosted media tracker (TypeScript monorepo: `server/` + `client/`).
 
 Key documentation files:
+
 - `README.md` — primary user-facing doc (duplicated in `server/README.md`)
 - `docker-reverse-proxy/README.md` — Nginx proxy setup
 - `server/openapi.json` — machine-readable API spec (source of truth for API docs)

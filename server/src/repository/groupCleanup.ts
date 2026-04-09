@@ -58,10 +58,13 @@ export async function cleanupSoftDeletedGroups(): Promise<void> {
       await cleanupSoftDeletedGroup(groupId);
       logger.info(`Startup sweep: cleaned up soft-deleted group ${groupId}`);
     } catch (err) {
-      logger.error(`Startup sweep: failed to clean up soft-deleted group ${groupId}`, {
-        err,
-        groupId,
-      });
+      logger.error(
+        `Startup sweep: failed to clean up soft-deleted group ${groupId}`,
+        {
+          err,
+          groupId,
+        }
+      );
     }
   }
 }

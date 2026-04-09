@@ -45,9 +45,7 @@ import type {
 // ---------------------------------------------------------------------------
 jest.mock('@lingui/macro', () => ({
   t: (strings: TemplateStringsArray, ...values: unknown[]) =>
-    strings.raw
-      ? String.raw(strings, ...values)
-      : strings.join(''),
+    strings.raw ? String.raw(strings, ...values) : strings.join(''),
 }));
 
 // ---------------------------------------------------------------------------
@@ -55,9 +53,7 @@ jest.mock('@lingui/macro', () => ({
 // requiring every optional field.
 // ---------------------------------------------------------------------------
 
-const makeTvEpisode = (
-  overrides: Partial<TvEpisode> = {}
-): TvEpisode => ({
+const makeTvEpisode = (overrides: Partial<TvEpisode> = {}): TvEpisode => ({
   title: 'Test Episode',
   episodeNumber: 1,
   seasonNumber: 1,
@@ -65,9 +61,7 @@ const makeTvEpisode = (
   ...overrides,
 });
 
-const makeTvSeason = (
-  overrides: Partial<TvSeason> = {}
-): TvSeason => ({
+const makeTvSeason = (overrides: Partial<TvSeason> = {}): TvSeason => ({
   title: 'Test Season',
   seasonNumber: 1,
   isSpecialSeason: false,
@@ -76,27 +70,27 @@ const makeTvSeason = (
 
 const makeMediaItem = (
   overrides: Partial<MediaItemItemsResponse> = {}
-): MediaItemItemsResponse => ({
-  title: 'Test Media',
-  mediaType: 'movie',
-  source: 'tmdb',
-  lists: [],
-  ...overrides,
-} as MediaItemItemsResponse);
+): MediaItemItemsResponse =>
+  ({
+    title: 'Test Media',
+    mediaType: 'movie',
+    source: 'tmdb',
+    lists: [],
+    ...overrides,
+  } as MediaItemItemsResponse);
 
 const makeDetailsItem = (
   overrides: Partial<MediaItemDetailsResponse> = {}
-): MediaItemDetailsResponse => ({
-  title: 'Test Show',
-  mediaType: 'tv',
-  source: 'tmdb',
-  lists: [],
-  ...overrides,
-} as MediaItemDetailsResponse);
+): MediaItemDetailsResponse =>
+  ({
+    title: 'Test Show',
+    mediaType: 'tv',
+    source: 'tmdb',
+    lists: [],
+    ...overrides,
+  } as MediaItemDetailsResponse);
 
-const makeUser = (
-  overrides: Partial<UserResponse> = {}
-): UserResponse => ({
+const makeUser = (overrides: Partial<UserResponse> = {}): UserResponse => ({
   id: 1,
   name: 'Test User',
   ...overrides,
@@ -212,13 +206,15 @@ describe('findEpisodeBeId', () => {
 // ---------------------------------------------------------------------------
 describe('getPosterHeight', () => {
   it('returns posterWidth / 0.75 for video_game', () => {
-    expect(getPosterHeight({ mediaType: 'video_game', posterWidth: 150 }))
-      .toBeCloseTo(200);
+    expect(
+      getPosterHeight({ mediaType: 'video_game', posterWidth: 150 })
+    ).toBeCloseTo(200);
   });
 
   it('returns posterWidth (1:1) for audiobook', () => {
-    expect(getPosterHeight({ mediaType: 'audiobook', posterWidth: 120 }))
-      .toBe(120);
+    expect(getPosterHeight({ mediaType: 'audiobook', posterWidth: 120 })).toBe(
+      120
+    );
   });
 
   it('returns posterWidth * 1.5 for book', () => {
@@ -478,7 +474,9 @@ describe('isVideoGame', () => {
 // ---------------------------------------------------------------------------
 describe('hasPoster', () => {
   it('returns true when posterSmall is set', () => {
-    expect(hasPoster(makeMediaItem({ posterSmall: '/path/to/poster.jpg' }))).toBe(true);
+    expect(
+      hasPoster(makeMediaItem({ posterSmall: '/path/to/poster.jpg' }))
+    ).toBe(true);
   });
 
   it('returns false when posterSmall is undefined', () => {
@@ -594,7 +592,9 @@ describe('canMetadataBeUpdated', () => {
   });
 
   it('returns false for an unsupported source', () => {
-    expect(canMetadataBeUpdated(makeMediaItem({ source: 'manual' }))).toBe(false);
+    expect(canMetadataBeUpdated(makeMediaItem({ source: 'manual' }))).toBe(
+      false
+    );
   });
 
   it('returns false when source is an empty string', () => {

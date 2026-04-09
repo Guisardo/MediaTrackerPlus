@@ -129,7 +129,12 @@ export class ProgressController {
     }
 
     if (mediaType === 'tv') {
-      if (!mediaItem || mediaItem.id == null || !episode || episode.id == null) {
+      if (
+        !mediaItem ||
+        mediaItem.id == null ||
+        !episode ||
+        episode.id == null
+      ) {
         res.status(400).send();
         return;
       }

@@ -3,20 +3,29 @@ import { render, screen } from '@testing-library/react';
 
 jest.mock('@lingui/core', () => ({
   i18n: {
-    _: (d: any) => (typeof d === 'string' ? d : d?.message ?? d?.id ?? String(d)),
+    _: (d: any) =>
+      typeof d === 'string' ? d : d?.message ?? d?.id ?? String(d),
     activate: jest.fn(),
     on: jest.fn(),
   },
   setupI18n: () => ({
-    _: (d: any) => (typeof d === 'string' ? d : d?.message ?? d?.id ?? String(d)),
+    _: (d: any) =>
+      typeof d === 'string' ? d : d?.message ?? d?.id ?? String(d),
     activate: jest.fn(),
     on: jest.fn(),
   }),
 }));
 
 jest.mock('@lingui/macro', () => ({
-  Trans: ({ children, message, id }: { children?: React.ReactNode; message?: string; id?: string }) =>
-    children ?? message ?? id ?? null,
+  Trans: ({
+    children,
+    message,
+    id,
+  }: {
+    children?: React.ReactNode;
+    message?: string;
+    id?: string;
+  }) => children ?? message ?? id ?? null,
   t: (strings: TemplateStringsArray, ...values: unknown[]) =>
     typeof strings === 'string'
       ? strings
@@ -28,8 +37,15 @@ jest.mock('@lingui/macro', () => ({
 jest.mock('@lingui/react', () => ({
   I18nProvider: ({ children }: { children: React.ReactNode }) => children,
   useLingui: () => ({ i18n: { _: (id: unknown) => id } }),
-  Trans: ({ children, message, id }: { children?: React.ReactNode; message?: string; id?: string }) =>
-    children ?? message ?? id ?? null,
+  Trans: ({
+    children,
+    message,
+    id,
+  }: {
+    children?: React.ReactNode;
+    message?: string;
+    id?: string;
+  }) => children ?? message ?? id ?? null,
 }));
 
 import {
@@ -84,30 +100,46 @@ describe('ImportSummaryTableRowComponent', () => {
     render(
       <table>
         <tbody>
-          <ImportSummaryTableRowComponent title="Watchlist" exported={10} imported={8} />
+          <ImportSummaryTableRowComponent
+            title="Watchlist"
+            exported={10}
+            imported={8}
+          />
         </tbody>
       </table>
     );
     expect(screen.getByText('Watchlist')).toBeInTheDocument();
-    expect(screen.getByText((_, el) => el?.textContent === '8 / 10')).toBeInTheDocument();
+    expect(
+      screen.getByText((_, el) => el?.textContent === '8 / 10')
+    ).toBeInTheDocument();
   });
 
   it('renders question mark when imported is 0 but exported > 0', () => {
     render(
       <table>
         <tbody>
-          <ImportSummaryTableRowComponent title="History" exported={5} imported={0} />
+          <ImportSummaryTableRowComponent
+            title="History"
+            exported={5}
+            imported={0}
+          />
         </tbody>
       </table>
     );
-    expect(screen.getByText((_, el) => el?.textContent === '? / 5')).toBeInTheDocument();
+    expect(
+      screen.getByText((_, el) => el?.textContent === '? / 5')
+    ).toBeInTheDocument();
   });
 
   it('renders empty cell when exported is 0', () => {
     const { container } = render(
       <table>
         <tbody>
-          <ImportSummaryTableRowComponent title="Empty" exported={0} imported={0} />
+          <ImportSummaryTableRowComponent
+            title="Empty"
+            exported={0}
+            imported={0}
+          />
         </tbody>
       </table>
     );
@@ -182,6 +214,8 @@ describe('TvImportSummaryTableRowComponent', () => {
       </table>
     );
     expect(screen.getByText('Partial')).toBeInTheDocument();
-    expect(screen.getByText((_, el) => el?.textContent === '2 / 3')).toBeInTheDocument();
+    expect(
+      screen.getByText((_, el) => el?.textContent === '2 / 3')
+    ).toBeInTheDocument();
   });
 });

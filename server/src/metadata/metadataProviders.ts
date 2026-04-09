@@ -1,10 +1,17 @@
-import { MediaItemBase, MediaItemForProvider, MediaType } from 'src/entity/mediaItem';
+import {
+  MediaItemBase,
+  MediaItemForProvider,
+  MediaType,
+} from 'src/entity/mediaItem';
 import { Audible } from 'src/metadata/provider/audible';
 import { IGDB } from 'src/metadata/provider/igdb';
 import { OpenLibrary } from 'src/metadata/provider/openlibrary';
 import { TMDbMovie, TMDbTv } from 'src/metadata/provider/tmdb';
 import _ from 'lodash';
-import { MetadataProvider, MetadataTrailer } from 'src/metadata/metadataProvider';
+import {
+  MetadataProvider,
+  MetadataTrailer,
+} from 'src/metadata/metadataProvider';
 import { SimilarItem } from 'src/metadata/types';
 
 const providers = <const>[

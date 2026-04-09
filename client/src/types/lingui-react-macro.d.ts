@@ -41,12 +41,16 @@ declare module '@lingui/react/macro' {
   export const Trans: (props: LinguiTransProps) => ReactElement | null;
   export const Plural: (props: LinguiPluralChoiceProps) => ReactElement | null;
   export const Select: (props: LinguiSelectChoiceProps) => ReactElement | null;
-  export const SelectOrdinal: (props: LinguiPluralChoiceProps) => ReactElement | null;
+  export const SelectOrdinal: (
+    props: LinguiPluralChoiceProps
+  ) => ReactElement | null;
 }
 
 declare module '@lingui/macro' {
   export const Trans: (props: LinguiTransProps) => ReactElement | null;
   export const Plural: (props: LinguiPluralChoiceProps) => ReactElement | null;
   export const Select: (props: LinguiSelectChoiceProps) => ReactElement | null;
-  export const SelectOrdinal: (props: LinguiPluralChoiceProps) => ReactElement | null;
+  export const SelectOrdinal: (
+    props: LinguiPluralChoiceProps
+  ) => ReactElement | null;
 }

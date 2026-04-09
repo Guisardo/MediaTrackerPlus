@@ -39,36 +39,72 @@ describe('US-017: Group-based platform recommended sort — integration tests', 
   // Watchlists (one per user — required by getItemsKnexSql)
   // ---------------------------------------------------------------------------
   const wl1 = {
-    id: 400, userId: user1.id, name: 'Watchlist', privacy: 'private',
-    sortBy: 'recently-watched', sortOrder: 'desc',
-    createdAt: Date.now(), updatedAt: Date.now(), isWatchlist: true,
+    id: 400,
+    userId: user1.id,
+    name: 'Watchlist',
+    privacy: 'private',
+    sortBy: 'recently-watched',
+    sortOrder: 'desc',
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+    isWatchlist: true,
   };
   const wl2 = {
-    id: 401, userId: user2.id, name: 'Watchlist', privacy: 'private',
-    sortBy: 'recently-watched', sortOrder: 'desc',
-    createdAt: Date.now(), updatedAt: Date.now(), isWatchlist: true,
+    id: 401,
+    userId: user2.id,
+    name: 'Watchlist',
+    privacy: 'private',
+    sortBy: 'recently-watched',
+    sortOrder: 'desc',
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+    isWatchlist: true,
   };
   const wl3 = {
-    id: 402, userId: user3.id, name: 'Watchlist', privacy: 'private',
-    sortBy: 'recently-watched', sortOrder: 'desc',
-    createdAt: Date.now(), updatedAt: Date.now(), isWatchlist: true,
+    id: 402,
+    userId: user3.id,
+    name: 'Watchlist',
+    privacy: 'private',
+    sortBy: 'recently-watched',
+    sortOrder: 'desc',
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+    isWatchlist: true,
   };
   const wlOutside = {
-    id: 403, userId: outsideUser.id, name: 'Watchlist', privacy: 'private',
-    sortBy: 'recently-watched', sortOrder: 'desc',
-    createdAt: Date.now(), updatedAt: Date.now(), isWatchlist: true,
+    id: 403,
+    userId: outsideUser.id,
+    name: 'Watchlist',
+    privacy: 'private',
+    sortBy: 'recently-watched',
+    sortOrder: 'desc',
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+    isWatchlist: true,
   };
   const wlNonMember = {
-    id: 404, userId: nonMemberUser.id, name: 'Watchlist', privacy: 'private',
-    sortBy: 'recently-watched', sortOrder: 'desc',
-    createdAt: Date.now(), updatedAt: Date.now(), isWatchlist: true,
+    id: 404,
+    userId: nonMemberUser.id,
+    name: 'Watchlist',
+    privacy: 'private',
+    sortBy: 'recently-watched',
+    sortOrder: 'desc',
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+    isWatchlist: true,
   };
 
   // Non-watchlist list for user2 (so items show in anyListItem for platformRecommended)
   const list2 = {
-    id: 410, userId: user2.id, name: 'List', privacy: 'private',
-    sortBy: 'recently-added', sortOrder: 'desc',
-    createdAt: Date.now(), updatedAt: Date.now(), isWatchlist: false,
+    id: 410,
+    userId: user2.id,
+    name: 'List',
+    privacy: 'private',
+    sortBy: 'recently-added',
+    sortOrder: 'desc',
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+    isWatchlist: false,
   };
 
   // ---------------------------------------------------------------------------
@@ -76,56 +112,105 @@ describe('US-017: Group-based platform recommended sort — integration tests', 
   // ---------------------------------------------------------------------------
   // Alpha: HIGH group rating, LOW global platformRating — should rank HIGH in group sort
   const itemAlpha = {
-    id: 400, lastTimeUpdated: Date.now(), mediaType: 'movie', source: 'tmdb',
-    title: 'IntAlpha', platformRating: 2.0, tmdbRating: 7.0,
+    id: 400,
+    lastTimeUpdated: Date.now(),
+    mediaType: 'movie',
+    source: 'tmdb',
+    title: 'IntAlpha',
+    platformRating: 2.0,
+    tmdbRating: 7.0,
   };
   // Beta: LOW group rating, HIGH global platformRating — should rank LOW in group sort
   const itemBeta = {
-    id: 401, lastTimeUpdated: Date.now(), mediaType: 'movie', source: 'tmdb',
-    title: 'IntBeta', platformRating: 9.0, tmdbRating: 8.0,
+    id: 401,
+    lastTimeUpdated: Date.now(),
+    mediaType: 'movie',
+    source: 'tmdb',
+    title: 'IntBeta',
+    platformRating: 9.0,
+    tmdbRating: 8.0,
   };
   // Gamma: no group rating, has tmdbRating — tier-2 in group sort
   const itemGamma = {
-    id: 402, lastTimeUpdated: Date.now(), mediaType: 'movie', source: 'tmdb',
-    title: 'IntGamma', platformRating: 5.0, tmdbRating: 6.5,
+    id: 402,
+    lastTimeUpdated: Date.now(),
+    mediaType: 'movie',
+    source: 'tmdb',
+    title: 'IntGamma',
+    platformRating: 5.0,
+    tmdbRating: 6.5,
   };
   // Delta: watched by 2 out of 3 group members (>50%) — excluded in group mode
   const itemDelta = {
-    id: 403, lastTimeUpdated: Date.now(), mediaType: 'movie', source: 'tmdb',
-    title: 'IntDelta', platformRating: 8.0, tmdbRating: 7.5,
+    id: 403,
+    lastTimeUpdated: Date.now(),
+    mediaType: 'movie',
+    source: 'tmdb',
+    title: 'IntDelta',
+    platformRating: 8.0,
+    tmdbRating: 7.5,
   };
   // Epsilon: watched by 1 out of 3 group members (~33%) — NOT excluded in group mode
   const itemEpsilon = {
-    id: 404, lastTimeUpdated: Date.now(), mediaType: 'movie', source: 'tmdb',
-    title: 'IntEpsilon', platformRating: 7.0, tmdbRating: 6.0,
+    id: 404,
+    lastTimeUpdated: Date.now(),
+    mediaType: 'movie',
+    source: 'tmdb',
+    title: 'IntEpsilon',
+    platformRating: 7.0,
+    tmdbRating: 6.0,
   };
   // Zeta: watched by outsideUser ONLY — NOT excluded in group mode, BUT excluded in global mode
   const itemZeta = {
-    id: 405, lastTimeUpdated: Date.now(), mediaType: 'movie', source: 'tmdb',
-    title: 'IntZeta', platformRating: 6.0, tmdbRating: 5.5,
+    id: 405,
+    lastTimeUpdated: Date.now(),
+    mediaType: 'movie',
+    source: 'tmdb',
+    title: 'IntZeta',
+    platformRating: 6.0,
+    tmdbRating: 5.5,
   };
   // TV show: Eta — 2 non-special episodes, completed by 2 out of 3 (>50%), excluded in group mode
   const tvShowEta = {
-    id: 410, lastTimeUpdated: Date.now(), mediaType: 'tv', source: 'tmdb',
-    title: 'IntTvEta', platformRating: 8.0, tmdbRating: 7.5,
+    id: 410,
+    lastTimeUpdated: Date.now(),
+    mediaType: 'tv',
+    source: 'tmdb',
+    title: 'IntTvEta',
+    platformRating: 8.0,
+    tmdbRating: 7.5,
   };
 
   // ---------------------------------------------------------------------------
   // Seasons and Episodes for tvShowEta
   // ---------------------------------------------------------------------------
   const seasonEta = {
-    id: 400, seasonNumber: 1, title: 'Season 1',
-    isSpecialSeason: false, tvShowId: tvShowEta.id, numberOfEpisodes: 2,
+    id: 400,
+    seasonNumber: 1,
+    title: 'Season 1',
+    isSpecialSeason: false,
+    tvShowId: tvShowEta.id,
+    numberOfEpisodes: 2,
   };
   const epEta1 = {
-    id: 400, title: 'Eta-S01E01', episodeNumber: 1, seasonNumber: 1,
-    seasonId: seasonEta.id, tvShowId: tvShowEta.id,
-    isSpecialEpisode: false, seasonAndEpisodeNumber: 1001,
+    id: 400,
+    title: 'Eta-S01E01',
+    episodeNumber: 1,
+    seasonNumber: 1,
+    seasonId: seasonEta.id,
+    tvShowId: tvShowEta.id,
+    isSpecialEpisode: false,
+    seasonAndEpisodeNumber: 1001,
   };
   const epEta2 = {
-    id: 401, title: 'Eta-S01E02', episodeNumber: 2, seasonNumber: 1,
-    seasonId: seasonEta.id, tvShowId: tvShowEta.id,
-    isSpecialEpisode: false, seasonAndEpisodeNumber: 1002,
+    id: 401,
+    title: 'Eta-S01E02',
+    episodeNumber: 2,
+    seasonNumber: 1,
+    seasonId: seasonEta.id,
+    tvShowId: tvShowEta.id,
+    isSpecialEpisode: false,
+    seasonAndEpisodeNumber: 1002,
   };
 
   // ---------------------------------------------------------------------------
@@ -138,26 +223,75 @@ describe('US-017: Group-based platform recommended sort — integration tests', 
   // ---------------------------------------------------------------------------
   // Group platform ratings for groupA
   // ---------------------------------------------------------------------------
-  const gprAlpha = { id: 400, groupId: groupAId, mediaItemId: itemAlpha.id, rating: 9.0 };
-  const gprBeta = { id: 401, groupId: groupAId, mediaItemId: itemBeta.id, rating: 2.0 };
+  const gprAlpha = {
+    id: 400,
+    groupId: groupAId,
+    mediaItemId: itemAlpha.id,
+    rating: 9.0,
+  };
+  const gprBeta = {
+    id: 401,
+    groupId: groupAId,
+    mediaItemId: itemBeta.id,
+    rating: 2.0,
+  };
   // Gamma has NO group rating — tier-2 fallback
-  const gprDelta = { id: 402, groupId: groupAId, mediaItemId: itemDelta.id, rating: 8.0 };
-  const gprEpsilon = { id: 403, groupId: groupAId, mediaItemId: itemEpsilon.id, rating: 7.0 };
-  const gprZeta = { id: 404, groupId: groupAId, mediaItemId: itemZeta.id, rating: 6.0 };
-  const gprTvEta = { id: 405, groupId: groupAId, mediaItemId: tvShowEta.id, rating: 8.0 };
+  const gprDelta = {
+    id: 402,
+    groupId: groupAId,
+    mediaItemId: itemDelta.id,
+    rating: 8.0,
+  };
+  const gprEpsilon = {
+    id: 403,
+    groupId: groupAId,
+    mediaItemId: itemEpsilon.id,
+    rating: 7.0,
+  };
+  const gprZeta = {
+    id: 404,
+    groupId: groupAId,
+    mediaItemId: itemZeta.id,
+    rating: 6.0,
+  };
+  const gprTvEta = {
+    id: 405,
+    groupId: groupAId,
+    mediaItemId: tvShowEta.id,
+    rating: 8.0,
+  };
 
   beforeAll(async () => {
     await runMigrations();
 
     // Insert users
-    await Database.knex('user').insert([user1, user2, user3, outsideUser, nonMemberUser]);
+    await Database.knex('user').insert([
+      user1,
+      user2,
+      user3,
+      outsideUser,
+      nonMemberUser,
+    ]);
 
     // Insert lists/watchlists
-    await Database.knex('list').insert([wl1, wl2, wl3, wlOutside, wlNonMember, list2]);
+    await Database.knex('list').insert([
+      wl1,
+      wl2,
+      wl3,
+      wlOutside,
+      wlNonMember,
+      list2,
+    ]);
 
     // Insert media items
     await Database.knex('mediaItem').insert([
-      itemAlpha, itemBeta, itemGamma, itemDelta, itemEpsilon, itemZeta, tvShowEta,
+      itemAlpha,
+      itemBeta,
+      itemGamma,
+      itemDelta,
+      itemEpsilon,
+      itemZeta,
+      tvShowEta,
     ]);
 
     // Insert seasons and episodes
@@ -177,8 +311,18 @@ describe('US-017: Group-based platform recommended sort — integration tests', 
 
     // Also put Alpha on user1's watchlist for the 'recommended' sort tests (needs estimatedRating on listItem)
     await Database.knex('listItem').insert([
-      { listId: wl1.id, mediaItemId: itemAlpha.id, addedAt: Date.now(), estimatedRating: 5.0 },
-      { listId: wl1.id, mediaItemId: itemBeta.id, addedAt: Date.now(), estimatedRating: 8.0 },
+      {
+        listId: wl1.id,
+        mediaItemId: itemAlpha.id,
+        addedAt: Date.now(),
+        estimatedRating: 5.0,
+      },
+      {
+        listId: wl1.id,
+        mediaItemId: itemBeta.id,
+        addedAt: Date.now(),
+        estimatedRating: 8.0,
+      },
     ]);
 
     // ---------------------------------------------------------------------------
@@ -186,37 +330,78 @@ describe('US-017: Group-based platform recommended sort — integration tests', 
     // ---------------------------------------------------------------------------
     // groupA: user1 (admin), user2 (viewer), user3 (viewer) — 3 members
     await Database.knex('userGroup').insert({
-      id: groupAId, name: 'Integration Group A',
-      createdBy: user1.id, createdAt: Date.now(),
+      id: groupAId,
+      name: 'Integration Group A',
+      createdBy: user1.id,
+      createdAt: Date.now(),
     });
     await Database.knex('userGroupMember').insert([
-      { id: 400, groupId: groupAId, userId: user1.id, role: 'admin', addedAt: Date.now() },
-      { id: 401, groupId: groupAId, userId: user2.id, role: 'viewer', addedAt: Date.now() },
-      { id: 402, groupId: groupAId, userId: user3.id, role: 'viewer', addedAt: Date.now() },
+      {
+        id: 400,
+        groupId: groupAId,
+        userId: user1.id,
+        role: 'admin',
+        addedAt: Date.now(),
+      },
+      {
+        id: 401,
+        groupId: groupAId,
+        userId: user2.id,
+        role: 'viewer',
+        addedAt: Date.now(),
+      },
+      {
+        id: 402,
+        groupId: groupAId,
+        userId: user3.id,
+        role: 'viewer',
+        addedAt: Date.now(),
+      },
     ]);
 
     // groupB: nonMemberUser (admin) — user1 is NOT a member
     await Database.knex('userGroup').insert({
-      id: groupBId, name: 'Non-Member Group B',
-      createdBy: nonMemberUser.id, createdAt: Date.now(),
+      id: groupBId,
+      name: 'Non-Member Group B',
+      createdBy: nonMemberUser.id,
+      createdAt: Date.now(),
     });
     await Database.knex('userGroupMember').insert([
-      { id: 410, groupId: groupBId, userId: nonMemberUser.id, role: 'admin', addedAt: Date.now() },
+      {
+        id: 410,
+        groupId: groupBId,
+        userId: nonMemberUser.id,
+        role: 'admin',
+        addedAt: Date.now(),
+      },
     ]);
 
     // softDeletedGroup: user1 was a member, but it's soft-deleted
     await Database.knex('userGroup').insert({
-      id: softDeletedGroupId, name: 'Soft Deleted Group',
-      createdBy: user1.id, createdAt: Date.now(),
+      id: softDeletedGroupId,
+      name: 'Soft Deleted Group',
+      createdBy: user1.id,
+      createdAt: Date.now(),
       deletedAt: Date.now() - 100000,
     });
     await Database.knex('userGroupMember').insert([
-      { id: 420, groupId: softDeletedGroupId, userId: user1.id, role: 'admin', addedAt: Date.now() },
+      {
+        id: 420,
+        groupId: softDeletedGroupId,
+        userId: user1.id,
+        role: 'admin',
+        addedAt: Date.now(),
+      },
     ]);
 
     // Group platform ratings for groupA
     await Database.knex('groupPlatformRating').insert([
-      gprAlpha, gprBeta, gprDelta, gprEpsilon, gprZeta, gprTvEta,
+      gprAlpha,
+      gprBeta,
+      gprDelta,
+      gprEpsilon,
+      gprZeta,
+      gprTvEta,
     ]);
 
     // ---------------------------------------------------------------------------
@@ -224,31 +409,81 @@ describe('US-017: Group-based platform recommended sort — integration tests', 
     // ---------------------------------------------------------------------------
     // Delta: watched by user1 and user2 (2 out of 3 = 66.7% > 50% → excluded in group mode)
     await Database.knex('seen').insert([
-      { id: 400, mediaItemId: itemDelta.id, userId: user1.id, date: Date.now() },
-      { id: 401, mediaItemId: itemDelta.id, userId: user2.id, date: Date.now() },
+      {
+        id: 400,
+        mediaItemId: itemDelta.id,
+        userId: user1.id,
+        date: Date.now(),
+      },
+      {
+        id: 401,
+        mediaItemId: itemDelta.id,
+        userId: user2.id,
+        date: Date.now(),
+      },
     ]);
 
     // Epsilon: watched by user1 only (1 out of 3 = 33.3% ≤ 50% → NOT excluded in group mode)
     await Database.knex('seen').insert([
-      { id: 402, mediaItemId: itemEpsilon.id, userId: user1.id, date: Date.now() },
+      {
+        id: 402,
+        mediaItemId: itemEpsilon.id,
+        userId: user1.id,
+        date: Date.now(),
+      },
     ]);
 
     // Zeta: watched by outsideUser only (0 out of 3 group members → NOT excluded in group mode)
     // BUT outsideUser IS a platform user → excluded in global mode (ANY user seen = excluded)
     await Database.knex('seen').insert([
-      { id: 403, mediaItemId: itemZeta.id, userId: outsideUser.id, date: Date.now() },
+      {
+        id: 403,
+        mediaItemId: itemZeta.id,
+        userId: outsideUser.id,
+        date: Date.now(),
+      },
     ]);
 
     // TV show Eta: user1 and user2 completed all 2 non-special episodes (2/3 = 66.7% → excluded)
     await Database.knex('seen').insert([
-      { id: 410, mediaItemId: tvShowEta.id, userId: user1.id, episodeId: epEta1.id, date: Date.now() },
-      { id: 411, mediaItemId: tvShowEta.id, userId: user1.id, episodeId: epEta2.id, date: Date.now() },
-      { id: 412, mediaItemId: tvShowEta.id, userId: user2.id, episodeId: epEta1.id, date: Date.now() },
-      { id: 413, mediaItemId: tvShowEta.id, userId: user2.id, episodeId: epEta2.id, date: Date.now() },
+      {
+        id: 410,
+        mediaItemId: tvShowEta.id,
+        userId: user1.id,
+        episodeId: epEta1.id,
+        date: Date.now(),
+      },
+      {
+        id: 411,
+        mediaItemId: tvShowEta.id,
+        userId: user1.id,
+        episodeId: epEta2.id,
+        date: Date.now(),
+      },
+      {
+        id: 412,
+        mediaItemId: tvShowEta.id,
+        userId: user2.id,
+        episodeId: epEta1.id,
+        date: Date.now(),
+      },
+      {
+        id: 413,
+        mediaItemId: tvShowEta.id,
+        userId: user2.id,
+        episodeId: epEta2.id,
+        date: Date.now(),
+      },
     ]);
     // user3 has only seen episode 1 (not completed → doesn't count as "completed" for majority-watched)
     await Database.knex('seen').insert([
-      { id: 414, mediaItemId: tvShowEta.id, userId: user3.id, episodeId: epEta1.id, date: Date.now() },
+      {
+        id: 414,
+        mediaItemId: tvShowEta.id,
+        userId: user3.id,
+        episodeId: epEta1.id,
+        date: Date.now(),
+      },
     ]);
   });
 
@@ -283,8 +518,12 @@ describe('US-017: Group-based platform recommended sort — integration tests', 
       expect(titles).toContain('IntBeta');
       expect(titles).toContain('IntGamma');
       expect(titles).toContain('IntAlpha');
-      expect(titles.indexOf('IntBeta')).toBeLessThan(titles.indexOf('IntGamma'));
-      expect(titles.indexOf('IntGamma')).toBeLessThan(titles.indexOf('IntAlpha'));
+      expect(titles.indexOf('IntBeta')).toBeLessThan(
+        titles.indexOf('IntGamma')
+      );
+      expect(titles.indexOf('IntGamma')).toBeLessThan(
+        titles.indexOf('IntAlpha')
+      );
     });
   });
 
@@ -330,10 +569,16 @@ describe('US-017: Group-based platform recommended sort — integration tests', 
       expect(titles).toContain('IntBeta');
       expect(titles).toContain('IntGamma');
 
-      expect(titles.indexOf('IntAlpha')).toBeLessThan(titles.indexOf('IntEpsilon'));
-      expect(titles.indexOf('IntEpsilon')).toBeLessThan(titles.indexOf('IntZeta'));
+      expect(titles.indexOf('IntAlpha')).toBeLessThan(
+        titles.indexOf('IntEpsilon')
+      );
+      expect(titles.indexOf('IntEpsilon')).toBeLessThan(
+        titles.indexOf('IntZeta')
+      );
       expect(titles.indexOf('IntZeta')).toBeLessThan(titles.indexOf('IntBeta'));
-      expect(titles.indexOf('IntBeta')).toBeLessThan(titles.indexOf('IntGamma'));
+      expect(titles.indexOf('IntBeta')).toBeLessThan(
+        titles.indexOf('IntGamma')
+      );
     });
   });
 
@@ -481,7 +726,12 @@ describe('US-017: Group-based platform recommended sort — integration tests', 
       // Verify that the controller path falls back correctly.
       const res = await request(itemsController.getPaginated, {
         userId: user1.id,
-        requestQuery: { page: 1, groupId: softDeletedGroupId, orderBy: 'platformRecommended', sortOrder: 'desc' },
+        requestQuery: {
+          page: 1,
+          groupId: softDeletedGroupId,
+          orderBy: 'platformRecommended',
+          sortOrder: 'desc',
+        },
       });
       expect(res.statusCode).toBe(200);
       const data = res.data as any;
@@ -527,7 +777,10 @@ describe('US-017: Group-based platform recommended sort — integration tests', 
 
       // Verify the facets include media types for all items in the base set
       // (movies + TV items from anyListItem, regardless of seen exclusion)
-      const mediaTypeFacets = facets.mediaTypes as Array<{ value: string; count: number }>;
+      const mediaTypeFacets = facets.mediaTypes as Array<{
+        value: string;
+        count: number;
+      }>;
       const movieFacet = mediaTypeFacets.find((f: any) => f.value === 'movie');
       const tvFacet = mediaTypeFacets.find((f: any) => f.value === 'tv');
 
@@ -560,7 +813,10 @@ describe('US-017: Group-based platform recommended sort — integration tests', 
       });
 
       // Total items = 6 movies + 1 TV show = 7 in anyListItem
-      const totalFacetItems = facets.mediaTypes.reduce((sum, f) => sum + f.count, 0);
+      const totalFacetItems = facets.mediaTypes.reduce(
+        (sum, f) => sum + f.count,
+        0
+      );
       expect(totalFacetItems).toBe(7);
 
       // Items returned by items query: 5 (7 - Delta - Eta)

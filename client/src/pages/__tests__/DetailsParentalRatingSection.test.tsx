@@ -29,18 +29,30 @@ jest.mock('@lingui/macro', () => {
   const React = require('react');
   return {
     Trans: ({ children, message, id }: any) =>
-      React.createElement(React.Fragment, null, children ?? message ?? id ?? null),
+      React.createElement(
+        React.Fragment,
+        null,
+        children ?? message ?? id ?? null
+      ),
     t: (strings: TemplateStringsArray | string, ...values: unknown[]) => {
       if (typeof strings === 'string') return strings;
       if ((strings as TemplateStringsArray).raw)
         return String.raw(strings as TemplateStringsArray, ...values);
       return (strings as TemplateStringsArray)[0];
     },
-    Plural: ({ value, one, other }: { value: number; one: string; other: string }) =>
+    Plural: ({
+      value,
+      one,
+      other,
+    }: {
+      value: number;
+      one: string;
+      other: string;
+    }) =>
       React.createElement(
         React.Fragment,
         null,
-        value === 1 ? one : other.replace('#', String(value)),
+        value === 1 ? one : other.replace('#', String(value))
       ),
   };
 });
@@ -56,7 +68,11 @@ jest.mock('@lingui/react', () => {
       },
     }),
     Trans: ({ children, message, id }: any) =>
-      React.createElement(React.Fragment, null, children ?? message ?? id ?? null),
+      React.createElement(
+        React.Fragment,
+        null,
+        children ?? message ?? id ?? null
+      ),
     I18nProvider: ({ children }: any) =>
       React.createElement(React.Fragment, null, children),
   };
@@ -154,7 +170,7 @@ function makeMediaItem(
       | 'parentalGuidanceSummary'
       | 'parentalGuidanceCategories'
     >
-  >,
+  >
 ): MediaItemDetailsResponse {
   return {
     id: 1,
@@ -182,7 +198,7 @@ describe('ParentalRatingSection – no parental metadata', () => {
         contentRatingDescriptors: null,
         parentalGuidanceSummary: null,
         parentalGuidanceCategories: null,
-      }),
+      })
     );
     expect(container.firstChild).toBeNull();
   });
@@ -197,7 +213,7 @@ describe('ParentalRatingSection – no parental metadata', () => {
       makeMediaItem({
         contentRatingDescriptors: [],
         parentalGuidanceCategories: [],
-      }),
+      })
     );
     expect(container.firstChild).toBeNull();
   });
@@ -239,7 +255,7 @@ describe('ParentalRatingSection – rating fields', () => {
         contentRatingSystem: 'MPAA',
         contentRatingRegion: 'US',
         contentRatingLabel: 'R',
-      }),
+      })
     );
     const ratingText = screen.getByText(/R.*MPAA.*US|MPAA.*US.*R|R.*US.*MPAA/);
     expect(ratingText).toBeInTheDocument();
@@ -255,7 +271,7 @@ describe('ParentalRatingSection – descriptors', () => {
     renderSection(
       makeMediaItem({
         contentRatingDescriptors: ['Violence', 'Strong Language'],
-      }),
+      })
     );
     expect(screen.getByText(/Violence, Strong Language/)).toBeInTheDocument();
   });
@@ -265,7 +281,7 @@ describe('ParentalRatingSection – descriptors', () => {
       makeMediaItem({
         contentRatingSystem: 'MPAA',
         contentRatingDescriptors: [],
-      }),
+      })
     );
     expect(screen.queryByText(/Descriptors/i)).not.toBeInTheDocument();
   });
@@ -280,10 +296,10 @@ describe('ParentalRatingSection – guidance summary', () => {
     renderSection(
       makeMediaItem({
         parentalGuidanceSummary: 'Contains scenes of moderate violence.',
-      }),
+      })
     );
     expect(
-      screen.getByText(/Contains scenes of moderate violence\./),
+      screen.getByText(/Contains scenes of moderate violence\./)
     ).toBeInTheDocument();
   });
 
@@ -292,7 +308,7 @@ describe('ParentalRatingSection – guidance summary', () => {
       makeMediaItem({
         contentRatingSystem: 'MPAA',
         parentalGuidanceSummary: null,
-      }),
+      })
     );
     expect(screen.queryByText(/^Guidance:/i)).not.toBeInTheDocument();
   });
@@ -309,7 +325,7 @@ describe('ParentalRatingSection – category breakdowns', () => {
         parentalGuidanceCategories: [
           { category: 'Violence', severity: 'Moderate' },
         ],
-      }),
+      })
     );
     expect(screen.getByText('Violence')).toBeInTheDocument();
   });
@@ -320,7 +336,7 @@ describe('ParentalRatingSection – category breakdowns', () => {
         parentalGuidanceCategories: [
           { category: 'Language', severity: 'Mild' },
         ],
-      }),
+      })
     );
     expect(screen.getByText(/Mild/)).toBeInTheDocument();
   });
@@ -335,18 +351,16 @@ describe('ParentalRatingSection – category breakdowns', () => {
             description: 'Occasional strong language',
           },
         ],
-      }),
+      })
     );
 
     expect(
-      screen.queryByText(/Occasional strong language/),
+      screen.queryByText(/Occasional strong language/)
     ).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: /Language/i }));
 
-    expect(
-      screen.getByText(/Occasional strong language/),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/Occasional strong language/)).toBeInTheDocument();
   });
 
   it('keeps guide items collapsed by default and reveals them on toggle', () => {
@@ -364,17 +378,17 @@ describe('ParentalRatingSection – category breakdowns', () => {
             ],
           },
         ],
-      }),
+      })
     );
 
     expect(
-      screen.queryByText(/A steamed-up car window implies sex\./i),
+      screen.queryByText(/A steamed-up car window implies sex\./i)
     ).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: /Sex & Nudity/i }));
 
     expect(
-      screen.getByText(/A steamed-up car window implies sex\./i),
+      screen.getByText(/A steamed-up car window implies sex\./i)
     ).toBeInTheDocument();
   });
 
@@ -393,7 +407,7 @@ describe('ParentalRatingSection – category breakdowns', () => {
             ],
           },
         ],
-      }),
+      })
     );
 
     expect(screen.queryByText(/spoiler/i)).not.toBeInTheDocument();
@@ -402,7 +416,7 @@ describe('ParentalRatingSection – category breakdowns', () => {
 
     expect(screen.getByText(/spoiler/i)).toBeInTheDocument();
     expect(
-      screen.getByText(/Several passengers drown during the finale\./i),
+      screen.getByText(/Several passengers drown during the finale\./i)
     ).toBeInTheDocument();
   });
 
@@ -421,19 +435,19 @@ describe('ParentalRatingSection – category breakdowns', () => {
             ],
           },
         ],
-      }),
+      })
     );
 
     const trigger = screen.getByRole('button', { name: /Sex & Nudity/i });
 
     fireEvent.click(trigger);
     expect(
-      screen.getByText(/A steamed-up car window implies sex\./i),
+      screen.getByText(/A steamed-up car window implies sex\./i)
     ).toBeInTheDocument();
 
     fireEvent.click(trigger);
     expect(
-      screen.queryByText(/A steamed-up car window implies sex\./i),
+      screen.queryByText(/A steamed-up car window implies sex\./i)
     ).not.toBeInTheDocument();
   });
 
@@ -441,7 +455,7 @@ describe('ParentalRatingSection – category breakdowns', () => {
     renderSection(
       makeMediaItem({
         parentalGuidanceCategories: [{ category: 'Nudity' }],
-      }),
+      })
     );
     expect(screen.getByText('Nudity')).toBeInTheDocument();
   });
@@ -454,7 +468,7 @@ describe('ParentalRatingSection – category breakdowns', () => {
           { category: 'Language', severity: 'Mild' },
           { category: 'Sexual Content' },
         ],
-      }),
+      })
     );
     expect(screen.getByText('Violence')).toBeInTheDocument();
     expect(screen.getByText('Language')).toBeInTheDocument();
@@ -466,7 +480,7 @@ describe('ParentalRatingSection – category breakdowns', () => {
       makeMediaItem({
         contentRatingSystem: 'MPAA',
         parentalGuidanceCategories: [],
-      }),
+      })
     );
     expect(screen.queryByText(/Content categories/i)).not.toBeInTheDocument();
   });

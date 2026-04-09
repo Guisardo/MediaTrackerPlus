@@ -16,7 +16,9 @@ const EXPECTED_API_ENDPOINT = 'https://api.pushover.net/1/messages.json';
 /**
  * Builds a complete FormattedNotification for use in tests.
  */
-function buildFormattedNotification(overrides: Partial<FormattedNotification> = {}): FormattedNotification {
+function buildFormattedNotification(
+  overrides: Partial<FormattedNotification> = {}
+): FormattedNotification {
   return {
     plainText: 'Plain text body',
     markdown: '**Markdown body**',
@@ -163,7 +165,9 @@ describe('Pushover notification platform', () => {
 
     test('sends a complete, correctly-shaped params object', async () => {
       const title = 'Full Params Test';
-      const notification = buildFormattedNotification({ html: '<b>Full test</b>' });
+      const notification = buildFormattedNotification({
+        html: '<b>Full test</b>',
+      });
 
       await Pushover.sendFunction({
         credentials: { key: userKey },

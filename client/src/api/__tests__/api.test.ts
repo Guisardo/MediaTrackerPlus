@@ -13,11 +13,15 @@ jest.mock('@lingui/core', () => ({
   i18n: { locale: 'en' },
 }));
 
-jest.mock('mediatracker-api', () => {
-  return {
-    Api: jest.fn().mockImplementation(() => ({})),
-  };
-}, { virtual: true });
+jest.mock(
+  'mediatracker-api',
+  () => {
+    return {
+      Api: jest.fn().mockImplementation(() => ({})),
+    };
+  },
+  { virtual: true }
+);
 
 let clientApiFetchLogger: typeof import('../api').clientApiFetchLogger;
 let FetchError: typeof import('../api').FetchError;

@@ -49,10 +49,7 @@ export const RatingSection: FunctionComponent<{
     setRatingRange(newMin, newMax);
 
   return (
-    <FacetSection
-      title={t`Rating`}
-      hasActiveSelection={hasActiveSelection}
-    >
+    <FacetSection title={t`Rating`} hasActiveSelection={hasActiveSelection}>
       <FacetRangeSlider
         min={0}
         max={10}

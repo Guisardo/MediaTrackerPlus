@@ -16,34 +16,36 @@ Build completed successfully in **36008 ms** (36 seconds).
 
 ### JavaScript Assets
 
-| Asset Name | Raw Size | Gzip Size | Brotli Size |
-|---|---|---|---|
+| Asset Name       | Raw Size                   | Gzip Size               | Brotli Size             |
+| ---------------- | -------------------------- | ----------------------- | ----------------------- |
 | main_f0b8a7e9.js | 1,824,339 bytes (1.74 MiB) | 408,400 bytes (399 KiB) | 323,142 bytes (316 KiB) |
 
 **Total JS Bundle:**
+
 - Raw: 1.74 MiB
 - Gzip: 399 KiB (78.6% compression)
 - Brotli: 316 KiB (82.3% compression)
 
 ### CSS Assets
 
-| Asset Name | Raw Size | Gzip Size | Brotli Size |
-|---|---|---|---|
+| Asset Name        | Raw Size                | Gzip Size               | Brotli Size             |
+| ----------------- | ----------------------- | ----------------------- | ----------------------- |
 | main_f0b8a7e9.css | 780,752 bytes (762 KiB) | 551,641 bytes (539 KiB) | 545,139 bytes (532 KiB) |
 
 **Total CSS Bundle:**
+
 - Raw: 762 KiB
 - Gzip: 539 KiB (29.3% compression)
 - Brotli: 532 KiB (30.2% compression)
 
 ### Additional Assets
 
-| Asset Name | Raw Size |
-|---|---|
-| main_f0b8a7e9.js.LICENSE.txt | 2,733 bytes |
-| index.html | 849 bytes |
-| logo/ (directory) | 85.7 KiB (7 SVG/PNG files) |
-| image/ (directory) | 248 KiB (goodreads_import.png) |
+| Asset Name                   | Raw Size                       |
+| ---------------------------- | ------------------------------ |
+| main_f0b8a7e9.js.LICENSE.txt | 2,733 bytes                    |
+| index.html                   | 849 bytes                      |
+| logo/ (directory)            | 85.7 KiB (7 SVG/PNG files)     |
+| image/ (directory)           | 248 KiB (goodreads_import.png) |
 
 ## Entrypoint
 
@@ -55,6 +57,7 @@ Build completed successfully in **36008 ms** (36 seconds).
 ## Webpack Warnings
 
 Three performance warnings were generated:
+
 1. Asset size limit exceeded: main_f0b8a7e9.css (762 KiB)
 2. Asset size limit exceeded: main_f0b8a7e9.js (1.74 MiB)
 3. Asset size limit exceeded: goodreads_import.png (248 KiB)
@@ -65,6 +68,7 @@ Three performance warnings were generated:
 All build artifacts are output to: `server/public/`
 
 Static assets (logos, images) are copied from `client/public/` to:
+
 - `server/public/logo/` (7 files, 85.7 KiB)
 - `server/public/image/` (1 file, 248 KiB)
 
@@ -73,6 +77,7 @@ Static assets (logos, images) are copied from `client/public/` to:
 **Command:** `npm test`
 
 **Summary:**
+
 - **Test Suites:** 69 passed, 69 total
 - **Tests:** 1109 passed, 1109 total
 - **Snapshots:** 2 passed, 2 total
@@ -106,11 +111,13 @@ TypeScript version: 4.7.3
 These metrics establish the baseline for measuring bundle size changes during the UI Stack Migration to Vite 6 + React 19 + Tailwind v4 + shadcn/ui v4.
 
 **Bundle Size Baseline:**
+
 - JS: 1.74 MiB (raw) / 399 KiB (gzip) / 316 KiB (brotli)
 - CSS: 762 KiB (raw) / 539 KiB (gzip) / 532 KiB (brotli)
 - **Total (JS + CSS):** 2.48 MiB (raw) / 938 KiB (gzip) / 848 KiB (brotli)
 
 **Acceptable Post-Migration Bundle Size (within 20% increase):**
+
 - JS: ≤ 2.09 MiB raw (20% above 1.74 MiB)
 - CSS: ≤ 914 KiB raw (20% above 762 KiB)
 - **Total:** ≤ 2.98 MiB raw (20% above 2.48 MiB)

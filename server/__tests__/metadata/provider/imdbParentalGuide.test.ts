@@ -27,8 +27,7 @@ describe('IMDb parental guide enrichment', () => {
           buildGuideCategory('NUDITY', 'Sex & Nudity', [
             {
               isSpoiler: false,
-              plaidHtml:
-                'Rose&#39;s nude sketch includes <b>brief nudity</b>.',
+              plaidHtml: 'Rose&#39;s nude sketch includes <b>brief nudity</b>.',
             },
           ]),
         ],
@@ -84,7 +83,9 @@ describe('IMDb parental guide enrichment', () => {
   });
 
   test('returns null when the page payload does not contain parental guide data', () => {
-    expect(parseImdbParentalGuideHtml('<html><body>empty</body></html>')).toBeNull();
+    expect(
+      parseImdbParentalGuideHtml('<html><body>empty</body></html>')
+    ).toBeNull();
   });
 
   test('parses guide items from IMDb GraphQL response', () => {
@@ -178,7 +179,9 @@ describe('IMDb parental guide enrichment', () => {
 
     mockedAxios.get.mockResolvedValueOnce({
       data: buildImdbParentalGuideHtml({
-        categories: [buildSummaryCategory('NUDITY', 'Sex & Nudity', 'Moderate')],
+        categories: [
+          buildSummaryCategory('NUDITY', 'Sex & Nudity', 'Moderate'),
+        ],
         nonSpoilerCategories: [
           buildGuideCategory('NUDITY', 'Sex & Nudity', [
             {
@@ -200,9 +203,9 @@ describe('IMDb parental guide enrichment', () => {
       parentalGuidanceCategories: null,
     });
 
-    expect(mediaItem.parentalGuidanceCategories?.[0]?.guideItems?.[0]?.text).toBe(
-      'A steamed-up car window implies sex.'
-    );
+    expect(
+      mediaItem.parentalGuidanceCategories?.[0]?.guideItems?.[0]?.text
+    ).toBe('A steamed-up car window implies sex.');
   });
 });
 
@@ -234,11 +237,7 @@ function buildImdbParentalGuideHtml(args: {
   )}</script></body></html>`;
 }
 
-function buildSummaryCategory(
-  id: string,
-  text: string,
-  severity: string
-) {
+function buildSummaryCategory(id: string, text: string, severity: string) {
   return {
     category: {
       id,

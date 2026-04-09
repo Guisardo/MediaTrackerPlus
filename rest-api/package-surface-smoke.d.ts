@@ -25,5 +25,5 @@ export type PackageSurfaceSmokeTest = [
   Items.Paginated.RequestQuery,
   MediaType,
   RequestError,
-  Statistics.Summary.ResponseBody,
+  Statistics.Summary.ResponseBody
 ];

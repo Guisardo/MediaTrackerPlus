@@ -44,7 +44,7 @@ export async function down(knex: Knex): Promise<void> {
 
   if (configurationEntry) {
     const configuration = JSON.parse(configurationEntry.configurationJson);
-    
+
     await knex('configuration').update({
       enableRegistration: configuration.enableRegistration,
       tmdbLang: configuration.tmdbLang,

@@ -10,11 +10,7 @@
 
 import React from 'react';
 import { render } from '@testing-library/react';
-import {
-  formatDistance,
-  formatDuration,
-  intervalToDuration,
-} from 'date-fns';
+import { formatDistance, formatDuration, intervalToDuration } from 'date-fns';
 import { enUS, es } from 'date-fns/locale';
 
 // ---------------------------------------------------------------------------
@@ -60,10 +56,10 @@ const expectedRelativeTime = (to: Date): string =>
   formatDistance(to, new Date(), { locale: enUS, addSuffix: true });
 
 const expectedDuration = (milliseconds: number): string =>
-  formatDuration(
-    intervalToDuration({ start: 0, end: milliseconds }),
-    { delimiter: ', ', locale: enUS }
-  );
+  formatDuration(intervalToDuration({ start: 0, end: milliseconds }), {
+    delimiter: ', ',
+    locale: enUS,
+  });
 
 // ---------------------------------------------------------------------------
 // RelativeTime
@@ -164,7 +160,9 @@ describe('FormatDuration', () => {
   it('renders duration in minutes for a value under one hour', () => {
     const thirtyMinutes = 30 * 60 * 1000;
 
-    const { container } = render(<FormatDuration milliseconds={thirtyMinutes} />);
+    const { container } = render(
+      <FormatDuration milliseconds={thirtyMinutes} />
+    );
 
     const expected = expectedDuration(thirtyMinutes);
     expect(container.textContent).toBe(expected);
@@ -173,7 +171,9 @@ describe('FormatDuration', () => {
   it('renders duration in hours and minutes for a value over one hour', () => {
     const ninetyMinutes = 90 * 60 * 1000;
 
-    const { container } = render(<FormatDuration milliseconds={ninetyMinutes} />);
+    const { container } = render(
+      <FormatDuration milliseconds={ninetyMinutes} />
+    );
 
     const expected = expectedDuration(ninetyMinutes);
     expect(container.textContent).toBe(expected);
@@ -189,10 +189,11 @@ describe('FormatDuration', () => {
   });
 
   it('renders a complex duration containing days and hours', () => {
-    const twoDaysThreeHours =
-      (2 * 24 * 60 * 60 + 3 * 60 * 60) * 1000;
+    const twoDaysThreeHours = (2 * 24 * 60 * 60 + 3 * 60 * 60) * 1000;
 
-    const { container } = render(<FormatDuration milliseconds={twoDaysThreeHours} />);
+    const { container } = render(
+      <FormatDuration milliseconds={twoDaysThreeHours} />
+    );
 
     const expected = expectedDuration(twoDaysThreeHours);
     expect(container.textContent).toBe(expected);
@@ -202,7 +203,9 @@ describe('FormatDuration', () => {
     // 1 hour 30 minutes → "1 hour, 30 minutes"
     const oneHourThirtyMin = (1 * 60 * 60 + 30 * 60) * 1000;
 
-    const { container } = render(<FormatDuration milliseconds={oneHourThirtyMin} />);
+    const { container } = render(
+      <FormatDuration milliseconds={oneHourThirtyMin} />
+    );
 
     const expected = expectedDuration(oneHourThirtyMin);
     // The delimiter in the component is ', '
@@ -216,7 +219,9 @@ describe('FormatDuration', () => {
     });
     const ninetyMinutes = 90 * 60 * 1000;
 
-    const { container } = render(<FormatDuration milliseconds={ninetyMinutes} />);
+    const { container } = render(
+      <FormatDuration milliseconds={ninetyMinutes} />
+    );
 
     const expected = formatDuration(
       intervalToDuration({ start: 0, end: ninetyMinutes }),

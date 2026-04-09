@@ -31,7 +31,9 @@ import { getAudibleLangMap } from 'src/metadataLanguages';
 import { logger } from 'src/logger';
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
-const mockedGetAudibleLangMap = getAudibleLangMap as jest.MockedFunction<typeof getAudibleLangMap>;
+const mockedGetAudibleLangMap = getAudibleLangMap as jest.MockedFunction<
+  typeof getAudibleLangMap
+>;
 const mockedLogger = logger as jest.Mocked<typeof logger>;
 
 const audible = new Audible();
@@ -84,7 +86,10 @@ describe('Audible.localizedDetails', () => {
     test('returns null when language has no entry in getAudibleLangMap()', async () => {
       mockedGetAudibleLangMap.mockReturnValue(new Map([['en', 'us']]));
 
-      const result = await audible.localizedDetails({ audibleId: 'B001ABC123' }, 'zh');
+      const result = await audible.localizedDetails(
+        { audibleId: 'B001ABC123' },
+        'zh'
+      );
 
       expect(result).toBeNull();
       expect(mockedAxios.get).not.toHaveBeenCalled();
@@ -104,7 +109,10 @@ describe('Audible.localizedDetails', () => {
       mockedGetAudibleLangMap.mockReturnValue(new Map([['en', 'us']]));
 
       // 'zh-TW' base is 'zh', which has no mapping
-      const result = await audible.localizedDetails({ audibleId: 'B001ABC123' }, 'zh-TW');
+      const result = await audible.localizedDetails(
+        { audibleId: 'B001ABC123' },
+        'zh-TW'
+      );
 
       expect(result).toBeNull();
     });
@@ -136,7 +144,11 @@ describe('Audible.localizedDetails', () => {
   describe('correct Audible domain per language', () => {
     test('calls the English (US) Audible domain for language "en"', async () => {
       mockedGetAudibleLangMap.mockReturnValue(
-        new Map([['en', 'us'], ['de', 'de'], ['es', 'es']])
+        new Map([
+          ['en', 'us'],
+          ['de', 'de'],
+          ['es', 'es'],
+        ])
       );
       mockedAxios.get.mockResolvedValueOnce({
         data: buildAudibleProductResponse(),
@@ -153,7 +165,11 @@ describe('Audible.localizedDetails', () => {
 
     test('calls the German Audible domain for language "de"', async () => {
       mockedGetAudibleLangMap.mockReturnValue(
-        new Map([['en', 'us'], ['de', 'de'], ['es', 'es']])
+        new Map([
+          ['en', 'us'],
+          ['de', 'de'],
+          ['es', 'es'],
+        ])
       );
       mockedAxios.get.mockResolvedValueOnce({
         data: buildAudibleProductResponse({ title: 'Der grosse Gatsby' }),
@@ -170,7 +186,11 @@ describe('Audible.localizedDetails', () => {
 
     test('calls the Spanish Audible domain for language "es"', async () => {
       mockedGetAudibleLangMap.mockReturnValue(
-        new Map([['en', 'us'], ['de', 'de'], ['es', 'es']])
+        new Map([
+          ['en', 'us'],
+          ['de', 'de'],
+          ['es', 'es'],
+        ])
       );
       mockedAxios.get.mockResolvedValueOnce({
         data: buildAudibleProductResponse({ title: 'El Gran Gatsby' }),
@@ -187,7 +207,10 @@ describe('Audible.localizedDetails', () => {
 
     test('extracts base language from BCP 47 tag (es-419 -> es)', async () => {
       mockedGetAudibleLangMap.mockReturnValue(
-        new Map([['en', 'us'], ['es', 'es']])
+        new Map([
+          ['en', 'us'],
+          ['es', 'es'],
+        ])
       );
       mockedAxios.get.mockResolvedValueOnce({
         data: buildAudibleProductResponse({ title: 'El Gran Gatsby' }),
@@ -204,9 +227,7 @@ describe('Audible.localizedDetails', () => {
     });
 
     test('calls UK domain for country code "uk" (co.uk)', async () => {
-      mockedGetAudibleLangMap.mockReturnValue(
-        new Map([['en', 'uk']])
-      );
+      mockedGetAudibleLangMap.mockReturnValue(new Map([['en', 'uk']]));
       mockedAxios.get.mockResolvedValueOnce({
         data: buildAudibleProductResponse(),
         status: 200,
@@ -236,7 +257,10 @@ describe('Audible.localizedDetails', () => {
         status: 200,
       });
 
-      const result = await audible.localizedDetails({ audibleId: 'B001ABC123' }, 'de');
+      const result = await audible.localizedDetails(
+        { audibleId: 'B001ABC123' },
+        'de'
+      );
 
       expect(result!.title).toBe('Der grosse Gatsby');
       expect(result!.overview).toBe('Ein grosser amerikanischer Roman.');
@@ -249,7 +273,10 @@ describe('Audible.localizedDetails', () => {
         status: 200,
       });
 
-      const result = await audible.localizedDetails({ audibleId: 'B001ABC123' }, 'en');
+      const result = await audible.localizedDetails(
+        { audibleId: 'B001ABC123' },
+        'en'
+      );
 
       expect(result).toBeNull();
     });

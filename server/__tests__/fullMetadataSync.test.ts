@@ -40,9 +40,10 @@ const mockedMetadataProviders = metadataProviders as jest.Mocked<
 const mockedMediaItemRepository = mediaItemRepository as jest.Mocked<
   typeof mediaItemRepository
 >;
-const mockedRunLockedMetadataUpdate = runLockedMetadataUpdate as jest.MockedFunction<
-  typeof runLockedMetadataUpdate
->;
+const mockedRunLockedMetadataUpdate =
+  runLockedMetadataUpdate as jest.MockedFunction<
+    typeof runLockedMetadataUpdate
+  >;
 
 describe('fullMetadataSync', () => {
   const supportedMovie: MediaItemBase = {
@@ -76,10 +77,7 @@ describe('fullMetadataSync', () => {
     ]);
 
     mockedMetadataProviders.get.mockImplementation((mediaType, source) => {
-      if (
-        (mediaType === 'movie' || mediaType === 'tv') &&
-        source === 'tmdb'
-      ) {
+      if ((mediaType === 'movie' || mediaType === 'tv') && source === 'tmdb') {
         return {} as never;
       }
 

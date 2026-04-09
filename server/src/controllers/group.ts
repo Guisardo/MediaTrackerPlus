@@ -1,6 +1,10 @@
 import { Database } from 'src/dbconfig';
 import { User } from 'src/entity/user';
-import { UserGroup, UserGroupMember, UserGroupRole } from 'src/entity/userGroup';
+import {
+  UserGroup,
+  UserGroupMember,
+  UserGroupRole,
+} from 'src/entity/userGroup';
 import { createExpressRoute } from 'typescript-routes-to-openapi-server';
 import { logger } from 'src/logger';
 import { recalculateAllGroupPlatformRatings } from 'src/repository/groupPlatformRatingCache';
@@ -145,7 +149,10 @@ export class GroupController {
 
     const countMap = new Map<number, number>();
     for (const row of memberCounts) {
-      countMap.set(Number((row as any).groupId), Number((row as any).memberCount));
+      countMap.set(
+        Number((row as any).groupId),
+        Number((row as any).memberCount)
+      );
     }
 
     const result: GroupResponse[] = groups.map((g: any) => ({
@@ -400,11 +407,14 @@ export class GroupController {
     // Triggered whenever a member is added to a group.
     setImmediate(() => {
       recalculateAllGroupPlatformRatings(groupId).catch((err) => {
-        logger.error('Failed to recalculate group platform ratings after member add', {
-          err,
-          groupId,
-          targetUserId,
-        });
+        logger.error(
+          'Failed to recalculate group platform ratings after member add',
+          {
+            err,
+            groupId,
+            targetUserId,
+          }
+        );
       });
     });
   });
@@ -511,11 +521,14 @@ export class GroupController {
     // Triggered whenever a member is removed from a group.
     setImmediate(() => {
       recalculateAllGroupPlatformRatings(groupId).catch((err) => {
-        logger.error('Failed to recalculate group platform ratings after member remove', {
-          err,
-          groupId,
-          targetUserId,
-        });
+        logger.error(
+          'Failed to recalculate group platform ratings after member remove',
+          {
+            err,
+            groupId,
+            targetUserId,
+          }
+        );
       });
     });
   });

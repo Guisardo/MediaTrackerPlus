@@ -129,8 +129,9 @@ describe('useTranslatedKeysFactory — keyToTranslation', () => {
 describe('useTranslatedKeysFactory — map', () => {
   it('invokes the callback once per entry and returns the mapped array', () => {
     const { map } = renderFactory();
-    const callback = jest.fn((key: FixtureKey, translation: FixtureTranslation) =>
-      `${key}=${translation}`
+    const callback = jest.fn(
+      (key: FixtureKey, translation: FixtureTranslation) =>
+        `${key}=${translation}`
     );
 
     const result = map(callback);

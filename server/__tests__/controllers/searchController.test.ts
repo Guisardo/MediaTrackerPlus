@@ -19,9 +19,10 @@ jest.mock('src/metadata/metadataProviders', () => ({
   },
 }));
 
-const mockFindMediaItemByExternalId = findMediaItemByExternalId as jest.MockedFunction<
-  typeof findMediaItemByExternalId
->;
+const mockFindMediaItemByExternalId =
+  findMediaItemByExternalId as jest.MockedFunction<
+    typeof findMediaItemByExternalId
+  >;
 
 const mockMetadataProviders = metadataProviders as unknown as {
   has: jest.Mock;
@@ -63,7 +64,9 @@ describe('Search controller', () => {
   afterEach(async () => {
     jest.resetAllMocks();
     await Database.knex('mediaItemTranslation').delete();
-    (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = null;
+    (
+      Config as unknown as { METADATA_LANGUAGES: string[] | null }
+    ).METADATA_LANGUAGES = null;
     _resetMetadataLanguagesCache();
   });
 
@@ -162,10 +165,9 @@ describe('Search controller', () => {
   });
 
   test('IMDB search falls back from regional request to base locale before default', async () => {
-    (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-      'en',
-      'es',
-    ];
+    (
+      Config as unknown as { METADATA_LANGUAGES: string[] | null }
+    ).METADATA_LANGUAGES = ['en', 'es'];
     _resetMetadataLanguagesCache();
 
     await upsertMediaItemTranslation(movieWithImdbId.id, 'en', {
@@ -194,10 +196,9 @@ describe('Search controller', () => {
   });
 
   test('IMDB search falls back to default locale when regional and base locales are unavailable', async () => {
-    (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-      'en',
-      'fr',
-    ];
+    (
+      Config as unknown as { METADATA_LANGUAGES: string[] | null }
+    ).METADATA_LANGUAGES = ['en', 'fr'];
     _resetMetadataLanguagesCache();
 
     await upsertMediaItemTranslation(movieWithImdbId.id, 'en', {

@@ -17,10 +17,7 @@ const getDetails = async (mediaItemId: number) => {
   return mediaTrackerApi.details.get(mediaItemId);
 };
 
-const requireId = (
-  value: number | null | undefined,
-  label: string
-): number => {
+const requireId = (value: number | null | undefined, label: string): number => {
   if (value == null) {
     throw new Error(`${label} is required`);
   }
@@ -44,7 +41,8 @@ export const useDetails = (mediaItemId: number) => {
 export const useUpdateMetadata = (mediaItemId: number) => {
   const mutation = useMutation({
     mutationFn: () => mediaTrackerApi.details.updateMetadata(mediaItemId),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: detailsKey(mediaItemId) }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: detailsKey(mediaItemId) }),
   });
 
   return {
@@ -81,16 +79,22 @@ const updateMediaItem = async (mediaItem: MediaItemItemsResponse) => {
     }
   );
 
-  queryClient.setQueriesData({ queryKey: ['listItems'] }, (items: ListItemsResponse | undefined) => {
-    return items?.map((item) => ({
-      ...item,
-      mediaItem: updater(item.mediaItem),
-    }));
-  });
+  queryClient.setQueriesData(
+    { queryKey: ['listItems'] },
+    (items: ListItemsResponse | undefined) => {
+      return items?.map((item) => ({
+        ...item,
+        mediaItem: updater(item.mediaItem),
+      }));
+    }
+  );
 
-  queryClient.setQueriesData({ queryKey: ['search'] }, (data: MediaItemItemsResponse[]) => {
-    return data?.map(updater);
-  });
+  queryClient.setQueriesData(
+    { queryKey: ['search'] },
+    (data: MediaItemItemsResponse[]) => {
+      return data?.map(updater);
+    }
+  );
 };
 
 export const setRating = async (
@@ -116,44 +120,47 @@ export const setRating = async (
   });
 
   await updateMediaItem(mediaItem);
-  queryClient.setQueriesData({ queryKey: ['listItems'] }, (items: ListItemsResponse) => {
-    return items.map((item) => {
-      if (item.mediaItem.id === mediaItem.id) {
-        const userRating = {
-          rating: options.rating,
-          review: options.review,
-        };
+  queryClient.setQueriesData(
+    { queryKey: ['listItems'] },
+    (items: ListItemsResponse) => {
+      return items.map((item) => {
+        if (item.mediaItem.id === mediaItem.id) {
+          const userRating = {
+            rating: options.rating,
+            review: options.review,
+          };
 
-        if (episode) {
-          return {
-            ...item,
-            episode: {
-              ...item.episode,
-              userRating: userRating,
-            },
-          };
-        } else if (season) {
-          return {
-            ...item,
-            season: {
-              ...item.season,
-              userRating: userRating,
-            },
-          };
-        } else {
-          return {
-            ...item,
-            mediaItem: {
-              ...item.mediaItem,
-              userRating: userRating,
-            },
-          };
+          if (episode) {
+            return {
+              ...item,
+              episode: {
+                ...item.episode,
+                userRating: userRating,
+              },
+            };
+          } else if (season) {
+            return {
+              ...item,
+              season: {
+                ...item.season,
+                userRating: userRating,
+              },
+            };
+          } else {
+            return {
+              ...item,
+              mediaItem: {
+                ...item.mediaItem,
+                userRating: userRating,
+              },
+            };
+          }
         }
-      }
 
-      return item;
-    });
-  });
+        return item;
+      });
+    }
+  );
 };
 
 export const removeFromWatchlist = async (args: {

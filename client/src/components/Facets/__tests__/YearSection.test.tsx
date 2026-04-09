@@ -4,7 +4,11 @@ import { YearSection } from '../YearSection';
 
 jest.mock('@lingui/macro', () => ({
   t: (strings: TemplateStringsArray, ...values: unknown[]) =>
-    typeof strings === 'string' ? strings : strings.raw ? String.raw(strings, ...values) : strings[0],
+    typeof strings === 'string'
+      ? strings
+      : strings.raw
+      ? String.raw(strings, ...values)
+      : strings[0],
   Trans: ({ children, message, id }: any) => children ?? message ?? id ?? null,
 }));
 
@@ -14,7 +18,10 @@ jest.mock('src/components/Facets/FacetSection', () => {
     FacetSection: ({ title, hasActiveSelection, children }: any) =>
       React.createElement(
         'div',
-        { 'data-testid': 'facet-section', 'data-active': String(hasActiveSelection) },
+        {
+          'data-testid': 'facet-section',
+          'data-active': String(hasActiveSelection),
+        },
         React.createElement('span', { 'data-testid': 'facet-title' }, title),
         children
       ),
@@ -24,7 +31,15 @@ jest.mock('src/components/Facets/FacetSection', () => {
 jest.mock('src/components/Facets/FacetRangeSlider', () => {
   const React = require('react');
   return {
-    FacetRangeSlider: ({ min, max, step, valueMin, valueMax, onCommit, decimalPlaces }: any) =>
+    FacetRangeSlider: ({
+      min,
+      max,
+      step,
+      valueMin,
+      valueMax,
+      onCommit,
+      decimalPlaces,
+    }: any) =>
       React.createElement('div', {
         'data-testid': 'facet-range-slider',
         'data-min': min,
@@ -95,7 +110,9 @@ describe('YearSection', () => {
         setYearRange: jest.fn(),
       })
     );
-    expect(screen.getByTestId('facet-section').getAttribute('data-active')).toBe('false');
+    expect(
+      screen.getByTestId('facet-section').getAttribute('data-active')
+    ).toBe('false');
   });
 
   it('sets hasActiveSelection to true when yearMin is set', () => {
@@ -107,7 +124,9 @@ describe('YearSection', () => {
         setYearRange: jest.fn(),
       })
     );
-    expect(screen.getByTestId('facet-section').getAttribute('data-active')).toBe('true');
+    expect(
+      screen.getByTestId('facet-section').getAttribute('data-active')
+    ).toBe('true');
   });
 
   it('sets hasActiveSelection to true when yearMax is set', () => {
@@ -119,7 +138,9 @@ describe('YearSection', () => {
         setYearRange: jest.fn(),
       })
     );
-    expect(screen.getByTestId('facet-section').getAttribute('data-active')).toBe('true');
+    expect(
+      screen.getByTestId('facet-section').getAttribute('data-active')
+    ).toBe('true');
   });
 
   it('passes yearMin and yearMax values to slider', () => {

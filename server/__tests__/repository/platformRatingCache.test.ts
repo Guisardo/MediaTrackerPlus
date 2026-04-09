@@ -1,6 +1,9 @@
 import { Database } from 'src/dbconfig';
 import { mediaItemRepository } from 'src/repository/mediaItem';
-import { WatchlistWriter, WatchlistWriterDeps } from 'src/recommendations/watchlistWriter';
+import {
+  WatchlistWriter,
+  WatchlistWriterDeps,
+} from 'src/recommendations/watchlistWriter';
 import { Data } from '__tests__/__utils__/data';
 import { clearDatabase, runMigrations } from '__tests__/__utils__/utils';
 
@@ -56,7 +59,7 @@ describe('platformRating cache maintenance', () => {
   // ─── recalculatePlatformRating direct method tests ───────────────────────────
 
   describe('recalculatePlatformRating()', () => {
-    test("after a single listItem estimatedRating, platformRating equals that value", async () => {
+    test('after a single listItem estimatedRating, platformRating equals that value', async () => {
       await Database.knex('listItem').insert({
         listId: Data.watchlist.id,
         mediaItemId: Data.movie.id,
@@ -197,7 +200,9 @@ describe('platformRating cache maintenance', () => {
         // Average of 9, 6, and 3 = 6
         expect(item.platformRating).toBeCloseTo(6, 5);
       } finally {
-        await Database.knex('listItem').where('listId', user3WatchlistId).delete();
+        await Database.knex('listItem')
+          .where('listId', user3WatchlistId)
+          .delete();
         await Database.knex('list').where('id', user3WatchlistId).delete();
         await Database.knex('user').where('id', user3Id).delete();
       }
@@ -221,9 +226,18 @@ describe('platformRating cache maintenance', () => {
     test("'added' outcome triggers recalculation and updates platformRating", async () => {
       const writer = createWriter(Data.movie.id);
 
-      const writeResult = await writer.write(Data.user.id, [
-        { externalId: String(Data.movie.tmdbId), mediaType: 'movie', title: 'Test Movie', externalRating: null },
-      ], 7.5);
+      const writeResult = await writer.write(
+        Data.user.id,
+        [
+          {
+            externalId: String(Data.movie.tmdbId),
+            mediaType: 'movie',
+            title: 'Test Movie',
+            externalRating: null,
+          },
+        ],
+        7.5
+      );
 
       expect(writeResult.added).toBe(1);
 
@@ -248,9 +262,18 @@ describe('platformRating cache maintenance', () => {
 
       const writer = createWriter(Data.movie.id);
 
-      const writeResult = await writer.write(Data.user.id, [
-        { externalId: String(Data.movie.tmdbId), mediaType: 'movie', title: 'Test Movie', externalRating: null },
-      ], 6.0);
+      const writeResult = await writer.write(
+        Data.user.id,
+        [
+          {
+            externalId: String(Data.movie.tmdbId),
+            mediaType: 'movie',
+            title: 'Test Movie',
+            externalRating: null,
+          },
+        ],
+        6.0
+      );
 
       expect(writeResult.updated).toBe(1);
 
@@ -281,9 +304,18 @@ describe('platformRating cache maintenance', () => {
 
       const writer = createWriter(Data.movie.id);
 
-      const writeResult = await writer.write(Data.user.id, [
-        { externalId: String(Data.movie.tmdbId), mediaType: 'movie', title: 'Test Movie', externalRating: null },
-      ], 9.0); // Higher than 3.0, so minimum-wins will skip
+      const writeResult = await writer.write(
+        Data.user.id,
+        [
+          {
+            externalId: String(Data.movie.tmdbId),
+            mediaType: 'movie',
+            title: 'Test Movie',
+            externalRating: null,
+          },
+        ],
+        9.0
+      ); // Higher than 3.0, so minimum-wins will skip
 
       expect(writeResult.skipped).toBe(1);
 
@@ -308,9 +340,18 @@ describe('platformRating cache maintenance', () => {
       // User2 writes via WatchlistWriter
       const writer = createWriter(Data.movie.id);
 
-      const writeResult = await writer.write(Data.user2.id, [
-        { externalId: String(Data.movie.tmdbId), mediaType: 'movie', title: 'Test Movie', externalRating: null },
-      ], 4.0);
+      const writeResult = await writer.write(
+        Data.user2.id,
+        [
+          {
+            externalId: String(Data.movie.tmdbId),
+            mediaType: 'movie',
+            title: 'Test Movie',
+            externalRating: null,
+          },
+        ],
+        4.0
+      );
 
       expect(writeResult.added).toBe(1);
 
@@ -344,9 +385,18 @@ describe('platformRating cache maintenance', () => {
       // Writer sends a lower estimatedRating — minimum-wins triggers update
       const writer = createWriter(Data.movie.id);
 
-      const writeResult = await writer.write(Data.user.id, [
-        { externalId: String(Data.movie.tmdbId), mediaType: 'movie', title: 'Test Movie', externalRating: null },
-      ], 5.0);
+      const writeResult = await writer.write(
+        Data.user.id,
+        [
+          {
+            externalId: String(Data.movie.tmdbId),
+            mediaType: 'movie',
+            title: 'Test Movie',
+            externalRating: null,
+          },
+        ],
+        5.0
+      );
 
       expect(writeResult.updated).toBe(1);
 

@@ -57,7 +57,9 @@ const mockedFindMediaItemByExternalId =
 const mockedMediaItemRepository = mediaItemRepository as jest.Mocked<
   typeof mediaItemRepository
 >;
-const mockedUserRepository = userRepository as jest.Mocked<typeof userRepository>;
+const mockedUserRepository = userRepository as jest.Mocked<
+  typeof userRepository
+>;
 const mutableConfig = Config as unknown as {
   METADATA_LANGUAGES: string[] | null;
 };
@@ -156,7 +158,9 @@ describe('MediaItemController related content enrichment', () => {
     });
 
     expect(res.statusCode).toBe(200);
-    expect((res.data as MediaItemDetailsResponse).relatedContent).toBeUndefined();
+    expect(
+      (res.data as MediaItemDetailsResponse).relatedContent
+    ).toBeUndefined();
   });
 
   test('filters out related items blocked by viewer age', async () => {
@@ -262,7 +266,9 @@ describe('MediaItemController related content enrichment', () => {
     });
 
     expect(res.statusCode).toBe(200);
-    expect((res.data as MediaItemDetailsResponse).relatedContent).toBeUndefined();
+    expect(
+      (res.data as MediaItemDetailsResponse).relatedContent
+    ).toBeUndefined();
     expect(mockedLogger.warn).toHaveBeenCalledWith(
       expect.stringContaining('failed to fetch similar items')
     );

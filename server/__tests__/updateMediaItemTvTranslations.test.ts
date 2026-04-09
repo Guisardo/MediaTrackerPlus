@@ -223,11 +223,15 @@ describe('updateMediaItem TV translation wiring', () => {
 
     expect(mediaItemTranslations).toHaveLength(2); // en + es
 
-    const enMIT = mediaItemTranslations.find((r: Record<string, unknown>) => r.language === 'en');
+    const enMIT = mediaItemTranslations.find(
+      (r: Record<string, unknown>) => r.language === 'en'
+    );
     expect(enMIT).toBeDefined();
     expect(enMIT.title).toBe('English Show Title');
 
-    const esMIT = mediaItemTranslations.find((r: Record<string, unknown>) => r.language === 'es');
+    const esMIT = mediaItemTranslations.find(
+      (r: Record<string, unknown>) => r.language === 'es'
+    );
     expect(esMIT).toBeDefined();
     expect(esMIT.title).toBe('Titulo Espanol');
 
@@ -238,12 +242,16 @@ describe('updateMediaItem TV translation wiring', () => {
 
     expect(seasonTranslations).toHaveLength(2); // en + es
 
-    const enST = seasonTranslations.find((r: Record<string, unknown>) => r.language === 'en');
+    const enST = seasonTranslations.find(
+      (r: Record<string, unknown>) => r.language === 'en'
+    );
     expect(enST).toBeDefined();
     expect(enST.title).toBe('English Season 1');
     expect(enST.description).toBe('English season desc');
 
-    const esST = seasonTranslations.find((r: Record<string, unknown>) => r.language === 'es');
+    const esST = seasonTranslations.find(
+      (r: Record<string, unknown>) => r.language === 'es'
+    );
     expect(esST).toBeDefined();
     expect(esST.title).toBe('Temporada 1');
 
@@ -254,11 +262,15 @@ describe('updateMediaItem TV translation wiring', () => {
 
     expect(ep1Translations).toHaveLength(2); // en + es
 
-    const enEp1 = ep1Translations.find((r: Record<string, unknown>) => r.language === 'en');
+    const enEp1 = ep1Translations.find(
+      (r: Record<string, unknown>) => r.language === 'en'
+    );
     expect(enEp1).toBeDefined();
     expect(enEp1.title).toBe('English Ep 1');
 
-    const esEp1 = ep1Translations.find((r: Record<string, unknown>) => r.language === 'es');
+    const esEp1 = ep1Translations.find(
+      (r: Record<string, unknown>) => r.language === 'es'
+    );
     expect(esEp1).toBeDefined();
     expect(esEp1.title).toBe('Episodio 1');
 
@@ -268,7 +280,9 @@ describe('updateMediaItem TV translation wiring', () => {
 
     expect(ep2Translations).toHaveLength(2); // en + es
 
-    const esEp2 = ep2Translations.find((r: Record<string, unknown>) => r.language === 'es');
+    const esEp2 = ep2Translations.find(
+      (r: Record<string, unknown>) => r.language === 'es'
+    );
     expect(esEp2).toBeDefined();
     expect(esEp2.title).toBe('Episodio 2');
     expect(esEp2.description).toBe('Desc episodio 2');
@@ -311,7 +325,8 @@ describe('updateMediaItem TV translation wiring', () => {
             },
           ],
         }),
-        localizedDetails: jest.fn()
+        localizedDetails: jest
+          .fn()
           .mockResolvedValueOnce({
             mediaType: 'tv',
             source: 'tmdb',
@@ -326,8 +341,20 @@ describe('updateMediaItem TV translation wiring', () => {
                 numberOfEpisodes: 2,
                 isSpecialSeason: false,
                 episodes: [
-                  { episodeNumber: 1, seasonNumber: 1, title: 'EN Ep1', description: 'EN ep1 desc', isSpecialEpisode: false },
-                  { episodeNumber: 2, seasonNumber: 1, title: 'EN Ep2', description: 'EN ep2 desc', isSpecialEpisode: false },
+                  {
+                    episodeNumber: 1,
+                    seasonNumber: 1,
+                    title: 'EN Ep1',
+                    description: 'EN ep1 desc',
+                    isSpecialEpisode: false,
+                  },
+                  {
+                    episodeNumber: 2,
+                    seasonNumber: 1,
+                    title: 'EN Ep2',
+                    description: 'EN ep2 desc',
+                    isSpecialEpisode: false,
+                  },
                 ],
               },
             ],
@@ -346,8 +373,20 @@ describe('updateMediaItem TV translation wiring', () => {
                 numberOfEpisodes: 2,
                 isSpecialSeason: false,
                 episodes: [
-                  { episodeNumber: 1, seasonNumber: 1, title: 'ES Ep1', description: 'ES ep1 desc', isSpecialEpisode: false },
-                  { episodeNumber: 2, seasonNumber: 1, title: 'ES Ep2', description: 'ES ep2 desc', isSpecialEpisode: false },
+                  {
+                    episodeNumber: 1,
+                    seasonNumber: 1,
+                    title: 'ES Ep1',
+                    description: 'ES ep1 desc',
+                    isSpecialEpisode: false,
+                  },
+                  {
+                    episodeNumber: 2,
+                    seasonNumber: 1,
+                    title: 'ES Ep2',
+                    description: 'ES ep2 desc',
+                    isSpecialEpisode: false,
+                  },
                 ],
               },
             ],
@@ -389,8 +428,20 @@ describe('updateMediaItem TV translation wiring', () => {
           numberOfEpisodes: 2,
           isSpecialSeason: false,
           episodes: [
-            { episodeNumber: 1, seasonNumber: 1, title: 'Ep1 ES', description: 'Desc ep1 ES', isSpecialEpisode: false },
-            { episodeNumber: 2, seasonNumber: 1, title: 'Ep2 ES', description: 'Desc ep2 ES', isSpecialEpisode: false },
+            {
+              episodeNumber: 1,
+              seasonNumber: 1,
+              title: 'Ep1 ES',
+              description: 'Desc ep1 ES',
+              isSpecialEpisode: false,
+            },
+            {
+              episodeNumber: 2,
+              seasonNumber: 1,
+              title: 'Ep2 ES',
+              description: 'Desc ep2 ES',
+              isSpecialEpisode: false,
+            },
           ],
         },
       ],
@@ -412,8 +463,22 @@ describe('updateMediaItem TV translation wiring', () => {
               numberOfEpisodes: 2,
               isSpecialSeason: false,
               episodes: [
-                { episodeNumber: 1, seasonNumber: 1, title: 'Base Ep1', description: 'Base ep1', isSpecialEpisode: false, seasonAndEpisodeNumber: 1001 },
-                { episodeNumber: 2, seasonNumber: 1, title: 'Base Ep2', description: 'Base ep2', isSpecialEpisode: false, seasonAndEpisodeNumber: 1002 },
+                {
+                  episodeNumber: 1,
+                  seasonNumber: 1,
+                  title: 'Base Ep1',
+                  description: 'Base ep1',
+                  isSpecialEpisode: false,
+                  seasonAndEpisodeNumber: 1001,
+                },
+                {
+                  episodeNumber: 2,
+                  seasonNumber: 1,
+                  title: 'Base Ep2',
+                  description: 'Base ep2',
+                  isSpecialEpisode: false,
+                  seasonAndEpisodeNumber: 1002,
+                },
               ],
             },
           ],
@@ -489,14 +554,20 @@ describe('updateMediaItem TV translation wiring', () => {
     expect(mediaItemTranslations.length).toBeGreaterThan(0);
 
     // No season or episode translations should exist
-    const seasonTranslations = await Database.knex('seasonTranslation').select('*');
+    const seasonTranslations = await Database.knex('seasonTranslation').select(
+      '*'
+    );
     expect(seasonTranslations).toHaveLength(0);
 
-    const episodeTranslations = await Database.knex('episodeTranslation').select('*');
+    const episodeTranslations = await Database.knex(
+      'episodeTranslation'
+    ).select('*');
     expect(episodeTranslations).toHaveLength(0);
 
     // Cleanup
-    await Database.knex('mediaItemTranslation').where({ mediaItemId: movieMediaItem.id }).delete();
+    await Database.knex('mediaItemTranslation')
+      .where({ mediaItemId: movieMediaItem.id })
+      .delete();
     await Database.knex('mediaItem').where({ id: movieMediaItem.id }).delete();
   });
 });

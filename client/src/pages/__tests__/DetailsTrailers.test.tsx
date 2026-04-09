@@ -6,7 +6,11 @@ jest.mock('@lingui/macro', () => {
   const React = require('react');
   return {
     Trans: ({ children, message, id }: any) =>
-      React.createElement(React.Fragment, null, children ?? message ?? id ?? null),
+      React.createElement(
+        React.Fragment,
+        null,
+        children ?? message ?? id ?? null
+      ),
     t: (strings: TemplateStringsArray | string, ...values: unknown[]) => {
       if (typeof strings === 'string') return strings;
       if ((strings as TemplateStringsArray).raw) {
@@ -14,7 +18,15 @@ jest.mock('@lingui/macro', () => {
       }
       return (strings as TemplateStringsArray)[0];
     },
-    Plural: ({ value, one, other }: { value: number; one: string; other: string }) =>
+    Plural: ({
+      value,
+      one,
+      other,
+    }: {
+      value: number;
+      one: string;
+      other: string;
+    }) =>
       React.createElement(
         React.Fragment,
         null,
@@ -34,7 +46,11 @@ jest.mock('@lingui/react', () => {
       },
     }),
     Trans: ({ children, message, id }: any) =>
-      React.createElement(React.Fragment, null, children ?? message ?? id ?? null),
+      React.createElement(
+        React.Fragment,
+        null,
+        children ?? message ?? id ?? null
+      ),
     I18nProvider: ({ children }: any) =>
       React.createElement(React.Fragment, null, children),
   };
@@ -130,7 +146,9 @@ jest.mock('src/components/Modal', () => {
       return (
         <>
           {openModal?.(() => setIsOpen(true))}
-          {isOpen ? <div data-testid="mock-modal">{children(closeModal)}</div> : null}
+          {isOpen ? (
+            <div data-testid="mock-modal">{children(closeModal)}</div>
+          ) : null}
         </>
       );
     },

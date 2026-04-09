@@ -31,7 +31,10 @@ export const useItems = (args: Items.Paginated.RequestQuery) => {
         throw new Error('mediaType is required for search');
       }
 
-      return mediaTrackerApi.search.search({ mediaType: args.mediaType, q: query });
+      return mediaTrackerApi.search.search({
+        mediaType: args.mediaType,
+        q: query,
+      });
     },
   });
 
@@ -49,7 +52,7 @@ export const useItems = (args: Items.Paginated.RequestQuery) => {
           ? (data as paginatedApiReturnType).total
           : undefined,
         ageGatingActive: data
-          ? ((data as paginatedApiReturnType).ageGatingActive ?? false)
+          ? (data as paginatedApiReturnType).ageGatingActive ?? false
           : false,
         search: search.mutate,
       }

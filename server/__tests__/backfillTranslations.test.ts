@@ -37,7 +37,9 @@ import { getMetadataLanguages } from 'src/metadataLanguages';
 import { metadataProviders } from 'src/metadata/metadataProviders';
 import { mediaItemRepository } from 'src/repository/mediaItem';
 
-const mockGetMetadataLanguages = getMetadataLanguages as jest.MockedFunction<typeof getMetadataLanguages>;
+const mockGetMetadataLanguages = getMetadataLanguages as jest.MockedFunction<
+  typeof getMetadataLanguages
+>;
 const mockedMetadataProviders = metadataProviders as jest.Mocked<
   typeof metadataProviders
 >;
@@ -46,7 +48,16 @@ const mockedMediaItemRepository = mediaItemRepository as jest.Mocked<
 >;
 
 // Helper to insert a media item directly into the database
-async function insertMediaItem(item: { id: number; title: string; mediaType: string; source: string; tmdbId?: number; igdbId?: number; audibleId?: string; openlibraryId?: string }): Promise<void> {
+async function insertMediaItem(item: {
+  id: number;
+  title: string;
+  mediaType: string;
+  source: string;
+  tmdbId?: number;
+  igdbId?: number;
+  audibleId?: string;
+  openlibraryId?: string;
+}): Promise<void> {
   await Database.knex('mediaItem').insert({
     id: item.id,
     title: item.title,
@@ -60,7 +71,14 @@ async function insertMediaItem(item: { id: number; title: string; mediaType: str
 }
 
 // Helper to insert a season
-async function insertSeason(season: { id: number; seasonNumber: number; title: string; isSpecialSeason: boolean; tvShowId: number; numberOfEpisodes?: number }): Promise<void> {
+async function insertSeason(season: {
+  id: number;
+  seasonNumber: number;
+  title: string;
+  isSpecialSeason: boolean;
+  tvShowId: number;
+  numberOfEpisodes?: number;
+}): Promise<void> {
   await Database.knex('season').insert({
     ...season,
     numberOfEpisodes: season.numberOfEpisodes ?? 0,
@@ -68,12 +86,25 @@ async function insertSeason(season: { id: number; seasonNumber: number; title: s
 }
 
 // Helper to insert an episode
-async function insertEpisode(episode: { id: number; episodeNumber: number; seasonNumber: number; seasonAndEpisodeNumber: number; title: string; isSpecialEpisode: boolean; seasonId: number; tvShowId: number }): Promise<void> {
+async function insertEpisode(episode: {
+  id: number;
+  episodeNumber: number;
+  seasonNumber: number;
+  seasonAndEpisodeNumber: number;
+  title: string;
+  isSpecialEpisode: boolean;
+  seasonId: number;
+  tvShowId: number;
+}): Promise<void> {
   await Database.knex('episode').insert(episode);
 }
 
 // Helper to insert a translation row directly
-async function insertTranslation(mediaItemId: number, language: string, title: string): Promise<void> {
+async function insertTranslation(
+  mediaItemId: number,
+  language: string,
+  title: string
+): Promise<void> {
   await Database.knex('mediaItemTranslation').insert({
     mediaItemId,
     language,
@@ -211,7 +242,8 @@ describe('backfillTranslations', () => {
       await insertMediaItem(movieItem);
 
       const mockProvider = {
-        localizedDetails: jest.fn()
+        localizedDetails: jest
+          .fn()
           .mockResolvedValueOnce({
             title: 'Test Movie EN',
             overview: 'English overview',
@@ -230,8 +262,14 @@ describe('backfillTranslations', () => {
       await backfillItemTranslations(movieItem, ['en', 'es-419']);
 
       expect(mockProvider.localizedDetails).toHaveBeenCalledTimes(2);
-      expect(mockProvider.localizedDetails).toHaveBeenCalledWith(movieItem, 'en');
-      expect(mockProvider.localizedDetails).toHaveBeenCalledWith(movieItem, 'es-419');
+      expect(mockProvider.localizedDetails).toHaveBeenCalledWith(
+        movieItem,
+        'en'
+      );
+      expect(mockProvider.localizedDetails).toHaveBeenCalledWith(
+        movieItem,
+        'es-419'
+      );
 
       // Verify translations were upserted
       const translations = await Database.knex('mediaItemTranslation')
@@ -244,7 +282,9 @@ describe('backfillTranslations', () => {
       expect(enTranslation.title).toBe('Test Movie EN');
       expect(enTranslation.overview).toBe('English overview');
 
-      const esTranslation = translations.find((t: any) => t.language === 'es-419');
+      const esTranslation = translations.find(
+        (t: any) => t.language === 'es-419'
+      );
       expect(esTranslation.title).toBe('Pelicula de Prueba');
       expect(esTranslation.overview).toBe('Resumen en espanol');
     });
@@ -266,7 +306,8 @@ describe('backfillTranslations', () => {
       await insertMediaItem(movieItem);
 
       const mockProvider = {
-        localizedDetails: jest.fn()
+        localizedDetails: jest
+          .fn()
           .mockRejectedValueOnce(new Error('API timeout'))
           .mockResolvedValueOnce({
             title: 'Pelicula de Prueba',
@@ -444,7 +485,7 @@ describe('backfillTranslations', () => {
       const mockProvider = {
         localizedDetails: null as any,
         fetchGameLocalizations: jest.fn().mockResolvedValue([
-          { regionId: 2, name: 'Test Game US' },  // region 2 = north_america = ['en']
+          { regionId: 2, name: 'Test Game US' }, // region 2 = north_america = ['en']
         ]),
       };
 
@@ -452,7 +493,9 @@ describe('backfillTranslations', () => {
 
       await backfillItemTranslations(gameItem, ['en', 'es-419']);
 
-      expect(mockProvider.fetchGameLocalizations).toHaveBeenCalledWith(gameItem);
+      expect(mockProvider.fetchGameLocalizations).toHaveBeenCalledWith(
+        gameItem
+      );
 
       // Only 'en' should be upserted since region 2 maps to ['en'] and 'en' is in missingLanguages
       const translations = await Database.knex('mediaItemTranslation')
@@ -477,7 +520,7 @@ describe('backfillTranslations', () => {
       const mockProvider = {
         localizedDetails: null as any,
         fetchGameLocalizations: jest.fn().mockResolvedValue([
-          { regionId: 8, name: 'Worldwide Game Title' },  // region 8 = worldwide = 'all'
+          { regionId: 8, name: 'Worldwide Game Title' }, // region 8 = worldwide = 'all'
         ]),
       };
 
@@ -491,7 +534,10 @@ describe('backfillTranslations', () => {
         .orderBy('language')
         .select('*');
       expect(translations).toHaveLength(2);
-      expect(translations.map((t: any) => t.language).sort()).toEqual(['en', 'es-419']);
+      expect(translations.map((t: any) => t.language).sort()).toEqual([
+        'en',
+        'es-419',
+      ]);
       expect(translations[0].title).toBe('Worldwide Game Title');
       expect(translations[1].title).toBe('Worldwide Game Title');
     });
@@ -509,7 +555,9 @@ describe('backfillTranslations', () => {
 
       const mockProvider = {
         localizedDetails: null as any,
-        fetchGameLocalizations: jest.fn().mockRejectedValue(new Error('IGDB API down')),
+        fetchGameLocalizations: jest
+          .fn()
+          .mockRejectedValue(new Error('IGDB API down')),
       };
 
       mockedMetadataProviders.get.mockReturnValue(mockProvider as any);
@@ -541,7 +589,10 @@ describe('backfillTranslations', () => {
 
       // localizedDetails should be called with the full BCP 47 tag 'es-419'
       // (the provider itself decides how to use it — e.g., TMDB provider calls toTmdbLang internally)
-      expect(mockProvider.localizedDetails).toHaveBeenCalledWith(movieItem, 'es-419');
+      expect(mockProvider.localizedDetails).toHaveBeenCalledWith(
+        movieItem,
+        'es-419'
+      );
     });
   });
 
@@ -592,7 +643,9 @@ describe('backfillTranslations', () => {
 
       await runBackfill([]);
 
-      const translations = await Database.knex('mediaItemTranslation').select('*');
+      const translations = await Database.knex('mediaItemTranslation').select(
+        '*'
+      );
       expect(translations).toHaveLength(0);
     });
 
@@ -613,7 +666,8 @@ describe('backfillTranslations', () => {
       });
 
       const mockProvider = {
-        localizedDetails: jest.fn()
+        localizedDetails: jest
+          .fn()
           .mockRejectedValueOnce(new Error('API Error'))
           .mockResolvedValueOnce({
             title: 'Movie 2 ES',
@@ -661,14 +715,16 @@ describe('backfillTranslations', () => {
 
       const callOrder: number[] = [];
       const mockProvider = {
-        localizedDetails: jest.fn().mockImplementation((item: MediaItemBase) => {
-          callOrder.push(item.id!);
-          return Promise.resolve({
-            title: `${item.title} ES`,
-            overview: null,
-            genres: null,
-          });
-        }),
+        localizedDetails: jest
+          .fn()
+          .mockImplementation((item: MediaItemBase) => {
+            callOrder.push(item.id!);
+            return Promise.resolve({
+              title: `${item.title} ES`,
+              overview: null,
+              genres: null,
+            });
+          }),
         fetchGameLocalizations: null as any,
       };
 
@@ -756,15 +812,15 @@ describe('backfillTranslations', () => {
       }
 
       const mockProvider = {
-        localizedDetails: jest.fn().mockImplementation(
-          (_item: MediaItemBase, language: string) => {
+        localizedDetails: jest
+          .fn()
+          .mockImplementation((_item: MediaItemBase, language: string) => {
             return Promise.resolve({
               title: `Title in ${language}`,
               overview: `Overview in ${language}`,
               genres: null,
             });
-          }
-        ),
+          }),
         fetchGameLocalizations: null as any,
       };
 
@@ -776,14 +832,21 @@ describe('backfillTranslations', () => {
       expect(mockProvider.localizedDetails).toHaveBeenCalledTimes(4);
 
       // 4 translation rows total
-      const translations = await Database.knex('mediaItemTranslation').select('*');
+      const translations = await Database.knex('mediaItemTranslation').select(
+        '*'
+      );
       expect(translations).toHaveLength(4);
 
       // Verify each item has both languages
       for (const itemId of [1, 2]) {
-        const itemTranslations = translations.filter((t: any) => t.mediaItemId === itemId);
+        const itemTranslations = translations.filter(
+          (t: any) => t.mediaItemId === itemId
+        );
         expect(itemTranslations).toHaveLength(2);
-        expect(itemTranslations.map((t: any) => t.language).sort()).toEqual(['en', 'es-419']);
+        expect(itemTranslations.map((t: any) => t.language).sort()).toEqual([
+          'en',
+          'es-419',
+        ]);
       }
     });
   });

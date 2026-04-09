@@ -565,7 +565,9 @@ describe('ProgressController', () => {
         pathParams: { progressId: firstId },
       });
 
-      const remaining = await Database.knex('seen').where('id', secondId).first();
+      const remaining = await Database.knex('seen')
+        .where('id', secondId)
+        .first();
 
       expect(remaining).toBeDefined();
     });

@@ -14,7 +14,11 @@ const StatisticsGenreSegment = (props: {
 
   const rountes = [
     { path: '/statistics/genre/tv/', name: t`Tv`, type: 'tv' as const },
-    { path: '/statistics/genre/movie/', name: t`Movies`, type: 'movie' as const },
+    {
+      path: '/statistics/genre/movie/',
+      name: t`Movies`,
+      type: 'movie' as const,
+    },
     {
       path: '/statistics/genre/video_game/',
       name: t`Games`,
@@ -47,7 +51,7 @@ const StatisticsGenreSegment = (props: {
                       {items.map((item: { genre: string; count: number }) => {
                         return (
                           <div key={item.genre}>
-                          <div
+                            <div
                               className="hover:underline hover:cursor-pointer text-sm text-zinc-600 dark:text-zinc-400"
                               onClick={() => {
                                 const search = createSearchParams({

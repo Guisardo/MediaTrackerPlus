@@ -80,8 +80,8 @@ export const SeenHistoryPage: FunctionComponent = () => {
           </div>
 
           <ul className="list-disc">
-            {mediaItem.seenHistory!
-              .sort((a, b) => (b.date ?? 0) - (a.date ?? 0))
+            {mediaItem
+              .seenHistory!.sort((a, b) => (b.date ?? 0) - (a.date ?? 0))
               .map((seenEntry) => ({
                 ...seenEntry,
                 dateStr: seenEntry.date
@@ -113,16 +113,13 @@ export const SeenHistoryPage: FunctionComponent = () => {
                   )}
 
                   <div>
-                    {seenEntry.episodeId &&
-                      episodesMap[seenEntry.episodeId] && (
-                        <Trans>
-                          Episode{' '}
-                          {formatEpisodeNumber(
-                            episodesMap[seenEntry.episodeId]
-                          )}{' '}
-                          {episodesMap[seenEntry.episodeId].title}
-                        </Trans>
-                      )}
+                    {seenEntry.episodeId && episodesMap[seenEntry.episodeId] && (
+                      <Trans>
+                        Episode{' '}
+                        {formatEpisodeNumber(episodesMap[seenEntry.episodeId])}{' '}
+                        {episodesMap[seenEntry.episodeId].title}
+                      </Trans>
+                    )}
                   </div>
 
                   <div className="mt-1 mb-3">

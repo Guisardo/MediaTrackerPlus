@@ -43,7 +43,13 @@ let mockUseQueryReturn: UseQueryReturn = {
 };
 
 jest.mock('@tanstack/react-query', () => ({
-  useQuery: ({ queryKey, queryFn }: { queryKey: unknown; queryFn: () => Promise<unknown> }) => {
+  useQuery: ({
+    queryKey,
+    queryFn,
+  }: {
+    queryKey: unknown;
+    queryFn: () => Promise<unknown>;
+  }) => {
     capturedQueryKey = queryKey;
     capturedQueryFn = queryFn;
     return mockUseQueryReturn;
@@ -81,7 +87,8 @@ type YearQuery = Statistics.StatisticsSeeninyearList.RequestQuery;
 // Helpers
 // ---------------------------------------------------------------------------
 
-const yearQuery = (year: number | null): YearQuery => ({ year } as unknown as YearQuery);
+const yearQuery = (year: number | null): YearQuery =>
+  ({ year } as unknown as YearQuery);
 
 const resetCaptures = () => {
   capturedQueryKey = null;
@@ -392,7 +399,11 @@ describe('useSeen – query function', () => {
 describe('useGenreSeen and useSeen – returned shape', () => {
   beforeEach(() => {
     resetCaptures();
-    mockUseQueryReturn = { error: null, data: [{ foo: 'bar' }], isFetched: true };
+    mockUseQueryReturn = {
+      error: null,
+      data: [{ foo: 'bar' }],
+      isFetched: true,
+    };
   });
 
   it('useGenreSeen returns an object with error, data, isFetched keys', () => {

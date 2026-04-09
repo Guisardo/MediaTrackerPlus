@@ -72,7 +72,9 @@ describe('Locale Resolution - Season and Episode API', () => {
   });
 
   afterEach(() => {
-    (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = null;
+    (
+      Config as unknown as { METADATA_LANGUAGES: string[] | null }
+    ).METADATA_LANGUAGES = null;
     _resetMetadataLanguagesCache();
   });
 
@@ -82,10 +84,9 @@ describe('Locale Resolution - Season and Episode API', () => {
 
   describe('Season translation - GET /api/details/:mediaItemId', () => {
     test('Tier 1: exact locale match returns localized season data with correct metadataLanguage', async () => {
-      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-        'en',
-        'es',
-      ];
+      (
+        Config as unknown as { METADATA_LANGUAGES: string[] | null }
+      ).METADATA_LANGUAGES = ['en', 'es'];
 
       const controller = new MediaItemController();
 
@@ -107,10 +108,9 @@ describe('Locale Resolution - Season and Episode API', () => {
     });
 
     test('Tier 2: regional request falls back to base locale for season', async () => {
-      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-        'en',
-        'es',
-      ];
+      (
+        Config as unknown as { METADATA_LANGUAGES: string[] | null }
+      ).METADATA_LANGUAGES = ['en', 'es'];
 
       const controller = new MediaItemController();
 
@@ -131,10 +131,9 @@ describe('Locale Resolution - Season and Episode API', () => {
     });
 
     test('Tier 3: no exact/base locale match returns default-language fallback for season', async () => {
-      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-        'en',
-        'fr',
-      ];
+      (
+        Config as unknown as { METADATA_LANGUAGES: string[] | null }
+      ).METADATA_LANGUAGES = ['en', 'fr'];
 
       const controller = new MediaItemController();
 
@@ -157,9 +156,9 @@ describe('Locale Resolution - Season and Episode API', () => {
 
     test('Tier 4: no translation for season returns base fields with metadataLanguage null', async () => {
       // Only 'de' configured — no German season translations seeded
-      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-        'de',
-      ];
+      (
+        Config as unknown as { METADATA_LANGUAGES: string[] | null }
+      ).METADATA_LANGUAGES = ['de'];
 
       const controller = new MediaItemController();
 
@@ -180,9 +179,9 @@ describe('Locale Resolution - Season and Episode API', () => {
     });
 
     test('season metadataLanguage field is present in response', async () => {
-      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-        'en',
-      ];
+      (
+        Config as unknown as { METADATA_LANGUAGES: string[] | null }
+      ).METADATA_LANGUAGES = ['en'];
 
       const controller = new MediaItemController();
 
@@ -208,10 +207,9 @@ describe('Locale Resolution - Season and Episode API', () => {
 
   describe('Episode translation - GET /api/details/:mediaItemId', () => {
     test('Tier 1: exact locale match returns localized episode data with correct metadataLanguage', async () => {
-      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-        'en',
-        'es',
-      ];
+      (
+        Config as unknown as { METADATA_LANGUAGES: string[] | null }
+      ).METADATA_LANGUAGES = ['en', 'es'];
 
       const controller = new MediaItemController();
 
@@ -241,10 +239,9 @@ describe('Locale Resolution - Season and Episode API', () => {
     });
 
     test('Tier 2: regional request falls back to base locale for episodes', async () => {
-      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-        'en',
-        'es',
-      ];
+      (
+        Config as unknown as { METADATA_LANGUAGES: string[] | null }
+      ).METADATA_LANGUAGES = ['en', 'es'];
 
       const controller = new MediaItemController();
 
@@ -266,10 +263,9 @@ describe('Locale Resolution - Season and Episode API', () => {
     });
 
     test('Tier 3: no exact/base locale match returns default-language fallback for episodes', async () => {
-      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-        'en',
-        'fr',
-      ];
+      (
+        Config as unknown as { METADATA_LANGUAGES: string[] | null }
+      ).METADATA_LANGUAGES = ['en', 'fr'];
 
       const controller = new MediaItemController();
 
@@ -294,9 +290,9 @@ describe('Locale Resolution - Season and Episode API', () => {
     test('Tier 4: episode without translation gets metadataLanguage null', async () => {
       // episode3 has no 'es' translation — should get metadataLanguage null when requesting 'es'
       // but fallback language 'en' also has no episode3 translation
-      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-        'de',
-      ];
+      (
+        Config as unknown as { METADATA_LANGUAGES: string[] | null }
+      ).METADATA_LANGUAGES = ['de'];
 
       const controller = new MediaItemController();
 
@@ -319,10 +315,9 @@ describe('Locale Resolution - Season and Episode API', () => {
 
     test('episodes without translations get metadataLanguage null in mixed season', async () => {
       // episode3 has no 'es' translation — within same season, ep1/ep2 have 'es' but ep3 does not
-      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-        'en',
-        'es',
-      ];
+      (
+        Config as unknown as { METADATA_LANGUAGES: string[] | null }
+      ).METADATA_LANGUAGES = ['en', 'es'];
 
       const controller = new MediaItemController();
 
@@ -351,10 +346,9 @@ describe('Locale Resolution - Season and Episode API', () => {
       });
 
       try {
-        (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-          'en',
-          'es',
-        ];
+        (
+          Config as unknown as { METADATA_LANGUAGES: string[] | null }
+        ).METADATA_LANGUAGES = ['en', 'es'];
 
         const controller = new MediaItemController();
 
@@ -386,9 +380,9 @@ describe('Locale Resolution - Season and Episode API', () => {
     });
 
     test('all episodes in response include metadataLanguage field', async () => {
-      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-        'en',
-      ];
+      (
+        Config as unknown as { METADATA_LANGUAGES: string[] | null }
+      ).METADATA_LANGUAGES = ['en'];
 
       const controller = new MediaItemController();
 
@@ -410,10 +404,9 @@ describe('Locale Resolution - Season and Episode API', () => {
     test('batch SELECT: all episodes fetched in one query (not per-episode)', async () => {
       // This test verifies correctness of the batch translation approach by ensuring
       // that multiple episodes in the same season all get their translations applied.
-      (Config as unknown as { METADATA_LANGUAGES: string[] | null }).METADATA_LANGUAGES = [
-        'en',
-        'es',
-      ];
+      (
+        Config as unknown as { METADATA_LANGUAGES: string[] | null }
+      ).METADATA_LANGUAGES = ['en', 'es'];
 
       const controller = new MediaItemController();
 

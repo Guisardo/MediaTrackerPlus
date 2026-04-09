@@ -51,7 +51,15 @@ function buildTmdbTvResponse(
 ): Record<string, unknown> {
   return {
     backdrop_path: '/tvBackdrop.jpg',
-    created_by: [{ id: 1, credit_id: 'abc', name: 'Creator', gender: 2, profile_path: null }],
+    created_by: [
+      {
+        id: 1,
+        credit_id: 'abc',
+        name: 'Creator',
+        gender: 2,
+        profile_path: null,
+      },
+    ],
     episode_run_time: [45],
     first_air_date: '2020-01-15',
     genres: [
@@ -66,7 +74,9 @@ function buildTmdbTvResponse(
     last_episode_to_air: null,
     name: 'Test TV Show',
     next_episode_to_air: null,
-    networks: [{ name: 'HBO', id: 49, logo_path: '/logo.png', origin_country: 'US' }],
+    networks: [
+      { name: 'HBO', id: 49, logo_path: '/logo.png', origin_country: 'US' },
+    ],
     number_of_episodes: 20,
     number_of_seasons: 2,
     origin_country: ['US'],
@@ -165,14 +175,8 @@ function setupStandardMocks(
   s1Episodes?: Array<Record<string, unknown>>,
   s2Episodes?: Array<Record<string, unknown>>
 ) {
-  const defaultS1Episodes = [
-    buildEpisode(1, 1),
-    buildEpisode(2, 1),
-  ];
-  const defaultS2Episodes = [
-    buildEpisode(1, 2),
-    buildEpisode(2, 2),
-  ];
+  const defaultS1Episodes = [buildEpisode(1, 1), buildEpisode(2, 1)];
+  const defaultS2Episodes = [buildEpisode(1, 2), buildEpisode(2, 2)];
 
   mockedAxios.get
     .mockResolvedValueOnce({
@@ -323,11 +327,20 @@ describe('TMDbTv.localizedDetails', () => {
   describe('localized season and episode data', () => {
     test('returns seasons with localized episodes from season API calls', async () => {
       const s1Episodes = [
-        buildEpisode(1, 1, { name: 'Episodio Uno', overview: 'Resumen del episodio uno' }),
-        buildEpisode(2, 1, { name: 'Episodio Dos', overview: 'Resumen del episodio dos' }),
+        buildEpisode(1, 1, {
+          name: 'Episodio Uno',
+          overview: 'Resumen del episodio uno',
+        }),
+        buildEpisode(2, 1, {
+          name: 'Episodio Dos',
+          overview: 'Resumen del episodio dos',
+        }),
       ];
       const s2Episodes = [
-        buildEpisode(1, 2, { name: 'Episodio Tres', overview: 'Resumen del episodio tres' }),
+        buildEpisode(1, 2, {
+          name: 'Episodio Tres',
+          overview: 'Resumen del episodio tres',
+        }),
       ];
 
       setupStandardMocks({}, s1Episodes, s2Episodes);
@@ -339,7 +352,9 @@ describe('TMDbTv.localizedDetails', () => {
       // Season 1 episodes
       expect(result!.seasons![0]!.episodes).toHaveLength(2);
       expect(result!.seasons![0]!.episodes![0]!.title).toBe('Episodio Uno');
-      expect(result!.seasons![0]!.episodes![0]!.description).toBe('Resumen del episodio uno');
+      expect(result!.seasons![0]!.episodes![0]!.description).toBe(
+        'Resumen del episodio uno'
+      );
       expect(result!.seasons![0]!.episodes![1]!.title).toBe('Episodio Dos');
 
       // Season 2 episodes
@@ -598,9 +613,7 @@ describe('TMDbTv.localizedDetails', () => {
         .mockRejectedValueOnce(new Error('Network timeout'))
         // Season 2 succeeds
         .mockResolvedValueOnce({
-          data: buildSeasonResponse(2, [
-            buildEpisode(1, 2, { name: 'S2E1' }),
-          ]),
+          data: buildSeasonResponse(2, [buildEpisode(1, 2, { name: 'S2E1' })]),
           status: 200,
         });
 
@@ -637,7 +650,9 @@ describe('TMDbTv.localizedDetails', () => {
       await tmdbTv.localizedDetails({ tmdbId: 1399 }, 'de');
 
       expect(logger.error).toHaveBeenCalledWith(
-        expect.stringContaining('TMDbTv.localizedDetails: failed to fetch season 1'),
+        expect.stringContaining(
+          'TMDbTv.localizedDetails: failed to fetch season 1'
+        ),
         expect.objectContaining({ err: expect.any(Error) })
       );
     });

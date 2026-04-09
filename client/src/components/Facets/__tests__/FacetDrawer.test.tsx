@@ -22,8 +22,15 @@ jest.mock('@lingui/macro', () => ({
 jest.mock('@lingui/react', () => ({
   I18nProvider: ({ children }: { children: React.ReactNode }) => children,
   useLingui: () => ({ i18n: { _: (id: unknown) => id } }),
-  Trans: ({ children, message, id }: { children?: React.ReactNode; message?: string; id?: string }) =>
-    children ?? message ?? id ?? null,
+  Trans: ({
+    children,
+    message,
+    id,
+  }: {
+    children?: React.ReactNode;
+    message?: string;
+    id?: string;
+  }) => children ?? message ?? id ?? null,
 }));
 
 /**
@@ -35,13 +42,27 @@ jest.mock('@lingui/react', () => ({
 jest.mock('@/components/ui/sheet', () => {
   const React = require('react');
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  const SheetContext = React.createContext({ open: false, onOpenChange: (_: boolean): void => {} });
+  const SheetContext = React.createContext({
+    open: false,
+    onOpenChange: (_: boolean): void => {},
+  });
 
   const Sheet = ({ open, onOpenChange, children }: any) =>
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    React.createElement(SheetContext.Provider, { value: { open: !!open, onOpenChange: onOpenChange || ((): void => {}) } }, children);
+    React.createElement(
+      SheetContext.Provider,
+      {
+        value: { open: !!open, onOpenChange: onOpenChange || ((): void => {}) },
+      },
+      children
+    );
 
-  const SheetContent = ({ children, side, className, showCloseButton }: any) => {
+  const SheetContent = ({
+    children,
+    side,
+    className,
+    showCloseButton,
+  }: any) => {
     const { open, onOpenChange } = React.useContext(SheetContext);
     if (!open) return null;
     return React.createElement(
@@ -52,22 +73,39 @@ jest.mock('@/components/ui/sheet', () => {
         'data-testid': 'sheet-overlay',
         onClick: () => onOpenChange(false),
       }),
-      children,
+      children
     );
   };
 
   const SheetHeader = ({ children, className }: any) =>
-    React.createElement('div', { 'data-testid': 'sheet-header', className }, children);
+    React.createElement(
+      'div',
+      { 'data-testid': 'sheet-header', className },
+      children
+    );
 
   const SheetTitle = ({ children, className }: any) =>
-    React.createElement('div', { 'data-slot': 'sheet-title', className }, children);
+    React.createElement(
+      'div',
+      { 'data-slot': 'sheet-title', className },
+      children
+    );
 
   const SheetTrigger = ({ children }: any) => children;
   const SheetClose = ({ children }: any) => children;
   const SheetFooter = ({ children }: any) => children;
   const SheetDescription = ({ children }: any) => children;
 
-  return { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose, SheetFooter, SheetDescription };
+  return {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+    SheetClose,
+    SheetFooter,
+    SheetDescription,
+  };
 });
 
 const createMockFacets = (overrides: Record<string, any> = {}) => ({

@@ -56,7 +56,10 @@ if (!openApiContent.endsWith('\n')) {
 
 const GENERATED_FILE_HEADER =
   '/* eslint-disable @typescript-eslint/ban-ts-comment */\n// @ts-nocheck\n';
-const routesFilePath = path.resolve(__dirname, '../src/generated/routes/routes.ts');
+const routesFilePath = path.resolve(
+  __dirname,
+  '../src/generated/routes/routes.ts'
+);
 const routesContent = fs.readFileSync(routesFilePath, 'utf-8');
 if (!routesContent.startsWith(GENERATED_FILE_HEADER)) {
   fs.writeFileSync(routesFilePath, `${GENERATED_FILE_HEADER}${routesContent}`);

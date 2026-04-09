@@ -48,7 +48,9 @@ describe('seasonEpisodeTranslationRepository', () => {
   // Helpers
   // ---------------------------------------------------------------------------
 
-  async function getAllSeasonTranslations(): Promise<Record<string, unknown>[]> {
+  async function getAllSeasonTranslations(): Promise<
+    Record<string, unknown>[]
+  > {
     return Database.knex('seasonTranslation').select('*');
   }
 
@@ -61,7 +63,9 @@ describe('seasonEpisodeTranslationRepository', () => {
       .first();
   }
 
-  async function getAllEpisodeTranslations(): Promise<Record<string, unknown>[]> {
+  async function getAllEpisodeTranslations(): Promise<
+    Record<string, unknown>[]
+  > {
     return Database.knex('episodeTranslation').select('*');
   }
 

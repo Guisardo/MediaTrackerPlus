@@ -87,9 +87,7 @@ export async function recalculateGroupPlatformRating(
   } else {
     // No members have ratings — delete the cache row if it exists
     // (clearing stale cache)
-    await knex('groupPlatformRating')
-      .where({ groupId, mediaItemId })
-      .delete();
+    await knex('groupPlatformRating').where({ groupId, mediaItemId }).delete();
   }
 }
 
@@ -189,9 +187,7 @@ export async function recalculateGroupPlatformRatingsForUser(
   const knex = Database.knex;
 
   // Find all groups the user belongs to
-  const memberships: Array<{ groupId: number }> = await knex(
-    'userGroupMember'
-  )
+  const memberships: Array<{ groupId: number }> = await knex('userGroupMember')
     .where('userId', userId)
     .select('groupId');
 
@@ -199,15 +195,12 @@ export async function recalculateGroupPlatformRatingsForUser(
   await Promise.all(
     memberships.map((m) =>
       recalculateGroupPlatformRating(m.groupId, mediaItemId).catch((err) => {
-        logger.error(
-          'Failed to recalculate group platform rating for group',
-          {
-            err,
-            groupId: m.groupId,
-            mediaItemId,
-            userId,
-          }
-        );
+        logger.error('Failed to recalculate group platform rating for group', {
+          err,
+          groupId: m.groupId,
+          mediaItemId,
+          userId,
+        });
       })
     )
   );

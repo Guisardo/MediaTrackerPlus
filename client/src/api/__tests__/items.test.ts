@@ -41,7 +41,11 @@ const ItemsHarness: React.FC<ItemsHarnessProps> = ({ args, searchQuery }) => {
   return React.createElement(
     React.Fragment,
     null,
-    React.createElement('span', { 'data-testid': 'isLoading' }, String(result.isLoading)),
+    React.createElement(
+      'span',
+      { 'data-testid': 'isLoading' },
+      String(result.isLoading)
+    ),
     React.createElement(
       'span',
       { 'data-testid': 'items' },
@@ -78,8 +82,17 @@ beforeEach(() => {
 
 describe('useItems – paginated mode', () => {
   it('calls items.paginated with the provided args', async () => {
-    const mockResponse = { data: [{ id: 1, title: 'Movie' }], totalPages: 3, total: 30, page: 1, from: 1, to: 10 };
-    (mediaTrackerApi.items.paginated as jest.Mock).mockResolvedValue(mockResponse);
+    const mockResponse = {
+      data: [{ id: 1, title: 'Movie' }],
+      totalPages: 3,
+      total: 30,
+      page: 1,
+      from: 1,
+      to: 10,
+    };
+    (mediaTrackerApi.items.paginated as jest.Mock).mockResolvedValue(
+      mockResponse
+    );
 
     renderItems({ args: { mediaType: 'movie', page: 1 } });
 
@@ -92,8 +105,17 @@ describe('useItems – paginated mode', () => {
 
   it('returns items and pagination info from paginated response', async () => {
     const mockData = [{ id: 1, title: 'Movie' }];
-    const mockResponse = { data: mockData, totalPages: 5, total: 50, page: 1, from: 1, to: 10 };
-    (mediaTrackerApi.items.paginated as jest.Mock).mockResolvedValue(mockResponse);
+    const mockResponse = {
+      data: mockData,
+      totalPages: 5,
+      total: 50,
+      page: 1,
+      from: 1,
+      to: 10,
+    };
+    (mediaTrackerApi.items.paginated as jest.Mock).mockResolvedValue(
+      mockResponse
+    );
 
     renderItems({ args: { mediaType: 'movie', page: 1 } });
 
@@ -101,7 +123,9 @@ describe('useItems – paginated mode', () => {
       expect(screen.getByTestId('isLoading').textContent).toBe('false');
     });
 
-    expect(JSON.parse(screen.getByTestId('items').textContent!)).toEqual(mockData);
+    expect(JSON.parse(screen.getByTestId('items').textContent!)).toEqual(
+      mockData
+    );
     expect(screen.getByTestId('numberOfPages').textContent).toBe('5');
   });
 });

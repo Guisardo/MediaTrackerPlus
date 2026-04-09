@@ -30,7 +30,9 @@ describe('SettingsSegment', () => {
   });
 
   it('renders the title as an anchor element when href is provided', () => {
-    render(<SettingsSegment title="External Link" href="https://example.com" />);
+    render(
+      <SettingsSegment title="External Link" href="https://example.com" />
+    );
 
     const link = screen.getByRole('link', { name: 'External Link' });
     expect(link).toBeInTheDocument();
@@ -72,7 +74,9 @@ describe('SettingsSegment', () => {
 
   it('renders without children (no error)', () => {
     // Should not throw
-    expect(() => render(<SettingsSegment title="Empty Section" />)).not.toThrow();
+    expect(() =>
+      render(<SettingsSegment title="Empty Section" />)
+    ).not.toThrow();
   });
 
   // -------------------------------------------------------------------------

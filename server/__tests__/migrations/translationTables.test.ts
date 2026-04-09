@@ -63,19 +63,22 @@ describe('translationTables migration', () => {
     });
 
     // Check that all three tables exist
-    const hasMediaItemTranslation =
-      await knex.schema.hasTable('mediaItemTranslation');
-    const hasSeasonTranslation =
-      await knex.schema.hasTable('seasonTranslation');
-    const hasEpisodeTranslation =
-      await knex.schema.hasTable('episodeTranslation');
+    const hasMediaItemTranslation = await knex.schema.hasTable(
+      'mediaItemTranslation'
+    );
+    const hasSeasonTranslation = await knex.schema.hasTable(
+      'seasonTranslation'
+    );
+    const hasEpisodeTranslation = await knex.schema.hasTable(
+      'episodeTranslation'
+    );
 
     expect(hasMediaItemTranslation).toBe(true);
     expect(hasSeasonTranslation).toBe(true);
     expect(hasEpisodeTranslation).toBe(true);
 
     // Check columns on mediaItemTranslation
-    const columns = await knex.raw("PRAGMA table_info(mediaItemTranslation);");
+    const columns = await knex.raw('PRAGMA table_info(mediaItemTranslation);');
     const columnNames = columns.map((col: { name: string }) => col.name);
     expect(columnNames).toContain('id');
     expect(columnNames).toContain('mediaItemId');
@@ -259,11 +262,13 @@ describe('translationTables migration', () => {
 
   test('migration down drops all three tables in correct order', async () => {
     // Verify tables exist before rollback
-    let hasMediaItemTranslation =
-      await knex.schema.hasTable('mediaItemTranslation');
+    let hasMediaItemTranslation = await knex.schema.hasTable(
+      'mediaItemTranslation'
+    );
     let hasSeasonTranslation = await knex.schema.hasTable('seasonTranslation');
-    let hasEpisodeTranslation =
-      await knex.schema.hasTable('episodeTranslation');
+    let hasEpisodeTranslation = await knex.schema.hasTable(
+      'episodeTranslation'
+    );
 
     expect(hasMediaItemTranslation).toBe(true);
     expect(hasSeasonTranslation).toBe(true);
@@ -275,8 +280,9 @@ describe('translationTables migration', () => {
     });
 
     // Verify tables are dropped
-    hasMediaItemTranslation =
-      await knex.schema.hasTable('mediaItemTranslation');
+    hasMediaItemTranslation = await knex.schema.hasTable(
+      'mediaItemTranslation'
+    );
     hasSeasonTranslation = await knex.schema.hasTable('seasonTranslation');
     hasEpisodeTranslation = await knex.schema.hasTable('episodeTranslation');
 
@@ -290,8 +296,9 @@ describe('translationTables migration', () => {
       directory: Config.MIGRATIONS_DIRECTORY,
     });
 
-    hasMediaItemTranslation =
-      await knex.schema.hasTable('mediaItemTranslation');
+    hasMediaItemTranslation = await knex.schema.hasTable(
+      'mediaItemTranslation'
+    );
     hasSeasonTranslation = await knex.schema.hasTable('seasonTranslation');
     hasEpisodeTranslation = await knex.schema.hasTable('episodeTranslation');
 

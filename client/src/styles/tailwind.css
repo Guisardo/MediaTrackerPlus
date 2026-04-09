@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* Scan source files for Tailwind class usage */
 @source "../../src/**/*.{js,jsx,ts,tsx}";
@@ -200,5 +200,3 @@
 @utility link {
   @apply text-blue-800 underline dark:text-blue-400;
 }
-
-

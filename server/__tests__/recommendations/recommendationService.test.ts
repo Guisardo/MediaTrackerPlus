@@ -9,26 +9,64 @@ import { MediaItemBase } from 'src/entity/mediaItem';
 import { logger } from 'src/logger';
 
 jest.mock('src/logger', () => ({
-  logger: { warn: jest.fn(), error: jest.fn(), info: jest.fn(), debug: jest.fn() },
+  logger: {
+    warn: jest.fn(),
+    error: jest.fn(),
+    info: jest.fn(),
+    debug: jest.fn(),
+  },
 }));
 
-const makeSimilarItems = (count: number, mediaType: SimilarItem['mediaType'] = 'movie'): SimilarItem[] =>
-  Array.from({ length: count }, (_, i) => ({ externalId: String(1000 + i), mediaType, title: `Title ${i}`, externalRating: 7.5 }));
+const makeSimilarItems = (
+  count: number,
+  mediaType: SimilarItem['mediaType'] = 'movie'
+): SimilarItem[] =>
+  Array.from({ length: count }, (_, i) => ({
+    externalId: String(1000 + i),
+    mediaType,
+    title: `Title ${i}`,
+    externalRating: 7.5,
+  }));
 
-const makeMediaItem = (overrides: Partial<MediaItemBase> = {}): MediaItemBase => ({
-  id: 42, title: 'Test Movie', mediaType: 'movie', source: 'tmdb', tmdbId: 12345, ...overrides,
+const makeMediaItem = (
+  overrides: Partial<MediaItemBase> = {}
+): MediaItemBase => ({
+  id: 42,
+  title: 'Test Movie',
+  mediaType: 'movie',
+  source: 'tmdb',
+  tmdbId: 12345,
+  ...overrides,
 });
 
-const makeWriteResult = (added = 1, updated = 0, skipped = 0) => ({ added, updated, skipped });
+const makeWriteResult = (added = 1, updated = 0, skipped = 0) => ({
+  added,
+  updated,
+  skipped,
+});
 
-function makeDeps(overrides: Partial<RecommendationServiceDeps> = {}): RecommendationServiceDeps {
+function makeDeps(
+  overrides: Partial<RecommendationServiceDeps> = {}
+): RecommendationServiceDeps {
   const mockProviders: SimilarityProviders = { similar: jest.fn() };
-  const mockWriter = { write: jest.fn<Promise<ReturnType<WatchlistWriter['write']>>, [number, SimilarItem[], number]>() } as unknown as WatchlistWriter;
-  return { metadataProviders: mockProviders, watchlistWriter: mockWriter, findMediaItemById: jest.fn(), ...overrides };
+  const mockWriter = {
+    write: jest.fn<
+      Promise<ReturnType<WatchlistWriter['write']>>,
+      [number, SimilarItem[], number]
+    >(),
+  } as unknown as WatchlistWriter;
+  return {
+    metadataProviders: mockProviders,
+    watchlistWriter: mockWriter,
+    findMediaItemById: jest.fn(),
+    ...overrides,
+  };
 }
 
 describe('RecommendationService - metadataProviders dispatch', () => {
-  beforeEach(() => { jest.clearAllMocks(); });
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
   it('calls metadataProviders.similar() with the resolved mediaItem for movie', async () => {
     const items = makeSimilarItems(3, 'movie');
@@ -36,7 +74,9 @@ describe('RecommendationService - metadataProviders dispatch', () => {
     const mediaItem = makeMediaItem({ mediaType: 'movie', tmdbId: 100 });
     (deps.findMediaItemById as jest.Mock).mockResolvedValue(mediaItem);
     (deps.metadataProviders.similar as jest.Mock).mockResolvedValue(items);
-    (deps.watchlistWriter.write as jest.Mock).mockResolvedValue(makeWriteResult(3));
+    (deps.watchlistWriter.write as jest.Mock).mockResolvedValue(
+      makeWriteResult(3)
+    );
     const service = new RecommendationService(deps);
     await service.processRating(1, 42, 8);
     expect(deps.metadataProviders.similar).toHaveBeenCalledTimes(1);
@@ -49,7 +89,9 @@ describe('RecommendationService - metadataProviders dispatch', () => {
     const mediaItem = makeMediaItem({ mediaType: 'tv', tmdbId: 999 });
     (deps.findMediaItemById as jest.Mock).mockResolvedValue(mediaItem);
     (deps.metadataProviders.similar as jest.Mock).mockResolvedValue(items);
-    (deps.watchlistWriter.write as jest.Mock).mockResolvedValue(makeWriteResult(2));
+    (deps.watchlistWriter.write as jest.Mock).mockResolvedValue(
+      makeWriteResult(2)
+    );
     const service = new RecommendationService(deps);
     await service.processRating(2, 42, 7);
     expect(deps.metadataProviders.similar).toHaveBeenCalledWith(mediaItem);
@@ -61,7 +103,9 @@ describe('RecommendationService - metadataProviders dispatch', () => {
     const mediaItem = makeMediaItem({ mediaType: 'video_game', igdbId: 555 });
     (deps.findMediaItemById as jest.Mock).mockResolvedValue(mediaItem);
     (deps.metadataProviders.similar as jest.Mock).mockResolvedValue(items);
-    (deps.watchlistWriter.write as jest.Mock).mockResolvedValue(makeWriteResult(5));
+    (deps.watchlistWriter.write as jest.Mock).mockResolvedValue(
+      makeWriteResult(5)
+    );
     const service = new RecommendationService(deps);
     await service.processRating(3, 42, 9);
     expect(deps.metadataProviders.similar).toHaveBeenCalledWith(mediaItem);
@@ -70,10 +114,15 @@ describe('RecommendationService - metadataProviders dispatch', () => {
   it('calls metadataProviders.similar() for book', async () => {
     const items = makeSimilarItems(4, 'book');
     const deps = makeDeps();
-    const mediaItem = makeMediaItem({ mediaType: 'book', openlibraryId: '/works/OL82563W' });
+    const mediaItem = makeMediaItem({
+      mediaType: 'book',
+      openlibraryId: '/works/OL82563W',
+    });
     (deps.findMediaItemById as jest.Mock).mockResolvedValue(mediaItem);
     (deps.metadataProviders.similar as jest.Mock).mockResolvedValue(items);
-    (deps.watchlistWriter.write as jest.Mock).mockResolvedValue(makeWriteResult(4));
+    (deps.watchlistWriter.write as jest.Mock).mockResolvedValue(
+      makeWriteResult(4)
+    );
     const service = new RecommendationService(deps);
     await service.processRating(4, 42, 6);
     expect(deps.metadataProviders.similar).toHaveBeenCalledWith(mediaItem);
@@ -84,7 +133,9 @@ describe('RecommendationService - metadataProviders dispatch', () => {
     const mediaItem = makeMediaItem({ mediaType: 'audiobook' });
     (deps.findMediaItemById as jest.Mock).mockResolvedValue(mediaItem);
     (deps.metadataProviders.similar as jest.Mock).mockReturnValue(null);
-    (deps.watchlistWriter.write as jest.Mock).mockResolvedValue(makeWriteResult(0));
+    (deps.watchlistWriter.write as jest.Mock).mockResolvedValue(
+      makeWriteResult(0)
+    );
     const service = new RecommendationService(deps);
     await service.processRating(1, 42, 5);
     expect(deps.watchlistWriter.write).toHaveBeenCalledWith(1, [], 5);
@@ -92,7 +143,9 @@ describe('RecommendationService - metadataProviders dispatch', () => {
 });
 
 describe('RecommendationService - WatchlistWriter integration', () => {
-  beforeEach(() => { jest.clearAllMocks(); });
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
   it('calls WatchlistWriter.write with userId, similarItems, and rating', async () => {
     const items = makeSimilarItems(3, 'movie');
@@ -100,7 +153,9 @@ describe('RecommendationService - WatchlistWriter integration', () => {
     const mediaItem = makeMediaItem({ mediaType: 'movie', tmdbId: 200 });
     (deps.findMediaItemById as jest.Mock).mockResolvedValue(mediaItem);
     (deps.metadataProviders.similar as jest.Mock).mockResolvedValue(items);
-    (deps.watchlistWriter.write as jest.Mock).mockResolvedValue(makeWriteResult(3));
+    (deps.watchlistWriter.write as jest.Mock).mockResolvedValue(
+      makeWriteResult(3)
+    );
     const service = new RecommendationService(deps);
     await service.processRating(7, 42, 8.5);
     expect(deps.watchlistWriter.write).toHaveBeenCalledTimes(1);
@@ -113,11 +168,19 @@ describe('RecommendationService - WatchlistWriter integration', () => {
     const mediaItem = makeMediaItem({ mediaType: 'movie', tmdbId: 300 });
     (deps.findMediaItemById as jest.Mock).mockResolvedValue(mediaItem);
     (deps.metadataProviders.similar as jest.Mock).mockResolvedValue(items);
-    (deps.watchlistWriter.write as jest.Mock).mockResolvedValue({ added: 3, updated: 1, skipped: 1 });
+    (deps.watchlistWriter.write as jest.Mock).mockResolvedValue({
+      added: 3,
+      updated: 1,
+      skipped: 1,
+    });
     const service = new RecommendationService(deps);
     await service.processRating(1, 42, 7);
-    const infoCalls = (logger.info as jest.Mock).mock.calls.map(([msg]) => msg as string);
-    const completionLog = infoCalls.find((msg) => msg.includes('processRating complete'));
+    const infoCalls = (logger.info as jest.Mock).mock.calls.map(
+      ([msg]) => msg as string
+    );
+    const completionLog = infoCalls.find((msg) =>
+      msg.includes('processRating complete')
+    );
     expect(completionLog).toBeDefined();
     expect(completionLog).toContain('apiResultCount=5');
     expect(completionLog).toContain('added=3');
@@ -127,14 +190,24 @@ describe('RecommendationService - WatchlistWriter integration', () => {
 
   it('logs entry with userId, mediaItemId, mediaType, and rating', async () => {
     const deps = makeDeps();
-    const mediaItem = makeMediaItem({ mediaType: 'movie', tmdbId: 400, id: 55 });
+    const mediaItem = makeMediaItem({
+      mediaType: 'movie',
+      tmdbId: 400,
+      id: 55,
+    });
     (deps.findMediaItemById as jest.Mock).mockResolvedValue(mediaItem);
     (deps.metadataProviders.similar as jest.Mock).mockResolvedValue([]);
-    (deps.watchlistWriter.write as jest.Mock).mockResolvedValue(makeWriteResult(0));
+    (deps.watchlistWriter.write as jest.Mock).mockResolvedValue(
+      makeWriteResult(0)
+    );
     const service = new RecommendationService(deps);
     await service.processRating(9, 55, 6);
-    const infoCalls = (logger.info as jest.Mock).mock.calls.map(([msg]) => msg as string);
-    const entryLog = infoCalls.find((msg) => msg.includes('processRating start'));
+    const infoCalls = (logger.info as jest.Mock).mock.calls.map(
+      ([msg]) => msg as string
+    );
+    const entryLog = infoCalls.find((msg) =>
+      msg.includes('processRating start')
+    );
     expect(entryLog).toBeDefined();
     expect(entryLog).toContain('userId=9');
     expect(entryLog).toContain('mediaItemId=55');
@@ -144,7 +217,9 @@ describe('RecommendationService - WatchlistWriter integration', () => {
 });
 
 describe('RecommendationService - error handling', () => {
-  beforeEach(() => { jest.clearAllMocks(); });
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
   it('swallows error from metadataProviders.similar() and does not rethrow', async () => {
     const deps = makeDeps();
@@ -165,7 +240,10 @@ describe('RecommendationService - error handling', () => {
     const service = new RecommendationService(deps);
     await service.processRating(1, 42, 8);
     expect(logger.error).toHaveBeenCalledTimes(1);
-    const [, meta] = (logger.error as jest.Mock).mock.calls[0] as [string, { err: unknown }];
+    const [, meta] = (logger.error as jest.Mock).mock.calls[0] as [
+      string,
+      { err: unknown }
+    ];
     expect(meta).toHaveProperty('err', apiError);
   });
 
@@ -191,7 +269,9 @@ describe('RecommendationService - error handling', () => {
 });
 
 describe('RecommendationService - edge cases', () => {
-  beforeEach(() => { jest.clearAllMocks(); });
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
   it('returns early and logs WARN when mediaItem is not found', async () => {
     const deps = makeDeps();
@@ -211,7 +291,9 @@ describe('RecommendationService - edge cases', () => {
     const mediaItem = makeMediaItem({ mediaType: 'audiobook' });
     (deps.findMediaItemById as jest.Mock).mockResolvedValue(mediaItem);
     (deps.metadataProviders.similar as jest.Mock).mockReturnValue(null);
-    (deps.watchlistWriter.write as jest.Mock).mockResolvedValue(makeWriteResult(0));
+    (deps.watchlistWriter.write as jest.Mock).mockResolvedValue(
+      makeWriteResult(0)
+    );
     const service = new RecommendationService(deps);
     await service.processRating(1, 42, 5);
     expect(deps.watchlistWriter.write).toHaveBeenCalledWith(1, [], 5);
@@ -222,7 +304,9 @@ describe('RecommendationService - edge cases', () => {
     const mediaItem = makeMediaItem({ mediaType: 'movie', tmdbId: 200 });
     (deps.findMediaItemById as jest.Mock).mockResolvedValue(mediaItem);
     (deps.metadataProviders.similar as jest.Mock).mockResolvedValue([]);
-    (deps.watchlistWriter.write as jest.Mock).mockResolvedValue(makeWriteResult(0));
+    (deps.watchlistWriter.write as jest.Mock).mockResolvedValue(
+      makeWriteResult(0)
+    );
     const service = new RecommendationService(deps);
     await service.processRating(1, 42, 7);
     expect(deps.watchlistWriter.write).toHaveBeenCalledWith(1, [], 7);

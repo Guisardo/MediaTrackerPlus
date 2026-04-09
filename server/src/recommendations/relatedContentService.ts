@@ -26,7 +26,9 @@ const isSupportedRelatedMediaType = (
   );
 };
 
-const toRelatedContentItem = (mediaItem: MediaItemBase): RelatedContentItem | null => {
+const toRelatedContentItem = (
+  mediaItem: MediaItemBase
+): RelatedContentItem | null => {
   if (
     mediaItem.id == null ||
     mediaItem.title == null ||
@@ -71,7 +73,11 @@ export class RelatedContentService {
     viewerAge?: number | null;
     limit?: number;
   }): Promise<RelatedContentItem[]> {
-    const { mediaItem, viewerAge, limit = DEFAULT_RELATED_CONTENT_LIMIT } = args;
+    const {
+      mediaItem,
+      viewerAge,
+      limit = DEFAULT_RELATED_CONTENT_LIMIT,
+    } = args;
 
     let similarItems: SimilarItem[] = [];
 
@@ -79,7 +85,9 @@ export class RelatedContentService {
       similarItems = (await this.metadataProviders.similar(mediaItem)) ?? [];
     } catch (error) {
       logger.warn(
-        `RelatedContentService: failed to fetch similar items for mediaItemId=${mediaItem.id ?? 'unknown'} source=${mediaItem.source} mediaType=${mediaItem.mediaType}`
+        `RelatedContentService: failed to fetch similar items for mediaItemId=${
+          mediaItem.id ?? 'unknown'
+        } source=${mediaItem.source} mediaType=${mediaItem.mediaType}`
       );
       logger.error('RelatedContentService: similarity fetch error', {
         err: error,
@@ -109,7 +117,10 @@ export class RelatedContentService {
           continue;
         }
 
-        if (resolved.id === mediaItem.id || dedupedResolvedIds.has(resolved.id)) {
+        if (
+          resolved.id === mediaItem.id ||
+          dedupedResolvedIds.has(resolved.id)
+        ) {
           continue;
         }
 
@@ -127,7 +138,11 @@ export class RelatedContentService {
         relatedContent.push(relatedItem);
       } catch (error) {
         logger.warn(
-          `RelatedContentService: failed to resolve similar item externalId="${candidate.externalId}" mediaType="${candidate.mediaType}" for mediaItemId=${mediaItem.id ?? 'unknown'}`
+          `RelatedContentService: failed to resolve similar item externalId="${
+            candidate.externalId
+          }" mediaType="${candidate.mediaType}" for mediaItemId=${
+            mediaItem.id ?? 'unknown'
+          }`
         );
         logger.error('RelatedContentService: related item resolution error', {
           err: error,

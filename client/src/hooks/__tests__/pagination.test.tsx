@@ -45,8 +45,13 @@ const PaginationHarness: React.FC<HarnessProps> = ({
   totalItems,
   items,
 }) => {
-  const { currentPage, numberOfPages, getPaginatedItems, setPage, showPaginationComponent } =
-    usePagination({ itemsPerPage, totalItems });
+  const {
+    currentPage,
+    numberOfPages,
+    getPaginatedItems,
+    setPage,
+    showPaginationComponent,
+  } = usePagination({ itemsPerPage, totalItems });
 
   const paginatedItems = getPaginatedItems(items);
 
@@ -54,9 +59,13 @@ const PaginationHarness: React.FC<HarnessProps> = ({
     <div>
       <span data-testid="current-page">{currentPage}</span>
       <span data-testid="number-of-pages">{numberOfPages}</span>
-      <span data-testid="show-pagination">{String(showPaginationComponent)}</span>
+      <span data-testid="show-pagination">
+        {String(showPaginationComponent)}
+      </span>
       <span data-testid="paginated-items">
-        {paginatedItems !== undefined ? JSON.stringify(paginatedItems) : 'undefined'}
+        {paginatedItems !== undefined
+          ? JSON.stringify(paginatedItems)
+          : 'undefined'}
       </span>
       <button data-testid="set-page-1" onClick={() => setPage(1)}>
         Go page 1
@@ -207,7 +216,9 @@ describe('usePagination – getPaginatedItems', () => {
     renderHarness({ itemsPerPage: 5, totalItems: 0, items: undefined });
 
     await waitFor(() =>
-      expect(screen.getByTestId('paginated-items').textContent).toBe('undefined')
+      expect(screen.getByTestId('paginated-items').textContent).toBe(
+        'undefined'
+      )
     );
   });
 

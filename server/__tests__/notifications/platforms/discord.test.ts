@@ -9,7 +9,9 @@ const mockedAxios = axios as jest.Mocked<typeof axios>;
 /**
  * Builds a complete FormattedNotification for use in tests.
  */
-function buildFormattedNotification(overrides: Partial<FormattedNotification> = {}): FormattedNotification {
+function buildFormattedNotification(
+  overrides: Partial<FormattedNotification> = {}
+): FormattedNotification {
   return {
     plainText: 'Plain text body',
     markdown: '**Markdown body**',
@@ -20,7 +22,8 @@ function buildFormattedNotification(overrides: Partial<FormattedNotification> = 
 }
 
 describe('Discord notification platform', () => {
-  const validWebhookUrl = 'https://discord.com/api/webhooks/123456789/abcdef-token';
+  const validWebhookUrl =
+    'https://discord.com/api/webhooks/123456789/abcdef-token';
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -59,7 +62,9 @@ describe('Discord notification platform', () => {
     });
 
     test('sends the markdown body as "content" in the request payload', async () => {
-      const body = buildFormattedNotification({ markdown: '**Breaking Bad** Season 5 Episode 16 is available' });
+      const body = buildFormattedNotification({
+        markdown: '**Breaking Bad** Season 5 Episode 16 is available',
+      });
 
       await Discord.sendFunction({
         credentials: { url: validWebhookUrl },
@@ -99,7 +104,8 @@ describe('Discord notification platform', () => {
     });
 
     test('normalises a URL with trailing slash via the URL constructor', async () => {
-      const urlWithTrailingSlash = 'https://discord.com/api/webhooks/999/token/';
+      const urlWithTrailingSlash =
+        'https://discord.com/api/webhooks/999/token/';
 
       await Discord.sendFunction({
         credentials: { url: urlWithTrailingSlash },

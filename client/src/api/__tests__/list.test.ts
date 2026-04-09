@@ -55,9 +55,21 @@ const ListHarness: React.FC<{ listId: number }> = ({ listId }) => {
   return React.createElement(
     React.Fragment,
     null,
-    React.createElement('span', { 'data-testid': 'isLoading' }, String(result.isLoading)),
-    React.createElement('span', { 'data-testid': 'isError' }, String(result.isError)),
-    React.createElement('span', { 'data-testid': 'list' }, JSON.stringify(result.list ?? null)),
+    React.createElement(
+      'span',
+      { 'data-testid': 'isLoading' },
+      String(result.isLoading)
+    ),
+    React.createElement(
+      'span',
+      { 'data-testid': 'isError' },
+      String(result.isError)
+    ),
+    React.createElement(
+      'span',
+      { 'data-testid': 'list' },
+      JSON.stringify(result.list ?? null)
+    ),
     React.createElement(
       'button',
       { onClick: result.invalidateListQuery },

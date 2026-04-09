@@ -115,9 +115,12 @@ export const unwrapError = async <T>(
   };
 };
 
-export const errorHandler = <T, U>(
-  fn: (args: T) => Promise<U | RequestError>
-): ((args: T) => Promise<ApiResult<U>>) => async (args: T) => unwrapError(fn(args));
+export const errorHandler =
+  <T, U>(
+    fn: (args: T) => Promise<U | RequestError>
+  ): ((args: T) => Promise<ApiResult<U>>) =>
+  async (args: T) =>
+    unwrapError(fn(args));
 
 const isMediaTrackerError = <T>(
   data: T | RequestError

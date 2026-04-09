@@ -1,6 +1,10 @@
 import _ from 'lodash';
 
-import { User, userNonSensitiveColumns, userSelfColumns } from 'src/entity/user';
+import {
+  User,
+  userNonSensitiveColumns,
+  userSelfColumns,
+} from 'src/entity/user';
 import { userRepository } from 'src/repository/user';
 import { Database } from 'src/dbconfig';
 import {
@@ -203,8 +207,9 @@ export class UsersController {
     requestBody: Partial<
       Pick<
         User,
-        Exclude<(typeof userNonSensitiveColumns)[number], 'id' | 'admin'>
-      > & Pick<User, 'dateOfBirth'>
+        Exclude<typeof userNonSensitiveColumns[number], 'id' | 'admin'>
+      > &
+        Pick<User, 'dateOfBirth'>
     >;
   }>(async (req, res) => {
     const userId = Number(req.user);
@@ -257,7 +262,10 @@ export class UsersController {
 
     const user = await userRepository.findOneWithPassword({ id: userId });
 
-    if (!user || !(await userRepository.verifyPassword(user, currentPassword))) {
+    if (
+      !user ||
+      !(await userRepository.verifyPassword(user, currentPassword))
+    ) {
       res.sendStatus(401);
       return;
     }
@@ -323,6 +331,6 @@ export class UsersController {
 
     // Return only id and name fields — safe: mapped to a plain {id, name} literal
     // nosemgrep: javascript.express.security.audit.xss.direct-response-write.direct-response-write
-    res.send(users.map(user => ({ id: user.id, name: user.name })));
+    res.send(users.map((user) => ({ id: user.id, name: user.name })));
   });
 }

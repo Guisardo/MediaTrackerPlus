@@ -55,8 +55,16 @@ const ListItemsHarness: React.FC<{ listId: number }> = ({ listId }) => {
   return React.createElement(
     React.Fragment,
     null,
-    React.createElement('span', { 'data-testid': 'isLoading' }, String(result.isLoading)),
-    React.createElement('span', { 'data-testid': 'isError' }, String(result.isError)),
+    React.createElement(
+      'span',
+      { 'data-testid': 'isLoading' },
+      String(result.isLoading)
+    ),
+    React.createElement(
+      'span',
+      { 'data-testid': 'isError' },
+      String(result.isError)
+    ),
     React.createElement(
       'span',
       { 'data-testid': 'listItems' },
@@ -98,7 +106,9 @@ describe('useListItems', () => {
   });
 
   it('calls getListItems with the correct listId', async () => {
-    const mockItems = [{ id: 1, listId: 7, mediaItem: { id: 10, title: 'Test' } }];
+    const mockItems = [
+      { id: 1, listId: 7, mediaItem: { id: 10, title: 'Test' } },
+    ];
     (mediaTrackerApi.list.getListItems as jest.Mock).mockResolvedValue(
       mockItems
     );
@@ -113,7 +123,9 @@ describe('useListItems', () => {
   });
 
   it('resolves listItems data from the API', async () => {
-    const mockItems = [{ id: 1, listId: 3, mediaItem: { id: 10, title: 'Movie' } }];
+    const mockItems = [
+      { id: 1, listId: 3, mediaItem: { id: 10, title: 'Movie' } },
+    ];
     (mediaTrackerApi.list.getListItems as jest.Mock).mockResolvedValue(
       mockItems
     );

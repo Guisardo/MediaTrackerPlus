@@ -162,7 +162,10 @@ export const SeasonsPage: FunctionComponent = () => {
     <>
       <div className="sm:w-full">
         <div className="flex w-full">
-          <Link className="text-2xl font-bold" to={`/details/${mediaItemIdNumber}`}>
+          <Link
+            className="text-2xl font-bold"
+            to={`/details/${mediaItemIdNumber}`}
+          >
             {mediaItem.title}
           </Link>
         </div>
@@ -271,7 +274,9 @@ const SeasonComponent: FunctionComponent<{
       <div className="w-full whitespace-nowrap">
         {(season.episodes ?? []).map((episode, index) => (
           <div
-            key={episode.id ?? `${episode.seasonNumber}-${episode.episodeNumber}`}
+            key={
+              episode.id ?? `${episode.seasonNumber}-${episode.episodeNumber}`
+            }
             className={clsx({
               'border-b border-zinc-600/30 dark:border-zinc-300/30':
                 index !== (season.episodes?.length ?? 0) - 1,

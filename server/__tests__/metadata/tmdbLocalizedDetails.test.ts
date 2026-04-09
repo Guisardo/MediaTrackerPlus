@@ -159,7 +159,8 @@ describe('TMDbMovie.localizedDetails', () => {
       mockedAxios.get.mockResolvedValueOnce({
         data: buildTmdbMovieResponse({
           title: 'El Club de la Pelea',
-          overview: 'Un empleado de oficina insomne y un fabricante de jabon forman un club de lucha.',
+          overview:
+            'Un empleado de oficina insomne y un fabricante de jabon forman un club de lucha.',
           genres: [
             { id: 28, name: 'Accion' },
             { id: 18, name: 'Drama' },
@@ -294,7 +295,8 @@ describe('TMDbMovie.localizedDetails', () => {
     test('preserves non-empty overview as-is', async () => {
       mockedAxios.get.mockResolvedValueOnce({
         data: buildTmdbMovieResponse({
-          overview: 'Un insomniaque et un vendeur de savon creent un club de combat.',
+          overview:
+            'Un insomniaque et un vendeur de savon creent un club de combat.',
         }),
         status: 200,
       });

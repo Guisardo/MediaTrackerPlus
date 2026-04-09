@@ -31,7 +31,9 @@ export class IGDB extends MetadataProvider {
     return Promise.all(result.map((item) => this.mapGame(item)));
   }
 
-  override async details(mediaItem: ExternalIds): Promise<MediaItemForProvider> {
+  override async details(
+    mediaItem: ExternalIds
+  ): Promise<MediaItemForProvider> {
     if (!mediaItem.igdbId) {
       throw new Error('IGDB.details requires an igdbId');
     }
@@ -39,7 +41,9 @@ export class IGDB extends MetadataProvider {
     const result = await this.game(mediaItem.igdbId);
 
     if (!result) {
-      throw new Error(`IGDB.details: no game found for igdbId=${mediaItem.igdbId}`);
+      throw new Error(
+        `IGDB.details: no game found for igdbId=${mediaItem.igdbId}`
+      );
     }
 
     return this.mapGame(result);
@@ -56,7 +60,10 @@ export class IGDB extends MetadataProvider {
     }
 
     const query = `fields name, region; where game = ${ids.igdbId};`;
-    const results = (await this.get('game_localizations', query)) as IgdbGameLocalization[];
+    const results = (await this.get(
+      'game_localizations',
+      query
+    )) as IgdbGameLocalization[];
 
     if (!results || results.length === 0) {
       logger.debug(
@@ -86,7 +93,9 @@ export class IGDB extends MetadataProvider {
     const similarGameIds = await this.fetchSimilarGameIds(ids.igdbId);
 
     if (similarGameIds.length === 0) {
-      logger.debug(`IGDB.similar: no similar games found for igdbId=${ids.igdbId}`);
+      logger.debug(
+        `IGDB.similar: no similar games found for igdbId=${ids.igdbId}`
+      );
       return [];
     }
 
@@ -171,10 +180,11 @@ export class IGDB extends MetadataProvider {
       url: definedOrUndefined(website),
       developer: searchResult.involved_companies?.find((item) => item.developer)
         ?.company.name,
-      publisher: searchResult.involved_companies
-        ?.filter((item) => item.publisher)
-        .map((item) => item.company.name)
-        .join(', ') || undefined,
+      publisher:
+        searchResult.involved_companies
+          ?.filter((item) => item.publisher)
+          .map((item) => item.company.name)
+          .join(', ') || undefined,
       platform: searchResult.platforms?.map((value) => value.name),
       ...parentalData,
     };
@@ -257,7 +267,7 @@ export class IGDB extends MetadataProvider {
       this.token &&
       this.tokenAcquiredAt &&
       this.tokenAcquiredAt.getTime() + this.token.expires_in * 1000 >
-      new Date().getTime()
+        new Date().getTime()
     ) {
       return;
     }
@@ -283,7 +293,6 @@ export class IGDB extends MetadataProvider {
   private readonly requestQueue = new RequestQueue({
     timeBetweenRequests: 250,
   });
-
 }
 
 interface IgdbGameLocalization {
@@ -440,7 +449,8 @@ const mapIgdbAgeRatings = (
       region,
       system,
       label,
-      descriptors: descriptors && descriptors.length > 0 ? descriptors : undefined,
+      descriptors:
+        descriptors && descriptors.length > 0 ? descriptors : undefined,
     });
   }
 

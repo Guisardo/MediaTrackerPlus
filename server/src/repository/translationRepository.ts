@@ -42,12 +42,18 @@ const chunkRows = <T>(rows: T[], chunkSize: number): T[][] => {
 };
 
 const upsertRowsInBatches = async (
-  tableName: 'mediaItemTranslation' | 'seasonTranslation' | 'episodeTranslation',
+  tableName:
+    | 'mediaItemTranslation'
+    | 'seasonTranslation'
+    | 'episodeTranslation',
   rows: Record<string, unknown>[],
   conflictColumns: string[]
 ): Promise<void> => {
   for (const chunk of chunkRows(rows, TRANSLATION_UPSERT_BATCH_SIZE)) {
-    await Database.knex(tableName).insert(chunk).onConflict(conflictColumns).merge();
+    await Database.knex(tableName)
+      .insert(chunk)
+      .onConflict(conflictColumns)
+      .merge();
   }
 };
 
@@ -75,7 +81,10 @@ const selectPreferredTranslations = <T extends { language: string }>(
 ): Map<number, T> => {
   const normalizedLanguages = dedupeLanguages(languages);
   const languagePriority = new Map(
-    normalizedLanguages.map((language, index) => [language.toLowerCase(), index])
+    normalizedLanguages.map((language, index) => [
+      language.toLowerCase(),
+      index,
+    ])
   );
   const selected = new Map<number, { priority: number; row: T }>();
 
@@ -93,7 +102,10 @@ const selectPreferredTranslations = <T extends { language: string }>(
   }
 
   return new Map(
-    Array.from(selected.entries()).map(([entityId, value]) => [entityId, value.row])
+    Array.from(selected.entries()).map(([entityId, value]) => [
+      entityId,
+      value.row,
+    ])
   );
 };
 
@@ -116,7 +128,11 @@ export const getMediaItemTranslations = async (
     .whereIn('language', normalizedLanguages)
     .select('*');
 
-  return selectPreferredTranslations(rows, (row) => row.mediaItemId, normalizedLanguages);
+  return selectPreferredTranslations(
+    rows,
+    (row) => row.mediaItemId,
+    normalizedLanguages
+  );
 };
 
 /**
@@ -138,7 +154,11 @@ export const getSeasonTranslations = async (
     .whereIn('language', normalizedLanguages)
     .select('*');
 
-  return selectPreferredTranslations(rows, (row) => row.seasonId, normalizedLanguages);
+  return selectPreferredTranslations(
+    rows,
+    (row) => row.seasonId,
+    normalizedLanguages
+  );
 };
 
 /**
@@ -160,7 +180,11 @@ export const getEpisodeTranslations = async (
     .whereIn('language', normalizedLanguages)
     .select('*');
 
-  return selectPreferredTranslations(rows, (row) => row.episodeId, normalizedLanguages);
+  return selectPreferredTranslations(
+    rows,
+    (row) => row.episodeId,
+    normalizedLanguages
+  );
 };
 
 export interface MediaItemTranslationData {

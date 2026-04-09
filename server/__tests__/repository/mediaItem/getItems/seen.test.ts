@@ -1,7 +1,10 @@
 import _ from 'lodash';
 
 import { mediaItemRepository } from 'src/repository/mediaItem';
-import { MediaItemBaseWithSeasons, MediaItemItemsResponse } from 'src/entity/mediaItem';
+import {
+  MediaItemBaseWithSeasons,
+  MediaItemItemsResponse,
+} from 'src/entity/mediaItem';
 import { User } from 'src/entity/user';
 import { userRepository } from 'src/repository/user';
 import { Seen } from 'src/entity/seen';
@@ -255,7 +258,10 @@ describe('seen', () => {
       userId: user.id,
     });
 
-    const items = _.keyBy(fetchedMediaItems, (item) => item.id) as _.Dictionary<MediaItemItemsResponse>;
+    const items = _.keyBy(
+      fetchedMediaItems,
+      (item) => item.id
+    ) as _.Dictionary<MediaItemItemsResponse>;
 
     Object.entries(seenUser1)
       .filter(([mediaItemId, seen]) => seen)
@@ -269,7 +275,10 @@ describe('seen', () => {
       userId: user2.id,
     });
 
-    const items = _.keyBy(fetchedMediaItems, (item) => item.id) as _.Dictionary<MediaItemItemsResponse>;
+    const items = _.keyBy(
+      fetchedMediaItems,
+      (item) => item.id
+    ) as _.Dictionary<MediaItemItemsResponse>;
 
     Object.entries(seenUser2)
       .filter(([mediaItemId, seen]) => seen)

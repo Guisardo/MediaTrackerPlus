@@ -4,7 +4,9 @@ import { FormattedNotification } from 'src/notifications/notificationFormatter';
 /**
  * Builds a complete FormattedNotification for use in tests.
  */
-function buildFormattedNotification(overrides: Partial<FormattedNotification> = {}): FormattedNotification {
+function buildFormattedNotification(
+  overrides: Partial<FormattedNotification> = {}
+): FormattedNotification {
   return {
     plainText: 'Plain text body',
     markdown: '**Markdown body**',
@@ -133,7 +135,10 @@ describe('createNotificationPlatform factory', () => {
         sendFunction: sendFn,
       });
 
-      await platform.sendFunction({ credentials, content: { title: 'Hello', body } });
+      await platform.sendFunction({
+        credentials,
+        content: { title: 'Hello', body },
+      });
 
       expect(sendFn).toHaveBeenCalledTimes(1);
       expect(sendFn).toHaveBeenCalledWith({
@@ -152,7 +157,10 @@ describe('createNotificationPlatform factory', () => {
         sendFunction: sendFn,
       });
 
-      await platform.sendFunction({ credentials: {} as never, content: { title, body } });
+      await platform.sendFunction({
+        credentials: {} as never,
+        content: { title, body },
+      });
 
       const calledWith = sendFn.mock.calls[0][0];
       expect(calledWith.content.title).toBe(title);
@@ -172,7 +180,10 @@ describe('createNotificationPlatform factory', () => {
         sendFunction: sendFn,
       });
 
-      await platform.sendFunction({ credentials: {} as never, content: { title: 'Title', body } });
+      await platform.sendFunction({
+        credentials: {} as never,
+        content: { title: 'Title', body },
+      });
 
       const calledWith = sendFn.mock.calls[0][0];
       expect(calledWith.content.body).toEqual(body);
@@ -188,7 +199,10 @@ describe('createNotificationPlatform factory', () => {
       });
 
       await expect(
-        platform.sendFunction({ credentials: {} as never, content: { title: 'Test', body } })
+        platform.sendFunction({
+          credentials: {} as never,
+          content: { title: 'Test', body },
+        })
       ).rejects.toThrow('send failed');
     });
 
@@ -201,8 +215,14 @@ describe('createNotificationPlatform factory', () => {
         sendFunction: sendFn,
       });
 
-      await platform.sendFunction({ credentials: {} as never, content: { title: 'First', body } });
-      await platform.sendFunction({ credentials: {} as never, content: { title: 'Second', body } });
+      await platform.sendFunction({
+        credentials: {} as never,
+        content: { title: 'First', body },
+      });
+      await platform.sendFunction({
+        credentials: {} as never,
+        content: { title: 'Second', body },
+      });
 
       expect(sendFn).toHaveBeenCalledTimes(2);
       expect(sendFn.mock.calls[0][0].content.title).toBe('First');
@@ -273,7 +293,9 @@ describe('createNotificationPlatform factory', () => {
     });
 
     test('Pushbullet platform has the correct factory-produced shape', async () => {
-      const { Pushbullet } = await import('src/notifications/platforms/pushbullet');
+      const { Pushbullet } = await import(
+        'src/notifications/platforms/pushbullet'
+      );
 
       expect(Pushbullet.name).toBe('Pushbullet');
       expect(Pushbullet.credentialName).toBe('token');
@@ -291,7 +313,9 @@ describe('createNotificationPlatform factory', () => {
     });
 
     test('Pushsafer platform has the correct factory-produced shape', async () => {
-      const { Pushsafer } = await import('src/notifications/platforms/pushsafer');
+      const { Pushsafer } = await import(
+        'src/notifications/platforms/pushsafer'
+      );
 
       expect(Pushsafer.name).toBe('Pushsafer');
       expect(Pushsafer.credentialName).toBe('key');

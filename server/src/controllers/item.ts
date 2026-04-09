@@ -35,7 +35,9 @@ async function enrichDetailsWithTrailers(
     }
   } catch (error) {
     logger.warn(
-      `MediaItemController.details: failed to fetch trailers for mediaItemId=${details.id ?? 'unknown'} source=${details.source} mediaType=${details.mediaType}`
+      `MediaItemController.details: failed to fetch trailers for mediaItemId=${
+        details.id ?? 'unknown'
+      } source=${details.source} mediaType=${details.mediaType}`
     );
     logger.error('MediaItemController.details: trailer enrichment error', {
       err: error,
@@ -63,11 +65,16 @@ async function enrichDetailsWithRelatedContent(
     }
   } catch (error) {
     logger.warn(
-      `MediaItemController.details: failed to enrich related content for mediaItemId=${details.id ?? 'unknown'} source=${details.source} mediaType=${details.mediaType}`
+      `MediaItemController.details: failed to enrich related content for mediaItemId=${
+        details.id ?? 'unknown'
+      } source=${details.source} mediaType=${details.mediaType}`
     );
-    logger.error('MediaItemController.details: related content enrichment error', {
-      err: error,
-    });
+    logger.error(
+      'MediaItemController.details: related content enrichment error',
+      {
+        err: error,
+      }
+    );
   }
 
   return details;
@@ -117,7 +124,10 @@ export class MediaItemController {
     if (!isAgeEligible(viewerAge, refreshedItem?.minimumAge ?? null)) {
       res.status(403).send(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        toCodedRequestErrorObject('This content is age-restricted.', 'AGE_RESTRICTED') as any
+        toCodedRequestErrorObject(
+          'This content is age-restricted.',
+          'AGE_RESTRICTED'
+        ) as any
       );
       return;
     }

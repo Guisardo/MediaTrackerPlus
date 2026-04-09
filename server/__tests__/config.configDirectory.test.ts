@@ -49,6 +49,8 @@ describe('Config.CONFIG_DIRECTORY env var override', () => {
     expect(resolvedConfigDirectory).toBe('/tmp/mediatracker-config');
     expect(resolvedAssetsPath).toBe(join('/tmp/mediatracker-config', 'img'));
     expect(resolvedLogsPath).toBe(join('/tmp/mediatracker-config', 'logs'));
-    expect(resolvedDatabasePath).toBe(join('/tmp/mediatracker-config', 'data.db'));
+    expect(resolvedDatabasePath).toBe(
+      join('/tmp/mediatracker-config', 'data.db')
+    );
   });
 });

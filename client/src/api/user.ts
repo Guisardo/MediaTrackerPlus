@@ -38,7 +38,9 @@ export const useUser = () => {
       queryClient.invalidateQueries({ queryKey: ['user'] });
 
       queryClient.removeQueries({ queryKey: ['metadataProviderCredentials'] });
-      queryClient.removeQueries({ queryKey: ['notificationPlatformsCredentials'] });
+      queryClient.removeQueries({
+        queryKey: ['notificationPlatformsCredentials'],
+      });
       queryClient.removeQueries({ queryKey: ['tokens'] });
       queryClient.removeQueries({ queryKey: ['calendar'] });
       queryClient.removeQueries({ queryKey: ['calendar'] });
@@ -69,8 +71,9 @@ export const useUser = () => {
   });
 
   const updatePasswordMutation = useMutation({
-    mutationFn: (data: Parameters<typeof mediaTrackerApi.user.updatePassword>[0]) =>
-      mediaTrackerApi.user.updatePassword(data),
+    mutationFn: (
+      data: Parameters<typeof mediaTrackerApi.user.updatePassword>[0]
+    ) => mediaTrackerApi.user.updatePassword(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },

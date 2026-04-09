@@ -38,7 +38,9 @@ export const throwOnErrorEnvelope = (data: unknown) => {
     (data as Record<string, unknown>)['MediaTrackerError'] === true &&
     typeof (data as Record<string, unknown>)['errorMessage'] === 'string'
   ) {
-    throw new Error((data as Record<string, unknown>)['errorMessage'] as string);
+    throw new Error(
+      (data as Record<string, unknown>)['errorMessage'] as string
+    );
   }
   return data;
 };

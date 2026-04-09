@@ -118,7 +118,10 @@ const makeTvItem = () =>
     id: 2,
     title: 'Test Show',
     mediaType: 'tv',
-    seenHistory: [{ id: 20, episodeId: 100 }, { id: 21, episodeId: 101 }],
+    seenHistory: [
+      { id: 20, episodeId: 100 },
+      { id: 21, episodeId: 101 },
+    ],
   } as any);
 
 const makeBookItem = () =>
@@ -172,7 +175,9 @@ describe('AddToSeenHistoryButton', () => {
     it('renders "Add to seen history" for a movie', () => {
       mockIsMovie.mockReturnValue(true);
       render(
-        React.createElement(AddToSeenHistoryButton, { mediaItem: makeMovieItem() })
+        React.createElement(AddToSeenHistoryButton, {
+          mediaItem: makeMovieItem(),
+        })
       );
       expect(screen.getByText('Add to seen history')).toBeInTheDocument();
     });
@@ -182,7 +187,9 @@ describe('AddToSeenHistoryButton', () => {
     it('renders "Add to read history" for a book', () => {
       mockIsBook.mockReturnValue(true);
       render(
-        React.createElement(AddToSeenHistoryButton, { mediaItem: makeBookItem() })
+        React.createElement(AddToSeenHistoryButton, {
+          mediaItem: makeBookItem(),
+        })
       );
       expect(screen.getByText('Add to read history')).toBeInTheDocument();
     });
@@ -230,7 +237,9 @@ describe('AddToSeenHistoryButton', () => {
           season,
         })
       );
-      expect(screen.getByText('Add season to seen history')).toBeInTheDocument();
+      expect(
+        screen.getByText('Add season to seen history')
+      ).toBeInTheDocument();
     });
 
     it('renders "Add episode to seen history" when episode provided and useSeasonAndEpisodeNumber=false', () => {
@@ -242,7 +251,9 @@ describe('AddToSeenHistoryButton', () => {
           episode,
         })
       );
-      expect(screen.getByText('Add episode to seen history')).toBeInTheDocument();
+      expect(
+        screen.getByText('Add episode to seen history')
+      ).toBeInTheDocument();
     });
 
     it('renders a button element when useSeasonAndEpisodeNumber=true and season provided', () => {
@@ -278,7 +289,9 @@ describe('AddToSeenHistoryButton', () => {
       mockIsMovie.mockReturnValue(true);
       const user = userEvent.setup();
       render(
-        React.createElement(AddToSeenHistoryButton, { mediaItem: makeMovieItem() })
+        React.createElement(AddToSeenHistoryButton, {
+          mediaItem: makeMovieItem(),
+        })
       );
       await user.click(screen.getByText('Add to seen history'));
       expect(screen.getByTestId('select-seen-date')).toBeInTheDocument();
@@ -323,7 +336,9 @@ describe('RemoveFromSeenHistoryButton', () => {
           mediaItem: makeAudiobookItem(),
         })
       );
-      expect(screen.getByText('Remove from listened history')).toBeInTheDocument();
+      expect(
+        screen.getByText('Remove from listened history')
+      ).toBeInTheDocument();
     });
   });
 
@@ -335,7 +350,9 @@ describe('RemoveFromSeenHistoryButton', () => {
           mediaItem: makeVideoGameItem(),
         })
       );
-      expect(screen.getByText('Remove from played history')).toBeInTheDocument();
+      expect(
+        screen.getByText('Remove from played history')
+      ).toBeInTheDocument();
     });
   });
 
@@ -363,7 +380,9 @@ describe('RemoveFromSeenHistoryButton', () => {
           season,
         })
       );
-      expect(screen.getByText('Remove season from seen history')).toBeInTheDocument();
+      expect(
+        screen.getByText('Remove season from seen history')
+      ).toBeInTheDocument();
     });
 
     it('renders "Remove episode from seen history" when episode provided', () => {
@@ -375,7 +394,9 @@ describe('RemoveFromSeenHistoryButton', () => {
           episode,
         })
       );
-      expect(screen.getByText('Remove episode from seen history')).toBeInTheDocument();
+      expect(
+        screen.getByText('Remove episode from seen history')
+      ).toBeInTheDocument();
     });
   });
 
@@ -397,9 +418,7 @@ describe('RemoveFromSeenHistoryButton', () => {
       mockConfirm.mockResolvedValue(true);
       const user = userEvent.setup();
       const mediaItem = makeMovieItem();
-      render(
-        React.createElement(RemoveFromSeenHistoryButton, { mediaItem })
-      );
+      render(React.createElement(RemoveFromSeenHistoryButton, { mediaItem }));
       await user.click(screen.getByText('Remove from seen history'));
       await waitFor(() => expect(mockMarkAsUnseen).toHaveBeenCalledTimes(1));
       expect(mockMarkAsUnseen).toHaveBeenCalledWith(

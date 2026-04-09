@@ -1,9 +1,4 @@
-import React, {
-  FunctionComponent,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { Trans, t } from '@lingui/macro';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -62,9 +57,7 @@ const AddMemberPanel: FunctionComponent<{
       try {
         const users = await searchUsers(trimmed);
         // Filter out existing members so the admin cannot re-add them
-        setResults(
-          users.filter((u) => !existingMemberUserIds.includes(u.id))
-        );
+        setResults(users.filter((u) => !existingMemberUserIds.includes(u.id)));
       } catch {
         setResults([]);
       } finally {
@@ -87,7 +80,9 @@ const AddMemberPanel: FunctionComponent<{
       setQuery('');
       setResults([]);
     } catch {
-      setErrorMessage(t`Failed to add member. They may already be in the group.`);
+      setErrorMessage(
+        t`Failed to add member. They may already be in the group.`
+      );
     }
   };
 
@@ -163,11 +158,7 @@ const MemberRow: FunctionComponent<{
   const { updateGroupMemberRole } = useUpdateGroupMemberRole(groupId);
 
   const handleRemove = async () => {
-    if (
-      await Confirm(
-        t`Remove ${member.name} from this group?`
-      )
-    ) {
+    if (await Confirm(t`Remove ${member.name} from this group?`)) {
       await removeGroupMember(member.userId);
     }
   };
@@ -205,7 +196,11 @@ const MemberRow: FunctionComponent<{
         </>
       ) : (
         <div className="text-sm text-zinc-500 dark:text-zinc-400">
-          {member.role === 'admin' ? <Trans>Admin</Trans> : <Trans>Viewer</Trans>}
+          {member.role === 'admin' ? (
+            <Trans>Admin</Trans>
+          ) : (
+            <Trans>Viewer</Trans>
+          )}
         </div>
       )}
     </div>

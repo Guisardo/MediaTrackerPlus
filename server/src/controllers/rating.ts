@@ -27,10 +27,18 @@ async function getRecommendationService(): Promise<RecommendationService> {
   }
 
   const { metadataProviders } = await import('src/metadata/metadataProviders');
-  const { findMediaItemByExternalId } = await import('src/metadata/findByExternalId');
-  const { mediaItemRepository: lazyMediaItemRepository } = await import('src/repository/mediaItem');
-  const { RecommendationService } = await import('src/recommendations/recommendationService');
-  const { WatchlistWriter } = await import('src/recommendations/watchlistWriter');
+  const { findMediaItemByExternalId } = await import(
+    'src/metadata/findByExternalId'
+  );
+  const { mediaItemRepository: lazyMediaItemRepository } = await import(
+    'src/repository/mediaItem'
+  );
+  const { RecommendationService } = await import(
+    'src/recommendations/recommendationService'
+  );
+  const { WatchlistWriter } = await import(
+    'src/recommendations/watchlistWriter'
+  );
 
   recommendationService = new RecommendationService({
     metadataProviders,
@@ -265,16 +273,13 @@ export class RatingController {
           episodeId,
         });
       } catch (err) {
-        logger.error(
-          'Failed to auto-mark content as seen after rating',
-          {
-            err,
-            userId,
-            mediaItemId,
-            seasonId,
-            episodeId,
-          }
-        );
+        logger.error('Failed to auto-mark content as seen after rating', {
+          err,
+          userId,
+          mediaItemId,
+          seasonId,
+          episodeId,
+        });
       }
     }
 
@@ -292,11 +297,14 @@ export class RatingController {
         mediaItemRepository
           .recalculatePlatformRating(mediaItemId)
           .catch((err) => {
-            logger.error('Failed to recalculate platformRating after rating write', {
-              err,
-              mediaItemId,
-              userId,
-            });
+            logger.error(
+              'Failed to recalculate platformRating after rating write',
+              {
+                err,
+                mediaItemId,
+                userId,
+              }
+            );
           });
 
         // Recalculate group platform rating caches for all groups the user belongs to.
@@ -324,7 +332,9 @@ export class RatingController {
               );
             })
             .catch((err) => {
-              logger.error('Unhandled error in recommendation pipeline', { err });
+              logger.error('Unhandled error in recommendation pipeline', {
+                err,
+              });
             });
         }
       });

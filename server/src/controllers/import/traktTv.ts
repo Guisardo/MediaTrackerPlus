@@ -115,7 +115,9 @@ type TraktTvImportNotImportedItems = {
   }[];
 };
 
-type DeviceCode = Awaited<ReturnType<typeof TraktTvExport.prototype.authenticate>>;
+type DeviceCode = Awaited<
+  ReturnType<typeof TraktTvExport.prototype.authenticate>
+>;
 
 type StoredImportState = {
   state: ImportState;
@@ -591,9 +593,7 @@ export class TraktTvImportController {
             return {
               userId: seen.userId,
               mediaItemId: seen.mediaItemId,
-              ...(seen.episodeId != null
-                ? { episodeId: seen.episodeId }
-                : {}),
+              ...(seen.episodeId != null ? { episodeId: seen.episodeId } : {}),
               ...(seen.date != null ? { date: seen.date } : {}),
             };
           };
@@ -841,8 +841,7 @@ const updateMetadataForTraktTvImport = async (
         ...exportedData.history,
         ...exportedData.rating,
         ...listItems,
-      ]
-        .flatMap((item) => (item.movie != null ? [item.movie.ids] : []))
+      ].flatMap((item) => (item.movie != null ? [item.movie.ids] : []))
     ),
     'movie'
   );
@@ -854,8 +853,7 @@ const updateMetadataForTraktTvImport = async (
         ...exportedData.history,
         ...exportedData.rating,
         ...listItems,
-      ]
-        .flatMap((item) => (item.show != null ? [item.show.ids] : []))
+      ].flatMap((item) => (item.show != null ? [item.show.ids] : []))
     ),
     'tv'
   );

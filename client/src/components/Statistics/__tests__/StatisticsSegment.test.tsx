@@ -51,9 +51,17 @@ jest.mock('src/components/ui/card', () => {
   const React = require('react');
   return {
     Card: ({ children, className }: any) =>
-      React.createElement('div', { 'data-testid': 'card', className }, children),
+      React.createElement(
+        'div',
+        { 'data-testid': 'card', className },
+        children
+      ),
     CardContent: ({ children, className }: any) =>
-      React.createElement('div', { 'data-testid': 'card-content', className }, children),
+      React.createElement(
+        'div',
+        { 'data-testid': 'card-content', className },
+        children
+      ),
   };
 });
 
@@ -174,10 +182,7 @@ describe('StatisticsSegmant', () => {
   });
 
   it('navigates to /statistics/seen/movie when Movies heading clicked', () => {
-    renderComponent(
-      { movie: { plays: 3, items: 3, duration: 0 } },
-      '2022'
-    );
+    renderComponent({ movie: { plays: 3, items: 3, duration: 0 } }, '2022');
     fireEvent.click(screen.getByText('Movies'));
     expect(mockNavigate).toHaveBeenCalledWith(
       expect.objectContaining({ pathname: '/statistics/seen/movie' })

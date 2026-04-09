@@ -88,9 +88,7 @@ export const SettingsConfigurationPage: FunctionComponent = () => {
           <SettingsSegment title={t`TMDB language`}>
             <Select
               value={configuration.tmdbLang || 'en'}
-              onValueChange={(value) =>
-                update({ tmdbLang: value as TmdbLang })
-              }
+              onValueChange={(value) => update({ tmdbLang: value as TmdbLang })}
             >
               <SelectTrigger aria-label={t`TMDB language`}>
                 <SelectValue />

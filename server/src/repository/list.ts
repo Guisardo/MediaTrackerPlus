@@ -294,7 +294,9 @@ class ListRepository extends repository<List>({
   tableName: 'list',
   primaryColumnName: 'id',
 }) {
-  public override async update(args: Partial<List>): Promise<Partial<List> | undefined> {
+  public override async update(
+    args: Partial<List>
+  ): Promise<Partial<List> | undefined> {
     const { userId, name, description, privacy, sortBy, sortOrder, id } = args;
 
     if (id == undefined || userId == undefined) {
@@ -727,8 +729,7 @@ class ListRepository extends repository<List>({
           // personally have added.  We deduplicate by mediaItemId (keeping the lowest
           // id representative row) and restrict to top-level media items only (no
           // season or episode entries).
-          qb.whereNull('listItem.seasonId')
-            .whereNull('listItem.episodeId')
+          qb.whereNull('listItem.seasonId').whereNull('listItem.episodeId')
             .whereRaw(`"listItem"."id" = (
               SELECT MIN("li2"."id") FROM "listItem" "li2"
               WHERE "li2"."mediaItemId" = "listItem"."mediaItemId"
@@ -820,7 +821,8 @@ class ListRepository extends repository<List>({
       // MediaItem: platform-seen flag — true if any platform user has fully watched this item.
       // Non-TV: any seen entry with episodeId IS NULL.
       // TV: any user has seen all non-special episodes (seenCount >= totalCount, count > 0).
-      .joinRaw(`LEFT JOIN (
+      .joinRaw(
+        `LEFT JOIN (
         SELECT "mediaItemId", 1 AS "platformSeen"
         FROM "seen"
         WHERE "episodeId" IS NULL
@@ -839,7 +841,8 @@ class ListRepository extends repository<List>({
                 AND e2."isSpecialEpisode" = 0
             )
         ) AS "completedShows"
-      ) AS "platformSeenItems" ON "platformSeenItems"."mediaItemId" = "listItem"."mediaItemId"`)
+      ) AS "platformSeenItems" ON "platformSeenItems"."mediaItemId" = "listItem"."mediaItemId"`
+      )
       // MediaItem: total runtime
       .leftJoin(
         (qb) =>

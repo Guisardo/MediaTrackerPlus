@@ -7,16 +7,30 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 jest.mock('@lingui/macro', () => ({
-  Trans: ({ children, message, id }: { children?: React.ReactNode; message?: string; id?: string }) =>
-    children ?? message ?? id ?? null,
+  Trans: ({
+    children,
+    message,
+    id,
+  }: {
+    children?: React.ReactNode;
+    message?: string;
+    id?: string;
+  }) => children ?? message ?? id ?? null,
   t: (s: TemplateStringsArray) => (typeof s === 'string' ? s : s[0]),
 }));
 
 jest.mock('@lingui/react', () => ({
   I18nProvider: ({ children }: { children: React.ReactNode }) => children,
   useLingui: () => ({ i18n: { _: (id: unknown) => id } }),
-  Trans: ({ children, message, id }: { children?: React.ReactNode; message?: string; id?: string }) =>
-    children ?? message ?? id ?? null,
+  Trans: ({
+    children,
+    message,
+    id,
+  }: {
+    children?: React.ReactNode;
+    message?: string;
+    id?: string;
+  }) => children ?? message ?? id ?? null,
 }));
 
 import { ExpandableList } from 'src/components/Facets/ExpandableList';
@@ -37,7 +51,9 @@ describe('ExpandableList', () => {
   it('renders all items when count is below maxVisible', () => {
     const items = makeItems(3);
     render(
-      <ExpandableList items={items} maxVisible={5}>{renderList}</ExpandableList>
+      <ExpandableList items={items} maxVisible={5}>
+        {renderList}
+      </ExpandableList>
     );
 
     expect(screen.getByText('Item 1')).toBeInTheDocument();
@@ -48,7 +64,9 @@ describe('ExpandableList', () => {
   it('truncates list to maxVisible items and shows "Show more" button', () => {
     const items = makeItems(20);
     render(
-      <ExpandableList items={items} maxVisible={5}>{renderList}</ExpandableList>
+      <ExpandableList items={items} maxVisible={5}>
+        {renderList}
+      </ExpandableList>
     );
 
     expect(screen.getByText('Item 5')).toBeInTheDocument();
@@ -60,7 +78,9 @@ describe('ExpandableList', () => {
     const user = userEvent.setup();
     const items = makeItems(10);
     render(
-      <ExpandableList items={items} maxVisible={3}>{renderList}</ExpandableList>
+      <ExpandableList items={items} maxVisible={3}>
+        {renderList}
+      </ExpandableList>
     );
 
     await user.click(screen.getByRole('button'));
@@ -72,7 +92,9 @@ describe('ExpandableList', () => {
     const user = userEvent.setup();
     const items = makeItems(10);
     render(
-      <ExpandableList items={items} maxVisible={3}>{renderList}</ExpandableList>
+      <ExpandableList items={items} maxVisible={3}>
+        {renderList}
+      </ExpandableList>
     );
 
     // Expand
@@ -86,9 +108,7 @@ describe('ExpandableList', () => {
 
   it('uses default maxVisible of 15 when not specified', () => {
     const items = makeItems(20);
-    render(
-      <ExpandableList items={items}>{renderList}</ExpandableList>
-    );
+    render(<ExpandableList items={items}>{renderList}</ExpandableList>);
 
     expect(screen.getByText('Item 15')).toBeInTheDocument();
     expect(screen.queryByText('Item 16')).not.toBeInTheDocument();

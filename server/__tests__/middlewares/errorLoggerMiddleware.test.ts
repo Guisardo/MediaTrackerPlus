@@ -131,7 +131,8 @@ describe('errorLoggerMiddleware', () => {
 
   describe('when the error is a generic Error', () => {
     const genericError = new Error('Something went wrong');
-    genericError.stack = 'Error: Something went wrong\n    at Object.<anonymous>';
+    genericError.stack =
+      'Error: Something went wrong\n    at Object.<anonymous>';
     const req = buildMockRequest({ method: 'GET', url: '/api/data' });
 
     test('responds with HTTP 500', () => {

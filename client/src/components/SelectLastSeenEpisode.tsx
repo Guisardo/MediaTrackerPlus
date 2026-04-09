@@ -30,7 +30,9 @@ export const SelectLastSeenEpisode: FunctionComponent<{
   const [selectedSeasonId, setSelectedSeasonId] = useState<number | undefined>(
     season?.id ?? undefined
   );
-  const [selectedEpisodeId, setSelectedEpisodeId] = useState<number | undefined>();
+  const [selectedEpisodeId, setSelectedEpisodeId] = useState<
+    number | undefined
+  >();
 
   const selectedSeason =
     (selectedSeasonId !== undefined
@@ -116,7 +118,11 @@ export const SelectLastSeenEpisode: FunctionComponent<{
                   <Trans>Season</Trans>:
                 </span>
                 <Select
-                  value={selectedSeasonId !== undefined ? String(selectedSeasonId) : ''}
+                  value={
+                    selectedSeasonId !== undefined
+                      ? String(selectedSeasonId)
+                      : ''
+                  }
                   onValueChange={(value) => setSelectedSeasonId(Number(value))}
                 >
                   <SelectTrigger aria-label="Season">
@@ -139,7 +145,11 @@ export const SelectLastSeenEpisode: FunctionComponent<{
                 <Trans>Episode</Trans>:
               </span>
               <Select
-                value={selectedEpisodeId !== undefined ? String(selectedEpisodeId) : ''}
+                value={
+                  selectedEpisodeId !== undefined
+                    ? String(selectedEpisodeId)
+                    : ''
+                }
                 onValueChange={(value) => setSelectedEpisodeId(Number(value))}
               >
                 <SelectTrigger aria-label="Episode">
@@ -180,9 +190,7 @@ export const SelectLastSeenEpisode: FunctionComponent<{
                       return;
                     }
 
-                    const lastSeenAt = args.date
-                      ? 'custom_date'
-                      : args.seenAt;
+                    const lastSeenAt = args.date ? 'custom_date' : args.seenAt;
 
                     if (!lastSeenAt) {
                       return;

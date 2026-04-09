@@ -64,9 +64,7 @@ export const SelectSeenDateComponent: FunctionComponent<{
   episode?: TvEpisode;
   closeModal?: () => void;
   onSelected: (
-    args:
-      | { date: Date; seenAt?: never }
-      | { seenAt: LastSeenAt; date?: Date }
+    args: { date: Date; seenAt?: never } | { seenAt: LastSeenAt; date?: Date }
   ) => void;
 }> = (props) => {
   const { mediaItem, episode, onSelected, closeModal } = props;

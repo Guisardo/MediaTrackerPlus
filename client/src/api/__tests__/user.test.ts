@@ -54,8 +54,16 @@ const UserHarness: React.FC<{
   return React.createElement(
     React.Fragment,
     null,
-    React.createElement('span', { 'data-testid': 'isLoading' }, String(result.isLoading)),
-    React.createElement('span', { 'data-testid': 'user' }, JSON.stringify(result.user ?? null)),
+    React.createElement(
+      'span',
+      { 'data-testid': 'isLoading' },
+      String(result.isLoading)
+    ),
+    React.createElement(
+      'span',
+      { 'data-testid': 'user' },
+      JSON.stringify(result.user ?? null)
+    ),
     loginPayload &&
       React.createElement(
         'button',
@@ -71,7 +79,12 @@ const UserHarness: React.FC<{
   );
 };
 
-const renderUser = (props: { loginPayload?: { username: string; password: string }; doLogout?: boolean } = {}) => {
+const renderUser = (
+  props: {
+    loginPayload?: { username: string; password: string };
+    doLogout?: boolean;
+  } = {}
+) => {
   const client = createTestQueryClient();
   return render(
     React.createElement(
@@ -88,7 +101,10 @@ beforeEach(() => {
 
 describe('useUser', () => {
   it('calls user.get to fetch current user', async () => {
-    (mediaTrackerApi.user.get as jest.Mock).mockResolvedValue({ id: 1, username: 'alice' });
+    (mediaTrackerApi.user.get as jest.Mock).mockResolvedValue({
+      id: 1,
+      username: 'alice',
+    });
 
     renderUser();
 
@@ -107,12 +123,17 @@ describe('useUser', () => {
       expect(screen.getByTestId('isLoading').textContent).toBe('false');
     });
 
-    expect(JSON.parse(screen.getByTestId('user').textContent!)).toEqual(mockUser);
+    expect(JSON.parse(screen.getByTestId('user').textContent!)).toEqual(
+      mockUser
+    );
   });
 
   it('calls user.login with correct credentials when login mutation is invoked', async () => {
     (mediaTrackerApi.user.get as jest.Mock).mockResolvedValue(null);
-    (mediaTrackerApi.user.login as jest.Mock).mockResolvedValue({ id: 1, username: 'alice' });
+    (mediaTrackerApi.user.login as jest.Mock).mockResolvedValue({
+      id: 1,
+      username: 'alice',
+    });
     const user = userEvent.setup();
 
     renderUser({ loginPayload: { username: 'alice', password: 'secret' } });
@@ -127,7 +148,10 @@ describe('useUser', () => {
   });
 
   it('calls user.logout when logout mutation is invoked', async () => {
-    (mediaTrackerApi.user.get as jest.Mock).mockResolvedValue({ id: 1, username: 'alice' });
+    (mediaTrackerApi.user.get as jest.Mock).mockResolvedValue({
+      id: 1,
+      username: 'alice',
+    });
     (mediaTrackerApi.user.logout as jest.Mock).mockResolvedValue(undefined);
     const user = userEvent.setup();
 
@@ -148,7 +172,11 @@ describe('useRegisterUser', () => {
     return React.createElement(
       React.Fragment,
       null,
-      React.createElement('span', { 'data-testid': 'error' }, result.error ?? ''),
+      React.createElement(
+        'span',
+        { 'data-testid': 'error' },
+        result.error ?? ''
+      ),
       React.createElement(
         'button',
         {

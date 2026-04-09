@@ -4,7 +4,11 @@ import { RatingSection } from '../RatingSection';
 
 jest.mock('@lingui/macro', () => ({
   t: (strings: TemplateStringsArray, ...values: unknown[]) =>
-    typeof strings === 'string' ? strings : strings.raw ? String.raw(strings, ...values) : strings[0],
+    typeof strings === 'string'
+      ? strings
+      : strings.raw
+      ? String.raw(strings, ...values)
+      : strings[0],
   Trans: ({ children, message, id }: any) => children ?? message ?? id ?? null,
 }));
 
@@ -12,7 +16,12 @@ jest.mock('src/components/Facets/FacetSection', () => {
   const React = require('react');
   return {
     FacetSection: ({ title, hasActiveSelection, children }: any) =>
-      React.createElement('div', { 'data-testid': 'facet-section', 'data-active': String(hasActiveSelection) },
+      React.createElement(
+        'div',
+        {
+          'data-testid': 'facet-section',
+          'data-active': String(hasActiveSelection),
+        },
         React.createElement('span', { 'data-testid': 'facet-title' }, title),
         children
       ),
@@ -102,7 +111,9 @@ describe('RatingSection', () => {
         setRatingRange: jest.fn(),
       })
     );
-    expect(screen.getByTestId('facet-section').getAttribute('data-active')).toBe('false');
+    expect(
+      screen.getByTestId('facet-section').getAttribute('data-active')
+    ).toBe('false');
   });
 
   it('has active selection when ratingMin is set', () => {
@@ -114,7 +125,9 @@ describe('RatingSection', () => {
         setRatingRange: jest.fn(),
       })
     );
-    expect(screen.getByTestId('facet-section').getAttribute('data-active')).toBe('true');
+    expect(
+      screen.getByTestId('facet-section').getAttribute('data-active')
+    ).toBe('true');
   });
 
   it('has active selection when ratingMax is set', () => {
@@ -126,7 +139,9 @@ describe('RatingSection', () => {
         setRatingRange: jest.fn(),
       })
     );
-    expect(screen.getByTestId('facet-section').getAttribute('data-active')).toBe('true');
+    expect(
+      screen.getByTestId('facet-section').getAttribute('data-active')
+    ).toBe('true');
   });
 
   it('calls setRatingRange when slider commits', () => {

@@ -2,10 +2,7 @@ import { SessionData, Store } from 'express-session';
 import { sessionRepository } from 'src/repository/session';
 
 export class SessionStore extends Store {
-  override async destroy(
-    sid: string,
-    callback: (error?: unknown) => void
-  ) {
+  override async destroy(sid: string, callback: (error?: unknown) => void) {
     await sessionRepository.delete({ sid: sid });
     callback();
   }

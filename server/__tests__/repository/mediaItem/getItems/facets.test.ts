@@ -223,9 +223,7 @@ describe('facets', () => {
         userId: user1.id,
       });
 
-      const genreMap = new Map(
-        facets.genres.map((g) => [g.value, g.count])
-      );
+      const genreMap = new Map(facets.genres.map((g) => [g.value, g.count]));
 
       // Action appears in movie1 (Action,Sci-Fi) and movie2 (Comedy,Action) = 2
       expect(genreMap.get('Action')).toBe(2);
@@ -282,9 +280,7 @@ describe('facets', () => {
         userId: user1.id,
       });
 
-      const langMap = new Map(
-        facets.languages.map((l) => [l.value, l.count])
-      );
+      const langMap = new Map(facets.languages.map((l) => [l.value, l.count]));
 
       // en: movie1, tvShow1, game1, book1 = 4
       expect(langMap.get('en')).toBe(4);
@@ -343,9 +339,7 @@ describe('facets', () => {
         userId: user1.id,
       });
 
-      const pubMap = new Map(
-        facets.publishers.map((p) => [p.value, p.count])
-      );
+      const pubMap = new Map(facets.publishers.map((p) => [p.value, p.count]));
 
       expect(pubMap.get('CD Projekt')).toBe(1);
     });
@@ -376,9 +370,7 @@ describe('facets', () => {
         userId: user1.id,
       });
 
-      const mtMap = new Map(
-        facets.mediaTypes.map((m) => [m.value, m.count])
-      );
+      const mtMap = new Map(facets.mediaTypes.map((m) => [m.value, m.count]));
 
       expect(mtMap.get('movie')).toBe(2); // movie1, movie2
       expect(mtMap.get('tv')).toBe(1);
@@ -483,9 +475,7 @@ describe('facets', () => {
       });
 
       // Only movie1 (Action,Sci-Fi) and movie2 (Comedy,Action) match
-      const langMap = new Map(
-        facets.languages.map((l) => [l.value, l.count])
-      );
+      const langMap = new Map(facets.languages.map((l) => [l.value, l.count]));
       expect(langMap.get('en')).toBe(1); // only movie1
       expect(langMap.get('fr')).toBe(1); // only movie2
       // de (audiobook1) and others excluded
@@ -514,9 +504,7 @@ describe('facets', () => {
       });
 
       // game1 has no rating and should be excluded
-      const mtMap = new Map(
-        facets.mediaTypes.map((m) => [m.value, m.count])
-      );
+      const mtMap = new Map(facets.mediaTypes.map((m) => [m.value, m.count]));
       expect(mtMap.get('video_game')).toBeUndefined();
     });
 
@@ -576,9 +564,7 @@ describe('facets', () => {
         userId: user1.id,
       });
 
-      const genreMap = new Map(
-        facets.genres.map((g) => [g.value, g.count])
-      );
+      const genreMap = new Map(facets.genres.map((g) => [g.value, g.count]));
 
       // Action appears in both movie1 and movie2
       expect(genreMap.get('Action')).toBe(2);

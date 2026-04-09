@@ -62,9 +62,13 @@ jest.mock('@lingui/react', () => {
         locale: 'en',
       },
     }),
-    Trans: ({ message, children }: { message?: string; children?: React.ReactNode }) => (
-      <>{message || children}</>
-    ),
+    Trans: ({
+      message,
+      children,
+    }: {
+      message?: string;
+      children?: React.ReactNode;
+    }) => <>{message || children}</>,
     I18nProvider: ({ children }: { children: React.ReactNode }) => (
       <>{children}</>
     ),
@@ -168,7 +172,9 @@ describe('GroupsPage – empty state', () => {
   it('still renders the Create group button in empty state', () => {
     mockGroups = [];
     renderGroupsPage();
-    expect(screen.getByRole('button', { name: 'Create group' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Create group' })
+    ).toBeInTheDocument();
   });
 });
 
@@ -231,6 +237,8 @@ describe('GroupsPage – groups list', () => {
   it('renders the Create group button when groups exist', () => {
     mockGroups = [ADMIN_GROUP];
     renderGroupsPage();
-    expect(screen.getByRole('button', { name: 'Create group' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Create group' })
+    ).toBeInTheDocument();
   });
 });

@@ -27,7 +27,11 @@ describe('Parental Metadata Integration', () => {
 
   const descriptors = ['Violence', 'Language', 'Drug Use'];
   const categories: ParentalGuidanceCategory[] = [
-    { category: 'Violence', severity: 'Moderate', description: 'Action sequences with mild violence' },
+    {
+      category: 'Violence',
+      severity: 'Moderate',
+      description: 'Action sequences with mild violence',
+    },
     { category: 'Language', severity: 'Mild' },
   ];
 
@@ -65,8 +69,16 @@ describe('Parental Metadata Integration', () => {
     // Add both to watchlist so they appear in items queries
     const now = Date.now();
     await Database.knex('listItem').insert([
-      { listId: Data.watchlist.id, mediaItemId: PARENTAL_MOVIE_ID, addedAt: now },
-      { listId: Data.watchlist.id, mediaItemId: NULL_PARENTAL_MOVIE_ID, addedAt: now },
+      {
+        listId: Data.watchlist.id,
+        mediaItemId: PARENTAL_MOVIE_ID,
+        addedAt: now,
+      },
+      {
+        listId: Data.watchlist.id,
+        mediaItemId: NULL_PARENTAL_MOVIE_ID,
+        addedAt: now,
+      },
     ]);
   });
 
@@ -171,9 +183,7 @@ describe('Parental Metadata Integration', () => {
 
       expect(res.statusCode).toBe(200);
       const data = res.data as any;
-      const ratedItem = data.data.find(
-        (i: any) => i.id === PARENTAL_MOVIE_ID
-      );
+      const ratedItem = data.data.find((i: any) => i.id === PARENTAL_MOVIE_ID);
 
       expect(ratedItem).toBeDefined();
       expect(ratedItem.minimumAge).toBe(17);

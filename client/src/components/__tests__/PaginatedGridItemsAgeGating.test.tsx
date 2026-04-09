@@ -22,7 +22,11 @@ jest.mock('@lingui/macro', () => {
   const React = require('react');
   return {
     Trans: ({ children, message, id }: any) =>
-      React.createElement(React.Fragment, null, children ?? message ?? id ?? null),
+      React.createElement(
+        React.Fragment,
+        null,
+        children ?? message ?? id ?? null
+      ),
     Plural: ({ value, one, other }: any) =>
       React.createElement(React.Fragment, null, value === 1 ? one : other),
     t: (strings: any, ...values: any[]) =>
@@ -106,20 +110,36 @@ jest.mock('src/components/Facets', () => {
       React.createElement('div', { 'data-testid': 'facet-panel' }, children),
     FacetDrawer: ({ isOpen, children }: any) =>
       isOpen
-        ? React.createElement('div', { 'data-testid': 'facet-drawer' }, children)
+        ? React.createElement(
+            'div',
+            { 'data-testid': 'facet-drawer' },
+            children
+          )
         : null,
     FacetMobileButton: ({ onClick }: any) =>
-      React.createElement('button', { 'data-testid': 'facet-mobile-button', onClick }, 'Filters'),
+      React.createElement(
+        'button',
+        { 'data-testid': 'facet-mobile-button', onClick },
+        'Filters'
+      ),
     ActiveFacetChips: () =>
       React.createElement('div', { 'data-testid': 'active-facet-chips' }),
-    GenreSection: () => React.createElement('div', { 'data-testid': 'genre-section' }),
-    YearSection: () => React.createElement('div', { 'data-testid': 'year-section' }),
-    RatingSection: () => React.createElement('div', { 'data-testid': 'rating-section' }),
-    LanguageSection: () => React.createElement('div', { 'data-testid': 'language-section' }),
-    CreatorSection: () => React.createElement('div', { 'data-testid': 'creator-section' }),
-    StatusSection: () => React.createElement('div', { 'data-testid': 'status-section' }),
-    PublisherSection: () => React.createElement('div', { 'data-testid': 'publisher-section' }),
-    MediaTypeSection: () => React.createElement('div', { 'data-testid': 'media-type-section' }),
+    GenreSection: () =>
+      React.createElement('div', { 'data-testid': 'genre-section' }),
+    YearSection: () =>
+      React.createElement('div', { 'data-testid': 'year-section' }),
+    RatingSection: () =>
+      React.createElement('div', { 'data-testid': 'rating-section' }),
+    LanguageSection: () =>
+      React.createElement('div', { 'data-testid': 'language-section' }),
+    CreatorSection: () =>
+      React.createElement('div', { 'data-testid': 'creator-section' }),
+    StatusSection: () =>
+      React.createElement('div', { 'data-testid': 'status-section' }),
+    PublisherSection: () =>
+      React.createElement('div', { 'data-testid': 'publisher-section' }),
+    MediaTypeSection: () =>
+      React.createElement('div', { 'data-testid': 'media-type-section' }),
   };
 });
 

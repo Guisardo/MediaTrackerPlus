@@ -124,7 +124,9 @@ describe('SettingsPreferencesPage – dateOfBirth section rendering', () => {
   it('does not show Clear button when dateOfBirth is null', () => {
     mockUserValue = { dateOfBirth: null };
     renderPage();
-    expect(screen.queryByRole('button', { name: /clear/i })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /clear/i })
+    ).not.toBeInTheDocument();
   });
 
   it('shows Clear button when dateOfBirth is already set', () => {
@@ -135,7 +137,9 @@ describe('SettingsPreferencesPage – dateOfBirth section rendering', () => {
 
   it('renders an explanation about self-only account data', () => {
     renderPage();
-    expect(screen.getAllByText(/age-based content filtering/i).length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText(/age-based content filtering/i).length
+    ).toBeGreaterThan(0);
     expect(screen.getByText(/self-only account data/i)).toBeInTheDocument();
   });
 });
@@ -154,7 +158,9 @@ describe('SettingsPreferencesPage – set flow (no existing date)', () => {
     await user.click(screen.getByRole('button', { name: /save/i }));
 
     await waitFor(() => {
-      expect(mockUpdateUser).toHaveBeenCalledWith({ dateOfBirth: '1995-03-20' });
+      expect(mockUpdateUser).toHaveBeenCalledWith({
+        dateOfBirth: '1995-03-20',
+      });
     });
   });
 
@@ -188,7 +194,9 @@ describe('SettingsPreferencesPage – update flow (existing date)', () => {
     await user.click(screen.getByRole('button', { name: /save/i }));
 
     await waitFor(() => {
-      expect(mockUpdateUser).toHaveBeenCalledWith({ dateOfBirth: '1992-11-25' });
+      expect(mockUpdateUser).toHaveBeenCalledWith({
+        dateOfBirth: '1992-11-25',
+      });
     });
   });
 });

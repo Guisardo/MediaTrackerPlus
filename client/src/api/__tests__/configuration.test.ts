@@ -57,7 +57,11 @@ const ConfigHarness: React.FC<{ updatePayload?: Record<string, unknown> }> = ({
   return React.createElement(
     React.Fragment,
     null,
-    React.createElement('span', { 'data-testid': 'isLoading' }, String(result.isLoading)),
+    React.createElement(
+      'span',
+      { 'data-testid': 'isLoading' },
+      String(result.isLoading)
+    ),
     React.createElement(
       'span',
       { 'data-testid': 'configuration' },
