@@ -55,10 +55,7 @@ jest.mock('@lingui/react', () => ({
 jest.mock('@lingui/macro', () => ({
   Trans: ({ children }: { children: React.ReactNode }) => children,
   t: (strings: TemplateStringsArray, ...values: unknown[]) =>
-    strings.reduce(
-      (result, str, i) => result + str + (values[i] ?? ''),
-      ''
-    ),
+    strings.reduce((result, str, i) => result + str + (values[i] ?? ''), ''),
 }));
 
 // Import App exports after mocks are set up.
@@ -327,7 +324,8 @@ describe('Integration: React 19 rendering', () => {
   it('@types/react is v19', () => {
     const pkg = readPackageJson();
     const typesReact =
-      pkg.devDependencies?.['@types/react'] || pkg.dependencies?.['@types/react'];
+      pkg.devDependencies?.['@types/react'] ||
+      pkg.dependencies?.['@types/react'];
     expect(typesReact).toMatch(/\^?19\./);
   });
 
@@ -369,7 +367,9 @@ describe('Integration: TanStack Query v5', () => {
 
   it('keepPreviousData returns previous data when called', () => {
     const prev = { items: [1, 2] };
-    const result = (keepPreviousData as (prevData: unknown, query: unknown) => unknown)(prev, {});
+    const result = (
+      keepPreviousData as (prevData: unknown, query: unknown) => unknown
+    )(prev, {});
     expect(result).toBe(prev);
   });
 
@@ -418,9 +418,35 @@ describe('Integration: TanStack Query v5', () => {
 
 describe('Integration: Lingui v5', () => {
   const LOCALES = [
-    'af', 'ar', 'ca', 'cs', 'da', 'de', 'el', 'en', 'es', 'es-419', 'fi',
-    'fr', 'he', 'hu', 'it', 'ja', 'ko', 'nl', 'no', 'pl', 'pt',
-    'ro', 'ru', 'sr', 'sv', 'tr', 'uk', 'vi', 'zh',
+    'af',
+    'ar',
+    'ca',
+    'cs',
+    'da',
+    'de',
+    'el',
+    'en',
+    'es',
+    'es-419',
+    'fi',
+    'fr',
+    'he',
+    'hu',
+    'it',
+    'ja',
+    'ko',
+    'nl',
+    'no',
+    'pl',
+    'pt',
+    'ro',
+    'ru',
+    'sr',
+    'sv',
+    'tr',
+    'uk',
+    'vi',
+    'zh',
   ];
 
   it('29 locale directories exist', () => {
@@ -499,9 +525,8 @@ describe('Integration: Tailwind v4', () => {
   });
 
   it('tailwind.css uses @import "tailwindcss" directive', () => {
-    expect(readSrcFile('styles', 'tailwind.css')).toContain(
-      '@import "tailwindcss"'
-    );
+    const css = readSrcFile('styles', 'tailwind.css');
+    expect(css).toMatch(/@import ['"]tailwindcss['"]/);
   });
 
   it('tailwind.css has @theme block with --font-sans', () => {
@@ -616,9 +641,7 @@ describe('Integration: shadcn/ui components', () => {
   });
 
   it('Dialog component uses radix-ui unified package', () => {
-    expect(readSrcFile('components', 'ui', 'dialog.tsx')).toContain(
-      'radix-ui'
-    );
+    expect(readSrcFile('components', 'ui', 'dialog.tsx')).toContain('radix-ui');
   });
 
   it('Slider component supports dual-thumb via value array', () => {
@@ -672,9 +695,9 @@ describe('Integration: Modal/Confirm migration', () => {
   });
 
   it('FacetSection.tsx uses shadcn/ui Collapsible', () => {
-    expect(
-      readSrcFile('components', 'Facets', 'FacetSection.tsx')
-    ).toContain('@/components/ui/collapsible');
+    expect(readSrcFile('components', 'Facets', 'FacetSection.tsx')).toContain(
+      '@/components/ui/collapsible'
+    );
   });
 
   it('Checkbox.tsx uses shadcn/ui Checkbox', () => {
@@ -822,21 +845,22 @@ describe('Integration: Zero legacy markers', () => {
   });
 
   it('no .btn, .btn-red, .btn-blue className usages in source', () => {
-    const matches = findFilesWithPattern(/className=.*\b(btn|btn-red|btn-blue)\b/);
+    const matches = findFilesWithPattern(
+      /className=.*\b(btn|btn-red|btn-blue)\b/
+    );
     expect(matches).toEqual([]);
   });
 
   it('no gray-* or slate-* Tailwind color tokens in .tsx source files', () => {
-    const matches = findFilesWithPattern(/(bg|text|border)-(gray|slate)-[0-9]/)
-      .filter((f) => f.endsWith('.tsx'));
+    const matches = findFilesWithPattern(
+      /(bg|text|border)-(gray|slate)-[0-9]/
+    ).filter((f) => f.endsWith('.tsx'));
     expect(matches).toEqual([]);
   });
 
   it('@radix-ui/react-collapsible standalone package is not in package.json', () => {
     const pkg = readPackageJson();
-    expect(
-      pkg.dependencies?.['@radix-ui/react-collapsible']
-    ).toBeUndefined();
+    expect(pkg.dependencies?.['@radix-ui/react-collapsible']).toBeUndefined();
     expect(
       pkg.devDependencies?.['@radix-ui/react-collapsible']
     ).toBeUndefined();
@@ -845,9 +869,7 @@ describe('Integration: Zero legacy markers', () => {
   it('@radix-ui/react-slider standalone package is not in package.json', () => {
     const pkg = readPackageJson();
     expect(pkg.dependencies?.['@radix-ui/react-slider']).toBeUndefined();
-    expect(
-      pkg.devDependencies?.['@radix-ui/react-slider']
-    ).toBeUndefined();
+    expect(pkg.devDependencies?.['@radix-ui/react-slider']).toBeUndefined();
   });
 });
 
