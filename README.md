@@ -1,9 +1,111 @@
 # MediaTracker-Plus &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Guisardo/MediaTrackerPlus/blob/main/LICENSE.md) [![Docker Image Size](https://img.shields.io/docker/image-size/guisardo/mediatracker-plus)](https://hub.docker.com/repository/docker/guisardo/mediatracker-plus) [![Docker Pulls](https://img.shields.io/docker/pulls/guisardo/mediatracker-plus)](https://hub.docker.com/repository/docker/guisardo/mediatracker-plus) [![CodeFactor](https://www.codefactor.io/repository/github/guisardo/mediatrackerplus/badge)](https://www.codefactor.io/repository/github/guisardo/mediatrackerplus) [![codecov](https://codecov.io/github/Guisardo/MediaTrackerPlus/graph/badge.svg?token=7O9IV84JVL)](https://codecov.io/github/Guisardo/MediaTrackerPlus)
 
 Self hosted platform for tracking movies, tv shows, video games, books and audiobooks, highly inspired by [flox](https://github.com/devfake/flox).
+
 This repository is maintained at [Guisardo/MediaTrackerPlus](https://github.com/Guisardo/MediaTrackerPlus).
-This is a fork from [Mediatracker](https://github.com/bonukai/MediaTracker) because I wanted new features and the original repository is at this time abandoned. But feel free to check out the original repository.
-This is a drop in replacement of the original repository. For now, the databases are compatible.
+
+Fork lineage:
+
+- [dnlwttnbrg/MediaTrackerPlus](https://github.com/dnlwttnbrg/MediaTrackerPlus)
+- Original upstream: [bonukai/MediaTracker](https://github.com/bonukai/MediaTracker)
+
+This fork intentionally drifts from both upstream repositories to ship Guisardo-specific features, fixes, Docker images, and release cadence. Runtime and database compatibility with either upstream should be treated as best-effort.
+
+## Fork-Specific Enhancements
+
+| Area                            | What this fork adds                                                                                                                                                                                                          |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| upnext recommendations          | Rating an item can asynchronously fetch similar content, add matches to the watchlist, store `estimatedRating`, and power the **Recommended** sort.                                                                          |
+| Related content                 | Details pages resolve provider-similar items against the local library, dedupe them, and age-filter them before rendering.                                                                                                   |
+| Age gates and parental metadata | Content ratings, descriptors, parental guidance, `dateOfBirth`-based eligibility, and stable `AGE_RESTRICTED` responses are applied across browse, details, calendar, statistics, lists, notifications, and related content. |
+| Localized metadata and trailers | The client sends `Accept-Language`; the API resolves configured metadata languages, overlays translated metadata from translation tables, backfills missing translations, and requests localized trailers.                   |
+| Facets and deeplinks            | URL-owned filters support genres, years, ratings, languages, creators, publishers, media type, and status; detail metadata pills deep-link back to filtered list views.                                                      |
+| Group recommendations           | Groups and memberships can scope **Platform Recommended** sorting through cached `groupPlatformRating` values and group-aware watched exclusions.                                                                            |
+| Full metadata sync              | `npm run metadata:sync:full` runs a one-off forced refresh for every provider-backed item using the server metadata update pipeline.                                                                                         |
+| UI and frontend stack           | The frontend moved to Vite, React 19, Tailwind CSS 4, Lingui 5, and shadcn/ui patterns with dark-mode and responsive layout improvements.                                                                                    |
+| Deployment and CI hardening     | Guisardo-owned Docker images, runtime hardening, container security checks, updated GitHub Actions, stricter typing, and broader tests support this fork's release path.                                                     |
+
+## Architecture and Flow Changes
+
+### Rating to Recommendations and Rating Cache Fan-out
+
+```mermaid
+sequenceDiagram
+  actor User
+  participant Client
+  participant Rating as RatingController
+  participant Repos as Rating/Seen/List repositories
+  participant Jobs as setImmediate jobs
+  participant Service as RecommendationService
+  participant Providers as Metadata providers
+  participant Writer as WatchlistWriter
+  participant GroupCache as Group rating cache
+
+  User->>Client: Rate item
+  Client->>Rating: PUT /api/rating
+  Rating->>Repos: Upsert rating
+  Rating->>Repos: Auto-mark as seen when rating exists
+  Rating-->>Client: 200 OK
+  Rating->>Jobs: Queue post-response work
+  Jobs->>Repos: Recalculate mediaItem.platformRating
+  Jobs->>GroupCache: Recalculate groupPlatformRating
+  Jobs->>Service: processRating when enabled
+  Service->>Providers: similar(mediaItem)
+  Providers-->>Service: Similar items
+  Service->>Writer: Write watchlist items with estimatedRating
+  Writer->>Repos: Insert or update listItem
+  Writer->>Repos: Recalculate mediaItem.platformRating
+  Writer->>GroupCache: Recalculate groupPlatformRating
+```
+
+### Localized, Age-Gated Details Response
+
+```mermaid
+flowchart TD
+  A["GET /api/details/:id + Accept-Language"] --> B["MediaItemController"]
+  B --> C{"needsDetails?"}
+  C -- "yes" --> D["updateMetadata refreshes base metadata"]
+  C -- "no" --> E["continue"]
+  D --> E
+  E --> F["Load user dateOfBirth and compute viewer age"]
+  F --> G{"Age eligible?"}
+  G -- "no" --> H["403 AGE_RESTRICTED"]
+  G -- "yes" --> I["Resolve metadata language candidates"]
+  I --> J["Details query"]
+  K[("mediaItem / season / episode tables")] --> J
+  L[("translation tables")] --> J
+  J --> M["Overlay first available translation and metadataLanguage"]
+  M --> N["Fetch trailers with primary language"]
+  M --> O["Resolve related content"]
+  O --> P["Dedupe and age-filter related items"]
+  N --> Q["Details payload"]
+  P --> Q
+  Q --> R["Details page, locale badge, trailers, related content"]
+```
+
+### Faceted Discovery and Group Recommendations
+
+```mermaid
+flowchart LR
+  A["URL params: facets + orderBy + groupId"] --> B["useFacets + GroupSelector"]
+  B --> C["GET /api/items/paginated"]
+  B --> D["GET /api/items/facets"]
+  C --> E["Validate group, viewer age, and locale preferences"]
+  D --> F["Validate group and viewer age"]
+  E --> G["getItemsKnex"]
+  F --> H["getFacetsKnex"]
+  G --> I{"platformRecommended + groupId?"}
+  I -- "yes" --> J["groupPlatformRating join + group watched exclusion"]
+  I -- "no" --> K["global platformRating or normal library scope"]
+  J --> L["shared filters + age gating + translation overlay"]
+  K --> L
+  H --> M["shared filters + age gating + facet counts"]
+  L --> N["items + total + ageGatingActive"]
+  M --> O["facet data"]
+  N --> P["PaginatedGridItems"]
+  O --> P
+  P --> Q["group selector, active chips, age-aware empty state"]
+```
 
 ## API Documentation
 
